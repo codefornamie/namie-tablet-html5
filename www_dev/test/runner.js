@@ -34,7 +34,7 @@
     // Ensure templates can be found correctly.
     require.config({
       lodashLoader: {
-        root: "/base/app/templates"
+        root: "base/app/templates"
       }
     });
 
