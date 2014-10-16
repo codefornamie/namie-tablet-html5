@@ -15,7 +15,7 @@ module.exports = ->
       logLevel: "ERROR"
 
       reporters: ["dots", "coverage"]
-      browsers: ["PhantomJS"]
+      browsers: ["Chrome"]
 
       frameworks: [framework]
 
@@ -23,7 +23,8 @@ module.exports = ->
         "karma-jasmine"
         "karma-mocha"
         "karma-qunit"
-        "karma-phantomjs-launcher"
+        "karma-phantomjs-launcher",
+        "karma-chrome-launcher",
         "karma-coverage"
       ]
 
