@@ -9,6 +9,7 @@ platforms/android/CordovaLib/ant-gen/
 platforms/android/CordovaLib/bin/
 platforms/android/res/xml/config.xml
 platforms/android/cordova/.*/
+platforms/android/out/*
 www/*
 www_dev/node_modules/
 www_dev/bower_components/
