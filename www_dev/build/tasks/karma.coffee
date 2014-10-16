@@ -15,7 +15,7 @@ module.exports = ->
       logLevel: "ERROR"
 
       reporters: ["dots", "coverage"]
-      browsers: ["Chrome"]
+      browsers: ["PhantomJS"]
 
       frameworks: [framework]
 
