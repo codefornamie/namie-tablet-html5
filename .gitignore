@@ -1,0 +1,15 @@
+# Android
+platforms/android/assets/www
+platforms/android/bin/
+platforms/android/gen/
+platforms/android/ant-build/
+platforms/android/ant-gen/
+platforms/android/CordovaLib/ant-build/
+platforms/android/CordovaLib/ant-gen/
+platforms/android/CordovaLib/bin/
+platforms/android/res/xml/config.xml
+platforms/android/cordova/.*/
+www/*
+www_dev/node_modules/
+www_dev/bower_components/
+www_dev/test/coverage/
