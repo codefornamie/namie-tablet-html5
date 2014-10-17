@@ -35,7 +35,7 @@ define(function(require, exports, module) {
 
             // Render to the page.
             this.layout = new Layout();
-//            this.layout.render();
+            this.layout.render();
         },
         routes : {
             "" : "index",
@@ -45,7 +45,7 @@ define(function(require, exports, module) {
 
         index : function() {
             console.log("Welcome to your / route.");
-            this.layout.render();
+//            this.layout.render();
         },
         top : function() {
             console.log("It's a top page.");

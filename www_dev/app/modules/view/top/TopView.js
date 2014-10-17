@@ -25,7 +25,7 @@ define(function(require, exports, module) {
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
             setTimeout($.proxy(function () {
                 this.setYouTubePlayer();
-            },this),1200);
+            },this),1600);
 
         },
         /**
