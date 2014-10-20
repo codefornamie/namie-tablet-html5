@@ -22,6 +22,13 @@ define(function(require, exports, module) {
 
         onClickLoginButton: function(event) {
             app.router.go("top");
+            var dcContext = new dcc.DcContext("https://fj.baas.jp.fujitsu.com/","namie-test");
+            var accessor = dcContext.asAccount("namie-test","user1","password1");
+            // ODataコレクションへのアクセス準備（実際の認証処理）
+            var cellobj = accessor.cell();
+            var targetBox = cellobj.ctl.box.retrieve("box")
+//             var targetBox = cellobj.boxCtl('__', null);
+            var odata = targetBox.odata('odatacol');
         }
     });
 
