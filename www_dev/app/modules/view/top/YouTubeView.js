@@ -2,10 +2,11 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var AbstractView = require("modules/view/AbstractView");
     var YouTubeCollection = require("modules/collection/youtube/YouTubeCollection");
     var YouTubeListView = require("modules/view/top/YouTubeListView");
 
-    var YouTubeView = Backbone.Layout.extend({
+    var YouTubeView = AbstractView.extend({
         template : require("ldsh!/app/templates/top/youTube"),
         /**
          * youtubePlayer
@@ -15,11 +16,11 @@ define(function(require, exports, module) {
             "click .playListItem" : "onClickPlayList"
         },
 
-        beforeRender : function() {
+        beforeRendered : function() {
 
         },
 
-        afterRender : function() {
+        afterRendered : function() {
 
         },
         /**
