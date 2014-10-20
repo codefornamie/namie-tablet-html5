@@ -5,6 +5,13 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var LoginModel = require("modules/model/LoginModel");
 
+    /**
+     * ログイン画面を表示するためのViewクラスを作成する。
+     *
+     * @class ログイン画面を表示するためのView
+     * @exports LoginView
+     * @constructor
+     */
     var LoginView = AbstractView.extend({
         template : require("ldsh!/app/templates/login/login"),
         model : new LoginModel(),
@@ -23,7 +30,11 @@ define(function(require, exports, module) {
 
         },
 
-        onClickLoginButton: function(event) {
+        /**
+         * ログインボタンクリック時のコールバック関数
+         * @memberOf LoginView
+         */
+        onClickLoginButton: function() {
             var loginId = $("#loginId").val();
             var password = $("#password").val();
             var loginModel = new LoginModel();
@@ -39,6 +50,12 @@ define(function(require, exports, module) {
             this.model.login($.proxy(this.onLogin, this));
             
         },
+        /**
+         * ログインボタンクリック時のコールバック関数
+         * @memberOf LoginView
+         * @param {string}
+         *            msg 認証失敗時のメッセージ
+         */
         onLogin : function(msg) {
             if (!msg) {
                 app.router.go("top");
