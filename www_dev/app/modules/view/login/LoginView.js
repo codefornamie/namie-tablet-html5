@@ -3,9 +3,11 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var LoginModel = require("modules/model/LoginModel");
 
     var LoginView = AbstractView.extend({
         template : require("ldsh!/app/templates/login/login"),
+        model : new LoginModel(),
         events : {
             "click #loginButton" : "onClickLoginButton"
         },
@@ -22,14 +24,27 @@ define(function(require, exports, module) {
         },
 
         onClickLoginButton: function(event) {
-            app.router.go("top");
-            var dcContext = new dcc.DcContext("https://fj.baas.jp.fujitsu.com/","namie-test");
-            var accessor = dcContext.asAccount("namie-test","user1","password1");
-            // ODataコレクションへのアクセス準備（実際の認証処理）
-            var cellobj = accessor.cell();
-            var targetBox = cellobj.ctl.box.retrieve("box")
-//             var targetBox = cellobj.boxCtl('__', null);
-            var odata = targetBox.odata('odatacol');
+            var loginId = $("#loginId").val();
+            var password = $("#password").val();
+            var loginModel = new LoginModel();
+
+            
+            this.model.set("loginId",$("#loginId").val());
+            this.model.set("password",$("#password").val());
+            
+            var errmsg = this.model.validate();
+            if (errmsg) {
+                return alert(errmsg); 
+            }
+            this.model.login($.proxy(this.onLogin, this));
+            
+        },
+        onLogin : function(msg) {
+            if (!msg) {
+                app.router.go("top");
+            } else {
+                alert(msg);
+            }
         }
     });
 
