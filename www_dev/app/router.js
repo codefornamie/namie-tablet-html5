@@ -35,7 +35,9 @@ define(function(require, exports, module) {
 
             // Render to the page.
             this.layout = new Layout();
-            this.layout.render();
+            if (!app.noRendering) {
+                this.layout.render();
+            }
         },
         routes : {
             "" : "index",

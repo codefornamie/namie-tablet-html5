@@ -5144,7 +5144,8 @@ dcc.box.odata.ODataManager.prototype.createAsResponse = function(body, callback)
     throw new dcc.ClientException("InvalidParameter");
   }
   if (callback !== undefined) {
-    this._internalCreate(JSON.stringify(body), {}, function(resp) {
+      // FST修正
+    this._internalCreate(JSON.stringify(body), {}, {complete: function(resp) {
       if (resp.getStatusCode() >= 300) {
         if (callback.error !== undefined) {
           callback.error(resp);
@@ -5160,7 +5161,7 @@ dcc.box.odata.ODataManager.prototype.createAsResponse = function(body, callback)
       if (callback.complete !== undefined) {
         callback.complete(resp);
       }
-    });
+    }});
   } else {
     //var resJson = this._internalCreate(JSON.stringify(body));
     var responseJson ={};

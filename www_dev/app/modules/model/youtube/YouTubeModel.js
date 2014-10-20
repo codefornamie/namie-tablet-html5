@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var AbstractModel = require("modules/model/AbstractModel");
     /**
      * YouTubeのモデルクラスを作成する。
      * 
@@ -9,7 +10,7 @@ define(function(require, exports, module) {
      * @exports YouTubeModel
      * @constructor
      */
-    var YouTubeModel = Backbone.Model.extend({
+    var YouTubeModel = AbstractModel.extend({
         parse : function(response, options) {
             var res = response.snippet;
 

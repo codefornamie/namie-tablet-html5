@@ -47,6 +47,7 @@ module.exports = ->
           included: false
         }
         { pattern: "bower_components/**/*.js", included: false }
+        { pattern: "lib/**/*.js", included: false }
       ]
 
     # This creates a server that will automatically run your tests when you
