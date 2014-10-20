@@ -2,17 +2,18 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var AbstractView = require("modules/view/AbstractView");
 
-    var LoginView = Backbone.Layout.extend({
+    var LoginView = AbstractView.extend({
         template : require("ldsh!/app/templates/login/login"),
         events : {
             "click #loginButton" : "onClickLoginButton"
         },
-        beforeRender : function() {
+        beforeRendered : function() {
 
         },
 
-        afterRender : function() {
+        afterRendered : function() {
 
         },
 

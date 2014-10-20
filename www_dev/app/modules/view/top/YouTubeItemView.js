@@ -2,19 +2,20 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-
-    var YouTubeView = Backbone.Layout.extend({
+    var AbstractView = require("modules/view/AbstractView");
+    
+    var YouTubeView = AbstractView.extend({
         template : require("ldsh!/app/templates/top/youTubeItem"),
         serialize : function() {
             return {
                 model : this.model
             };
         },
-        beforeRender : function() {
+        beforeRendered : function() {
 
         },
 
-        afterRender : function() {
+        afterRendered : function() {
 
         },
         /**

@@ -2,19 +2,21 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractView = require("modules/view/AbstractView");
 
-    var FooterView = AbstractView.extend({
-        template : require("ldsh!/app/templates/common/footer"),
+    var AbstractView = Backbone.Layout.extend({
 
+        beforeRender : function() {
+            this.beforeRendered();
+        },
         beforeRendered : function() {
-
+            
         },
-
+        afterRender : function() {
+            this.afterRendered();
+        },
         afterRendered : function() {
-
+            
         },
-
         initialize : function() {
 
         },
@@ -24,5 +26,5 @@ define(function(require, exports, module) {
         }
     });
 
-    module.exports = FooterView;
+    module.exports = AbstractView;
 });

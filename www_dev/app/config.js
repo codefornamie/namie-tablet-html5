@@ -1,5 +1,6 @@
 require.config({
     paths : {
+        "dc1-client" : "../lib/dao/dc1-client",
         "underscore" : "../bower_components/lodash/dist/lodash.underscore",
         "lodash" : "../bower_components/lodash/dist/lodash",
         "ldsh" : "../bower_components/lodash-template-loader/loader",

@@ -2,15 +2,16 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var AbstractView = require("modules/view/AbstractView");
 
-    var MenuView = Backbone.Layout.extend({
+    var MenuView = AbstractView.extend({
         template : require("ldsh!/app/templates/common/menu"),
 
-        beforeRender : function() {
+        beforeRendered : function() {
 
         },
 
-        afterRender : function() {
+        afterRendered : function() {
 
         },
 
