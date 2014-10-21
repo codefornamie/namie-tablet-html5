@@ -4,3 +4,11 @@
 @import "../../bower_components/foundation/css/foundation.css";
 
 /*-- Application stylesheets. -----------------------------------------------*/
+#eventsPage {
+    color : #666666;
+}
+
+.eventColumnsTitle {
+    font-weight: bold;
+    font-size: 16px;
+}
