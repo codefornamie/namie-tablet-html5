@@ -5,7 +5,11 @@ define(function(require, exports, module) {
 
     var AbstractCollection = Backbone.Collection.extend({
         parse : function parse(response, options) {
-            return response.items;
+            response = this.parseResponse(response, options);
+            return response;
+        },
+        parseResponse : function(response, options) {
+            return response;
         }
     });
 

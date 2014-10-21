@@ -10,8 +10,12 @@ define(function(require, exports, module) {
      * @constructor
      */
     var AbstractModel = Backbone.Model.extend({
-        parse : function(response, options) {
-
+        parse : function parse(response, options) {
+            response = this.parseResponse(response, options);
+            return response;
+        },
+        parseResponse : function(response, options) {
+            return response;
         }
     });
 

@@ -97,7 +97,7 @@ define(function(require, exports, module) {
          * 
          * @return {Object} パース後の情報
          */
-        parse : function(response, options) {
+        parseResponse: function (response, options) {
             var res = this.parseOData(response, options);
             // 全ての情報で共通のパース処理を実施する
             if (response && response.__metadata) {

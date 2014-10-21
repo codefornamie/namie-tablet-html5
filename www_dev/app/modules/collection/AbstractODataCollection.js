@@ -11,6 +11,13 @@ define(function(require, exports, module) {
         condition : {
             top : 100
         },
+        parseResponse: function (response, options) {
+            response = this.parseOData(response, options);
+            return response;
+        },
+        parseOData: function (response, options) {
+            return response;
+        },
         sync : function(method, model, options) {
             if (!options) {
                 options = {};
