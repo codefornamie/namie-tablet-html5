@@ -18,6 +18,10 @@ define(function(require) {
         it("TEST-02 AbstractODataModel#save", function(done) {
             this.timeout(15000);
             var model = new AbstractODataModel();
+            model.cell = "namiedev01";
+            model.box = "box1";
+            model.odata = "odata01";
+            model.entity = "entity01";
             this.model = model;
             model.save(null, {
                 success : function(model, response, options) {
@@ -36,6 +40,11 @@ define(function(require) {
         it("TEST-04 AbstractODataModel#fetch", function(done) {
             this.timeout(15000);
             var targetModel = new AbstractODataModel();
+            targetModel.cell = "namiedev01";
+            targetModel.box = "box1";
+            targetModel.odata = "odata01";
+            targetModel.entity = "entity01";
+
             targetModel.set("id", this.model.get("id"));
             targetModel.fetch({
                 success : function(model, response, options) {
@@ -47,6 +56,11 @@ define(function(require) {
         it("TEST-05 AbstractODataModel#destroy", function(done) {
             this.timeout(15000);
             var targetModel = new AbstractODataModel();
+            targetModel.cell = "namiedev01";
+            targetModel.box = "box1";
+            targetModel.odata = "odata01";
+            targetModel.entity = "entity01";
+
             targetModel.set("id", this.model.get("id"));
             targetModel.destroy({
                 success : function(model, response, options) {

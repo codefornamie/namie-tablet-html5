@@ -16,7 +16,6 @@ define(function(require, exports, module) {
         box : "box1",
         odata : "odata01",
         entity : "entity01",
-        targetId : null,
         sync : function(method, model, options) {
             if (!options) {
                 options = {};
@@ -124,14 +123,14 @@ define(function(require, exports, module) {
          */
         getSaveData : function() {
             var saveData = {};
-            if (this.get("id")) {
-                saveData.id = this.get("id");
+            if (this.get("__id")) {
+                saveData.__id = this.get("__id");
             }
-            saveData.created = this.get("created");
+            saveData.createdAt = this.get("createdAt");
             if (!saveData.created) {
-                saveData.created = new Date().toISOString();
+                saveData.createdAt = new Date().toISOString();
             }
-            saveData.updated = new Date().toISOString();
+            saveData.updatedAt = new Date().toISOString();
 
             this.makeSaveData(saveData);
 

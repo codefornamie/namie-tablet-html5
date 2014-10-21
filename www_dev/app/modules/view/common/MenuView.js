@@ -21,10 +21,14 @@ define(function(require, exports, module) {
 
         events : {
             "click #newsLink" : "onClickNewsLink",
+            "click #eventsLink" : "onClickEventsLink",
             "click #tvLink" : "onClickTvLink"
         },
         onClickNewsLink : function() {
             app.router.go("news");
+        },
+        onClickEventsLink : function() {
+            app.router.go("events");
         },
         onClickTvLink : function() {
             app.router.go("top");

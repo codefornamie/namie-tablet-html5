@@ -4,8 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var LoginModel = require("modules/model/LoginModel");
-    var AbstractOdataModel = require("modules/model/AbstractODataModel");
-
+    
     /**
      * ログイン画面を表示するためのViewクラスを作成する。
      * 
