@@ -60,23 +60,6 @@ define(function(require, exports, module) {
         onLogin : function(msg) {
             if (!msg) {
                 app.router.go("top");
-                var model = new AbstractOdataModel();
-                model.set("test", "テスト用です");
-                model.save(null, {success: function (model, response, options) {
-                    console.log("save success");
-                }});
-                model.set("id", "defaceaa21b6456cae55c655f6121b9a")
-                model.fetch({
-                    success : function success(model, response, options) {
-                        console.log("success");
-                    },
-                    error : function error(model, response, options) {
-                        console.log("error");
-                    }
-                });
-                model.destroy({success: function (model, response, options) {
-                    console.log("destroy success");
-                }});
             } else {
                 alert(msg);
             }

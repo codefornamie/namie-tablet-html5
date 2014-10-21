@@ -2,9 +2,10 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var AbstractCollection = require("modules/collection/AbstractCollection");
     var YouTubeModel = require("modules/model/youtube/YouTubeModel");
 
-    var YouTubeCollection = Backbone.Collection.extend({
+    var YouTubeCollection = AbstractCollection.extend({
         model : YouTubeModel,
         channelId : null,
         sync : function(method, model, options) {
