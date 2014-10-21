@@ -18,7 +18,6 @@ define(function(require, exports, module) {
         onLogin : null,
         /**
          * 入力された認証情報のバリデータ。
-         * 
          * @memberOf LoginModel
          */
         validate : function() {
@@ -41,7 +40,10 @@ define(function(require, exports, module) {
          * <li>ログインID,パスワードに誤りがあった場合</li>
          * </ul>
          * </p>
+<<<<<<< HEAD
          * 
+=======
+>>>>>>> branch 'master' of https://sakaguchi-manabu@bitbucket.org/codefornamie/namie-tablet.git
          * @memberOf LoginModel
          * @param {Function}
          *            onLogin 認証完了後に呼び出されるコールバック関数。
