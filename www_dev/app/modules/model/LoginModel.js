@@ -40,10 +40,7 @@ define(function(require, exports, module) {
          * <li>ログインID,パスワードに誤りがあった場合</li>
          * </ul>
          * </p>
-<<<<<<< HEAD
          * 
-=======
->>>>>>> branch 'master' of https://sakaguchi-manabu@bitbucket.org/codefornamie/namie-tablet.git
          * @memberOf LoginModel
          * @param {Function}
          *            onLogin 認証完了後に呼び出されるコールバック関数。
@@ -60,9 +57,10 @@ define(function(require, exports, module) {
                 var cellobj = accessor.cell();
                 var targetBox = cellobj.ctl.box.retrieve("box1");
                 app.accessor = cellobj.accessor;
+                app.box = targetBox;
             } catch (e) {
                 var message = "";
-                if (!e.statusCode) {
+                if (e.name === "NetworkError") {
                     message = "ネットワーク接続エラーが発生しました。";
                 } else {
                     message = "ユーザーID、または、パスワードが正しくありません。";

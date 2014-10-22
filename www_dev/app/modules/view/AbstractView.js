@@ -26,6 +26,20 @@ define(function(require, exports, module) {
         },
         afterRender : function() {
             this.afterRendered();
+            if (this.formId) {
+                var self = this;
+             // バリデーションを設定
+                $(this.formId).validate({
+                    submitHandler : function() {
+                        return false;
+                    },
+                    invalidHandler : function() {
+//                        self.onValidateError();
+                        return false;
+                    },
+                    onsubmit : false
+                });
+            }
         },
         /**
          * 描画後の処理を実装する。
@@ -43,7 +57,7 @@ define(function(require, exports, module) {
 
         events : {
 
-        }
+        },
     });
 
     module.exports = AbstractView;

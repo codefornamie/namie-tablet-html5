@@ -8,6 +8,8 @@ require.config({
         "backbone" : "../bower_components/backbone/backbone",
         "layoutmanager" : "../bower_components/layoutmanager/backbone.layoutmanager",
 
+        "jqueryvalidation" : "../bower_components/jquery-validation/dist/jquery.validate",
+        "messageja" : "../lib/jqueryvalidation/messages_ja",
         "foundation" : "../bower_components/foundation/js/foundation"
     },
 
@@ -17,7 +19,11 @@ require.config({
             deps : [ "jquery", "underscore" ],
             exports : "Backbone"
         },
-
+        "jqueryvalidation" : [ "jquery" ],
+        "messageja": {
+            deps : [ "jqueryvalidation" ]
+        },
         "foundation" : [ "jquery" ]
+        
     }
 });

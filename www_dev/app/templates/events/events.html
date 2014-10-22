@@ -12,6 +12,7 @@
 				<p>イベント情報を登録してください。</p>
 			</div>
 		</div>
+<form id="eventsRegistForm">
         <div class="row">
             <div class="large-2 columns">
                 <label class="eventColumnsTitle">日時</label>
@@ -41,10 +42,10 @@
                 <label class="eventColumnsTitle">画像</label>
             </div>
             <div class="large-6 columns end">
-                <button id="fileInputButton">画像を登録</button>
-                <input type="file" id="eventFile" style="display:none;"/>
+                <button type="button" id="fileInputButton">画像を登録</button>
+                <input type="file" id="eventFile" style="display:none;" accept="image/jpeg, image/gif, image/png"/>
                 <img id="previewFile" style="display:none;padding-bottom: 10px;"></img>
-                <button id="fileDeleteBUtton" style="display:none;">画像を削除</button>
+                <button type="button" id="fileDeleteButton" style="display:none;">画像を削除</button>
             </div>
         </div>
         <div class="row">
@@ -52,7 +53,7 @@
                 <label class="eventColumnsTitle">詳細</label>
             </div>
             <div class="large-6 columns end">
-                <textArea id="eventDetail" rows="5"/>
+                <textArea id="eventDetail" rows="5"></textArea>
             </div>
         </div>
         <div class="row">
@@ -60,13 +61,15 @@
                 <label class="eventColumnsTitle">連絡先</label>
             </div>
             <div class="large-6 columns end">
-                                     電話番号<input id="eventTel" type="tel"/>
+                                     電話番号<input id="eventTel" type="tel" name="eventTel" class="telnum"/>
                 E-mail<input id="eventEmail" name="eventEmail" type="text" class ="email"/>
             </div>
         </div>
+        </form>
         <div class="row">
             <div class="large-2 columns">
-                <button id="eventRegistButton">登録</button>
+            <button id="eventRegistButton" class="ladda-button" data-style="contract-overlay"><span class="ladda-label">登録</span></button>
+          <!--       <button id="eventRegistButton">登録</button> -->
             </div>
         </div>
 	</article>
