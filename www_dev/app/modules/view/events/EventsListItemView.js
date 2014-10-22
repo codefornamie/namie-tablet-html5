@@ -30,7 +30,7 @@ define(function(require, exports, module) {
                     var url = FileAPIUtil.createObjectURL(blob);
                     var imgElement = self.$el.find("img");
                     imgElement.load(function() {
-                        //window.URL.revokeObjectURL(imgElement.attr("src"));
+                        window.URL.revokeObjectURL(imgElement.attr("src"));
                     });
                     imgElement.attr("src", url);
                 }
