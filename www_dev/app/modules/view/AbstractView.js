@@ -10,9 +10,16 @@ define(function(require, exports, module) {
      * @constructor
      */
     var AbstractView = Backbone.Layout.extend({
-
+        animation: null,
+        animationDeley: 0,
         beforeRender : function() {
             this.beforeRendered();
+            if (this.animation) {
+                this.$el.addClass('animated ' + this.animation);
+            }
+            if (this.animationDeley) {
+                this.$el.css("-webkit-animation-delay", this.animationDeley + "s");
+            }
         },
         /**
          * 描画前の処理を実装する。
@@ -22,7 +29,6 @@ define(function(require, exports, module) {
          * </p>
          */
         beforeRendered : function() {
-            
         },
         afterRender : function() {
             this.afterRendered();

@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     
     var YouTubeView = AbstractView.extend({
+        animation: 'fadeIn',
         template : require("ldsh!/app/templates/top/youTubeItem"),
         serialize : function() {
             return {

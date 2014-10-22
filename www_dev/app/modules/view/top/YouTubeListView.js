@@ -28,11 +28,13 @@ define(function(require, exports, module) {
         setPlayList : function() {
             var self = this;
             this.parent.setVideo(this.collection.at(0));
+            var animationDeley = 0;
             this.collection.each($.proxy(function(model) {
-                var itemView = new YouTubeItemView();
                 this.insertView("#playListUl", new YouTubeItemView({
                     model : model,
+                    animationDeley : animationDeley
                 }));
+                animationDeley += 0.2;
             }, this));
 
         }

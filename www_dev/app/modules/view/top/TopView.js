@@ -22,7 +22,6 @@ define(function(require, exports, module) {
             if (app.gapiLoaded) {
                 var youTubeView = new YouTubeView();
                 this.setView(".youtube", youTubeView).render();
-                youTubeView.show();
                 return;
             }
             var self = this;
@@ -34,7 +33,6 @@ define(function(require, exports, module) {
                     app.gapiLoaded = true;
                     var youTubeView = new YouTubeView();
                     self.setView(".youtube", youTubeView).render();
-                    youTubeView.show();
                 };
 
                 var tag = document.createElement('script');

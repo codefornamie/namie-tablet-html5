@@ -2,6 +2,7 @@
 
 /* @import "../../bower_components/pure/pure.css"; */
 @import "../../bower_components/foundation/css/foundation.css";
+@import "../../bower_components/animate.css/animate.css";
 
 /*-- Application stylesheets. -----------------------------------------------*/
 #eventsPage {
@@ -11,4 +12,7 @@
 .eventColumnsTitle {
     font-weight: bold;
     font-size: 16px;
+}
+body {
+	font-size: xx-large;
 }

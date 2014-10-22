@@ -21,7 +21,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-
+            this.setYouTubePlayer();
         },
         /**
          * 初期化処理
@@ -38,9 +38,6 @@ define(function(require, exports, module) {
             youTubeListView.listenTo(this.collection, "reset sync request", youTubeListView.render);
 
         },
-        show : function() {
-            this.setYouTubePlayer();
-        },
         /**
          * youtube動画プレイヤーの設定
          */
@@ -54,6 +51,7 @@ define(function(require, exports, module) {
             });
         },
         onSetYouTubePlayer : function() {
+            this.player.removeEventListener("onReady");
             gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
             gapi.client.load('youtube', 'v3', $.proxy(this.searchPlayList, this));
         },
@@ -82,6 +80,14 @@ define(function(require, exports, module) {
             this.player.loadVideoById(video.get("videoId"));
             $("#videoTitle").text(video.get("title"));
             $("#videoDescription").text(video.get("description"));
+        },
+        cleanup : function() {
+            try {
+                this.player.destroy();
+            } catch(e) {
+                console.log(e);
+            }
+            
         }
 
     });
