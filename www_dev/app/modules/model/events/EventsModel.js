@@ -39,6 +39,7 @@ define(function(require, exports, module) {
             saveData.eventDetail = this.get("eventDetail");
             saveData.eventTel = this.get("eventTel");
             saveData.eventEmail = this.get("eventEmail");
+            saveData.fileName = this.get("fileName");
         }
 
     });
