@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var TopView = require("modules/view/top/TopView");
     var NewsView = require("modules/view/news/NewsView");
     var EventsView = require("modules/view/events/EventsView");
+    var ShowEventsView = require("modules/view/events/ShowEventsView");
     
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -44,6 +45,7 @@ define(function(require, exports, module) {
             "" : "index",
             "top": "top",
             "events": "events",
+            "showEvents": "showEvents",
             "news": "news"
         },
 
@@ -61,6 +63,11 @@ define(function(require, exports, module) {
         events : function() {
             console.log("It's a news page.");
             this.layout.showView(new EventsView());
+            this.commonView();
+        },
+        showEvents : function() {
+            console.log("It's a show events page.");
+            this.layout.showView(new ShowEventsView());
             this.commonView();
         },
         news : function() {

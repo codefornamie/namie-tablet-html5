@@ -22,6 +22,7 @@ define(function(require, exports, module) {
         events : {
             "click #newsLink" : "onClickNewsLink",
             "click #eventsLink" : "onClickEventsLink",
+            "click #showEventsLink" : "onClickShowEventsLink",
             "click #tvLink" : "onClickTvLink"
         },
         onClickNewsLink : function() {
@@ -29,6 +30,9 @@ define(function(require, exports, module) {
         },
         onClickEventsLink : function() {
             app.router.go("events");
+        },
+        onClickShowEventsLink : function() {
+            app.router.go("showEvents");
         },
         onClickTvLink : function() {
             app.router.go("top");

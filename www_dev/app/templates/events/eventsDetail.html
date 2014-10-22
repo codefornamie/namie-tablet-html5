@@ -1,0 +1,52 @@
+<article>
+    <div class="row">
+        <div class="large-2 columns">
+            <label class="eventColumnsTitle">日時</label>
+        </div>
+        <div class="large-6 columns end">
+            <%= model.get("eventDate") %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-2 columns">
+            <label class="eventColumnsTitle">イベント名</label>
+        </div>
+        <div class="large-6 columns end">
+            <%= model.get("eventName") %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-2 columns">
+            <label class="eventColumnsTitle">場所</label>
+        </div>
+        <div class="large-6 columns end">
+            <%= model.get("eventPlace") %>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-2 columns">
+            <label class="eventColumnsTitle">画像</label>
+        </div>
+        <div class="large-6 columns end">
+            <img src="app/img/nami.jpg"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-2 columns">
+            <label class="eventColumnsTitle">詳細</label>
+        </div>
+        <div class="large-6 columns end">
+            <p>
+                <%= model.get("eventDetail") %>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-2 columns">
+            <label class="eventColumnsTitle">連絡先</label>
+        </div>
+        <div class="large-6 columns end">
+            <%= model.get("eventTel") %>
+        </div>
+    </div>
+</article>

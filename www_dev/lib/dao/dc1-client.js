@@ -4324,7 +4324,7 @@ dcc.box.DavCollection.prototype.getBinary = function(pathValue, callback, etag) 
         }
       } else {
         if (callback.success !== undefined) {
-          var body = resp.bodyAsBinary();
+          var body = resp.httpClient.bodyAsBinary();
           callback.success(body);
         }
       }
