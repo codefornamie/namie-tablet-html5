@@ -1970,7 +1970,9 @@ dcc.http.RestAdapter.prototype.getBinary = function(requestUrl, etag, callback) 
   builder.defaultHeaders(this.accessor.getDefaultHeaders());
 
   var xhr = this.httpClient;
-  xhr.setOverrideMimeType("text/plain; charset=x-user-defined");
+  // xhr.setOverrideMimeType("text/plain; charset=x-user-defined");
+  // FSTが修正
+  xhr.httpClient.responseType = 'arraybuffer';
   this.request(xhr, "GET", requestUrl, "", builder, {}, callback);
 
   if (callback === undefined) {
@@ -4324,6 +4326,7 @@ dcc.box.DavCollection.prototype.getBinary = function(pathValue, callback, etag) 
         }
       } else {
         if (callback.success !== undefined) {
+            // FSTが修正
           var body = resp.httpClient.bodyAsBinary();
           callback.success(body);
         }

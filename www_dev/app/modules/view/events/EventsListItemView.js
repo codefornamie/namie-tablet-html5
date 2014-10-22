@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    
+    var FileAPIUtil = require("modules/util/FileAPIUtil");
     var EventsListItemView = AbstractView.extend({
         template : require("ldsh!/app/templates/events/eventsListItem"),
         serialize : function() {
@@ -16,19 +16,24 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-        	var self = this;
+            var self = this;
 
-        	if (!this.model.get("fileName")) {
-        		return;
-        	}
+            if (!this.model.get("fileName")) {
+                return;
+            }
             app.box.col("dav").getBinary(this.model.get("fileName"), {
-            	success: function (binary) {
-            		var arrayBufferView = new Uint8Array( binary );
-            		var blob = new Blob([arrayBufferView], { type: "image/jpg" });
-            		var url = URL.createObjectURL(blob);
-            		
-            		self.$el.find("img").attr("src", url);
-            	}
+                success : function(binary) {
+                    var arrayBufferView = new Uint8Array(binary);
+                    var blob = new Blob([ arrayBufferView ], {
+                        type : "image/jpg"
+                    });
+                    var url = FileAPIUtil.createObjectURL(blob);
+                    var imgElement = self.$el.find("img");
+                    imgElement.load(function() {
+                        //window.URL.revokeObjectURL(imgElement.attr("src"));
+                    });
+                    imgElement.attr("src", url);
+                }
             });
         },
         /**
