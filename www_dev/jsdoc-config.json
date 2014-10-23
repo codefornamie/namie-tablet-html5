@@ -1,0 +1,20 @@
+{
+  "templates" : {
+    "cleverLinks"     : false,
+    "monospaceLinks"  : false,
+    "default"         : {
+      "outputSourceFiles" : true
+    },
+    "systemName"      : "namie-tablet",
+    "footer"          : "",
+    "copyright"       : "Copyright (C) 2014 Namie Town. All Rights Reserved.",
+    "navType"         : "vertical",
+    "theme"           : "cerulean",
+    "linenums"        : true,
+    "collapseSymbols" : false,
+    "inverseNav"      : true
+  },
+  "opts": {
+    "template": "node_modules/grunt-jsdoc/node_modules/ink-docstrap/template"
+  }
+}
