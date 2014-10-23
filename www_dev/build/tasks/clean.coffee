@@ -7,5 +7,8 @@ module.exports = ->
       force: true
     files: [
       "../www/"
-      "test/reports"
+      "reports/test"
+      "reports/doc"
+      "reports/coverage"
+      "reports/jshint"
     ]

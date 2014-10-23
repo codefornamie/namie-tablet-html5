@@ -14,6 +14,7 @@ module.exports = ->
     "clean"
     "jsdoc"
     "jshint"
+    "plato"
     "karma:run"
     "processhtml"
     "requirejs"

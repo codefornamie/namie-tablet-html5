@@ -14,7 +14,7 @@ module.exports = ->
       autoWatch: true
       logLevel: "ERROR"
 
-      reporters: ["dots", "coverage"]
+      reporters: ["dots", "coverage", "junit"]
       browsers: ["PhantomJS"]
 
       frameworks: [framework]
@@ -25,7 +25,8 @@ module.exports = ->
         "karma-qunit"
         "karma-phantomjs-launcher",
         "karma-chrome-launcher",
-        "karma-coverage"
+        "karma-coverage",
+        "karma-junit-reporter"
       ]
 
       preprocessors:
@@ -33,7 +34,11 @@ module.exports = ->
 
       coverageReporter:
         type: "lcov"
-        dir: "test/coverage"
+        dir: "reports/coverage"
+
+      junitReporter:
+        outputFile: "reports/test/test-results.xml"
+        suite: ""
 
       files: [
         # You can optionally remove this or swap out for a different expect.
