@@ -16,6 +16,12 @@ define(function(require, exports, module) {
         password : null,
         /** ログイン完了後に呼び出されるコールバック関数 */
         onLogin : null,
+        /** baseurl */
+        baseUrl : "https://fj.baas.jp.fujitsu.com/",
+        /** cellId */
+        cellId : "kizuna01",
+        /** box */
+        box : "data",
         /**
          * 入力された認証情報のバリデータ。
          * @memberOf LoginModel
@@ -49,13 +55,13 @@ define(function(require, exports, module) {
             this.onLogin = onLogin;
 
             try {
-                var dcContext = new dcc.DcContext("https://fj.baas.jp.fujitsu.com/", "kizuna01");
+                var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
                 dcContext.setAsync(true);
 
-                var accessor = dcContext.asAccount("kizuna01", this.get("loginId"), this.get("password"));
+                var accessor = dcContext.asAccount(this.cellId, this.get("loginId"), this.get("password"));
                 // ODataコレクションへのアクセス準備（実際の認証処理）
                 var cellobj = accessor.cell();
-                var targetBox = cellobj.ctl.box.retrieve("data");
+                var targetBox = cellobj.ctl.box.retrieve(this.box);
                 app.accessor = cellobj.accessor;
                 app.box = targetBox;
             } catch (e) {

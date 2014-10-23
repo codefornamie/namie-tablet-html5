@@ -8,6 +8,9 @@ define(function(require) {
     describe("AbstractODataModel", function() {
         it("TEST-01 LoginModel#login", function(done) {
             var loginModel = new LoginModel();
+            loginModel.baseUrl = "https://fj.baas.jp.fujitsu.com/";
+            loginModel.cellId = "namiedev01";
+            loginModel.box = "box1";
             loginModel.set("loginId", "admin");
             loginModel.set("password", "c3s-innov");
 
