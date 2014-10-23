@@ -67,14 +67,14 @@ define(function(require, exports, module) {
                 }
             });
         },
-        update : function(method, model, options) {
+        update : function(method, model, options, complete) {
             this.entityset.update(this.get("id"), this.getSaveData(), this.get("etag"), {
                 complete : function(response) {
                     complete(response);
                 }
             });
         },
-        del : function(method, model, options) {
+        del : function(method, model, options, complete) {
             this.entityset.del(this.get("id"), this.get("etag"), {
                 complete : function(response) {
                     complete(response);
