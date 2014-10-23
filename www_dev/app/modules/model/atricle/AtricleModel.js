@@ -10,8 +10,8 @@ define(function(require, exports, module) {
      * @exports EventsModel
      * @constructor
      */
-    var EventsModel = AbstractODataModel.extend({
-        entity : "event",
+    var AtricleModel = AbstractODataModel.extend({
+        entity : "atricle",
         /**
          * 取得したOData情報のparse処理を行う。
          * <p>
@@ -30,9 +30,6 @@ define(function(require, exports, module) {
          * </p>
          */
         makeSaveData : function(saveData) {
-            if (this.get("eventDate")) {
-                this.get("eventDate").replace("-","/");
-            }
             saveData.eventDate = this.get("eventDate");
             saveData.eventTime = this.get("eventTime");
             saveData.eventName = this.get("eventName");
@@ -45,5 +42,5 @@ define(function(require, exports, module) {
 
     });
 
-    module.exports = EventsModel;
+    module.exports = AtricleModel;
 });
