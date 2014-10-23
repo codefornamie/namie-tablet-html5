@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 
     var EventsCollection = AbstractODataCollection.extend({
         model : EventsModel,
-        entity : "entity01",
+        entity : "event",
         condition : {
             top : 1000
         },

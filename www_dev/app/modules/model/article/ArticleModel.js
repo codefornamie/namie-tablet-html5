@@ -3,15 +3,16 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+
     /**
-     * イベント情報のモデルクラスを作成する。
+     * 記事情報のモデルクラスを作成する。
      * 
-     * @class イベント情報のモデルクラス
+     * @class 記事情報のモデルクラス
      * @exports EventsModel
      * @constructor
      */
-    var AtricleModel = AbstractODataModel.extend({
-        entity : "atricle",
+    var ArticleModel = AbstractODataModel.extend({
+        entity : "article",
         /**
          * 取得したOData情報のparse処理を行う。
          * <p>
@@ -30,17 +31,21 @@ define(function(require, exports, module) {
          * </p>
          */
         makeSaveData : function(saveData) {
-            saveData.eventDate = this.get("eventDate");
-            saveData.eventTime = this.get("eventTime");
-            saveData.eventName = this.get("eventName");
-            saveData.eventPlace = this.get("eventPlace");
-            saveData.eventDetail = this.get("eventDetail");
-            saveData.eventTel = this.get("eventTel");
-            saveData.eventEmail = this.get("eventEmail");
-            saveData.fileName = this.get("fileName");
+            // テストデータ登録用
+//            saveData.site = this.get("site");
+//            saveData.url = this.get("url");
+//            saveData.link = this.get("link");
+//            saveData.createdAt = this.get("createdAt");
+//            saveData.updatedAt = this.get("updatedAt");
+//            saveData.deletedAt = this.get("deletedAt");
+//            saveData.title = this.get("title");
+//            saveData.description = this.get("description");
+//            saveData.auther = this.get("auther");
+//            saveData.scraping = this.get("scraping");
+//            saveData.imageUrl = "http://www.minpo.jp/common/news/localnews/2014102318808-2.jpg";
         }
 
     });
 
-    module.exports = AtricleModel;
+    module.exports = ArticleModel;
 });

@@ -1,0 +1,20 @@
+#eventsPage, #newsPage {
+    color : #666666;
+}
+.eventColumnsTitle {
+    font-weight: bold;
+    font-size: 16px;
+}
+#articleList:first-child {
+    border-top: solid 1px #666666;
+}
+.eventsListItem {
+    border-bottom: solid 1px #666666;
+}
+.eventsListItem p {
+    margin-bottom: 3px;
+}
+.article-detail {
+    border: solid 1px #666666;
+    height : 600px;
+}

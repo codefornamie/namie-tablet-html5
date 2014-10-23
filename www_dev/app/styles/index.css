@@ -3,13 +3,6 @@
 /* @import "../../bower_components/pure/pure.css"; */
 @import "../../bower_components/foundation/css/foundation.css";
 @import "../../bower_components/animate.css/animate.css";
+@import "namie_common.css";
 
 /*-- Application stylesheets. -----------------------------------------------*/
-#eventsPage {
-    color : #666666;
-}
-
-.eventColumnsTitle {
-    font-weight: bold;
-    font-size: 16px;
-}

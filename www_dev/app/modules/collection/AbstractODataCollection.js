@@ -4,12 +4,13 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractCollection = require("modules/collection/AbstractCollection");
     var AbstractODataCollection = AbstractCollection.extend({
-        cell : "namiedev01",
-        box : "box1",
-        odata : "odata01",
-        entity : "entity01",
+        cell : "kizuna01",
+        box : "data",
+        odata : "odata",
+        entity : "",
         condition : {
-            top : 100
+            top : 100,
+            orderby : ""
         },
         parseResponse: function (response, options) {
             response = this.parseOData(response, options);
@@ -50,7 +51,7 @@ define(function(require, exports, module) {
             this.search(method, model, options, complete);
         },
         search : function(method, model, options, complete) {
-            this.entityset.query().filter(this.condition.filter).top(this.condition.top).run({
+            this.entityset.query().filter(this.condition.filter).top(this.condition.top).orderby(this.condition.orderby).run({
                 complete : function(response) {
                     complete(response);
                 }
