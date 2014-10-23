@@ -49,13 +49,13 @@ define(function(require, exports, module) {
             this.onLogin = onLogin;
 
             try {
-                var dcContext = new dcc.DcContext("https://fj.baas.jp.fujitsu.com/", "namiedev01");
+                var dcContext = new dcc.DcContext("https://fj.baas.jp.fujitsu.com/", "kizuna01");
                 dcContext.setAsync(true);
 
-                var accessor = dcContext.asAccount("namiedev01", this.get("loginId"), this.get("password"));
+                var accessor = dcContext.asAccount("kizuna01", this.get("loginId"), this.get("password"));
                 // ODataコレクションへのアクセス準備（実際の認証処理）
                 var cellobj = accessor.cell();
-                var targetBox = cellobj.ctl.box.retrieve("box1");
+                var targetBox = cellobj.ctl.box.retrieve("data");
                 app.accessor = cellobj.accessor;
                 app.box = targetBox;
             } catch (e) {

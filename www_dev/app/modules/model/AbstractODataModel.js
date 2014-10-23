@@ -12,10 +12,10 @@ define(function(require, exports, module) {
      * @constructor
      */
     var AbstractODataModel = Backbone.Model.extend({
-        cell : "namiedev01",
-        box : "box1",
-        odata : "odata01",
-        entity : "entity01",
+        cell : "kizuna01",
+        box : "data",
+        odata : "odata",
+        entity : "",
         sync : function(method, model, options) {
             if (!options) {
                 options = {};
