@@ -33,7 +33,7 @@ module.exports = ->
         "app/**/*.js": "coverage"
 
       coverageReporter:
-        type: "lcov"
+        type: "clover"
         dir: "reports/coverage"
 
       junitReporter:
