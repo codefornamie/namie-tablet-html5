@@ -1,19 +1,31 @@
 #eventsPage, #newsPage {
-    color : #666666;
+    color: #666666;
 }
+
 .eventColumnsTitle {
     font-weight: bold;
     font-size: 16px;
 }
+
 #articleList:first-child {
     border-top: solid 1px #666666;
 }
+
 .articleListItem {
     border-bottom: solid 1px #666666;
 }
 .articleListItem p {
     margin-bottom: 3px;
 }
+
+.eventsListItem {
+    border-bottom: solid 1px #666666;
+}
+
+.eventsListItem p {
+    margin-bottom: 3px;
+}
+
 .article-detail {
     border: solid 1px #666666;
     min-height : 600px;
@@ -25,4 +37,55 @@ div.nehan-block.nehan-body {
 div.nehan-block.nehan-body:last-child {
     border-bottom: solid 0px;
     margin-bottom: 0px;
+}
+
+/**
+ *  Events Detail
+ */
+.events-detail {
+    
+}
+
+.events-detail__image {
+    border: 1px solid #eee;
+    text-align: center;
+}
+
+.events-detail__image img {
+    height: 400px;
+}
+
+.events-detail__info {
+    padding: 16px;
+}
+
+.events-detail__info .columns {
+    /* -webkit-writing-mode: vertical-rl;
+    -webkit-column-width: 400px;
+    -webkit-column-gap: 10px;
+    -webkit-column-rule: 1px solid #333;
+    -webkit-text-orientation: upright; */
+    vertical-align: middle;
+}
+
+.events-detail__info .events-name {
+    font-size: 40px;
+    color: inherit;
+}
+
+.events-detail__info h3 {
+    margin: 0;
+    font-size: 32px;
+    color: #666;
+}
+
+.events-detail__info p {
+    line-height: 1.6;
+    font-size: 32px;
+    text-indent: 1em;
+}
+
+.nehan-body {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 16px;
 }
