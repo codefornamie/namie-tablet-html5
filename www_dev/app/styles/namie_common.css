@@ -18,3 +18,11 @@
     border: solid 1px #666666;
     min-height : 600px;
 }
+div.nehan-block.nehan-body {
+    border-bottom: solid 1px #aaaaaa;
+    margin-bottom: 7px;
+}
+div.nehan-block.nehan-body:last-child {
+    border-bottom: solid 0px;
+    margin-bottom: 0px;
+}

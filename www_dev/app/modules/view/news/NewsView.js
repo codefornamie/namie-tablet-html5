@@ -33,7 +33,11 @@ define(function(require, exports, module) {
 
             articleListView.listenTo(this.collection, "reset sync request", articleListView.render);
             
-            this.collection.fetch();
+            var self = this;
+            this.collection.fetch({success: function() {
+                var article = self.collection.at(0);
+                self.setArticle(article);
+            }});
 
         },
 
