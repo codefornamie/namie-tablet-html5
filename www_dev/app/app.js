@@ -5,6 +5,7 @@ define(function(require, exports, module) {
   var Layout = require("layoutmanager");
   var dc1 = require("dc1-client");
   var jqueryvalidation = require("jqueryvalidation");
+  var nehan = require("jquerynehan");
 //  var messageja = require("messageja");
 
   // The root path to run the application through.

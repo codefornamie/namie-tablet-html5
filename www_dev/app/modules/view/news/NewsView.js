@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var ArticleListView = require("modules/view/news/ArticleListView");
+    var ArticleDetailView = require("modules/view/news/ArticleDetailView");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
 
@@ -37,22 +38,20 @@ define(function(require, exports, module) {
         },
 
         events : {
-//            "click #newsRegist" : "onClickNewsRegistButton"
+            "click .articleListItem" : "onClickArticleListItem"
         },
-        onClickNewsRegistButton : function () {
-            //テストデータ登録用
-//            this.model.set("site","xxxx民報");
-//            this.model.set("url","http://xxx/xxx.rss");
-//            this.model.set("link","http://xxx/xxx.html");
-//            this.model.set("createdAt","2014-10-24T11:23:22");
-//            this.model.set("updatedAt","2014-09-24T11:23:22");
-//            this.model.set("deletedAt",null);
-//            this.model.set("title","xxxxxxx　東京で叙勲祝賀会");
-//            this.model.set("description","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-//            this.model.set("auther","xxxxxxx");
-//            this.model.set("scraping",0);
-//            this.model.save();
+        onClickArticleListItem : function(ev) {
+            var articleId = $(ev.currentTarget).attr("data-article-id");
+            var article = this.collection.find(function(item) {
+                return item.get('__id') === articleId;
+            });
+            this.setArticle(article);
         },
+        setArticle : function(article) {
+            this.setView(".article-detail", new ArticleDetailView({
+                model: article
+            })).render();
+        }
 
     });
 

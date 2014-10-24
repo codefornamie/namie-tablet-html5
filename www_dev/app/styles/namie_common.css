@@ -8,13 +8,13 @@
 #articleList:first-child {
     border-top: solid 1px #666666;
 }
-.eventsListItem {
+.articleListItem {
     border-bottom: solid 1px #666666;
 }
-.eventsListItem p {
+.articleListItem p {
     margin-bottom: 3px;
 }
 .article-detail {
     border: solid 1px #666666;
-    height : 600px;
+    min-height : 600px;
 }

@@ -31,18 +31,6 @@ define(function(require, exports, module) {
          * </p>
          */
         makeSaveData : function(saveData) {
-            // テストデータ登録用
-//            saveData.site = this.get("site");
-//            saveData.url = this.get("url");
-//            saveData.link = this.get("link");
-//            saveData.createdAt = this.get("createdAt");
-//            saveData.updatedAt = this.get("updatedAt");
-//            saveData.deletedAt = this.get("deletedAt");
-//            saveData.title = this.get("title");
-//            saveData.description = this.get("description");
-//            saveData.auther = this.get("auther");
-//            saveData.scraping = this.get("scraping");
-//            saveData.imageUrl = "http://www.minpo.jp/common/news/localnews/2014102318808-2.jpg";
         }
 
     });

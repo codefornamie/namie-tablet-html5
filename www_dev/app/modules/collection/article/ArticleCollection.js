@@ -12,7 +12,7 @@ define(function(require, exports, module) {
         model : ArticleModel,
         entity : "article",
         condition : {
-            top : 100,
+            top : 10,
             orderby : "createdAt desc"
         },
     });

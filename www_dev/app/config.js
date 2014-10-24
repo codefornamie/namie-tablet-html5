@@ -10,7 +10,9 @@ require.config({
 
         "jqueryvalidation" : "../bower_components/jquery-validation/dist/jquery.validate",
         "messageja" : "../lib/jqueryvalidation/messages_ja",
-        "foundation" : "../bower_components/foundation/js/foundation"
+        "foundation" : "../bower_components/foundation/js/foundation",
+        "nehan" : "../lib/nehan/nehan",
+        "jquerynehan" : "../lib/nehan/jquery.nehan"
     },
 
     deps : [ "main" ],
@@ -23,7 +25,11 @@ require.config({
         "messageja": {
             deps : [ "jqueryvalidation" ]
         },
-        "foundation" : [ "jquery" ]
-        
+        "foundation" : [ "jquery" ],
+        "nehan" : {
+            deps : [ "jquery" ],
+            exports : "Nehan"
+        },
+        "jquerynehan" : [ "nehan" ],
     }
 });
