@@ -33,8 +33,16 @@ module.exports = ->
         "app/**/*.js": "coverage"
 
       coverageReporter:
-        type: "clover"
-        dir: "reports/coverage"
+        reporters: [
+          {
+            type: "clover"
+            dir: "reports/coverage"
+          }
+          {
+            type: "lcov"
+            dir: "reports/coverage"
+          }
+        ]
 
       junitReporter:
         outputFile: "reports/test/test-results.xml"
