@@ -8,6 +8,7 @@ define(function(require, exports, module) {
      * 記事一覧アイテムのViewクラス
      */
     var ArticleListItemView = AbstractView.extend({
+        animation: 'fadeIn',
         template : require("ldsh!/app/templates/news/articleListItem"),
         serialize : function() {
             return {

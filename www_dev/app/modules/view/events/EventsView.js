@@ -24,6 +24,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            $("#eventDatetime").val("2014-10-28T14:05");
         },
 
         initialize : function() {
@@ -66,6 +67,7 @@ define(function(require, exports, module) {
         },
         onClickEventRegistButton : function () {
             if ($(this.formId).validate().form()) {
+                this.showLoading();
                 this.onSubmit();
             }
         },
@@ -113,7 +115,15 @@ define(function(require, exports, module) {
                     this.saveEventPicture();
                 }
                 this.setInputValue();
-                this.model.save();
+                var self = this;
+                this.model.save(null,{
+                    success: function() {
+                        setTimeout(function () {
+                            self.hideLoading();
+                            app.router.go("eventsRegisted");
+                        }, 1000);
+                    }
+                });
             } catch (e) {
                 return;
             }

@@ -12,7 +12,8 @@ require.config({
         "messageja" : "../lib/jqueryvalidation/messages_ja",
         "foundation" : "../bower_components/foundation/js/foundation",
         "nehan" : "../lib/nehan/nehan",
-        "jquerynehan" : "../lib/nehan/jquery.nehan"
+        "jquerynehan" : "../lib/nehan/jquery.nehan",
+        "blockui" : "../lib/blockUI/jquery.blockUI"
     },
 
     deps : [ "main" ],
@@ -31,5 +32,6 @@ require.config({
             exports : "Nehan"
         },
         "jquerynehan" : [ "nehan" ],
+        "blockui" : [ "jquery" ]
     }
 });

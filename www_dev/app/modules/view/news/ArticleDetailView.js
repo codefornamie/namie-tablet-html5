@@ -18,8 +18,9 @@ define(function(require, exports, module) {
         afterRendered : function() {
             if (this.model.get("imageUrl")) {
                 $("#articleDetailImage").attr("src",this.model.get("imageUrl"));
+            } else {
+                $("#articleDetailImageArea").hide();
             }
-            
             // 縦書き表示処理
             $(".nehandiv").nehan({
                 usePager:false, // if false, pager disabled(append mode)
@@ -32,10 +33,12 @@ define(function(require, exports, module) {
             spacingSize:16,
 //            pagerElements:["left-prev", "indicator", "right-next"]
           });
-            $("#nehan-articleDetailImage").parent().css("width","auto");
-            $("#nehan-articleDetailImage").parent().css("height","auto");
-            $("#nehan-articleDetailImage").css("width","auto");
-            $("#nehan-articleDetailImage").css("height","auto");
+            if (this.model.get("imageUrl")) {
+                $("#nehan-articleDetailImage").parent().css("width","auto");
+                $("#nehan-articleDetailImage").parent().css("height","auto");
+                $("#nehan-articleDetailImage").css("width","auto");
+                $("#nehan-articleDetailImage").css("height","auto");
+            }
         },
         /**
          * 初期化処理

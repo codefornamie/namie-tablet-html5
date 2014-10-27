@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var TopView = require("modules/view/top/TopView");
     var NewsView = require("modules/view/news/NewsView");
     var EventsView = require("modules/view/events/EventsView");
+    var EventsRegistedView = require("modules/view/events/EventsRegistedView");
     var ShowEventsView = require("modules/view/events/ShowEventsView");
     
     // Defining the application router.
@@ -45,6 +46,7 @@ define(function(require, exports, module) {
             "" : "index",
             "top": "top",
             "events": "events",
+            "eventsRegisted": "eventsRegisted",
             "showEvents": "showEvents",
             "news": "news"
         },
@@ -61,8 +63,13 @@ define(function(require, exports, module) {
             this.commonView();
         },
         events : function() {
-            console.log("It's a news page.");
+            console.log("It's a events page.");
             this.layout.showView(new EventsView());
+            this.commonView();
+        },
+        eventsRegisted : function() {
+            console.log("It's a eventsRegisted page.");
+            this.layout.showView(new EventsRegistedView());
             this.commonView();
         },
         showEvents : function() {

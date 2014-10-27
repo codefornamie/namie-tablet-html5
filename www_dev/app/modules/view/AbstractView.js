@@ -64,6 +64,23 @@ define(function(require, exports, module) {
         events : {
 
         },
+        showLoading : function () {
+            $.blockUI({
+                message: "しばらくお待ちください",
+                css: {
+                    border: 'none', 
+                    padding: '10px', 
+                    backgroundColor: '#000', 
+                    '-webkit-border-radius': '10px', 
+                    '-moz-border-radius': '10px', 
+                    opacity: .5, 
+                    color: '#fff' 
+                }
+            }); 
+        },
+        hideLoading :function () {
+            $.unblockUI();
+        }
     });
 
     module.exports = AbstractView;

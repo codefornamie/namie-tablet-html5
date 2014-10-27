@@ -30,11 +30,14 @@ define(function(require, exports, module) {
          */
         setArticleList : function() {
             var self = this;
+            var animationDeley = 0;
             this.collection.each($.proxy(function(model) {
                 var itemView = new ArticleListItemView();
                 this.insertView("#articleList", new ArticleListItemView({
                     model : model,
+                    animationDeley : animationDeley
                 }));
+                animationDeley += 0.2;
             }, this));
 
         }
