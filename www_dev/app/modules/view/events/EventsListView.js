@@ -30,7 +30,6 @@ define(function(require, exports, module) {
             this.collection.each($.proxy(function(model) {
             	if (!model.get("eventDate")) { return; }
 
-                var itemView = new EventsListItemView();
                 this.insertView("#eventsList", new EventsListItemView({
                     model : model,
                 }));
