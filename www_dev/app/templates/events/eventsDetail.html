@@ -1,52 +1,45 @@
-<article>
-    <div class="row">
-        <div class="large-2 columns">
-            <label class="eventColumnsTitle">日時</label>
-        </div>
-        <div class="large-6 columns end">
-            <%= model.get("eventDate") %>
+<article class="events-detail">
+    <div class="row events-detail__image">
+        <div class="large-12 columns">
+            <img src="app/img/nami.jpg" />
         </div>
     </div>
-    <div class="row">
-        <div class="large-2 columns">
-            <label class="eventColumnsTitle">イベント名</label>
-        </div>
-        <div class="large-6 columns end">
-            <%= model.get("eventName") %>
-        </div>
-    </div>
-    <div class="row">
-        <div class="large-2 columns">
-            <label class="eventColumnsTitle">場所</label>
-        </div>
-        <div class="large-6 columns end">
-            <%= model.get("eventPlace") %>
-        </div>
-    </div>
-    <div class="row">
-        <div class="large-2 columns">
-            <label class="eventColumnsTitle">画像</label>
-        </div>
-        <div class="large-6 columns end">
-            <img src="app/img/nami.jpg"/>
-        </div>
-    </div>
-    <div class="row">
-        <div class="large-2 columns">
-            <label class="eventColumnsTitle">詳細</label>
-        </div>
-        <div class="large-6 columns end">
+
+    <div class="events-detail__info">
+        <div data-nehan>
             <p>
-                <%= model.get("eventDetail") %>
+イベント名
+<br />
+<%= model.get("eventName") %>
             </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="large-2 columns">
-            <label class="eventColumnsTitle">連絡先</label>
-        </div>
-        <div class="large-6 columns end">
-            <%= model.get("eventTel") %>
+
+            <p>
+日時
+<br />
+<%= model.get("eventDate") %>
+<br />
+<%= model.get("eventTime") %>
+            </p>
+
+            <p>
+場所
+<br />
+<%= model.get("eventPlace") %>
+            </p>
+
+            <p>
+連絡先
+<br />
+<%= model.get("eventTel") %>
+<br />
+<%= model.get("eventEmail") %>
+            </p>
+
+            <p>
+詳細
+<br />
+<%= model.get("eventDetail") %>
+            </p>
         </div>
     </div>
 </article>
