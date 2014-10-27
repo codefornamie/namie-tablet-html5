@@ -16,6 +16,7 @@
     "modernizr": "~2.8.3",
     "layoutmanager": "~0.9.5",
     "jquery-validation": "~1.13.1",
-    "animate.css": "~3.2.0"
+    "animate.css": "~3.2.0",
+    "jquery.panzoom": "~2.0.5"
   }
 }
