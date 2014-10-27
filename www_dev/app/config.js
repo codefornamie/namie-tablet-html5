@@ -13,7 +13,8 @@ require.config({
         "foundation" : "../bower_components/foundation/js/foundation",
         "nehan" : "../lib/nehan/nehan",
         "jquerynehan" : "../lib/nehan/jquery.nehan",
-        "blockui" : "../lib/blockUI/jquery.blockUI"
+        "blockui" : "../lib/blockUI/jquery.blockUI",
+        "panzoom" : "../bower_components/jquery.panzoom/dist/jquery.panzoom",
     },
 
     deps : [ "main" ],
@@ -32,6 +33,7 @@ require.config({
             exports : "Nehan"
         },
         "jquerynehan" : [ "nehan" ],
-        "blockui" : [ "jquery" ]
+        "blockui" : [ "jquery" ],
+        "panzoom" : [ "jquery" ]
     }
 });

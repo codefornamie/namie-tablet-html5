@@ -39,6 +39,11 @@ define(function(require, exports, module) {
                 $("#nehan-articleDetailImage").css("width","auto");
                 $("#nehan-articleDetailImage").css("height","auto");
             }
+            
+            $(".panzoom-elements").panzoom({
+                minScale: 1,
+                contain: "invert"
+            });
         },
         /**
          * 初期化処理
