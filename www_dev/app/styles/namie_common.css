@@ -1,3 +1,147 @@
+/**
+ *  general
+ */
+html,
+body {
+    height: 100%;
+}
+
+/**
+ *  foundation helpers
+ */
+.row.is-full {
+    max-width: none;
+}
+
+/**
+ *  layout
+ */
+main {
+    height: 100%;
+}
+
+.contents {
+    height: 100%;
+    padding-bottom: 60px;
+    position: absolute;
+    top: 0;
+    padding-top: 45px;
+    width: 100%;
+}
+
+.contents > .row {
+    height: 100%;
+}
+
+.contents > .row > .columns {
+    height: 100%;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    padding-top: 16px;
+    border-top: 1px solid #eee;
+}
+
+/**
+ *  header
+ */
+.header {
+    
+}
+
+.header .button.small {
+    height: 28px;
+    line-height: 28px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/**
+ *  contents
+ */
+.contents {
+}
+
+.contents__primary,
+.contents__secondary {
+    position: relative;
+}
+
+.contents__primary {
+    overflow: auto;
+    border-left: 1px solid #eee;
+}
+
+.contents__secondary {
+    padding: 0;
+}
+
+/**
+ *  sidebar
+ */
+.sidebar {
+    overflow: auto;
+    height: 100%;
+    padding-bottom: 144px;
+}
+
+.sidebar__list {
+    list-style: none;
+    margin: 0;
+}
+
+/**
+ *  side-action
+ */
+.side-action {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 144px;
+}
+
+.side-action__list {
+    list-style: none;
+    margin: 0;
+}
+
+.side-action__list li {
+    height: 48px;
+}
+
+.side-action__list li .button {
+    height: 48px;
+    line-height: 48px;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin: 0;
+}
+
+/**
+ *  post
+ */
+.post {
+    border: 1px solid #eee;
+    margin: 16px;
+}
+
+.post__body {
+    margin: 16px;
+}
+
+.post__footer {
+    border: 1px solid #eee;
+    margin: 16px;
+}
+
+/**
+ *
+ */
 #eventsPage, #newsPage {
     color: #666666;
 }
