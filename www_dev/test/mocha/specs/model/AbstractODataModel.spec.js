@@ -9,10 +9,10 @@ define(function(require) {
         it("TEST-01 LoginModel#login", function(done) {
             var loginModel = new LoginModel();
             loginModel.baseUrl = "https://fj.baas.jp.fujitsu.com/";
-            loginModel.cellId = "namiedev01";
-            loginModel.box = "box1";
-            loginModel.set("loginId", "admin");
-            loginModel.set("password", "c3s-innov");
+            loginModel.cellId = "kizunatest01";
+            loginModel.box = "data";
+            loginModel.set("loginId", "namie");
+            loginModel.set("password", "namie01");
 
             loginModel.login(function() {
                 done();
@@ -21,10 +21,10 @@ define(function(require) {
         it("TEST-02 AbstractODataModel#save", function(done) {
             this.timeout(15000);
             var model = new AbstractODataModel();
-            model.cell = "namiedev01";
-            model.box = "box1";
-            model.odata = "odata01";
-            model.entity = "entity01";
+            model.cell = "kizunatest01";
+            model.box = "data";
+            model.odata = "odata";
+            model.entity = "article";
             this.model = model;
             model.save(null, {
                 success : function(model, response, options) {
@@ -43,10 +43,10 @@ define(function(require) {
         it("TEST-04 AbstractODataModel#fetch", function(done) {
             this.timeout(15000);
             var targetModel = new AbstractODataModel();
-            targetModel.cell = "namiedev01";
-            targetModel.box = "box1";
-            targetModel.odata = "odata01";
-            targetModel.entity = "entity01";
+            targetModel.cell = "kizunatest01";
+            targetModel.box = "data";
+            targetModel.odata = "odata";
+            targetModel.entity = "article";
 
             targetModel.set("id", this.model.get("id"));
             targetModel.fetch({
@@ -59,10 +59,10 @@ define(function(require) {
         it("TEST-05 AbstractODataModel#destroy", function(done) {
             this.timeout(15000);
             var targetModel = new AbstractODataModel();
-            targetModel.cell = "namiedev01";
-            targetModel.box = "box1";
-            targetModel.odata = "odata01";
-            targetModel.entity = "entity01";
+            targetModel.cell = "kizunatest01";
+            targetModel.box = "data";
+            targetModel.odata = "odata";
+            targetModel.entity = "article";
 
             targetModel.set("id", this.model.get("id"));
             targetModel.destroy({
