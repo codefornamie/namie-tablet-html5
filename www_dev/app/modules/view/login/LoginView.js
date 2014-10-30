@@ -60,9 +60,8 @@ define(function(require, exports, module) {
             if (!msg) {
                 // TODO ログインユーザ情報が正式に出来た際に以下を正しく直してください。
                 app.user = {
-                        name:"namie",
-                        id:"namie"
-                        }
+                            id: this.model.get("loginId")
+                        };
                 
                 app.router.go("top");
             } else {
