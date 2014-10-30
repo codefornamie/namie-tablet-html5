@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var FavoriteModel = require("modules/model/article/FavoriteModel");
     
     var ArticleDetailView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/articleDetail"),
@@ -16,6 +17,10 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            // 既にお気に入り登録されている記事のお気に入りボタンを非表示にする
+            if (this.model.get("isFavorite")) {
+                $("#favoriteRegistButton").hide();
+            }
             if (this.model.get("imageUrl")) {
                 $("#articleDetailImage").attr("src",this.model.get("imageUrl"));
             } else {
@@ -50,8 +55,32 @@ define(function(require, exports, module) {
          */
         initialize : function() {
 
-        }
-
+        },
+        events : {
+            "click #favoriteRegistButton" : "onClickFavoriteRegistButton"
+        },
+        /**
+         * お気に入りボタン押下時のコールバック関数
+         */
+        onClickFavoriteRegistButton : function () {
+            var favoriteModel = new FavoriteModel();
+            var source = this.model.get("__id");
+            if (this.model.get("url")) {
+                source = this.model.get("url");
+            }
+            favoriteModel.set("source",source);
+            favoriteModel.set("userId","namie");
+            favoriteModel.set("contents",this.model.get("description"));
+            favoriteModel.set("title",this.model.get("title"));
+            favoriteModel.set("createdAt",new Date().toISOString());
+            favoriteModel.save(null, {
+                success : $.proxy(function () {
+                    $("#favoriteRegistButton").hide();
+                    this.model.set("isFavorite",true);
+                },this)
+            });
+            
+        },
     });
 
     module.exports = ArticleDetailView;

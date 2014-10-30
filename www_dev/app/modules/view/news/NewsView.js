@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var ArticleDetailView = require("modules/view/news/ArticleDetailView");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラス
@@ -15,6 +16,7 @@ define(function(require, exports, module) {
         template : require("ldsh!/app/templates/news/news"),
         model : new ArticleModel(),
         collection : new ArticleCollection(),
+        favoriteCollection : new FavoriteCollection(),
 
         beforeRendered : function() {
 
@@ -33,17 +35,38 @@ define(function(require, exports, module) {
 
             articleListView.listenTo(this.collection, "reset sync request", articleListView.render);
             
-            var self = this;
-            this.collection.fetch({success: function() {
-                var article = self.collection.at(0);
-                self.setArticle(article);
-            }});
+            this.collection.fetch({success: $.proxy(this.onfetchArticle,this)});
 
+        },
+        /**
+         * 記事情報検索完了後のコールバック関数
+         */
+        onfetchArticle: function () {
+//            this.favoriteCollection.condition.filter = "";
+            this.favoriteCollection.fetch({success: $.proxy(this.onfetchFavorite,this)});
+        },
+        /**
+         * お気に入り情報検索完了後のコールバック関数
+         */
+        onfetchFavorite: function () {
+            this.collection.each($.proxy(function (article) {
+                this.favoriteCollection.each($.proxy(function (favorite) {
+                    if (article.get("url") === favorite.get("source")) {
+                        article.set("isFavorite",true);
+                    }
+                },this));
+            },this));
+            
+            var article = this.collection.at(0);
+            this.setArticle(article);
         },
 
         events : {
             "click .articleListItem" : "onClickArticleListItem"
         },
+        /**
+         * 記事リストアイテムをクリックされたときのコールバック関数
+         */
         onClickArticleListItem : function(ev) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
             var article = this.collection.find(function(item) {
@@ -51,6 +74,9 @@ define(function(require, exports, module) {
             });
             this.setArticle(article);
         },
+        /**
+         * 記事詳細に記事情報を表示する
+         */
         setArticle : function(article) {
             this.setView(".article-detail", new ArticleDetailView({
                 model: article
