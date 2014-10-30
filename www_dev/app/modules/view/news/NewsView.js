@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var ArticleListView = require("modules/view/news/ArticleListView");
-    var ArticleDetailView = require("modules/view/news/ArticleDetailView");
+    var FeedListView = require("modules/view/news/FeedListView");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
 
@@ -27,23 +27,37 @@ define(function(require, exports, module) {
         initialize : function() {
             this.collection = new ArticleCollection();
 
+            // FeedListView初期化
+            var feedListView = new FeedListView();
+            feedListView.collection = this.collection;
+            this.setView("#sidebar__list", feedListView);
+            feedListView.listenTo(this.collection, "reset sync request", feedListView.render);
+            
+            // ArticleListView初期化
             var articleListView = new ArticleListView();
             articleListView.collection = this.collection;
-            this.setView(".article-list", articleListView);
-
+            this.setView("#article-list", articleListView);
             articleListView.listenTo(this.collection, "reset sync request", articleListView.render);
             
+            // 一番最初の記事を描画
             var self = this;
-            this.collection.fetch({success: function() {
-                var article = self.collection.at(0);
-                self.setArticle(article);
-            }});
-
+            this.collection.fetch({
+                success: function() {
+                    var article = self.collection.at(0);
+                    self.setArticle(article);
+                }
+            });
         },
 
         events : {
             "click .articleListItem" : "onClickArticleListItem"
         },
+        
+        /**
+         *  サイドメニューから記事をクリックしたら呼ばれる
+         *  
+         *  @param {Event} ev
+         */
         onClickArticleListItem : function(ev) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
             var article = this.collection.find(function(item) {
@@ -51,10 +65,19 @@ define(function(require, exports, module) {
             });
             this.setArticle(article);
         },
+        
+        /**
+         *  記事を指定して表示する
+         *  
+         *  @param {Backbone.Model} article
+         */
         setArticle : function(article) {
-            this.setView(".article-detail", new ArticleDetailView({
+            // [TODO] article listの中から該当の記事まで移動する
+            /*
+            this.setView("#article-list", new ArticleDetailView({
                 model: article
             })).render();
+            */
         }
 
     });

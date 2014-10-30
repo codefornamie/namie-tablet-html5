@@ -15,6 +15,7 @@ require.config({
         "jquerynehan" : "../lib/nehan/jquery.nehan",
         "blockui" : "../lib/blockUI/jquery.blockUI",
         "panzoom" : "../bower_components/jquery.panzoom/dist/jquery.panzoom",
+        "snap.js" : "../bower_components/Snap.js/snap.min",
     },
 
     deps : [ "main" ],

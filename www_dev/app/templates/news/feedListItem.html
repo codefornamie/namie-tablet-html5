@@ -1,0 +1,23 @@
+<li data-article-id="<%= model.get('__id') %>" class="feedListItem">
+    <div class="row">
+        <div class="large-8 columns">
+	        <p>
+	            <%= model.get("site") %>
+	        </p>
+	        
+	        <p class="articleTitle" style="font-weight: bold;">
+	            <%= model.get("title") %>
+	        </p>
+	    
+	        <span style="font-size: small;">
+	            <%= model.get("createdAt") %>
+	        </span>
+	        <!--<span class="descriptionText" style="font-size: small;"><%= model.get("description") %></span>  -->
+        </div>
+        <div class="large-4 columns">
+	        <a class="th" href="javascript:void(0)">
+                <img id="articleImage" src=""/>
+	        </a>
+        </div>
+    </div>
+</li>

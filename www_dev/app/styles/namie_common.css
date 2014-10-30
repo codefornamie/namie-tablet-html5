@@ -20,6 +20,13 @@ main {
     height: 100%;
 }
 
+.menu {
+    width: 300px;
+    position: absolute;
+    left: -300px;
+    top: 0;
+}
+
 .contents {
     height: 100%;
     padding-bottom: 60px;
@@ -66,9 +73,14 @@ main {
 .contents {
 }
 
+.contents > div {
+    height: 100%;
+}
+
 .contents__primary,
 .contents__secondary {
     position: relative;
+    height: 100%;
 }
 
 .contents__primary {
@@ -80,11 +92,15 @@ main {
     padding: 0;
 }
 
+.contents__secondary > div {
+    position: relative;
+    height: 100%;
+}
+
 /**
  *  sidebar
  */
 .sidebar {
-    overflow: auto;
     height: 100%;
     padding-bottom: 144px;
 }
@@ -92,6 +108,8 @@ main {
 .sidebar__list {
     list-style: none;
     margin: 0;
+    height: 100%;
+    overflow: auto;
 }
 
 /**
