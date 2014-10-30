@@ -58,6 +58,12 @@ define(function(require, exports, module) {
          */
         onLogin : function(msg) {
             if (!msg) {
+                // TODO ログインユーザ情報が正式に出来た際に以下を正しく直してください。
+                app.user = {
+                        name:"namie",
+                        id:"namie"
+                        }
+                
                 app.router.go("top");
             } else {
                 alert(msg);
