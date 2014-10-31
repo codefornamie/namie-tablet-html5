@@ -44,8 +44,6 @@ define(function(require, exports, module) {
             if (!app.noRendering) {
                 this.layout.render();
             }
-
-            app.isRunning = true;
         },
         routes : {
             "" : "index",
@@ -65,6 +63,8 @@ define(function(require, exports, module) {
                     trigger: true,
                     replace: true
                 });
+
+                app.isRunning = true;
                 return;
             }
 
@@ -74,7 +74,6 @@ define(function(require, exports, module) {
             this.layout.setFooter(new common.FooterView());
             this.commonView();
         },
-        /*
         events : function() {
             console.log("It's a events page.");
             this.layout.showView(new EventsView());
@@ -95,13 +94,12 @@ define(function(require, exports, module) {
             this.layout.showView(new NewsView());
             this.commonView();
         },
-        */
         // Shortcut for building a url.
         go: function() {
           return this.navigate(_.toArray(arguments).join("/"), true);
         },
         commonView: function() {
-            this.layout.setView("#contents__secondary", new common.MenuView()).render();
+            this.layout.setView("#menu", new common.MenuView()).render();
         }
     });
 

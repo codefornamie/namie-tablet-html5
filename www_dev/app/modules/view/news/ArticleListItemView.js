@@ -19,7 +19,7 @@ define(function(require, exports, module) {
         afterRendered : function() {
             // 既にお気に入り登録されている記事のお気に入りボタンを非表示にする
             if (this.model.get("isFavorite")) {
-                $("#favoriteRegistButton").hide();
+                this.$el.find('[data-favorite-register-button]').hide();
             }
             if (this.model.get("imageUrl")) {
                 $("#articleDetailImage").attr("src",this.model.get("imageUrl"));
@@ -59,12 +59,12 @@ define(function(require, exports, module) {
 
         },
         events : {
-            "click #favoriteRegistButton" : "onClickFavoriteRegistButton"
+            "click [data-favorite-register-button]" : "onClickFavoriteRegisterButton"
         },
         /**
          * お気に入りボタン押下時のコールバック関数
          */
-        onClickFavoriteRegistButton : function () {
+        onClickFavoriteRegisterButton : function () {
             var favoriteModel = new FavoriteModel();
             var source = this.model.get("__id");
             if (this.model.get("url")) {
@@ -77,7 +77,7 @@ define(function(require, exports, module) {
             favoriteModel.set("createdAt",new Date().toISOString());
             favoriteModel.save(null, {
                 success : $.proxy(function () {
-                    $("#favoriteRegistButton").hide();
+                    this.$el.find("[data-favorite-register-button]").hide();
                     this.model.set("isFavorite",true);
                 },this)
             });

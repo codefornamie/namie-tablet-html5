@@ -16,15 +16,18 @@ body {
 /**
  *  layout
  */
+.header,
+.footer {
+    position: relative;
+    z-index: 10;
+}
+
 main {
     height: 100%;
 }
 
 .menu {
-    width: 300px;
-    position: absolute;
-    left: -300px;
-    top: 0;
+    width: 266px;
 }
 
 .contents {
@@ -34,6 +37,8 @@ main {
     top: 0;
     padding-top: 45px;
     width: 100%;
+    background-color: #fff;
+    border-left: 1px solid #eee;
 }
 
 .contents > .row {
@@ -65,6 +70,16 @@ main {
     line-height: 28px;
     padding-top: 0;
     padding-bottom: 0;
+}
+
+/**
+ *  menu
+ */
+.menu {
+}
+
+.menu__list {
+    margin: 0;
 }
 
 /**
@@ -102,6 +117,8 @@ main {
  */
 .sidebar {
     height: 100%;
+
+    /* .side-actionの高さ分のpaddingを確保する */
     padding-bottom: 144px;
 }
 
@@ -116,16 +133,16 @@ main {
  *  side-action
  */
 .side-action {
-    position: absolute;
-    left: 0;
-    bottom: 0;
     width: 100%;
-    height: 144px;
 }
 
 .side-action__list {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     list-style: none;
     margin: 0;
+    width: 100%;
 }
 
 .side-action__list li {
