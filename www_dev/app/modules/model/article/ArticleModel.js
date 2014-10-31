@@ -25,7 +25,7 @@ define(function(require, exports, module) {
         parseOData : function(response, options) {
             response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt),"yyyy年MM月dd日 HH時mm分");
             response.tagsArray = [];
-            response.tagsLabel = ""
+            response.tagsLabel = "";
             if (response.tags) {
                 var arr = response.tags.split(",");
                 _.each(arr,function (tag) {

@@ -20,7 +20,7 @@ define(function(require, exports, module) {
             _.each(response,function (res) {
                 res.dispCreatedAt = DateUtil.formatDate(new Date(res.createdAt),"yyyy年MM月dd日 HH時mm分");
                 res.tagsArray = [];
-                res.tagsLabel = ""
+                res.tagsLabel = "";
                 if (res.tags) {
                     var arr = res.tags.split(",");
                     _.each(arr,function (tag) {
