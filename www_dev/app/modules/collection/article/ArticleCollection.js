@@ -18,7 +18,15 @@ define(function(require, exports, module) {
         },
         parseOData: function (response, options) {
             _.each(response,function (res) {
-                res.createdAt = DateUtil.formatDate(new Date(res.createdAt),"yyyy年MM月dd日 HH時mm分");
+                res.dispCreatedAt = DateUtil.formatDate(new Date(res.createdAt),"yyyy年MM月dd日 HH時mm分");
+                res.tagsArray = [];
+                res.tagsLabel = ""
+                if (res.tags) {
+                    var arr = res.tags.split(",");
+                    _.each(arr,function (tag) {
+                        res.tagsArray.push(unescape(tag));
+                    });
+                }
             });
             return response;
         },

@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var DateUtil = require("modules/util/DateUtil");
 
     /**
      * 記事情報のモデルクラスを作成する。
@@ -22,7 +23,17 @@ define(function(require, exports, module) {
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            return {};
+            response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt),"yyyy年MM月dd日 HH時mm分");
+            response.tagsArray = [];
+            response.tagsLabel = ""
+            if (response.tags) {
+                var arr = response.tags.split(",");
+                _.each(arr,function (tag) {
+                    response.tagsArray.push(unescape(tag));
+                });
+            }
+
+            return response;
         },
         /**
          * モデル固有の永続化データを生成する。
@@ -31,6 +42,31 @@ define(function(require, exports, module) {
          * </p>
          */
         makeSaveData : function(saveData) {
+            saveData.site = this.get("site");
+            saveData.url = this.get("url");
+            saveData.link = this.get("link");
+            saveData.createdAt = this.get("createdAt");
+            saveData.updatedAt = this.get("updatedAt");
+            saveData.deletedAt = this.get("deletedAt");
+            saveData.title = this.get("title");
+            saveData.description = this.get("description");
+            saveData.rawHTML = this.get("rawHTML");
+            saveData.auther = this.get("auther");
+            saveData.scraping = this.get("scraping");
+            saveData.imageUrl = this.get("imageUrl");
+            
+            // タグ文字列の生成
+            var tags ="";
+            if (this.get("tagsArray").length) {
+                _.each(this.get("tagsArray"),function (tag) {
+                    if (!tags) {
+                        tags = escape(tag);
+                    } else {
+                        tags += "," + escape(tag);
+                    }
+                });
+            }
+            saveData.tags = tags;
         }
 
     });
