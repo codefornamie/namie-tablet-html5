@@ -12,9 +12,4 @@ define(function(require, exports, module) {
 
   // The root path to run the application through.
   exports.root = "/";
-  
-  /**
-   *  router初期化が完了したらtrueになる
-   */
-  exports.isRunning = false;
 });

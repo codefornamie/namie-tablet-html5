@@ -58,16 +58,6 @@ define(function(require, exports, module) {
             console.log("Welcome to your / route.");
         },
         top : function() {
-            if (!app.isRunning) {
-                this.navigate('', {
-                    trigger: true,
-                    replace: true
-                });
-
-                app.isRunning = true;
-                return;
-            }
-
             console.log("It's a top page.");
             this.layout.showView(new NewsView());
             this.layout.setHeader(new common.HeaderView());
