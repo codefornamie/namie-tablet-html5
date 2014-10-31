@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var DateUtil = require("modules/util/DateUtil");
+    var AbstractModel = require("modules/model/AbstractModel");
 
     /**
      * PCS ODataの操作を行うモデルの基底クラスを作成する。
@@ -11,7 +11,11 @@ define(function(require, exports, module) {
      * @exports AbstractODataModel
      * @constructor
      */
-    var AbstractODataModel = Backbone.Model.extend({
+    var AbstractODataModel = AbstractModel.extend({
+        /**
+         * idとして使用するattribute中のフィールド
+         */
+        idAttribute : "__id",
         cell : "kizuna01",
         box : "data",
         odata : "odata",
@@ -68,14 +72,14 @@ define(function(require, exports, module) {
             });
         },
         update : function(method, model, options, complete) {
-            this.entityset.update(this.get("id"), this.getSaveData(), this.get("etag"), {
+            this.entityset.update(this.get("__id"), this.getSaveData(), this.get("etag"), {
                 complete : function(response) {
                     complete(response);
                 }
             });
         },
         del : function(method, model, options, complete) {
-            this.entityset.del(this.get("id"), this.get("etag"), {
+            this.entityset.del(this.get("__id"), this.get("etag"), {
                 complete : function(response) {
                     complete(response);
                 }
@@ -83,7 +87,7 @@ define(function(require, exports, module) {
         },
         retrieve : function(method, model, options, complete) {
             // var dataList = entityset.query().filter().top(1000).run();
-            this.entityset.retrieveAsResponse(this.get("id"), {
+            this.entityset.retrieveAsResponse(this.get("__id"), {
                 complete : function(response) {
                     complete(response);
                 }

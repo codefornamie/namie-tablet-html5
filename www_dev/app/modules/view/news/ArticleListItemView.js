@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var ArticleModel = require("modules/model/article/ArticleModel");
     var FavoriteModel = require("modules/model/article/FavoriteModel");
     
     var ArticleListItemView = AbstractView.extend({
@@ -51,6 +52,14 @@ define(function(require, exports, module) {
                 minScale: 1,
                 contain: "invert"
             });
+            
+            // タグボタンの追加 
+            // beforeRenderで実施すると要素がなくタグが挿入できなかったためここで実装
+            if (this.model.get("tagsArray").length) {
+                _.each(this.model.get("tagsArray"), $.proxy(function (tag) {
+                    $("#tagButtons").append("<button type='button' class='deleteTag'>"+ tag +"</button>");
+                },this));
+            }
         },
         /**
          * 初期化処理
@@ -59,7 +68,9 @@ define(function(require, exports, module) {
 
         },
         events : {
-            "click [data-favorite-register-button]" : "onClickFavoriteRegisterButton"
+            "click [data-favorite-register-button]" : "onClickFavoriteRegisterButton",
+            "click #tagAddButton" : "onClickTagAddButton",
+            "click .deleteTag" : "onClickDeleteTag"
         },
         /**
          * お気に入りボタン押下時のコールバック関数
@@ -82,6 +93,32 @@ define(function(require, exports, module) {
                 },this)
             });
             
+        },
+        /**
+         * タグ追加ボタン押下時のコールバック関数
+         */
+        onClickTagAddButton : function () {
+            if ($("#tagInput").val()) {
+                this.model.get("tagsArray").push($("#tagInput").val());
+                this.model.save(null,{success : $.proxy(this.onSave,this)});
+            }
+        },
+        /**
+         * 記事情報更新完了後のコールバック関数
+         */
+        onSave : function () {
+            this.model.fetch({success :$.proxy(function () {
+                this.render();
+            },this)});
+        },
+        /**
+         * タグボタン押下時のコールバック関数
+         * @params {event} タグボタンのクリックイベント
+         */
+        onClickDeleteTag : function (ev) {
+            var tagLabel = $(ev.currentTarget).text();
+            this.model.set("tagsArray",_.without(this.model.get("tagsArray"),tagLabel));
+            this.model.save(null,{success : $.proxy(this.onSave,this)});
         },
     });
 
