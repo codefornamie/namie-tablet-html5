@@ -24,7 +24,7 @@ define(function(require, exports, module) {
                 if (res.tags) {
                     var arr = res.tags.split(",");
                     _.each(arr,function (tag) {
-                        res.tagsArray.push(unescape(tag));
+                        res.tagsArray.push(decodeURIComponent(tag));
                     });
                 }
             });

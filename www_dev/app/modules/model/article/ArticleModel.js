@@ -29,7 +29,7 @@ define(function(require, exports, module) {
             if (response.tags) {
                 var arr = response.tags.split(",");
                 _.each(arr,function (tag) {
-                    response.tagsArray.push(unescape(tag));
+                    response.tagsArray.push(decodeURIComponent(tag));
                 });
             }
 
@@ -60,9 +60,9 @@ define(function(require, exports, module) {
             if (this.get("tagsArray").length) {
                 _.each(this.get("tagsArray"),function (tag) {
                     if (!tags) {
-                        tags = escape(tag);
+                        tags = encodeURIComponent(tag);
                     } else {
-                        tags += "," + escape(tag);
+                        tags += "," + encodeURIComponent(tag);
                     }
                 });
             }
