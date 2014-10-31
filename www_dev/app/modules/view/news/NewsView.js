@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var FeedListView = require("modules/view/news/FeedListView");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラス
@@ -15,6 +16,7 @@ define(function(require, exports, module) {
         template : require("ldsh!/app/templates/news/news"),
         model : new ArticleModel(),
         collection : new ArticleCollection(),
+        favoriteCollection : new FavoriteCollection(),
 
         beforeRendered : function() {
 
@@ -39,14 +41,30 @@ define(function(require, exports, module) {
             this.setView("#article-list", articleListView);
             articleListView.listenTo(this.collection, "reset sync request", articleListView.render);
             
-            // 一番最初の記事を描画
-            var self = this;
-            this.collection.fetch({
-                success: function() {
-                    var article = self.collection.at(0);
-                    self.setArticle(article);
-                }
-            });
+            this.collection.fetch({success: $.proxy(this.onfetchArticle,this)});
+
+        },
+        /**
+         * 記事情報検索完了後のコールバック関数
+         */
+        onfetchArticle: function () {
+//            this.favoriteCollection.condition.filter = "";
+            this.favoriteCollection.fetch({success: $.proxy(this.onfetchFavorite,this)});
+        },
+        /**
+         * お気に入り情報検索完了後のコールバック関数
+         */
+        onfetchFavorite: function () {
+            this.collection.each($.proxy(function (article) {
+                this.favoriteCollection.each($.proxy(function (favorite) {
+                    if (article.get("url") === favorite.get("source")) {
+                        article.set("isFavorite",true);
+                    }
+                },this));
+            },this));
+            
+            var article = this.collection.at(0);
+            this.setArticle(article);
         },
 
         events : {
@@ -54,7 +72,7 @@ define(function(require, exports, module) {
         },
         
         /**
-         *  サイドメニューから記事をクリックしたら呼ばれる
+         * 記事リストアイテムをクリックされたときのコールバック関数
          *  
          *  @param {Event} ev
          */
@@ -67,7 +85,7 @@ define(function(require, exports, module) {
         },
         
         /**
-         *  記事を指定して表示する
+         * 記事詳細に記事情報を表示する
          *  
          *  @param {Backbone.Model} article
          */
