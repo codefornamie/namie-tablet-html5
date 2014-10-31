@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var FavoriteModel = require("modules/model/article/FavoriteModel");
+    var CommonUtil = require("modules/util/CommonUtil");
     
     var ArticleListItemView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/articleListItem"),
@@ -57,7 +58,8 @@ define(function(require, exports, module) {
             // beforeRenderで実施すると要素がなくタグが挿入できなかったためここで実装
             if (this.model.get("tagsArray").length) {
                 _.each(this.model.get("tagsArray"), $.proxy(function (tag) {
-                    $("#tagButtons").append("<button type='button' class='deleteTag'>"+ tag +"</button>");
+                    var tagLabel = CommonUtil.sanitizing(tag);
+                    $("#tagButtons").append("<button type='button' class='deleteTag'>"+ tagLabel +"</button>");
                 },this));
             }
         },
@@ -100,6 +102,7 @@ define(function(require, exports, module) {
         onClickTagAddButton : function () {
             if ($("#tagInput").val()) {
                 this.model.get("tagsArray").push($("#tagInput").val());
+                this.model.set("tagsArray",_.uniq(this.model.get("tagsArray")));
                 this.model.save(null,{success : $.proxy(this.onSave,this)});
             }
         },
