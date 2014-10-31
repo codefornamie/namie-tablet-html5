@@ -21,23 +21,65 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-            this.setYouTubePlayer();
+            this.requestGoogleAPIClient();
         },
+
         /**
          * 初期化処理
          */
         initialize : function() {
+        },
+
+        /**
+         * Google API clientを初期化する
+         */
+        requestGoogleAPIClient : function() {
+            if (app.gapiLoaded) {
+                this.initYouTubeView();
+                return;
+            }
+
+            var self = this;
+            window.googleApiClientReady = function() {
+                delete window.googleApiClientReady;
+
+                window.onYouTubeIframeAPIReady = function() {
+                    delete window.onYouTubeIframeAPIReady;
+                    app.gapiLoaded = true;
+
+                    self.initYouTubeView();
+                };
+
+                var tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                var firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            };
+
+            var tag = document.createElement('script');
+            tag.src = "https://apis.google.com/js/client.js?onload=googleApiClientReady";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        },
+        
+        /**
+         *  YouTubeViewを初期化する
+         *  GoogleAPIの初期化が済んだら呼ばれる
+         */
+        initYouTubeView: function () {
             this.collection = new YouTubeCollection();
             this.collection.channelId = "UC9_ZCtgOk8dPC6boqZMNqbw";
 
             var youTubeListView = new YouTubeListView();
             youTubeListView.collection = this.collection;
             youTubeListView.parent = this;
-            this.setView(".youtubelist", youTubeListView);
+            this.setView("#sidebar__list", youTubeListView);
 
             youTubeListView.listenTo(this.collection, "reset sync request", youTubeListView.render);
 
+            this.setYouTubePlayer();
         },
+
         /**
          * youtube動画プレイヤーの設定
          */
@@ -50,11 +92,13 @@ define(function(require, exports, module) {
                 }
             });
         },
+
         onSetYouTubePlayer : function() {
             this.player.removeEventListener("onReady");
             gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
             gapi.client.load('youtube', 'v3', $.proxy(this.searchPlayList, this));
         },
+
         searchPlayList : function() {
             var self = this;
             this.collection.fetch({
@@ -66,6 +110,7 @@ define(function(require, exports, module) {
                 }
             });
         },
+
         onClickPlayList : function(ev) {
             var videoId = $(ev.currentTarget).attr("videoId");
             var video = this.collection.find(function(item) {
@@ -73,6 +118,7 @@ define(function(require, exports, module) {
             });
             this.setVideo(video);
         },
+
         setVideo : function(video) {
             if (!this.player || !video) {
                 return;
@@ -81,6 +127,7 @@ define(function(require, exports, module) {
             $("#videoTitle").text(video.get("title"));
             $("#videoDescription").text(video.get("description"));
         },
+
         cleanup : function() {
             try {
                 this.player.destroy();
@@ -89,7 +136,6 @@ define(function(require, exports, module) {
             }
             
         }
-
     });
 
     module.exports = YouTubeView;

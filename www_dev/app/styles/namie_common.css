@@ -16,8 +16,18 @@ body {
 /**
  *  layout
  */
+.header,
+.footer {
+    position: relative;
+    z-index: 10;
+}
+
 main {
     height: 100%;
+}
+
+.menu {
+    width: 266px;
 }
 
 .contents {
@@ -27,6 +37,8 @@ main {
     top: 0;
     padding-top: 45px;
     width: 100%;
+    background-color: #fff;
+    border-left: 1px solid #eee;
 }
 
 .contents > .row {
@@ -61,14 +73,29 @@ main {
 }
 
 /**
+ *  menu
+ */
+.menu {
+}
+
+.menu__list {
+    margin: 0;
+}
+
+/**
  *  contents
  */
 .contents {
 }
 
+.contents > div {
+    height: 100%;
+}
+
 .contents__primary,
 .contents__secondary {
     position: relative;
+    height: 100%;
 }
 
 .contents__primary {
@@ -80,34 +107,42 @@ main {
     padding: 0;
 }
 
+.contents__secondary > div {
+    position: relative;
+    height: 100%;
+}
+
 /**
  *  sidebar
  */
 .sidebar {
-    overflow: auto;
     height: 100%;
+
+    /* .side-actionの高さ分のpaddingを確保する */
     padding-bottom: 144px;
 }
 
 .sidebar__list {
     list-style: none;
     margin: 0;
+    height: 100%;
+    overflow: auto;
 }
 
 /**
  *  side-action
  */
 .side-action {
-    position: absolute;
-    left: 0;
-    bottom: 0;
     width: 100%;
-    height: 144px;
 }
 
 .side-action__list {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     list-style: none;
     margin: 0;
+    width: 100%;
 }
 
 .side-action__list li {

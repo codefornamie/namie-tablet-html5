@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var ArticleListView = require("modules/view/news/ArticleListView");
-    var ArticleDetailView = require("modules/view/news/ArticleDetailView");
+    var FeedListView = require("modules/view/news/FeedListView");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
@@ -29,10 +29,16 @@ define(function(require, exports, module) {
         initialize : function() {
             this.collection = new ArticleCollection();
 
+            // FeedListView初期化
+            var feedListView = new FeedListView();
+            feedListView.collection = this.collection;
+            this.setView("#sidebar__list", feedListView);
+            feedListView.listenTo(this.collection, "reset sync request", feedListView.render);
+            
+            // ArticleListView初期化
             var articleListView = new ArticleListView();
             articleListView.collection = this.collection;
-            this.setView(".article-list", articleListView);
-
+            this.setView("#article-list", articleListView);
             articleListView.listenTo(this.collection, "reset sync request", articleListView.render);
             
             this.collection.fetch({success: $.proxy(this.onfetchArticle,this)});
@@ -64,8 +70,11 @@ define(function(require, exports, module) {
         events : {
             "click .articleListItem" : "onClickArticleListItem"
         },
+        
         /**
          * 記事リストアイテムをクリックされたときのコールバック関数
+         *  
+         *  @param {Event} ev
          */
         onClickArticleListItem : function(ev) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
@@ -74,13 +83,19 @@ define(function(require, exports, module) {
             });
             this.setArticle(article);
         },
+        
         /**
          * 記事詳細に記事情報を表示する
+         *  
+         *  @param {Backbone.Model} article
          */
         setArticle : function(article) {
-            this.setView(".article-detail", new ArticleDetailView({
+            // [TODO] article listの中から該当の記事まで移動する
+            /*
+            this.setView("#article-list", new ArticleDetailView({
                 model: article
             })).render();
+            */
         }
 
     });

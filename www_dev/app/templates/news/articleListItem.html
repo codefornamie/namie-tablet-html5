@@ -1,23 +1,54 @@
-<li data-article-id="<%= model.get('__id') %>" class="articleListItem">
-    <div class="row">
-        <div class="large-8 columns">
-	        <p>
-	            <%= model.get("site") %>
-	        </p>
-	        
-	        <p class="articleTitle" style="font-weight: bold;">
-	            <%= model.get("title") %>
-	        </p>
-	    
-	        <span style="font-size: small;">
-	            <%= model.get("dispCreatedAt") %>
-	        </span>
-	        <!--<span class="descriptionText" style="font-size: small;"><%= model.get("description") %></span>  -->
+<article class='post'>
+    <section class='post__body'>
+        <div class="row">
+            <div class="large-12 columns">
+                <%= model.get("site") %>
+            </div>
         </div>
-        <div class="large-4 columns">
-	        <a class="th" href="javascript:void(0)">
-                <img id="articleImage" src=""/>
-	        </a>
+        <div class="row">
+            <div class="large-12 columns" style="font-size: large;font-weight: bold;">
+                <%= model.get("title") %>
+            </div>
         </div>
-    </div>
-</li>
+        <div class="row">
+            <div class="large-12 columns" style="font-size: large;font-weight: bold;">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns nehandiv">
+                <div id="articleDetailImageArea" height="390" width="390" >
+                    <img id="articleDetailImage" class="nehan-float-start"></img>
+                </div>
+                <%= model.get("description") %>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns" style="font-size: small;">
+                <%= model.get("link") %>
+            </div>
+        </div>
+    </section>
+    
+    <section class='post__footer'>
+        <div class="row">
+            <div class="large-12 columns">
+                            タグ<div id="tagButtons"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-2 columns">
+                <label>タグ追加</label>
+            </div>
+            <div class="large-4 columns">
+                <input id="tagInput" type="text">
+            </div>
+            <div class="large-3 columns end" style="font-size: small;">
+                <button id="tagAddButton" type="button" style="font-size: small;">追加</button>
+            </div>
+        </div>
+
+        <button data-favorite-register-button type="button" style="font-size: small;">お気に入り登録</button>
+    </section>
+</article>

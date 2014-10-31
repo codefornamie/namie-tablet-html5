@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var login = require("modules/view/login/index");
     var common = require("modules/view/common/index");
-    var TopView = require("modules/view/top/TopView");
+    var YouTubeView = require("modules/view/top/YouTubeView");
     var NewsView = require("modules/view/news/NewsView");
     var EventsView = require("modules/view/events/EventsView");
     var EventsRegistedView = require("modules/view/events/EventsRegistedView");
@@ -13,7 +13,6 @@ define(function(require, exports, module) {
     // Defining the application router.
     var Router = Backbone.Router.extend({
         initialize : function() {
-
             // Use main layout and set Views.
             var Layout = Backbone.Layout.extend({
                 el : "main",
@@ -21,18 +20,22 @@ define(function(require, exports, module) {
                 template : require("ldsh!/app/templates/main"),
 
                 views : {
-                    ".header" : new login.HeaderView(),
-                    ".contents" : new login.LoginView(),
-                    ".footer" : new login.FooterView()
+                    "#header" : new login.HeaderView(),
+                    "#menu" : new login.MenuView(),
+                    "#contents" : new login.LoginView(),
+                    "#footer" : new login.FooterView()
                 },
                 setHeader : function(headerView) {
-                    this.setView(".header", headerView).render();
+                    this.setView("#header", headerView).render();
                 },
                 setFooter : function(footerView) {
-                    this.setView(".footer", footerView).render();
+                    this.setView("#footer", footerView).render();
+                },
+                setMenu : function(menuView) {
+                    this.setView("#menu", menuView).render();
                 },
                 showView: function(view) {
-                    this.setView(".contents", view).render();
+                    this.setView("#contents", view).render();
                 }
             });
 
@@ -53,11 +56,10 @@ define(function(require, exports, module) {
 
         index : function() {
             console.log("Welcome to your / route.");
-//            this.layout.render();
         },
         top : function() {
             console.log("It's a top page.");
-            this.layout.showView(new TopView());
+            this.layout.showView(new NewsView());
             this.layout.setHeader(new common.HeaderView());
             this.layout.setFooter(new common.FooterView());
             this.commonView();
@@ -87,7 +89,7 @@ define(function(require, exports, module) {
           return this.navigate(_.toArray(arguments).join("/"), true);
         },
         commonView: function() {
-            this.layout.setView(".menu", new common.MenuView()).render();
+            this.layout.setView("#menu", new common.MenuView()).render();
         }
     });
 

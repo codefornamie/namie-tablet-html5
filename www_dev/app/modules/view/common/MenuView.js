@@ -16,14 +16,17 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
-
         },
 
         events : {
+            "click #topLink" : "onClickTopLink",
             "click #newsLink" : "onClickNewsLink",
             "click #eventsLink" : "onClickEventsLink",
             "click #showEventsLink" : "onClickShowEventsLink",
             "click #tvLink" : "onClickTvLink"
+        },
+        onClickTopLink : function() {
+            app.router.go("top");
         },
         onClickNewsLink : function() {
             app.router.go("news");

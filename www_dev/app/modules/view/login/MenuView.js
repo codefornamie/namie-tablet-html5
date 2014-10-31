@@ -3,10 +3,9 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var YouTubeView = require("modules/view/top/YouTubeView");
 
-    var TopView = AbstractView.extend({
-        template : require("ldsh!/app/templates/top/top"),
+    var MenuView = AbstractView.extend({
+        template : require("ldsh!/app/templates/common/menu"),
 
         beforeRendered : function() {
 
@@ -15,7 +14,11 @@ define(function(require, exports, module) {
         afterRendered : function() {
 
         },
+
+        initialize : function() {
+
+        }
     });
 
-    module.exports = TopView;
+    module.exports = MenuView;
 });

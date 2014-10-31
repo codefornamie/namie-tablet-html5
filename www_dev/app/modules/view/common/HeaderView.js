@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var Snap = require("snap");
 
     var HeaderView = AbstractView.extend({
         template : require("ldsh!/app/templates/common/header"),
@@ -16,11 +17,22 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
-
+            this.snapper = new Snap({
+                element: document.getElementById('snap-content'),
+                tapToClose: true,
+                touchToDrag: false
+            });
         },
 
         events : {
-
+            'click [data-drawer-opener]': 'onClickDrawerOpener'
+        },
+        
+        /**
+         *  サンドイッチボタンがクリックされたら呼ばれる
+         */
+        onClickDrawerOpener: function () {
+            this.snapper.open('left');
         }
     });
 

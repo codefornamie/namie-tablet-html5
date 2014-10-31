@@ -1,0 +1,47 @@
+define(function(require, exports, module) {
+    "use strict";
+
+    var app = require("app");
+    var AbstractView = require("modules/view/AbstractView");
+    var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var FeedListItemView = require("modules/view/news/FeedListItemView");
+
+    /**
+     * 記事一覧(メニュー用)のViewクラス
+     */
+    var FeedListView = AbstractView.extend({
+        template : require("ldsh!/app/templates/news/feedList"),
+
+        beforeRendered : function() {
+            this.setFeedList();
+        },
+
+        afterRendered : function() {
+
+        },
+        /**
+         * 初期化処理
+         */
+        initialize : function() {
+
+        },
+        /**
+         * 取得した動画一覧を描画する
+         */
+        setFeedList : function() {
+            var self = this;
+            var animationDeley = 0;
+            this.collection.each($.proxy(function(model) {
+                var itemView = new FeedListItemView();
+                this.insertView("#feedList", new FeedListItemView({
+                    model : model,
+                    animationDeley : animationDeley
+                }));
+                animationDeley += 0.2;
+            }, this));
+
+        }
+    });
+
+    module.exports = FeedListView;
+});
