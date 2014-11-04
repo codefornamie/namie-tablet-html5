@@ -3,6 +3,8 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var DateUtil = require("modules/util/DateUtil");
+    var CommonUtil = require("modules/util/CommonUtil");
     /**
      * イベント情報のモデルクラスを作成する。
      * 
@@ -14,14 +16,25 @@ define(function(require, exports, module) {
         entity : "event",
         /**
          * 取得したOData情報のparse処理を行う。
-         * <p>
-         * サブクラスは、本メソッドをオーバライドして、取得した情報のparse処理を実装する。
-         * </p>
          * 
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            return {};
+            response.isNotArticle = true;
+            response.modelType = "event";
+
+            response.dispSite = "イベント";
+            response.dispTitle = CommonUtil.sanitizing(response.eventName);
+            var eventDateTime = new Date(response.eventDate + "T" + response.eventTime);
+            response.dispDate = DateUtil.formatDate(eventDateTime,"yyyy年MM月dd日 HH時mm分");
+            response.dispPlace = response.eventPlace;
+            response.dispTel = response.eventTel;
+            response.dispEmail = response.eventEmail;
+            response.description = CommonUtil.sanitizing(response.eventDetail);
+            response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt),"yyyy年MM月dd日 HH時mm分");
+            response.tagsArray = [];
+            response.tagsArray.push("イベント");
+            return response;
         },
         /**
          * モデル固有の永続化データを生成する。

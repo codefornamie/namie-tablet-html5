@@ -15,7 +15,6 @@ define(function(require, exports, module) {
             };
         },
         beforeRendered : function() {
-
         },
 
         afterRendered : function() {
@@ -24,9 +23,9 @@ define(function(require, exports, module) {
                 this.$el.find('[data-favorite-register-button]').hide();
             }
             if (this.model.get("imageUrl")) {
-                $("#articleDetailImage").attr("src",this.model.get("imageUrl"));
+                $(this.el).find(".articleDetailImage").attr("src",this.model.get("imageUrl"));
             } else {
-                $("#articleDetailImageArea").hide();
+                $(this.el).find(".articleDetailImageArea").hide();
             }
             // 縦書き表示処理
             /*
@@ -43,10 +42,10 @@ define(function(require, exports, module) {
           });
             */
             if (this.model.get("imageUrl")) {
-                $("#nehan-articleDetailImage").parent().css("width","auto");
-                $("#nehan-articleDetailImage").parent().css("height","auto");
-                $("#nehan-articleDetailImage").css("width","auto");
-                $("#nehan-articleDetailImage").css("height","auto");
+                $(this.el).find("#nehan-articleDetailImage").parent().css("width","auto");
+                $(this.el).find("#nehan-articleDetailImage").parent().css("height","auto");
+                $(this.el).find("#nehan-articleDetailImage").css("width","auto");
+                $(this.el).find("#nehan-articleDetailImage").css("height","auto");
             }
             
             $(".panzoom-elements").panzoom({
@@ -59,9 +58,13 @@ define(function(require, exports, module) {
             if (this.model.get("tagsArray").length) {
                 _.each(this.model.get("tagsArray"), $.proxy(function (tag) {
                     var tagLabel = CommonUtil.sanitizing(tag);
-                    $("#tagButtons").append("<button type='button' class='deleteTag'>"+ tagLabel +"</button>");
+                    $(this.el).find(".tagButtons").append("<button type='button' class='tiny button secondary deleteTag'>"+ tagLabel +"</button>");
                 },this));
             }
+            if (this.model.get("isNotArticle")) {
+                $(this.el).find(".tagInputArea").hide();
+            }
+
         },
         /**
          * 初期化処理
@@ -100,8 +103,8 @@ define(function(require, exports, module) {
          * タグ追加ボタン押下時のコールバック関数
          */
         onClickTagAddButton : function () {
-            if ($("#tagInput").val()) {
-                this.model.get("tagsArray").push($("#tagInput").val());
+            if ($(this.el).find("#tagInput").val()) {
+                this.model.get("tagsArray").push($(this.el).find("#tagInput").val());
                 this.model.set("tagsArray",_.uniq(this.model.get("tagsArray")));
                 this.model.save(null,{success : $.proxy(this.onSave,this)});
             }
@@ -119,9 +122,11 @@ define(function(require, exports, module) {
          * @params {event} タグボタンのクリックイベント
          */
         onClickDeleteTag : function (ev) {
-            var tagLabel = $(ev.currentTarget).text();
-            this.model.set("tagsArray",_.without(this.model.get("tagsArray"),tagLabel));
-            this.model.save(null,{success : $.proxy(this.onSave,this)});
+            if (!this.model.get("isNotArticle")) {
+                var tagLabel = $(ev.currentTarget).text();
+                this.model.set("tagsArray",_.without(this.model.get("tagsArray"),tagLabel));
+                this.model.save(null,{success : $.proxy(this.onSave,this)});
+            }
         },
     });
 

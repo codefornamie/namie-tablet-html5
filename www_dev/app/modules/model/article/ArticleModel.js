@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
     var DateUtil = require("modules/util/DateUtil");
+    var CommonUtil = require("modules/util/CommonUtil");
 
     /**
      * 記事情報のモデルクラスを作成する。
@@ -24,6 +25,8 @@ define(function(require, exports, module) {
          */
         parseOData : function(response, options) {
             response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt),"yyyy年MM月dd日 HH時mm分");
+            response.dispSite = CommonUtil.sanitizing(response.site);
+            response.dispTitle = CommonUtil.sanitizing(response.title);
             response.tagsArray = [];
             response.tagsLabel = "";
             if (response.tags) {
