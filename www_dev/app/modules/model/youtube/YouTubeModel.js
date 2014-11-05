@@ -3,6 +3,8 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractModel = require("modules/model/AbstractModel");
+    var DateUtil = require("modules/util/DateUtil");
+    var CommonUtil = require("modules/util/CommonUtil");
     /**
      * YouTubeのモデルクラスを作成する。
      * 
@@ -13,9 +15,20 @@ define(function(require, exports, module) {
     var YouTubeModel = AbstractModel.extend({
         parse : function(response, options) {
             var res = response.snippet;
+            
+            res.isNotArticle = true;
+            res.modelType = "youtube";
 
+            res.__id = response.id.videoId;
             res.kind = response.id.kind;
             res.videoId = response.id.videoId;
+            res.dispCreatedAt = DateUtil.formatDate(new Date(res.publishedAt),"yyyy年MM月dd日 HH時mm分");
+            res.imageUrl = res.thumbnails["default"].url;
+            res.dispTitle = CommonUtil.sanitizing(res.title);
+            res.dispSite = "YouTube";
+            res.tagsArray = [];
+            res.tagsArray.push("YouTube");
+
             return res;
         }
     });

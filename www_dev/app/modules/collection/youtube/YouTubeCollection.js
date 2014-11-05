@@ -20,7 +20,7 @@ define(function(require, exports, module) {
                     channelId : this.channelId,
                     type : "video",
                     part : "id,snippet",
-                    maxResults : 5,
+                    maxResults : 3,
                     order : "date",
                 },
                 callback : $.proxy(function(res) {

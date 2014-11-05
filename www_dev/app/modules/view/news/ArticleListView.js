@@ -17,29 +17,39 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-
+            
         },
         /**
          * 初期化処理
          */
         initialize : function() {
-
+            
         },
         /**
          * 取得した動画一覧を描画する
          */
         setArticleList : function() {
-            var self = this;
             var animationDeley = 0;
             this.collection.each($.proxy(function(model) {
-                var itemView = new ArticleListItemView();
+                var template = require("ldsh!/app/templates/news/articleListItem");
+                switch (model.get("modelType")) {
+                    case "youtube":
+                        template = require("ldsh!/app/templates/news/articleListItem");
+                        break;
+                    case "event":
+                        template = require("ldsh!/app/templates/news/eventsListItem");
+                        break;
+                    default:
+                        template = require("ldsh!/app/templates/news/articleListItem");
+                        break;
+                }
                 this.insertView("#articleList", new ArticleListItemView({
                     model : model,
+                    template: template,
                     animationDeley : animationDeley
                 }));
                 animationDeley += 0.2;
             }, this));
-
         }
     });
 
