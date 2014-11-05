@@ -24,9 +24,9 @@ define(function(require, exports, module) {
                 this.$el.find('[data-favorite-register-button]').hide();
             }
             if (this.model.get("imageUrl")) {
-                $("#articleDetailImage").attr("src",this.model.get("imageUrl"));
+                this.$el.find("#articleDetailImage").attr("src",this.model.get("imageUrl"));
             } else {
-                $("#articleDetailImageArea").hide();
+            	this.$el.find("#articleDetailImageArea").hide();
             }
             // 縦書き表示処理
             /*
@@ -43,10 +43,10 @@ define(function(require, exports, module) {
           });
             */
             if (this.model.get("imageUrl")) {
-                $("#nehan-articleDetailImage").parent().css("width","auto");
-                $("#nehan-articleDetailImage").parent().css("height","auto");
-                $("#nehan-articleDetailImage").css("width","auto");
-                $("#nehan-articleDetailImage").css("height","auto");
+            	this.$el.find("#nehan-articleDetailImage").parent().css("width","auto");
+            	this.$el.find("#nehan-articleDetailImage").parent().css("height","auto");
+            	this.$el.find("#nehan-articleDetailImage").css("width","auto");
+            	this.$el.find("#nehan-articleDetailImage").css("height","auto");
             }
             
             $(".panzoom-elements").panzoom({
@@ -59,9 +59,12 @@ define(function(require, exports, module) {
             if (this.model.get("tagsArray").length) {
                 _.each(this.model.get("tagsArray"), $.proxy(function (tag) {
                     var tagLabel = CommonUtil.sanitizing(tag);
-                    $("#tagButtons").append("<button type='button' class='deleteTag'>"+ tagLabel +"</button>");
+                    this.$el.find("#tagButtons").append("<button type='button' class='deleteTag'>"+ tagLabel +"</button>");
                 },this));
             }
+            
+            // 画像クリックイベント
+            this.$el.find("#articleDetailImageArea").on("click", $.proxy(this.onClickImage, this));
         },
         /**
          * 初期化処理
@@ -100,8 +103,8 @@ define(function(require, exports, module) {
          * タグ追加ボタン押下時のコールバック関数
          */
         onClickTagAddButton : function () {
-            if ($("#tagInput").val()) {
-                this.model.get("tagsArray").push($("#tagInput").val());
+            if (this.$el.find("#tagInput").val()) {
+                this.model.get("tagsArray").push(this.$el.find("#tagInput").val());
                 this.model.set("tagsArray",_.uniq(this.model.get("tagsArray")));
                 this.model.save(null,{success : $.proxy(this.onSave,this)});
             }
@@ -123,7 +126,53 @@ define(function(require, exports, module) {
             this.model.set("tagsArray",_.without(this.model.get("tagsArray"),tagLabel));
             this.model.save(null,{success : $.proxy(this.onSave,this)});
         },
-    });
+        /**
+         * 画像をクリックされた際のハンドラ。
+         */
+        onClickImage : function (ev){
+        	alert("image click!!");
+            var uri = ev.target.src;
+        	alert(uri);
+            var fileName = this.getLocalPath() + "kuro.png";
+            this.saveImage(uri, fileName);
+        },
+        /**
+         * アプリから保存可能なローカルストレージのパスを取得する。 
+         */
+        getLocalPath : function (){
+            requestFileSystem(LocalFileSystem.PERSISTENT, 0,
+                function(fileSystem) {
+                    return fileSystem.root.fullPath;
+                },
+                function(e) {
+                    console.log('パス取得エラー');
+                }
+            );
+        },
+        /**
+         * 指定URiの画像データをストレージに保存する。
+         */
+        saveImage : function(uri, filePath){
+        	alert("saveImage!");
 
+            var fileTransfer = new FileTransfer();
+            fileTransfer.download(
+                encodeURI(uri),
+                filePath,
+                function(entry) {
+                	alert("download complete: " + entry.fullPath);
+                    console.log("download complete: " + entry.fullPath);
+                },
+                function(error) {
+                    console.log("download error source " + error.source);
+                    console.log("download error target " + error.target);
+                    console.log("upload error code" + error.code);
+                },
+                false,
+                {
+                }
+            );
+        }
+    });
     module.exports = ArticleListItemView;
 });
