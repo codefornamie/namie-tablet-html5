@@ -6,7 +6,7 @@ define(function(require, exports, module) {
     var ArticleModel = require("modules/model/article/ArticleModel");
     var FavoriteModel = require("modules/model/article/FavoriteModel");
     var CommonUtil = require("modules/util/CommonUtil");
-    
+
     var ArticleListItemView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/articleListItem"),
         serialize : function() {
@@ -48,13 +48,13 @@ define(function(require, exports, module) {
             	this.$el.find("#nehan-articleDetailImage").css("width","auto");
             	this.$el.find("#nehan-articleDetailImage").css("height","auto");
             }
-            
+
             $(".panzoom-elements").panzoom({
                 minScale: 1,
                 contain: "invert"
             });
-            
-            // タグボタンの追加 
+
+            // タグボタンの追加
             // beforeRenderで実施すると要素がなくタグが挿入できなかったためここで実装
             if (this.model.get("tagsArray").length) {
                 _.each(this.model.get("tagsArray"), $.proxy(function (tag) {
@@ -62,7 +62,7 @@ define(function(require, exports, module) {
                     this.$el.find("#tagButtons").append("<button type='button' class='deleteTag'>"+ tagLabel +"</button>");
                 },this));
             }
-            
+
             // 画像クリックイベント
             this.$el.find("#articleDetailImageArea").on("click", $.proxy(this.onClickImage, this));
         },
@@ -97,7 +97,7 @@ define(function(require, exports, module) {
                     this.model.set("isFavorite",true);
                 },this)
             });
-            
+
         },
         /**
          * タグ追加ボタン押下時のコールバック関数
@@ -133,11 +133,12 @@ define(function(require, exports, module) {
         	alert("image click!!");
             var uri = ev.target.src;
         	alert(uri);
-            var fileName = this.getLocalPath() + "kuro.png";
+            // var fileName = this.getLocalPath() + "kuro.png";
+            var fileName = "/mnt/sdcard/Pictures/NamieTablet/kuro.png";
             this.saveImage(uri, fileName);
         },
         /**
-         * アプリから保存可能なローカルストレージのパスを取得する。 
+         * アプリから保存可能なローカルストレージのパスを取得する。
          */
         getLocalPath : function (){
             requestFileSystem(LocalFileSystem.PERSISTENT, 0,
@@ -154,6 +155,7 @@ define(function(require, exports, module) {
          */
         saveImage : function(uri, filePath){
         	alert("saveImage!");
+        	alert(filePath);
 
             var fileTransfer = new FileTransfer();
             fileTransfer.download(
