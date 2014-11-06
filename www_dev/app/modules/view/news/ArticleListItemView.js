@@ -6,7 +6,8 @@ define(function(require, exports, module) {
     var ArticleModel = require("modules/model/article/ArticleModel");
     var FavoriteModel = require("modules/model/article/FavoriteModel");
     var CommonUtil = require("modules/util/CommonUtil");
-    
+    var DateUtil = require("modules/util/DateUtil");
+
     var ArticleListItemView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/articleListItem"),
         serialize : function() {
@@ -47,13 +48,13 @@ define(function(require, exports, module) {
                 $(this.el).find("#nehan-articleDetailImage").css("width","auto");
                 $(this.el).find("#nehan-articleDetailImage").css("height","auto");
             }
-            
+
             $(".panzoom-elements").panzoom({
                 minScale: 1,
                 contain: "invert"
             });
-            
-            // タグボタンの追加 
+
+            // タグボタンの追加
             // beforeRenderで実施すると要素がなくタグが挿入できなかったためここで実装
             if (this.model.get("tagsArray").length) {
                 _.each(this.model.get("tagsArray"), $.proxy(function (tag) {
@@ -65,6 +66,9 @@ define(function(require, exports, module) {
                 $(this.el).find(".tagInputArea").hide();
             }
 
+
+            // 画像クリックイベント
+            this.$el.find("#articleDetailImageArea").on("click", $.proxy(this.onClickImage, this));
         },
         /**
          * 初期化処理
@@ -97,7 +101,7 @@ define(function(require, exports, module) {
                     this.model.set("isFavorite",true);
                 },this)
             });
-            
+
         },
         /**
          * タグ追加ボタン押下時のコールバック関数
@@ -128,7 +132,59 @@ define(function(require, exports, module) {
                 this.model.save(null,{success : $.proxy(this.onSave,this)});
             }
         },
+        /**
+         * 画像をクリックされた際のハンドラ。
+         */
+        onClickImage : function (ev){
+            var uri = ev.target.src;
+            var base = DateUtil.formatDate(new Date(), "yyyy-MM-dd_HH-mm-ss");
+            var ext = uri.replace(/.*\//, "").replace(/.*\./, "");
+            if(!ext){
+                ext = "jpg";
+            }
+            var fileName = this.getLocalPath() + "/" + base + "." + ext;
+            this.saveImage(uri, fileName);
+        },
+        /**
+         * アプリから保存可能なローカルストレージのパスを取得する。
+         */
+        getLocalPath : function (){
+            return "/mnt/sdcard/Pictures/namie-town" ;
+        },
+        /**
+         * 指定URiの画像データをストレージに保存する。
+         */
+        saveImage : function(uri, filePath){
+            if(window.FileTransfer === undefined){
+                alert("ご使用の端末では保存できません。");
+                return;
+            }
+            var fileTransfer = new FileTransfer();
+            fileTransfer.download(
+                encodeURI(uri),
+                filePath,
+                function(entry) {
+                    window.MediaScanPlugin.scanFile(
+                            filePath,
+                            function(msg){
+                                alert("画像を保存しました。");
+                            }, function(err){
+                                alert("画像の保存に失敗しました。");
+                                console.log(err);
+                            }
+                        );
+                },
+                function(error) {
+                    alert("画像の保存に失敗しました。");
+                    console.log("download error source: " + error.source);
+                    console.log("download error target: " + error.target);
+                    console.log("download error code: " + error.code);
+                },
+                false,
+                {
+                }
+            );
+        }
     });
-
     module.exports = ArticleListItemView;
 });
