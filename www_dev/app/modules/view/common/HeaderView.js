@@ -1,3 +1,5 @@
+/* jshint eqnull:true */
+
 define(function(require, exports, module) {
     "use strict";
 
@@ -34,7 +36,7 @@ define(function(require, exports, module) {
             var model = this.collection.at(0);
             var value = "-";
             if (model != null) {
-                value = model.get("value")
+                value = model.get("value");
             }
             $("#radiationValue").text(value + "μSv/h");
         },
