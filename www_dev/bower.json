@@ -18,6 +18,7 @@
     "jquery-validation": "~1.13.1",
     "animate.css": "~3.2.0",
     "jquery.panzoom": "~2.0.5",
-    "Snap.js": "~1.9.3"
+    "Snap.js": "~1.9.3",
+    "vex": "~2.2.1"
   }
 }
