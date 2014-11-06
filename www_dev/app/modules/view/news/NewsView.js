@@ -125,15 +125,6 @@ define(function(require, exports, module) {
                 this.onFetchAll();
             }
         },
-        /**
-         * youtube情報検索完了後のコールバック関数
-         */
-        onfetchYoutube: function () {
-            this.fetchCounter++;
-            if (this.fetchCounter >= 3) {
-                this.onFetchAll();
-            }
-        },
 
         /**
          * 全ての情報検索完了後のコールバック関数
