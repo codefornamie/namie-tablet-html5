@@ -48,6 +48,9 @@ define(function(require, exports, module) {
                     break;
                 default:
                     template = require("ldsh!/app/templates/news/articleListItem");
+                    if (model.get("rawHTML")) {
+                        template = require("ldsh!/app/templates/news/articleListItemForHtml");
+                    }
                     ListItemView = ArticleListItemView;
                     break;
                 }

@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var CommonUtil = require("modules/util/CommonUtil");
     var DateUtil = require("modules/util/DateUtil");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var vexDialog = require("vexDialog");
 
     /**
      * 記事一覧アイテムのViewを作成する。
@@ -109,7 +110,8 @@ define(function(require, exports, module) {
         events : {
             "click [data-favorite-register-button]" : "onClickFavoriteRegisterButton",
             "click #tagAddButton" : "onClickTagAddButton",
-            "click .deleteTag" : "onClickDeleteTag"
+            "click .deleteTag" : "onClickDeleteTag",
+            "click a" : "onClickAnchorTag"
         },
         /**
          * お気に入りボタン押下時に呼び出されるコールバック関数。
@@ -183,6 +185,13 @@ define(function(require, exports, module) {
             }
             var fileName = this.getLocalPath() + "/" + base + "." + ext;
             this.saveImage(uri, fileName);
+        },
+        /**
+         * 記事詳細内のアンカータグがクリックされた際のハンドラ
+         */
+        onClickAnchorTag: function () {
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.alert(this.model.get("dispSite") + "のHPを直接開いてリンクを参照してください。");
         },
         /**
          * アプリから保存可能なローカルストレージのパスを取得する。

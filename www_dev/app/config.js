@@ -16,6 +16,8 @@ require.config({
         "blockui" : "../lib/blockUI/jquery.blockUI",
         "panzoom" : "../bower_components/jquery.panzoom/dist/jquery.panzoom",
         "snap" : "../bower_components/Snap.js/snap.min",
+        "vex" : "../bower_components/vex/js/vex",
+        "vexDialog" : "../bower_components/vex/js/vex.dialog",
     },
 
     deps : [ "main" ],
@@ -35,6 +37,8 @@ require.config({
         },
         "jquerynehan" : [ "nehan" ],
         "blockui" : [ "jquery" ],
-        "panzoom" : [ "jquery" ]
+        "panzoom" : [ "jquery" ],
+        "vex" : [ "jquery" ],
+        "vexDialog" : [ "vex" ]
     }
 });
