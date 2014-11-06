@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var ArticleModel = require("modules/model/article/ArticleModel");
     var FavoriteModel = require("modules/model/article/FavoriteModel");
     var CommonUtil = require("modules/util/CommonUtil");
+    var DateUtil = require("modules/util/DateUtil");
 
     var ArticleListItemView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/articleListItem"),
@@ -130,45 +131,46 @@ define(function(require, exports, module) {
          * 画像をクリックされた際のハンドラ。
          */
         onClickImage : function (ev){
-        	alert("image click!!");
             var uri = ev.target.src;
-        	alert(uri);
-            // var fileName = this.getLocalPath() + "kuro.png";
-            var fileName = "/mnt/sdcard/Pictures/NamieTablet/kuro.png";
+        	var base = DateUtil.formatDate(new Date(), "yyyy-MM-dd_HH-mm-ss");
+        	var ext = uri.replace(/.*\//, "").replace(/.*\./, "");
+            var fileName = this.getLocalPath() + "/" + base + "." + ext;
             this.saveImage(uri, fileName);
         },
         /**
          * アプリから保存可能なローカルストレージのパスを取得する。
          */
         getLocalPath : function (){
-            requestFileSystem(LocalFileSystem.PERSISTENT, 0,
-                function(fileSystem) {
-                    return fileSystem.root.fullPath;
-                },
-                function(e) {
-                    console.log('パス取得エラー');
-                }
-            );
+        	return "/mnt/sdcard/Pictures/namie-town" ;
         },
         /**
          * 指定URiの画像データをストレージに保存する。
          */
         saveImage : function(uri, filePath){
-        	alert("saveImage!");
-        	alert(filePath);
-
+        	if(window.FileTransfer === undefined){
+        		alert("ご使用の端末では保存できません。");
+        		return;
+        	}
             var fileTransfer = new FileTransfer();
             fileTransfer.download(
                 encodeURI(uri),
                 filePath,
                 function(entry) {
-                	alert("download complete: " + entry.fullPath);
-                    console.log("download complete: " + entry.fullPath);
+                	window.MediaScanPlugin.scanFile(
+                			filePath,
+                			function(msg){
+                            	alert("画像を保存しました。");
+                			}, function(err){
+                            	alert("画像の保存に失敗しました。");
+                				console.log(err);
+                			}
+                		);
                 },
                 function(error) {
-                    console.log("download error source " + error.source);
-                    console.log("download error target " + error.target);
-                    console.log("upload error code" + error.code);
+                	alert("画像の保存に失敗しました。");
+                    console.log("download error source: " + error.source);
+                    console.log("download error target: " + error.target);
+                    console.log("download error code: " + error.code);
                 },
                 false,
                 {
