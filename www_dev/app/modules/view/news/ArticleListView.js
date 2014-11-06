@@ -28,6 +28,9 @@ define(function(require, exports, module) {
 
         afterRendered : function() {
             this.initIScroll();
+            
+            // 読み込み後のフェードインのため
+            $('.article-list').addClass('is-ready');
         },
         /**
          * 初期化処理

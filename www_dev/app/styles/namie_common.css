@@ -100,7 +100,14 @@ main {
 .contents__primary {
     overflow: auto;
     border-left: 1px solid #eee;
+    padding: 0;
+    background: #777;
 }
+
+.iscroll-container {
+}
+    .iscroll-container > div {
+    }
 
 .contents__secondary {
     padding: 0;
@@ -234,6 +241,20 @@ main {
     font-weight: bold;
     font-size: 16px;
 }
+
+.article-list {
+    margin: 0;
+    overflow: hidden;
+    list-style: none;
+    background: white;
+    min-height: 700px;
+    opacity: 0;
+    -webkit-transition: .4s ease opacity;
+    transition: .4s ease opacity;
+}
+    .article-list.is-ready {
+        opacity: 1;
+    }
 
 #articleList:first-child {
 }
