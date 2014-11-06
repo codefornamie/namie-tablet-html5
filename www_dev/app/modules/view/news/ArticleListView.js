@@ -1,5 +1,9 @@
+/* global IScroll:true */
+
 define(function(require, exports, module) {
     "use strict";
+    
+    require('iscroll');
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
@@ -17,7 +21,10 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-            
+            var iscroll = new IScroll('#contents__primary', {
+                momentum: false,
+                scrollbars: true
+            });
         },
         /**
          * 初期化処理
@@ -29,6 +36,27 @@ define(function(require, exports, module) {
          * 取得した動画一覧を描画する
          */
         setArticleList : function() {
+            var model = this.collection.at(0);
+            var template = require("ldsh!/app/templates/news/articleListItem");
+
+            switch (model.get("modelType")) {
+                case "youtube":
+                    template = require("ldsh!/app/templates/news/articleListItem");
+                    break;
+                case "event":
+                    template = require("ldsh!/app/templates/news/eventsListItem");
+                    break;
+                default:
+                    template = require("ldsh!/app/templates/news/articleListItem");
+                    break;
+            }
+
+            this.insertView("#articleList", new ArticleListItemView({
+                model : model,
+                template: template
+            }));
+
+            /*
             var animationDeley = 0;
             this.collection.each($.proxy(function(model) {
                 var template = require("ldsh!/app/templates/news/articleListItem");
@@ -50,6 +78,7 @@ define(function(require, exports, module) {
                 }));
                 animationDeley += 0.2;
             }, this));
+            */
         }
     });
 

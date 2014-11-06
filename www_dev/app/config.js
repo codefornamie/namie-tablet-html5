@@ -16,6 +16,7 @@ require.config({
         "blockui" : "../lib/blockUI/jquery.blockUI",
         "panzoom" : "../bower_components/jquery.panzoom/dist/jquery.panzoom",
         "snap" : "../bower_components/Snap.js/snap.min",
+        "iscroll": "../bower_components/iscroll/build/iscroll"
     },
 
     deps : [ "main" ],
