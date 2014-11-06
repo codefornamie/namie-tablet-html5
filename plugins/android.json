@@ -9,6 +9,10 @@
                 "parents": {
                     "/*": [
                         {
+                            "xml": "<feature name=\"MediaScanPlugin\"><param name=\"android-package\" value=\"jp.fukushima.namie.town.MediaScanPlugin.MediaScanPlugin\" /></feature>",
+                            "count": 1
+                        },
+                        {
                             "xml": "<feature name=\"File\"><param name=\"android-package\" value=\"org.apache.cordova.file.FileUtils\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
                         },
@@ -32,6 +36,9 @@
         }
     },
     "installed_plugins": {
+        "jp.fukushima.namie.town.MediaScanPlugin": {
+            "PACKAGE_NAME": "jp.fukushima.namie.town"
+        },
         "org.apache.cordova.file-transfer": {
             "PACKAGE_NAME": "jp.fukushima.namie.town"
         }
