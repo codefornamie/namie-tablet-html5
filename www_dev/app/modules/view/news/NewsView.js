@@ -8,6 +8,8 @@ define(function(require, exports, module) {
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
+    var YouTubeCollection = require("modules/collection/youtube/YouTubeCollection");
+    var EventsCollection = require("modules/collection/events/EventsCollection");
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラス
@@ -15,8 +17,12 @@ define(function(require, exports, module) {
     var NewsView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/news"),
         model : new ArticleModel(),
-        collection : new ArticleCollection(),
+        fetchCounter : 0,
+        articleCollection : new ArticleCollection(),
         favoriteCollection : new FavoriteCollection(),
+        youtubeCollection : new YouTubeCollection(),
+        eventsCollection : new EventsCollection(),
+        newsCollection : {models:[]},
 
         beforeRendered : function() {
 
@@ -27,22 +33,66 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
-            this.collection = new ArticleCollection();
+            this.requestGoogleAPIClient();
+            this.articleCollection.fetch({success: $.proxy(this.onfetchArticle,this)});
+            this.eventsCollection.fetch({success: $.proxy(this.onfetchEvents,this)});
+        },
+        /**
+         * Google API clientを初期化する
+         */
+        requestGoogleAPIClient : function() {
+            if (app.gapiLoaded) {
+                this.searchYoutube();
+                return;
+            }
 
-            // FeedListView初期化
-            var feedListView = new FeedListView();
-            feedListView.collection = this.collection;
-            this.setView("#sidebar__list", feedListView);
-            feedListView.listenTo(this.collection, "reset sync request", feedListView.render);
-            
-            // ArticleListView初期化
-            var articleListView = new ArticleListView();
-            articleListView.collection = this.collection;
-            this.setView("#article-list", articleListView);
-            articleListView.listenTo(this.collection, "reset sync request", articleListView.render);
-            
-            this.collection.fetch({success: $.proxy(this.onfetchArticle,this)});
+            var self = this;
+            window.googleApiClientReady = function() {
+                delete window.googleApiClientReady;
 
+                window.onYouTubeIframeAPIReady = function() {
+                    delete window.onYouTubeIframeAPIReady;
+                    app.gapiLoaded = true;
+
+                    self.searchYoutube();
+                };
+
+                var tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                var firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            };
+
+            var tag = document.createElement('script');
+            tag.src = "https://apis.google.com/js/client.js?onload=googleApiClientReady";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        },
+        /**
+         *  YouTube情報の検索
+         *  GoogleAPIの初期化が済んだら呼ばれる
+         */
+        searchYoutube: function () {
+            this.youtubeCollection.channelId = "UC9_ZCtgOk8dPC6boqZMNqbw";
+            var onload = function () {
+                this.youtubeCollection.fetch({
+                    success : $.proxy(this.onFetchYoutube,this),
+                    error : function error(model, response, options) {
+                        console.log("error");
+                    }
+                });
+            };
+            gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
+            gapi.client.load('youtube', 'v3', $.proxy(onload, this));
+        },
+        /**
+         * youtube情報検索完了後のコールバック関数
+         */
+        onFetchYoutube: function () {
+            this.fetchCounter++;
+            if (this.fetchCounter >= 3) {
+                this.onFetchAll();
+            }
         },
         /**
          * 記事情報検索完了後のコールバック関数
@@ -55,48 +105,60 @@ define(function(require, exports, module) {
          * お気に入り情報検索完了後のコールバック関数
          */
         onfetchFavorite: function () {
-            this.collection.each($.proxy(function (article) {
+            this.articleCollection.each($.proxy(function (article) {
                 this.favoriteCollection.each($.proxy(function (favorite) {
                     if (article.get("url") === favorite.get("source")) {
                         article.set("isFavorite",true);
                     }
                 },this));
             },this));
-            
-            var article = this.collection.at(0);
-            this.setArticle(article);
+            this.fetchCounter++;
+            if (this.fetchCounter >= 3) {
+                this.onFetchAll();
+            }
         },
-
-        events : {
-            "click .articleListItem" : "onClickArticleListItem"
-        },
-        
         /**
-         * 記事リストアイテムをクリックされたときのコールバック関数
-         *  
-         *  @param {Event} ev
+         * イベント情報検索完了後のコールバック関数
          */
-        onClickArticleListItem : function(ev) {
-            var articleId = $(ev.currentTarget).attr("data-article-id");
-            var article = this.collection.find(function(item) {
-                return item.get('__id') === articleId;
-            });
-            this.setArticle(article);
+        onfetchEvents: function () {
+            this.fetchCounter++;
+            if (this.fetchCounter >= 3) {
+                this.onFetchAll();
+            }
         },
-        
         /**
-         * 記事詳細に記事情報を表示する
-         *  
-         *  @param {Backbone.Model} article
+         * youtube情報検索完了後のコールバック関数
          */
-        setArticle : function(article) {
-            // [TODO] article listの中から該当の記事まで移動する
-            /*
-            this.setView("#article-list", new ArticleDetailView({
-                model: article
-            })).render();
-            */
-        }
+        onfetchYoutube: function () {
+            this.fetchCounter++;
+            if (this.fetchCounter >= 3) {
+                this.onFetchAll();
+            }
+        },
+        /**
+         * 全ての情報検索完了後のコールバック関数
+         */
+        onFetchAll: function () {
+//            this.newsCollection = this.articleCollection;
+            this.newsCollection = new Backbone.Collection();
+            this.newsCollection.models = [].concat(
+                    this.articleCollection.models).concat(
+                    this.youtubeCollection.models).concat(
+                    this.eventsCollection.models);
+            // FeedListView初期化
+          var feedListView = new FeedListView();
+          feedListView.collection = this.newsCollection;
+          this.setView("#sidebar__list", feedListView);
+          feedListView.render();
+          feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
+          
+          // ArticleListView初期化
+          var articleListView = new ArticleListView();
+          articleListView.collection = this.newsCollection;
+          this.setView("#article-list", articleListView);
+          articleListView.render();
+          articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
+        },
 
     });
 

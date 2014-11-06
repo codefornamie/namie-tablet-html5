@@ -72,6 +72,19 @@ main {
     padding-bottom: 0;
 }
 
+#selectRadiation {
+    margin-top:4px;
+    background-color:#262626;
+    border-color:#262626;
+    text-align:right;
+    color:white;
+}
+
+#radiationValue {
+    color:white;
+    line-height:42px;
+}
+
 /**
  *  menu
  */
@@ -105,6 +118,7 @@ main {
 
 .contents__secondary {
     padding: 0;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 .contents__secondary > div {
@@ -170,7 +184,7 @@ main {
 }
 
 .post__footer {
-    border: 1px solid #eee;
+    border-top: 1px solid #eee;
     margin: 16px;
 }
 
@@ -218,6 +232,13 @@ div.nehan-block.nehan-body:last-child {
     margin-bottom: 0px;
 }
 
+.articleLink {
+    font-size: small;
+    word-break: break-all;
+}
+.tagColumnsLabel {
+    padding-top: 7px;
+}
 /**
  *  Events Detail
  */
@@ -267,4 +288,14 @@ div.nehan-block.nehan-body:last-child {
 .nehan-body {
     border-bottom: 1px solid #eee;
     margin-bottom: 16px;
+}
+/**
+ * Feed
+ **/
+.feedListItem {
+	border-top: solid 1px #aaa;
+    margin-bottom: 8px;
+}
+.feedListItem p{
+	margin-bottom: 0.20rem;
 }

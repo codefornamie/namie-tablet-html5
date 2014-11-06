@@ -11,7 +11,9 @@ define(function(require, exports, module) {
      */
     var FeedListView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/feedList"),
-
+        events: {
+            "click .feedListItem" : "onClickFeedListItem"
+        },
         beforeRendered : function() {
             this.setFeedList();
         },
@@ -39,8 +41,24 @@ define(function(require, exports, module) {
                 }));
                 animationDeley += 0.2;
             }, this));
-
-        }
+        },
+        /**
+         * 記事リストアイテムをクリックされたときのコールバック関数
+         *  
+         *  @param {Event} ev
+         */
+        onClickFeedListItem : function(ev) {
+            // クリックされたフィードに対応する記事のスクロール位置取得
+            var articleId = $(ev.currentTarget).attr("data-article-id");
+            var position = $("#" + articleId).offset().top - $(".top-bar").height();
+            
+            // 現在の記事詳細のスクロール位置と相対位置を加算した箇所までスクロールする
+            $(".contents__primary").animate({
+                scrollTop : position + $(".contents__primary").scrollTop()
+            }, {
+                queue : false
+            });
+        },
     });
 
     module.exports = FeedListView;
