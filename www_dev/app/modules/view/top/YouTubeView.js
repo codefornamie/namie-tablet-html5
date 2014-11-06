@@ -73,7 +73,7 @@ define(function(require, exports, module) {
             var youTubeListView = new YouTubeListView();
             youTubeListView.collection = this.collection;
             youTubeListView.parent = this;
-            this.setView("#sidebar__list", youTubeListView);
+            this.setView("#sidebar_list", youTubeListView);
 
             youTubeListView.listenTo(this.collection, "reset sync request", youTubeListView.render);
 

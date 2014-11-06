@@ -33,6 +33,7 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
+            this.showLoading();
             this.requestGoogleAPIClient();
             this.articleCollection.fetch({success: $.proxy(this.onfetchArticle,this)});
             this.eventsCollection.fetch({success: $.proxy(this.onfetchEvents,this)});
@@ -148,7 +149,7 @@ define(function(require, exports, module) {
             // FeedListView初期化
           var feedListView = new FeedListView();
           feedListView.collection = this.newsCollection;
-          this.setView("#sidebar__list", feedListView);
+          this.setView("#sidebar_list", feedListView);
           feedListView.render();
           feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
           
@@ -158,6 +159,7 @@ define(function(require, exports, module) {
           this.setView("#article-list", articleListView);
           articleListView.render();
           articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
+          this.hideLoading();
         },
 
     });
