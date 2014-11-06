@@ -72,6 +72,19 @@ main {
     padding-bottom: 0;
 }
 
+#selectRadiation {
+    margin-top:4px;
+    background-color:#262626;
+    border-color:#262626;
+    text-align:right;
+    color:white;
+}
+
+#radiationValue {
+    color:white;
+    line-height:42px;
+}
+
 /**
  *  menu
  */
