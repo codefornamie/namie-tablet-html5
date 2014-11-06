@@ -27,7 +27,7 @@ define(function(require, exports, module) {
             if (this.model.get("imageUrl")) {
                 this.$el.find("#articleDetailImage").attr("src",this.model.get("imageUrl"));
             } else {
-            	this.$el.find("#articleDetailImageArea").hide();
+                this.$el.find("#articleDetailImageArea").hide();
             }
             // 縦書き表示処理
             /*
@@ -44,10 +44,10 @@ define(function(require, exports, module) {
           });
             */
             if (this.model.get("imageUrl")) {
-            	this.$el.find("#nehan-articleDetailImage").parent().css("width","auto");
-            	this.$el.find("#nehan-articleDetailImage").parent().css("height","auto");
-            	this.$el.find("#nehan-articleDetailImage").css("width","auto");
-            	this.$el.find("#nehan-articleDetailImage").css("height","auto");
+                this.$el.find("#nehan-articleDetailImage").parent().css("width","auto");
+                this.$el.find("#nehan-articleDetailImage").parent().css("height","auto");
+                this.$el.find("#nehan-articleDetailImage").css("width","auto");
+                this.$el.find("#nehan-articleDetailImage").css("height","auto");
             }
 
             $(".panzoom-elements").panzoom({
@@ -132,8 +132,11 @@ define(function(require, exports, module) {
          */
         onClickImage : function (ev){
             var uri = ev.target.src;
-        	var base = DateUtil.formatDate(new Date(), "yyyy-MM-dd_HH-mm-ss");
-        	var ext = uri.replace(/.*\//, "").replace(/.*\./, "");
+            var base = DateUtil.formatDate(new Date(), "yyyy-MM-dd_HH-mm-ss");
+            var ext = uri.replace(/.*\//, "").replace(/.*\./, "");
+            if(!ext){
+                ext = "jpg";
+            }
             var fileName = this.getLocalPath() + "/" + base + "." + ext;
             this.saveImage(uri, fileName);
         },
@@ -141,33 +144,33 @@ define(function(require, exports, module) {
          * アプリから保存可能なローカルストレージのパスを取得する。
          */
         getLocalPath : function (){
-        	return "/mnt/sdcard/Pictures/namie-town" ;
+            return "/mnt/sdcard/Pictures/namie-town" ;
         },
         /**
          * 指定URiの画像データをストレージに保存する。
          */
         saveImage : function(uri, filePath){
-        	if(window.FileTransfer === undefined){
-        		alert("ご使用の端末では保存できません。");
-        		return;
-        	}
+            if(window.FileTransfer === undefined){
+                alert("ご使用の端末では保存できません。");
+                return;
+            }
             var fileTransfer = new FileTransfer();
             fileTransfer.download(
                 encodeURI(uri),
                 filePath,
                 function(entry) {
-                	window.MediaScanPlugin.scanFile(
-                			filePath,
-                			function(msg){
-                            	alert("画像を保存しました。");
-                			}, function(err){
-                            	alert("画像の保存に失敗しました。");
-                				console.log(err);
-                			}
-                		);
+                    window.MediaScanPlugin.scanFile(
+                            filePath,
+                            function(msg){
+                                alert("画像を保存しました。");
+                            }, function(err){
+                                alert("画像の保存に失敗しました。");
+                                console.log(err);
+                            }
+                        );
                 },
                 function(error) {
-                	alert("画像の保存に失敗しました。");
+                    alert("画像の保存に失敗しました。");
                     console.log("download error source: " + error.source);
                     console.log("download error target: " + error.target);
                     console.log("download error code: " + error.code);
