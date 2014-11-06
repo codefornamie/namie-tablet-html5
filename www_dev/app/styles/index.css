@@ -7,5 +7,7 @@
 @import "namie_common.css";
 @import "nehan.css";
 @import "jquery.nehan.css";
+@import "../../bower_components/vex/css/vex.css";
+@import "../../bower_components/vex/css/vex-theme-default.css";
 
 /*-- Application stylesheets. -----------------------------------------------*/

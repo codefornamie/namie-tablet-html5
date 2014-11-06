@@ -17,7 +17,9 @@ require.config({
         "panzoom" : "../bower_components/jquery.panzoom/dist/jquery.panzoom",
         "snap" : "../bower_components/Snap.js/snap.min",
         "iscroll": "../bower_components/iscroll/build/iscroll-probe",
-        "async": "../bower_components/async/lib/async"
+        "async": "../bower_components/async/lib/async",
+        "vex" : "../bower_components/vex/js/vex",
+        "vexDialog" : "../bower_components/vex/js/vex.dialog",
     },
 
     deps : [ "main" ],
@@ -37,6 +39,8 @@ require.config({
         },
         "jquerynehan" : [ "nehan" ],
         "blockui" : [ "jquery" ],
-        "panzoom" : [ "jquery" ]
+        "panzoom" : [ "jquery" ],
+        "vex" : [ "jquery" ],
+        "vexDialog" : [ "vex" ]
     }
 });

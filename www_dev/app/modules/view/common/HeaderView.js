@@ -35,7 +35,7 @@ define(function(require, exports, module) {
         onFetchRadiation: function() {
             var model = this.collection.at(0);
             var value = "-";
-            if (model != null) {
+            if (model) {
                 value = model.get("value");
             }
             $("#radiationValue").text(value + "μSv/h");

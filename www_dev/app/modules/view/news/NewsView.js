@@ -33,6 +33,8 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
+            this.showLoading();
+
             async.parallel([
                 this.loadYoutube.bind(this),
                 this.loadArticle.bind(this),
@@ -182,8 +184,8 @@ define(function(require, exports, module) {
                 return;
             }
 
-            this.newsCollection.add(this.articleCollection.models);
             this.newsCollection.add(this.youtubeCollection.models);
+            this.newsCollection.add(this.articleCollection.models);
             this.newsCollection.add(this.eventsCollection.models);
 
             // FeedListView初期化
@@ -199,6 +201,8 @@ define(function(require, exports, module) {
             this.setView("#article-list", articleListView);
             articleListView.render();
             articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
+
+            this.hideLoading();
         },
 
     });

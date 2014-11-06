@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var ArticleListItemView = require("modules/view/news/ArticleListItemView");
+    var YouTubeListItemView = require("modules/view/news/YouTubeListItemView");
 
     /**
      * 記事一覧のViewクラス
@@ -81,17 +82,26 @@ define(function(require, exports, module) {
             var currentPage = app.get('currentPage');
             var model = this.collection.at(currentPage);
             var template = require("ldsh!/app/templates/news/articleListItem");
-
+            // 記事一覧に追加するViewクラス。
+            // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
+            var ListItemView;
+            
             switch (model.get("modelType")) {
-                case "youtube":
-                    template = require("ldsh!/app/templates/news/articleListItem");
-                    break;
-                case "event":
-                    template = require("ldsh!/app/templates/news/eventsListItem");
-                    break;
-                default:
-                    template = require("ldsh!/app/templates/news/articleListItem");
-                    break;
+            case "youtube":
+                template = require("ldsh!/app/templates/news/youTubeListItem");
+                ListItemView = YouTubeListItemView;
+                break;
+            case "event":
+                template = require("ldsh!/app/templates/news/eventsListItem");
+                ListItemView = ArticleListItemView;
+                break;
+            default:
+                template = require("ldsh!/app/templates/news/articleListItem");
+                if (model.get("rawHTML")) {
+                    template = require("ldsh!/app/templates/news/articleListItemForHtml");
+                }
+                ListItemView = ArticleListItemView;
+                break;
             }
 
             this.setView("#articleList", new ArticleListItemView({
