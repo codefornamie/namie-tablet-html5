@@ -110,7 +110,6 @@ main {
 
 .contents__secondary > div {
     position: relative;
-    height: 100%;
 }
 
 /**
@@ -120,7 +119,7 @@ main {
     height: 100%;
 
     /* .side-actionの高さ分のpaddingを確保する */
-    padding-bottom: 144px;
+    padding-top: 200px;
 }
 
 .sidebar__list {
@@ -137,25 +136,21 @@ main {
     width: 100%;
 }
 
-.side-action__list {
+.side-action__content {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     list-style: none;
     margin: 0;
     width: 100%;
+    height: 200px;
 }
 
-.side-action__list li {
-    height: 48px;
-}
-
-.side-action__list li .button {
-    height: 48px;
-    line-height: 48px;
-    padding-top: 0;
-    padding-bottom: 0;
-    margin: 0;
+/**
+ *  feed list
+ */
+.feed-list {
+    margin: 16px;
 }
 
 /**
