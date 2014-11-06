@@ -150,7 +150,7 @@ define(function(require, exports, module) {
             // FeedListView初期化
           var feedListView = new FeedListView();
           feedListView.collection = this.newsCollection;
-          this.setView("#sidebar_list", feedListView);
+          this.setView("#sidebar__list", feedListView);
           feedListView.render();
           feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
           
