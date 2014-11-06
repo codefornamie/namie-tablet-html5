@@ -195,13 +195,6 @@ define(function(require, exports, module) {
         },
         /**
          * アプリから保存可能なローカルストレージのパスを取得する。
-         */
-        onClickAnchorTag: function () {
-            vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.alert(this.model.get("dispSite") + "のHPを直接開いてリンクを参照してください。");
-        },
-        /**
-         * アプリから保存可能なローカルストレージのパスを取得する。
          * 
          * @return {String} ローカルストレージのパス
          */
