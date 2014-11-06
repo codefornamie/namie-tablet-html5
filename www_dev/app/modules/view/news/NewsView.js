@@ -33,6 +33,7 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
+            this.showLoading();
             this.requestGoogleAPIClient();
             this.articleCollection.fetch({success: $.proxy(this.onfetchArticle,this)});
             this.eventsCollection.fetch({success: $.proxy(this.onfetchEvents,this)});
@@ -139,11 +140,12 @@ define(function(require, exports, module) {
          * 全ての情報検索完了後のコールバック関数
          */
         onFetchAll: function () {
-//            this.newsCollection = this.articleCollection;
             this.newsCollection = new Backbone.Collection();
+            // 取得した３つのCollectionを一つのCollectionにマージする。
+            // 表示順は、YouTube動画、記事、イベントとするため、その順でマージする
             this.newsCollection.models = [].concat(
-                    this.articleCollection.models).concat(
                     this.youtubeCollection.models).concat(
+                    this.articleCollection.models).concat(
                     this.eventsCollection.models);
             // FeedListView初期化
           var feedListView = new FeedListView();
@@ -158,6 +160,7 @@ define(function(require, exports, module) {
           this.setView("#article-list", articleListView);
           articleListView.render();
           articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
+          this.hideLoading();
         },
 
     });
