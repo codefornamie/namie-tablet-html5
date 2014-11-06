@@ -55,6 +55,7 @@
 		"define",
 		"dcc",
 		"YT",
-		"require"
+		"require",
+        "FileTransfer"
     ]
 }

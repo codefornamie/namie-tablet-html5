@@ -15,4 +15,5 @@ www_dev/node_modules/
 www_dev/bower_components/
 www_dev/test/coverage/
 www_dev/reports/
+plugins/*/.fetch.json
 !.gitkeep

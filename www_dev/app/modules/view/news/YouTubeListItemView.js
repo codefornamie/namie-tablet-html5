@@ -3,12 +3,16 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var ArticleListItemView = require("modules/view/news/ArticleListItemView");
 
     /**
      * 新聞アプリの福島TVのニュースを表示するためのViewを作成する。
      * 
+     * @class 新聞アプリの福島TVのニュースを表示するためのView
+     * @exports YouTubeListItemView
+     * @constructor
      */
-    var YouTubeListItemView = AbstractView.extend({
+    var YouTubeListItemView = ArticleListItemView.extend({
         /**
          * Viewのテンプレートファイルパス
          */
@@ -17,22 +21,16 @@ define(function(require, exports, module) {
          * YouTubePlayerのインスタンス
          */
         player : null,
-
         /**
-         * Viewのテンプレートの描画が完了した後に呼び出されるコールバック関数。
+         * YouTubeの動画再生プレイヤーを表示する。<br/>
+         * このメソッドは、View#afterRenderメソッド処理完了後に呼び出される。
          */
-        afterRendered : function() {
+        showImage : function() {
             this.setYouTubePlayer();
         },
 
         /**
-         * 初期化処理
-         */
-        initialize : function() {
-        },
-
-        /**
-         * YouTube動画プレイヤーの設定
+         * YouTube動画プレイヤーの設定を行う。
          */
         setYouTubePlayer : function() {
             this.player = new YT.Player('youtubePlayer-' + this.model.get("videoId"), {
