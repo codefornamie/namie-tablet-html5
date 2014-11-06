@@ -33,8 +33,8 @@ define(function(require, exports, module) {
         onFetchRadiation: function() {
             var model = this.collection.at(0);
             var value = "-";
-            if (model != null) {
-                value = model.get("value")
+            if (model) {
+                value = model.get("value");
             }
             $("#radiationValue").text(value + "μSv/h");
         },
