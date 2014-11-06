@@ -61,7 +61,7 @@ define(function(require, exports, module) {
                 var accessor = dcContext.asAccount(this.cellId, this.get("loginId"), this.get("password"));
                 // ODataコレクションへのアクセス準備（実際の認証処理）
                 var cellobj = accessor.cell();
-                var targetBox = cellobj.ctl.box.retrieve(this.box);
+                var targetBox = cellobj.box("data");
                 app.accessor = cellobj.accessor;
                 app.box = targetBox;
             } catch (e) {
@@ -74,10 +74,8 @@ define(function(require, exports, module) {
                 this.onLogin(message);
                 return;
             }
-
             this.onLogin();
         },
     });
-
     module.exports = LoginModel;
 });
