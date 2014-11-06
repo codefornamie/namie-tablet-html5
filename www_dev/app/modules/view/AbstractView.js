@@ -12,6 +12,11 @@ define(function(require, exports, module) {
     var AbstractView = Backbone.Layout.extend({
         animation: null,
         animationDeley: 0,
+        serialize : function() {
+            return {
+                model : this.model
+            };
+        },
         beforeRender : function() {
             this.beforeRendered();
             if (this.animation) {
