@@ -2,19 +2,20 @@
     <section class='post__body'>
         <div class="row">
             <div class="large-12 columns">
-                <%= model.get("dispSite") %>
+                <div class="post-header">
+                    <div class="post-header__site">
+                        <div class="post-label">
+                            <%= model.get("dispSite") %>
+                        </div>
+                    </div>
+
+                    <div class="post-header__title">
+                        <%= model.get("dispTitle") %>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="large-9 columns" style="font-size: large;font-weight: bold;">
-                <%= model.get("dispTitle") %>
-            </div>
-        </div>
-        <div class="row">
-            <div class="large-12 columns" style="font-size: large;font-weight: bold;">
-                <hr/>
-            </div>
-        </div>
+
         <div class="row">
             <div class="large-12 columns nehandiv">
                 <div id="articleDetailImageArea" height="390" width="390" >
