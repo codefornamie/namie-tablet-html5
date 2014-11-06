@@ -55,25 +55,9 @@ define(function(require, exports, module) {
         },
 
         index : function() {
-            app._isRunning = true;
-            if (app._isRunning) {
-                setTimeout(function () {
-                    console.log('click!');
-                    $('#loginButton').click();
-                }, 0);
-            }
             console.log("Welcome to your / route.");
         },
         top : function() {
-            if (!app._isRunning) {
-                this.navigate('', {
-                    trigger: true,
-                    replace: true
-                });
-                app._isRunning = true;
-                return;
-            }
-
             console.log("It's a top page.");
             this.layout.showView(new NewsView());
             this.layout.setHeader(new common.HeaderView());
