@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var FavoriteModel = require("modules/model/article/FavoriteModel");
     var CommonUtil = require("modules/util/CommonUtil");
     var DateUtil = require("modules/util/DateUtil");
+    var vexDialog = require("vexDialog");
 
     var ArticleListItemView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/articleListItem"),
@@ -79,7 +80,8 @@ define(function(require, exports, module) {
         events : {
             "click [data-favorite-register-button]" : "onClickFavoriteRegisterButton",
             "click #tagAddButton" : "onClickTagAddButton",
-            "click .deleteTag" : "onClickDeleteTag"
+            "click .deleteTag" : "onClickDeleteTag",
+            "click a" : "onClickAnchorTag"
         },
         /**
          * お気に入りボタン押下時のコールバック関数
@@ -144,6 +146,13 @@ define(function(require, exports, module) {
             }
             var fileName = this.getLocalPath() + "/" + base + "." + ext;
             this.saveImage(uri, fileName);
+        },
+        /**
+         * 記事詳細内のアンカータグがクリックされた際のハンドラ
+         */
+        onClickAnchorTag: function () {
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.alert(this.model.get("dispSite") + "のHPを直接開いてリンクを参照してください。");
         },
         /**
          * アプリから保存可能なローカルストレージのパスを取得する。
