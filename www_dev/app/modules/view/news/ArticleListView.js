@@ -16,11 +16,6 @@ define(function(require, exports, module) {
     var ArticleListView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/articleList"),
         
-        /**
-         * 現在のページ番号
-         */
-        currentPage: 0,
-
         beforeRendered : function() {
             this.destroyIScroll();
             this.setArticleList();
@@ -36,6 +31,9 @@ define(function(require, exports, module) {
          * 初期化処理
          */
         initialize : function() {
+            // 表示する記事ページのインデックス
+            app.set('currentPage', 0);
+            this.listenTo(app, 'change:currentPage', this.onChangeCurrentPage);
         },
         
         /**
@@ -80,7 +78,8 @@ define(function(require, exports, module) {
          * 取得した動画一覧を描画する
          */
         setArticleList : function() {
-            var model = this.collection.at(this.currentPage);
+            var currentPage = app.get('currentPage');
+            var model = this.collection.at(currentPage);
             var template = require("ldsh!/app/templates/news/articleListItem");
 
             switch (model.get("modelType")) {
@@ -108,24 +107,33 @@ define(function(require, exports, module) {
         goToPage: function (page) {
             // 範囲外ならば移動しない
             if (page < 0) return;
-            if (this.collection.models.length <= page) return;
+            if (this.collection.length <= page) return;
             
-            this.currentPage = page;
-            this.render();
+            // 範囲内ならば表示しているページを更新する
+            app.set('currentPage', page);
         },
         
         /**
          * 前のページに移動する
          */
         goToPreviousPage: function () {
-            this.goToPage(this.currentPage - 1);
+            var currentPage = app.get('currentPage');
+            this.goToPage(currentPage - 1);
         },
         
         /**
          * 次のページに移動する
          */
         goToNextPage: function () {
-            this.goToPage(this.currentPage + 1);
+            var currentPage = app.get('currentPage');
+            this.goToPage(currentPage + 1);
+        },
+        
+        /**
+         * currentPageが更新されたら呼ばれる
+         */
+        onChangeCurrentPage: function () {
+            this.render();
         }
     });
 

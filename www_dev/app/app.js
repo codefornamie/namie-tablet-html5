@@ -10,6 +10,9 @@ define(function(require, exports, module) {
   var panzoom = require("panzoom");
 //  var messageja = require("messageja");
 
+  // グローバルに利用できるModel
+  var app = module.exports = new Backbone.Model();
+
   // The root path to run the application through.
-  exports.root = "/";
+  app.root = "/";
 });

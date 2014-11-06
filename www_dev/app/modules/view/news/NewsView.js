@@ -134,29 +134,29 @@ define(function(require, exports, module) {
                 this.onFetchAll();
             }
         },
+
         /**
          * 全ての情報検索完了後のコールバック関数
          */
         onFetchAll: function () {
-//            this.newsCollection = this.articleCollection;
             this.newsCollection = new Backbone.Collection();
-            this.newsCollection.models = [].concat(
-                    this.articleCollection.models).concat(
-                    this.youtubeCollection.models).concat(
-                    this.eventsCollection.models);
+            this.newsCollection.add(this.articleCollection.models);
+            this.newsCollection.add(this.youtubeCollection.models);
+            this.newsCollection.add(this.eventsCollection.models);
+
             // FeedListView初期化
-          var feedListView = new FeedListView();
-          feedListView.collection = this.newsCollection;
-          this.setView("#sidebar__list", feedListView);
-          feedListView.render();
-          feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
-          
-          // ArticleListView初期化
-          var articleListView = new ArticleListView();
-          articleListView.collection = this.newsCollection;
-          this.setView("#article-list", articleListView);
-          articleListView.render();
-          articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
+            var feedListView = new FeedListView();
+            feedListView.collection = this.newsCollection;
+            this.setView("#sidebar__list", feedListView);
+            feedListView.render();
+            feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
+
+            // ArticleListView初期化
+            var articleListView = new ArticleListView();
+            articleListView.collection = this.newsCollection;
+            this.setView("#article-list", articleListView);
+            articleListView.render();
+            articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
         },
 
     });
