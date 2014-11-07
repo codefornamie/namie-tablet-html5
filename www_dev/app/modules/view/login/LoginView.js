@@ -14,7 +14,7 @@ define(function(require, exports, module) {
      */
     var LoginView = AbstractView.extend({
         template : require("ldsh!/app/templates/login/login"),
-        model : new LoginModel(),
+        model : null,
         events : {
             "click #loginButton" : "onClickLoginButton"
         },
@@ -27,7 +27,7 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
-
+            this.model = new LoginModel();
         },
 
         /**
