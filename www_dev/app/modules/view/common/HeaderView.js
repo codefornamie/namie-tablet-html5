@@ -8,7 +8,8 @@ define(function(require, exports, module) {
     var Snap = require("snap");
     var RadiationModel = require("modules/model/radiation/RadiationModel");
     var RadiationCollection = require("modules/collection/radiation/RadiationCollection");
-
+    var Equal = require("modules/util/filter/Equal");
+    
     var HeaderView = AbstractView.extend({
         template : require("ldsh!/app/templates/common/header"),
         model : new RadiationModel(),
@@ -59,7 +60,8 @@ define(function(require, exports, module) {
          */
         onChangeRadiationStation: function(ev) {
             var value = $("#selectRadiation").val();
-            this.collection.condition.filter = "station eq '" + value + "'";
+            //this.collection.condition.filter = "station eq '" + value + "'";
+            this.collection.condition.filters = [new Equal("station", value)];
             this.collection.fetch({success: $.proxy(this.onFetchRadiation,this)});
         }
     });

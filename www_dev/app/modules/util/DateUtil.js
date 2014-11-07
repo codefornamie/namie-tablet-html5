@@ -72,6 +72,9 @@ define(function(require, exports, module) {
     DateUtil.zeroPadding = function(value, length) {
         return new Array(length - ('' + value).length + 1).join('0') + value;
     };
-
+    DateUtil.addDay = function(date, days) {
+        var dayTime = 1000 * 60 * 60 * 24 * days;
+        return new Date(date.getTime() + dayTime);
+    };
     module.exports = DateUtil;
 });

@@ -3,6 +3,8 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractCollection = require("modules/collection/AbstractCollection");
+    var Filter = require("modules/util/filter/Filter");
+
     var AbstractODataCollection = AbstractCollection.extend({
         cell : "kizuna01",
         box : "data",
@@ -51,6 +53,7 @@ define(function(require, exports, module) {
             this.search(method, model, options, complete);
         },
         search : function(method, model, options, complete) {
+            this.condition = Filter.searchCondition(this.condition);
             this.entityset.query().filter(this.condition.filter).top(this.condition.top).orderby(this.condition.orderby).run({
                 complete : function(response) {
                     complete(response);
