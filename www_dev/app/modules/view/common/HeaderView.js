@@ -43,7 +43,8 @@ define(function(require, exports, module) {
 
         events : {
             'click [data-drawer-opener]': 'onClickDrawerOpener',
-            'change #selectRadiation' : "onChangeRadiationStation"
+            'change #selectRadiation' : "onChangeRadiationStation",
+            'click .fontResizeButton' : "onClickFontResizeButton"
         },
 
         /**
@@ -61,6 +62,27 @@ define(function(require, exports, module) {
             var value = $("#selectRadiation").val();
             this.collection.condition.filter = "station eq '" + value + "'";
             this.collection.fetch({success: $.proxy(this.onFetchRadiation,this)});
+        },
+        /**
+         * 文字サイズ変更ボタンがクリックされた際のイベントハンドラ.
+         * @param {Object} ev イベントオブジェクト
+         */
+        onClickFontResizeButton: function(ev) {
+            var fontSize = $(ev.currentTarget).attr("id");
+            $("input[name='fontSize'][value='" + fontSize + "']")[0].click();
+//            switch (fontSize) {
+//                case "fontSizeSmall":
+//                    $("input[name='fontSize'][value='small']")[0].click();
+//                    break;
+//                case "fontSizeMiddle":
+//                    $("input[name='fontSize'][value='middle']")[0].click();
+//                    break;
+//                case "fontSizeLarge":
+//                    $("input[name='fontSize'][value='large']")[0].click();
+//                    break;
+//                default:
+//                    break;
+//            }
         }
     });
 
