@@ -19,6 +19,10 @@
                         {
                             "xml": "<feature name=\"FileTransfer\"><param name=\"android-package\" value=\"org.apache.cordova.filetransfer.FileTransfer\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Toast\"><param name=\"android-package\" value=\"nl.xservices.plugins.Toast\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -40,6 +44,9 @@
             "PACKAGE_NAME": "jp.fukushima.namie.town"
         },
         "org.apache.cordova.file-transfer": {
+            "PACKAGE_NAME": "jp.fukushima.namie.town"
+        },
+        "nl.x-services.plugins.toast": {
             "PACKAGE_NAME": "jp.fukushima.namie.town"
         }
     },

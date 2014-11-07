@@ -17,11 +17,19 @@ define(function(require, exports, module) {
         /** ログイン完了後に呼び出されるコールバック関数 */
         onLogin : null,
         /** baseurl */
-        baseUrl : "https://fj.baas.jp.fujitsu.com/",
+        baseUrl : null,
         /** cellId */
-        cellId : "kizuna01",
+        cellId : null,
         /** box */
-        box : "data",
+        box : null,
+        /**
+         * モデルの初期化処理を行う。
+         */
+        initialize: function(options) {
+            this.baseUrl = app.config.basic.baseUrl;
+            this.cellId = app.config.basic.cellId;
+            this.box = app.config.basic.boxName;
+        },
         /**
          * 入力された認証情報のバリデータ。
          * @memberOf LoginModel

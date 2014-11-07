@@ -224,13 +224,13 @@ define(function(require, exports, module) {
             var fileTransfer = new FileTransfer();
             fileTransfer.download(encodeURI(uri), filePath, function(entry) {
                 window.MediaScanPlugin.scanFile(filePath, function(msg) {
-                    alert("画像を保存しました。");
+                    window.plugins.toast.showLongBottom("画像を保存しました。");
                 }, function(err) {
-                    alert("画像の保存に失敗しました。");
+                    window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
                     console.log(err);
                 });
             }, function(error) {
-                alert("画像の保存に失敗しました。");
+                window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
                 console.log("download error source: " + error.source);
                 console.log("download error target: " + error.target);
                 console.log("download error code: " + error.code);

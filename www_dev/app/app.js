@@ -8,7 +8,7 @@ define(function(require, exports, module) {
   var nehan = require("jquerynehan");
   var blockui = require("blockui");
   var panzoom = require("panzoom");
-
+  var config = require("resources/appConfig");
 
 //  var messageja = require("messageja");
 
@@ -17,4 +17,6 @@ define(function(require, exports, module) {
 
   // The root path to run the application through.
   app.root = "/";
+  // アプリの設定情報を保持
+  app.config = config;
 });
