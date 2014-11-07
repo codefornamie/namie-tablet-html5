@@ -21,12 +21,16 @@ define(function(require, exports, module) {
 
                 views : {
                     "#header" : new login.HeaderView(),
+                    "#global-nav" : new login.GlobalNavView(),
                     "#menu" : new login.MenuView(),
                     "#contents" : new login.LoginView(),
                     "#footer" : new login.FooterView()
                 },
                 setHeader : function(headerView) {
                     this.setView("#header", headerView).render();
+                },
+                setGlobalNav : function(globalNavView) {
+                    this.setView("#global-nav", globalNavView).render();
                 },
                 setFooter : function(footerView) {
                     this.setView("#footer", footerView).render();
@@ -77,6 +81,7 @@ define(function(require, exports, module) {
             console.log("It's a top page.");
             this.layout.showView(new NewsView());
             this.layout.setHeader(new common.HeaderView());
+            this.layout.setGlobalNav(new common.GlobalNavView());
             this.layout.setFooter(new common.FooterView());
             this.commonView();
         },

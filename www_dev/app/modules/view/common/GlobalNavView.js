@@ -5,11 +5,12 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var Snap = require("snap");
     var RadiationModel = require("modules/model/radiation/RadiationModel");
     var RadiationCollection = require("modules/collection/radiation/RadiationCollection");
 
-    var HeaderView = AbstractView.extend({
-        template : require("ldsh!/app/templates/common/header"),
+    var GlobalNavView = AbstractView.extend({
+        template : require("ldsh!/app/templates/common/global-nav"),
         model : new RadiationModel(),
         collection : new RadiationCollection(),
 
@@ -21,6 +22,11 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
+            this.snapper = new Snap({
+                element: document.getElementById('snap-content'),
+                tapToClose: true,
+                touchToDrag: false
+            });
         },
 
         /**
@@ -36,7 +42,15 @@ define(function(require, exports, module) {
         },
 
         events : {
+            'click [data-drawer-opener]': 'onClickDrawerOpener',
             'change #selectRadiation' : "onChangeRadiationStation"
+        },
+
+        /**
+         *  サンドイッチボタンがクリックされたら呼ばれる
+         */
+        onClickDrawerOpener: function () {
+            this.snapper.open('left');
         },
 
         /**
@@ -50,5 +64,5 @@ define(function(require, exports, module) {
         }
     });
 
-    module.exports = HeaderView;
+    module.exports = GlobalNavView;
 });

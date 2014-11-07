@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     module.exports = {
         MenuView : require("./MenuView"),
         HeaderView : require("./HeaderView"),
+        GlobalNavView : require("./GlobalNavView"),
         FooterView : require("./FooterView")
     };
 });
