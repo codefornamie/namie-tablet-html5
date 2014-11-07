@@ -1,3 +1,5 @@
+/* jshint eqnull:true */
+
 define(function(require, exports, module) {
     "use strict";
 

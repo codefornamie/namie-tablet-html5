@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var async = require("async");
     var AbstractView = require("modules/view/AbstractView");
     var ArticleListView = require("modules/view/news/ArticleListView");
     var FeedListView = require("modules/view/news/FeedListView");
@@ -15,6 +16,7 @@ define(function(require, exports, module) {
      * 記事一覧・詳細のメインとなる画面のViewクラス
      */
     var NewsView = AbstractView.extend({
+
         template : require("ldsh!/app/templates/news/news"),
         model : new ArticleModel(),
         fetchCounter : 0,
@@ -22,145 +24,185 @@ define(function(require, exports, module) {
         favoriteCollection : new FavoriteCollection(),
         youtubeCollection : new YouTubeCollection(),
         eventsCollection : new EventsCollection(),
-        newsCollection : {models:[]},
+        newsCollection : new Backbone.Collection(),
 
         beforeRendered : function() {
-
         },
 
         afterRendered : function() {
-
         },
 
         initialize : function() {
             this.showLoading();
-            this.requestGoogleAPIClient();
-            this.articleCollection.fetch({success: $.proxy(this.onfetchArticle,this)});
-            this.eventsCollection.fetch({success: $.proxy(this.onfetchEvents,this)});
+
+            async.parallel([
+                this.loadYoutube.bind(this),
+                this.loadArticle.bind(this),
+                this.loadEvents.bind(this)
+            ], this.onFetchAll.bind(this));
         },
+        
         /**
-         * Google API clientを初期化する
+         *  youtubeのコンテンツを読み込む
+         *  @param {Function} callback
          */
-        requestGoogleAPIClient : function() {
+        loadYoutube: function (callback) {
+            async.series([
+                this.requestGoogleAPIClient.bind(this),
+                this.searchYoutube.bind(this)
+            ], callback);
+        },
+
+        /**
+         *  Google API clientを初期化する
+         *  @param {Function} callback
+         */
+        requestGoogleAPIClient : function(callback) {
             if (app.gapiLoaded) {
-                this.searchYoutube();
+                callback();
                 return;
             }
 
             var self = this;
-            window.googleApiClientReady = function() {
-                delete window.googleApiClientReady;
-
-                window.onYouTubeIframeAPIReady = function() {
-                    delete window.onYouTubeIframeAPIReady;
-                    app.gapiLoaded = true;
-
-                    self.searchYoutube();
+            
+            var loadScript = function (url) {
+                return function (next) {
+                    $.getScript(url)
+                        .done(function () {
+                            next(null);
+                        })
+                        .fail(function (jqXHR, settings, err) {
+                            next(err);
+                        });
                 };
-
-                var tag = document.createElement('script');
-                tag.src = "https://www.youtube.com/iframe_api";
-                var firstScriptTag = document.getElementsByTagName('script')[0];
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
             };
 
-            var tag = document.createElement('script');
-            tag.src = "https://apis.google.com/js/client.js?onload=googleApiClientReady";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            async.series([
+                loadScript("https://apis.google.com/js/client.js"),
+                loadScript("https://www.youtube.com/iframe_api")
+            ], function (err) {
+                if (!err) {
+                    app.gapiLoaded = true;
+                }
+
+                callback(err);
+            });
         },
+
         /**
          *  YouTube情報の検索
          *  GoogleAPIの初期化が済んだら呼ばれる
+         *  @param {Function} callback
          */
-        searchYoutube: function () {
+        searchYoutube: function (callback) {
             this.youtubeCollection.channelId = "UC9_ZCtgOk8dPC6boqZMNqbw";
+
             var onload = function () {
                 this.youtubeCollection.fetch({
-                    success : $.proxy(this.onFetchYoutube,this),
-                    error : function error(model, response, options) {
-                        console.log("error");
+                    success: function () {
+                        callback();
+                    },
+                    
+                    error: function onErrorSearchYoutube() {
+                        callback('error');
                     }
                 });
             };
+
             gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
             gapi.client.load('youtube', 'v3', $.proxy(onload, this));
         },
+        
         /**
-         * youtube情報検索完了後のコールバック関数
+         *  articleを読み込む
+         *  @param {Function} callback
          */
-        onFetchYoutube: function () {
-            this.fetchCounter++;
-            if (this.fetchCounter >= 3) {
-                this.onFetchAll();
+        loadArticle: function (callback) {
+            var self = this;
+
+            this.articleCollection.fetch({
+                success: function () {
+                    self.loadFavorite(callback);
+                },
+                
+                error: function onErrorLoadArticle() {
+                    callback('err');
+                }
+            });
+        },
+        
+        /**
+         *  favoriteを読み込む
+         *  @param {Function} callback
+         */
+        loadFavorite: function (callback) {
+            var self = this;
+
+            this.favoriteCollection.fetch({
+                success: function () {
+                    // articleCollectionにfav状態を反映する
+                    self.articleCollection.each(function (article) {
+                        self.favoriteCollection.each(function (favorite) {
+                            if (article.get("url") === favorite.get("source")) {
+                                article.set("isFavorite", true);
+                            }
+                        });
+                    });
+
+                    callback();
+                },
+                
+                error: function onErrorLoadFavorite() {
+                    callback('error');
+                }
+            });
+        },
+        
+        /**
+         *  eventsを読み込む
+         *  @param {Function} callback
+         */
+        loadEvents: function (callback) {
+            this.eventsCollection.fetch({
+                success: function () {
+                    callback();
+                },
+                
+                error: function onErrorLoadEvents() {
+                    callback('error');
+                }
+            });
+        },
+
+        /**
+         *  全ての情報検索完了後のコールバック関数
+         *  @param {Error|Undefined} err
+         */
+        onFetchAll: function (err) {
+            if (err) {
+                console.error(err);
+                return;
             }
-        },
-        /**
-         * 記事情報検索完了後のコールバック関数
-         */
-        onfetchArticle: function () {
-//            this.favoriteCollection.condition.filter = "";
-            this.favoriteCollection.fetch({success: $.proxy(this.onfetchFavorite,this)});
-        },
-        /**
-         * お気に入り情報検索完了後のコールバック関数
-         */
-        onfetchFavorite: function () {
-            this.articleCollection.each($.proxy(function (article) {
-                this.favoriteCollection.each($.proxy(function (favorite) {
-                    if (article.get("url") === favorite.get("source")) {
-                        article.set("isFavorite",true);
-                    }
-                },this));
-            },this));
-            this.fetchCounter++;
-            if (this.fetchCounter >= 3) {
-                this.onFetchAll();
-            }
-        },
-        /**
-         * イベント情報検索完了後のコールバック関数
-         */
-        onfetchEvents: function () {
-            this.fetchCounter++;
-            if (this.fetchCounter >= 3) {
-                this.onFetchAll();
-            }
-        },
-        /**
-         * youtube情報検索完了後のコールバック関数
-         */
-        onfetchYoutube: function () {
-            this.fetchCounter++;
-            if (this.fetchCounter >= 3) {
-                this.onFetchAll();
-            }
-        },
-        /**
-         * 全ての情報検索完了後のコールバック関数
-         */
-        onFetchAll: function () {
-            this.newsCollection = new Backbone.Collection();
-            // 取得した３つのCollectionを一つのCollectionにマージする。
-            // 表示順は、YouTube動画、記事、イベントとするため、その順でマージする
-            this.newsCollection.models = [].concat(
-                    this.youtubeCollection.models).concat(
-                    this.articleCollection.models).concat(
-                    this.eventsCollection.models);
+
+            this.newsCollection.add(this.youtubeCollection.models);
+            this.newsCollection.add(this.articleCollection.models);
+            this.newsCollection.add(this.eventsCollection.models);
+
             // FeedListView初期化
-          var feedListView = new FeedListView();
-          feedListView.collection = this.newsCollection;
-          this.setView("#sidebar__list", feedListView);
-          feedListView.render();
-          feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
-          
-          // ArticleListView初期化
-          var articleListView = new ArticleListView();
-          articleListView.collection = this.newsCollection;
-          this.setView("#article-list", articleListView);
-          articleListView.render();
-          articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
-          this.hideLoading();
+            var feedListView = new FeedListView();
+            feedListView.collection = this.newsCollection;
+            this.setView("#sidebar__list", feedListView);
+            feedListView.render();
+            feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
+
+            // ArticleListView初期化
+            var articleListView = new ArticleListView();
+            articleListView.collection = this.newsCollection;
+            this.setView("#article-list", articleListView);
+            articleListView.render();
+            articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
+
+            this.hideLoading();
         },
 
     });

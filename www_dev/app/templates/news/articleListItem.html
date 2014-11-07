@@ -2,30 +2,34 @@
     <section class='post__body'>
         <div class="row">
             <div class="large-12 columns">
-                <%= model.get("dispSite") %>
+                <div class="post-header">
+                    <div class="post-header__site">
+                        <div class="post-label">
+                            <%= model.get("dispSite") %>
+                        </div>
+                    </div>
+
+                    <div class="post-header__title">
+                        <%= model.get("dispTitle") %>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="large-9 columns" style="font-size: large;font-weight: bold;">
-                <%= model.get("dispTitle") %>
-            </div>
-            <div class="large-3 columns">
-                <button data-favorite-register-button type="button" class="small button round">お気に入り登録</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="large-12 columns" style="font-size: large;font-weight: bold;">
-                <hr/>
-            </div>
-        </div>
+
         <div class="row">
             <div class="large-12 columns nehandiv">
-                <div id="articleDetailImageArea" height="390" width="390" >
-                    <img class="articleDetailImage" class="nehan-float-start"></img>
+                <div class="post-main">
+                    <div id="articleDetailImageArea" class='post-main__image'>
+                        <img class="articleDetailImage" class="nehan-float-start">
+                    </div>
+                    
+                    <div class="post-main__description">
+                        <%= model.get("description") %>
+                    </div>
                 </div>
-                <%= model.get("description") %>
             </div>
         </div>
+
         <div class="row">
             <div class="large-12 columns articleLink">
                 <%= model.get("link") %>
@@ -34,6 +38,16 @@
     </section>
     
     <section class='post__footer'>
+        <div class="post-action">
+            <button type="button" class="small button">
+                おすすめ
+            </button>
+
+            <button data-favorite-register-button type="button" class="small button">
+                スクラップ
+            </button>
+        </div>
+
         <div class="row">
             <div class="large-1 columns tagColumnsLabel">
                <span>タグ</span>
@@ -54,6 +68,5 @@
                 <button id="tagAddButton" type="button" style="font-size: small;" class="button postfix">追加</button>
             </div>
         </div>
-
     </section>
 </article>
