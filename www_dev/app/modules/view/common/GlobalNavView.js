@@ -6,19 +6,15 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var Snap = require("snap");
-    var RadiationModel = require("modules/model/radiation/RadiationModel");
-    var RadiationCollection = require("modules/collection/radiation/RadiationCollection");
 
     var GlobalNavView = AbstractView.extend({
         template : require("ldsh!/app/templates/common/global-nav"),
-        model : new RadiationModel(),
-        collection : new RadiationCollection(),
 
         beforeRendered : function() {
         },
 
         afterRendered : function() {
-            this.collection.fetch({success: $.proxy(this.onFetchRadiation,this)});
+            this.updateBackHomeButton();
         },
 
         initialize : function() {
@@ -43,7 +39,20 @@ define(function(require, exports, module) {
 
         events : {
             'click [data-drawer-opener]': 'onClickDrawerOpener',
+            'click [data-back-home]': 'onClickBackHome',
             'change #selectRadiation' : "onChangeRadiationStation"
+        },
+        
+        /**
+         *  今日の新聞に戻るボタンは
+         *  topでは表示しない
+         */
+        updateBackHomeButton: function () {
+            if (Backbone.history.fragment == 'top') {
+                $('[data-back-home]').hide();
+            } else {
+                $('[data-back-home]').show();
+            }
         },
 
         /**
@@ -54,13 +63,10 @@ define(function(require, exports, module) {
         },
 
         /**
-         * 放射線量の測定地区Selectの選択イベントハンドラ。
-         * @param {Object} ev イベントオブジェクト
+         *  今日の新聞に戻るボタンが押されたら呼ばれる
          */
-        onChangeRadiationStation: function(ev) {
-            var value = $("#selectRadiation").val();
-            this.collection.condition.filter = "station eq '" + value + "'";
-            this.collection.fetch({success: $.proxy(this.onFetchRadiation,this)});
+        onClickBackHome: function () {
+            app.router.go('top');
         }
     });
 

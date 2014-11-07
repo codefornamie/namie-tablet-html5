@@ -19,27 +19,47 @@ define(function(require, exports, module) {
         },
 
         events : {
-            "click #topLink" : "onClickTopLink",
-            "click #newsLink" : "onClickNewsLink",
-            "click #eventsLink" : "onClickEventsLink",
-            "click #showEventsLink" : "onClickShowEventsLink",
-            "click #tvLink" : "onClickTvLink"
+            //"click #topLink" : "onClickTopLink",
+            //"click #newsLink" : "onClickNewsLink",
+            //"click #eventsLink" : "onClickEventsLink",
+            //"click #showEventsLink" : "onClickShowEventsLink",
+            //"click #tvLink" : "onClickTvLink"
+            'click #goto-scrap': 'onClickScrap',
+            'click #goto-tutorial': 'onClickTutorial',
+            'click #goto-backnumber': 'onClickBacknumber',
+            'click #goto-settings': 'onClickSettings'
         },
-        onClickTopLink : function() {
-            app.router.go("top");
+        
+        onClickScrap: function () {
+            app.router.go("scrap");
         },
-        onClickNewsLink : function() {
-            app.router.go("news");
+        
+        onClickTutorial: function () {
+            app.router.go("tutorial");
         },
-        onClickEventsLink : function() {
-            app.router.go("events");
+        
+        onClickBacknumber: function () {
+            app.router.go("backnumber");
         },
-        onClickShowEventsLink : function() {
-            app.router.go("showEvents");
-        },
-        onClickTvLink : function() {
-            app.router.go("top");
+        
+        onClickSettings: function () {
+            app.router.go("settings");
         }
+        //onClickTopLink : function() {
+        //    app.router.go("top");
+        //},
+        //onClickNewsLink : function() {
+        //    app.router.go("news");
+        //},
+        //onClickEventsLink : function() {
+        //    app.router.go("events");
+        //},
+        //onClickShowEventsLink : function() {
+        //    app.router.go("showEvents");
+        //},
+        //onClickTvLink : function() {
+        //    app.router.go("top");
+        //}
     });
 
     module.exports = MenuView;

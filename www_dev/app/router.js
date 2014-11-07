@@ -9,6 +9,11 @@ define(function(require, exports, module) {
     var EventsView = require("modules/view/events/EventsView");
     var EventsRegistedView = require("modules/view/events/EventsRegistedView");
     var ShowEventsView = require("modules/view/events/ShowEventsView");
+
+    var ScrapView = require("modules/view/scrap/ScrapView");
+    var TutorialView = require("modules/view/tutorial/TutorialView");
+    var BacknumberView = require("modules/view/backnumber/BacknumberView");
+    var SettingsView = require("modules/view/settings/SettingsView");
     
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -52,10 +57,14 @@ define(function(require, exports, module) {
         routes : {
             "" : "index",
             "top": "top",
-            "events": "events",
-            "eventsRegisted": "eventsRegisted",
-            "showEvents": "showEvents",
-            "news": "news"
+            //"events": "events",
+            //"eventsRegisted": "eventsRegisted",
+            //"showEvents": "showEvents",
+            //"news": "news"
+            'scrap': 'scrap',
+            'tutorial': 'tutorial',
+            'backnumber': 'backnumber',
+            'settings': 'settings'
         },
 
         index : function() {
@@ -85,6 +94,32 @@ define(function(require, exports, module) {
             this.layout.setFooter(new common.FooterView());
             this.commonView();
         },
+        
+        scrap: function () {
+            console.log('[route] scrap');
+            this.layout.showView(new ScrapView());
+            this.commonView();
+        },
+        
+        tutorial: function () {
+            console.log('[route] tutorial');
+            this.layout.showView(new TutorialView());
+            this.commonView();
+        },
+        
+        backnumber: function () {
+            console.log('[route] backnumber');
+            this.layout.showView(new BacknumberView());
+            this.commonView();
+        },
+        
+        settings: function () {
+            console.log('[route] settings');
+            this.layout.showView(new SettingsView());
+            this.commonView();
+        },
+
+        /*
         events : function() {
             console.log("It's a events page.");
             this.layout.showView(new EventsView());
@@ -105,11 +140,14 @@ define(function(require, exports, module) {
             this.layout.showView(new NewsView());
             this.commonView();
         },
+        */
+
         // Shortcut for building a url.
         go: function() {
           return this.navigate(_.toArray(arguments).join("/"), true);
         },
         commonView: function() {
+            this.layout.setGlobalNav(new common.GlobalNavView());
             this.layout.setView("#menu", new common.MenuView()).render();
         }
     });
