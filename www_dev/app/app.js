@@ -17,6 +17,6 @@ define(function(require, exports, module) {
 
   // The root path to run the application through.
   app.root = "/";
-  
+  // アプリの設定情報を保持
   app.config = config;
 });
