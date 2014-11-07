@@ -42,25 +42,39 @@ define(function(require, exports, module) {
          */
         initIScroll: function () {
             var self = this;
+            var $container = $('#contents__primary');
+
+            // ページ遷移後はスクロール位置を0にする
+            $container.animate({
+                scrollTop: 0
+            }, 0);
             
             // iscrollインスタンスを生成する
-            this.iscroll = new IScroll('#contents__primary', {
-                momentum: false,
+            self.iscroll = new IScroll($container[0], {
                 scrollbars: true,
                 probeType: 1
             });
             
             // scroll量に従ってページ切り替えを行う
-            this.iscroll.on('scroll', function () {
+            var SCROLL_BUFFER = 80;
+
+            self.iscroll.on('scroll', function () {
                 var y = self.iscroll.y;
+                var scrollTop = $container.scrollTop();
+                var containerHeight = $container.height();
+                var contentHeight = $container.children().height();
+                var hiddenHeight = contentHeight - (scrollTop + containerHeight);
+                
+                if (0 < y) {
+                    if (SCROLL_BUFFER < y) {
+                        self.goToPreviousPage();
+                    }
+                } else {
+                    y = y + hiddenHeight;
 
-                // 上
-                if (80 < y) {
-                    self.goToPreviousPage();
-
-                // 下
-                } else if (y < -80) {
-                    self.goToNextPage();
+                    if (y < -SCROLL_BUFFER) {
+                        self.goToNextPage();
+                    }
                 }
             });
         },
