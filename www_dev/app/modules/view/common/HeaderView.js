@@ -70,19 +70,6 @@ define(function(require, exports, module) {
         onClickFontResizeButton: function(ev) {
             var fontSize = $(ev.currentTarget).attr("id");
             $("input[name='fontSize'][value='" + fontSize + "']")[0].click();
-//            switch (fontSize) {
-//                case "fontSizeSmall":
-//                    $("input[name='fontSize'][value='small']")[0].click();
-//                    break;
-//                case "fontSizeMiddle":
-//                    $("input[name='fontSize'][value='middle']")[0].click();
-//                    break;
-//                case "fontSizeLarge":
-//                    $("input[name='fontSize'][value='large']")[0].click();
-//                    break;
-//                default:
-//                    break;
-//            }
         }
     });
 
