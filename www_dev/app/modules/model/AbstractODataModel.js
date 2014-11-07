@@ -16,14 +16,42 @@ define(function(require, exports, module) {
          * idとして使用するattribute中のフィールド
          */
         idAttribute : "__id",
-        cell : "kizuna01",
-        box : "data",
-        odata : "odata",
-        entity : "",
+        /**
+         * セルID
+         */
+        cell : null,
+        /**
+         * Box名
+         */
+        box : null,
+        /**
+         * ODataCollection名
+         */
+        odata : null,
+        /**
+         * 操作対象のEntitySet名
+         */
+        entity : null,
+
+        /**
+         * PCS ODataの取得・登録・更新・削除処理を行う。
+         * 
+         * @param {String}
+         *            method メソッド
+         * @param {Object}
+         *            model モデル
+         * @param {Object}
+         *            options オプション情報
+         */
         sync : function(method, model, options) {
             if (!options) {
                 options = {};
             }
+            // PCS設定情報読み込み
+            this.cell = app.config.basic.cellId;
+            this.box = app.config.basic.boxName;
+            this.odata = app.config.basic.odataName;
+
             // dc1-clientによるODataアクセスを行う
             var odataCollection = app.accessor.cell(this.cell).box(this.box).odata(this.odata);
             this.entityset = odataCollection.entitySet(this.entity);
@@ -64,6 +92,21 @@ define(function(require, exports, module) {
                 break;
             }
         },
+        /**
+         * PCS ODataの登録処理を行う。
+         * 
+         * @param {String}
+         *            method メソッド
+         * @param {Object}
+         *            model モデル
+         * @param {Object}
+         *            options オプション情報
+         * @param {Function}
+         *            complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *            以下のシグネチャの関数を指定する。<br>
+         *            <code>complete (response:Object)</code><br>
+         *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         */
         create : function(method, model, options, complete) {
             this.entityset.createAsResponse(this.getSaveData(), {
                 complete : function(response) {
@@ -71,6 +114,21 @@ define(function(require, exports, module) {
                 }
             });
         },
+        /**
+         * PCS ODataの更新処理を行う。
+         * 
+         * @param {String}
+         *            method メソッド
+         * @param {Object}
+         *            model モデル
+         * @param {Object}
+         *            options オプション情報
+         * @param {Function}
+         *            complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *            以下のシグネチャの関数を指定する。<br>
+         *            <code>complete (response:Object)</code><br>
+         *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         */
         update : function(method, model, options, complete) {
             this.entityset.update(this.get("__id"), this.getSaveData(), this.get("etag"), {
                 complete : function(response) {
@@ -78,6 +136,21 @@ define(function(require, exports, module) {
                 }
             });
         },
+        /**
+         * PCS ODataの削除処理を行う。
+         * 
+         * @param {String}
+         *            method メソッド
+         * @param {Object}
+         *            model モデル
+         * @param {Object}
+         *            options オプション情報
+         * @param {Function}
+         *            complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *            以下のシグネチャの関数を指定する。<br>
+         *            <code>complete (response:Object)</code><br>
+         *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         */
         del : function(method, model, options, complete) {
             this.entityset.del(this.get("__id"), this.get("etag"), {
                 complete : function(response) {
@@ -85,8 +158,22 @@ define(function(require, exports, module) {
                 }
             });
         },
+        /**
+         * PCS ODataの取得処理を行う。
+         * 
+         * @param {String}
+         *            method メソッド
+         * @param {Object}
+         *            model モデル
+         * @param {Object}
+         *            options オプション情報
+         * @param {Function}
+         *            complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *            以下のシグネチャの関数を指定する。<br>
+         *            <code>complete (response:Object)</code><br>
+         *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         */
         retrieve : function(method, model, options, complete) {
-            // var dataList = entityset.query().filter().top(1000).run();
             this.entityset.retrieveAsResponse(this.get("__id"), {
                 complete : function(response) {
                     complete(response);
@@ -101,7 +188,7 @@ define(function(require, exports, module) {
          * 
          * @return {Object} パース後の情報
          */
-        parseResponse: function (response, options) {
+        parseResponse : function(response, options) {
             var res = this.parseOData(response, options);
             // 全ての情報で共通のパース処理を実施する
             if (response && response.__metadata) {

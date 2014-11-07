@@ -1187,7 +1187,7 @@ dcc.UrlUtils.jsonToW3Form = function(json) {
       requestBody += key + "=" + json[key] + "&";
     }
   }
-  console.log(typeof requestBody);
+  //console.log(typeof requestBody);
   if(dcc.UrlUtils.endsWith(requestBody, "&")){
     requestBody = requestBody.substr(0, requestBody.lastIndexOf("&"));
   }
@@ -5903,7 +5903,7 @@ dcc.Accessor.prototype.cell = function(cellUrl, opts) {
         }
         //return myCell instance
         var myCell = new dcc.unitctl.Cell(clone);
-        console.log(myCell);
+        //console.log(myCell);
         return myCell;
     }
     clone.targetCellName = dcc.UrlUtils.extractFirstPath(cellUrl);
@@ -14396,12 +14396,12 @@ dcc.http.DcResponse.prototype.bodyAsXml = function() {
  */
 dcc.http.DcResponse.prototype.debugHttpResponse = function(res) {
   if (res !== null) {
-    console.log("(Response) ResponseCode: " + res.statusText + "(" + res.status + ")");
+    //console.log("(Response) ResponseCode: " + res.statusText + "(" + res.status + ")");
     var headers = res.getAllResponseHeaders();
     var array = headers.split("\n");
     for (var i = 0; i < array.length; i++) {
       var keyValue = array[i].split(": ");
-      console.log("ResponseHeader[" + keyValue[0] + "] : " + keyValue[1]);
+      //console.log("ResponseHeader[" + keyValue[0] + "] : " + keyValue[1]);
     }
   }
 };
