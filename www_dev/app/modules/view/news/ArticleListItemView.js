@@ -55,8 +55,14 @@ define(function(require, exports, module) {
                         articleImage.attr("src", url);
                     }
                 });
-                articleImage.parent().hide();
+                // iscroll.jsが正確に高さを把握できなくなるため,
+                // 後から画像が読み込まれる場合はhideしない
+                //articleImage.parent().hide();
             } else {
+                // ArticleListViewでiscrollを初期化する際に
+                // 記事内のimgの読み込みを待機しているので
+                // このimgは決して読み込まれないことを通知する
+                articleImage.trigger('error', "this image will never be loaded");
                 $(this.el).find(".articleDetailImageArea").hide();
             }
 

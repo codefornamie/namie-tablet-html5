@@ -14,13 +14,26 @@ define(function(require, exports, module) {
         afterRendered : function() {
 
         },
+        
+        events: {
+            'click [data-prev-day]': 'goToPrevDay',
+            'click [data-next-day]': 'goToNextDay'
+        },
 
         initialize : function() {
 
         },
-
-        events : {
-
+        
+        /**
+         *  前の日ボタンをクリックしたら呼ばれる
+         */
+        goToPrevDay: function () {
+        },
+        
+        /**
+         *  次の日ボタンをクリックしたら呼ばれる
+         */
+        goToNextDay: function () {
         }
     });
 

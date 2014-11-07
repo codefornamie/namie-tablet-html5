@@ -3,7 +3,7 @@
 define(function(require, exports, module) {
     "use strict";
     
-    require('iscroll');
+    require('iscroll-namie');
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
@@ -24,9 +24,6 @@ define(function(require, exports, module) {
 
         afterRendered : function() {
             this.initIScroll();
-            
-            // 読み込み後のフェードインのため
-            $('.article-list').addClass('is-ready');
         },
         /**
          * 初期化処理
@@ -43,40 +40,98 @@ define(function(require, exports, module) {
         initIScroll: function () {
             var self = this;
             var $container = $('#contents__primary');
+            var $img = $container.find('img');
+            var count = $img.length;
 
-            // ページ遷移後はスクロール位置を0にする
-            $container.animate({
-                scrollTop: 0
-            }, 0);
-            
-            // iscrollインスタンスを生成する
-            self.iscroll = new IScroll($container[0], {
-                scrollbars: true,
-                probeType: 1
-            });
-            
-            // scroll量に従ってページ切り替えを行う
-            var SCROLL_BUFFER = 80;
+            $img.each(function () {
+                var img = this;
 
-            self.iscroll.on('scroll', function () {
-                var y = self.iscroll.y;
-                var scrollTop = $container.scrollTop();
-                var containerHeight = $container.height();
-                var contentHeight = $container.children().height();
-                var hiddenHeight = contentHeight - (scrollTop + containerHeight);
-                
-                if (0 < y) {
-                    if (SCROLL_BUFFER < y) {
-                        self.goToPreviousPage();
-                    }
-                } else {
-                    y = y + hiddenHeight;
+                // すでに読み込まれている場合はカウントを減らす
+                if (this.src && this.complete) {
+                    $(this).attr({
+                        width: this.width,
+                        height: this.height
+                    });
 
-                    if (y < -SCROLL_BUFFER) {
-                        self.goToNextPage();
-                    }
+                    count--;
+                    registerIScroll();
+                    return;
                 }
+
+                // 画像が読み込まれたらカウントを減らす
+                $(this)
+                    .on('load.iscroll', function () {
+                        $(this).attr({
+                            width: this.width,
+                            height: this.height
+                        });
+
+                        count--;
+                        registerIScroll();
+                    })
+                    .on('error.iscroll', function () {
+                        count--;
+                        registerIScroll();
+                    });
+
+                // しばらく読み込まれなかったら無視する
+                setTimeout(function () {
+                    $(img).off('load.iscroll').off('error.iscroll');
+
+                    count--;
+                    registerIScroll();
+                }, 5000);
             });
+
+            if ($img.length === 0) {
+                registerIScroll();
+            }
+            
+            function registerIScroll() {
+                if (count > 0) return;
+                
+                _initIScroll();
+
+                // 読み込み後のフェードインのため
+                $('.article-list').addClass('is-ready');
+            }
+            
+            function _initIScroll() {
+                // ページ遷移後はスクロール位置を0にする
+                $container.animate({
+                    scrollTop: 0
+                }, 0);
+                
+                // iscrollインスタンスを生成する
+                self.iscroll = new IScroll($container[0], {
+                    scrollbars: true,
+                    zoom: true,
+                    probeType: 1
+                });
+                
+                // scroll量に従ってページ切り替えを行う
+                var SCROLL_BUFFER = 50;
+
+                self.iscroll.on('scroll', function () {
+                    var y = self.iscroll.y;
+                    var scrollTop = $container.scrollTop();
+                    var containerHeight = $container.height();
+                    var contentHeight = $container.children().height();
+                    var hiddenHeight = contentHeight - (scrollTop + containerHeight);
+                    
+                    if (0 < y) {
+                        if (SCROLL_BUFFER < y) {
+                            self.goToPreviousPage();
+                        }
+                    } else {
+                        y = y + hiddenHeight;
+
+                        if (y < -SCROLL_BUFFER) {
+                            self.goToNextPage();
+                        }
+                    }
+                });
+            }
         },
         
         /**

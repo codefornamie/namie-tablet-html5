@@ -40,7 +40,8 @@ define(function(require, exports, module) {
         events : {
             'click [data-drawer-opener]': 'onClickDrawerOpener',
             'click [data-back-home]': 'onClickBackHome',
-            'change #selectRadiation' : "onChangeRadiationStation"
+            'change #selectRadiation' : "onChangeRadiationStation",
+            'click [data-font-size]': 'onClickFontSize'
         },
         
         /**
@@ -67,6 +68,16 @@ define(function(require, exports, module) {
          */
         onClickBackHome: function () {
             app.router.go('top');
+        },
+        
+        /**
+         *  フォントサイズ変更ボタンが押されたら呼ばれる
+         */
+        onClickFontSize: function (ev) {
+            var $target = $(ev.currentTarget);
+            var size = parseInt($target.attr('data-font-size'), 10);
+            
+            $('html, body').css('font-size', size + 'px');
         }
     });
 
