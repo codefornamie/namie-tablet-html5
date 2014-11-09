@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var ComparisonOperatorBase = require("modules/util/filter/ComparisonOperatorBase");
+    var ComparisonOperatorBase = require("modules/util/filter/base/ComparisonOperatorBase");
     /**
      * $filterのge,gt演算子を利用する式を生成する機能を提供するクラスを作成する。
      * 

@@ -20,7 +20,7 @@ define(function(require, exports, module) {
     /**
      * この演算子が表現する式を生成する。
      * 
-     * @returns {String} 生成した式
+     * @return {String} 生成した式
      */
     ComparisonOperatorBase.prototype.expression = function() {
         return this.makeExpression(this);
@@ -54,7 +54,7 @@ define(function(require, exports, module) {
      * 
      * @param {Array}
      *            operator 演算子クラスのインスタンス。または、演算子クラスのインスタンスの配列。
-     * @returns {String} 生成した式
+     * @return {String} 生成した式
      */
     ComparisonOperatorBase.prototype.customeMakeExpression = function(operator) {
 

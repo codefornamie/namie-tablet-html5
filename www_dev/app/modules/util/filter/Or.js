@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var LogicalOperatorBase = require("modules/util/filter/LogicalOperatorBase");
+    var LogicalOperatorBase = require("modules/util/filter/base/LogicalOperatorBase");
     /**
      * $filterのor演算子の式を生成するためのクラスを作成する。
      * 

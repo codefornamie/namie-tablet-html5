@@ -21,7 +21,7 @@ define(function(require, exports, module) {
      * サブクラスは、本メソッドをオーバライドして、論理演算子を表す文字列を返却する処理を実装する。
      * </p>
      * 
-     * @returns {String} 論理演算子
+     * @return {String} 論理演算子
      */
     LogicalOperatorBase.prototype.operator = function() {
 
@@ -29,7 +29,7 @@ define(function(require, exports, module) {
     /**
      * この演算子が表現する式を生成する。
      * 
-     * @returns {String} 生成した式
+     * @return {String} 生成した式
      */
     LogicalOperatorBase.prototype.expression = function() {
         var expression = "";
