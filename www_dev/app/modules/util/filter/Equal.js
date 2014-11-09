@@ -3,7 +3,14 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var ComparisonOperatorBase = require("modules/util/filter/ComparisonOperatorBase");
-    
+
+    /**
+     * $filterのeq演算子を利用する式を生成する機能を提供するクラスを作成する。
+     * 
+     * @class $filterのeq演算子を利用する式を生成する機能を提供するクラス
+     * @exports Equal
+     * @constructor
+     */
     var Equal = ComparisonOperatorBase.extend({
         init : function(key, value) {
             this.key = key;
@@ -12,15 +19,11 @@ define(function(require, exports, module) {
         }
     });
 
-//    /**
-//     * この演算子が表現する式を生成する。
-//     * 
-//     * @returns {String} 式
-//     */
-//    Equal.prototype.expression = function() {
-//        return this.makeExpression(this);
-//    };
-
+    /**
+     * eq演算子固有の式の作成処理を行う。
+     * @param {Array} equalOperator Equalクラスのインスタンスの配列
+     * @returns {String} 生成した式
+     */
     Equal.prototype.customeMakeExpression = function(equalOperator) {
         if (_.isArray(equalOperator.value)) {
             // 配列が指定された場合、or で結合する

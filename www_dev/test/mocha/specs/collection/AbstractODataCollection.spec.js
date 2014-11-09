@@ -5,7 +5,6 @@ define(function(require) {
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     app.noRendering = true;
 
-    // Test that the Router exists.
     describe("AbstractODataCollection", function() {
         it("TEST-01 LoginModel#login", function(done) {
             var loginModel = new LoginModel();

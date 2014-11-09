@@ -4,7 +4,7 @@ define(function(require) {
     var LoginModel = require("modules/model/LoginModel");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
     app.noRendering = true;
-    // Test that the Router exists.
+
     describe("AbstractODataModel", function() {
         it("TEST-01 LoginModel#login", function(done) {
             var loginModel = new LoginModel();
