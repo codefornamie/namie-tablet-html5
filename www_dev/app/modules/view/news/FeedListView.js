@@ -49,16 +49,18 @@ define(function(require, exports, module) {
          *  @param {Event} ev
          */
         onClickFeedListItem : function(ev) {
+            // クリックされたフィードに対応する記事のスクロール位置取得
             var articleId = $(ev.currentTarget).attr("data-article-id");
-            var index = -1;
-
-            this.collection.find(function (m, i) {
-                index = i;
-                return m.get("__id") == articleId;
-            });
+            var heightTopBar = $('.top-bar').height();
+            var heightGlobalNav = $('.global-nav').height();
+            var position = $("#" + articleId).offset().top - heightTopBar - heightGlobalNav;
             
-            // 表示中の記事のページを変更する
-            app.set('currentPage', index);
+            // 現在の記事詳細のスクロール位置と相対位置を加算した箇所までスクロールする
+            $(".contents__primary").animate({
+                scrollTop : position + $(".contents__primary").scrollTop()
+            }, {
+                queue : false
+            });
         },
     });
 

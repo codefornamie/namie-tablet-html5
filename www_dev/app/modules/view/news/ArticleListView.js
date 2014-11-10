@@ -23,7 +23,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-            this.initIScroll();
+            //this.initIScroll();
         },
         /**
          * 初期化処理
@@ -150,33 +150,60 @@ define(function(require, exports, module) {
         setArticleList : function() {
             var currentPage = app.get('currentPage');
             var model = this.collection.at(currentPage);
-            var template = require("ldsh!/app/templates/news/articleListItem");
-            // 記事一覧に追加するViewクラス。
-            // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
-            var ListItemView;
             
-            switch (model.get("modelType")) {
-            case "youtube":
-                template = require("ldsh!/app/templates/news/youTubeListItem");
-                ListItemView = YouTubeListItemView;
-                break;
-            case "event":
-                template = require("ldsh!/app/templates/news/eventsListItem");
-                ListItemView = ArticleListItemView;
-                break;
-            default:
-                template = require("ldsh!/app/templates/news/articleListItem");
-                if (model.get("rawHTML")) {
-                    template = require("ldsh!/app/templates/news/articleListItemForHtml");
+            this.collection.each(function (model) {
+                var template = require("ldsh!/app/templates/news/articleListItem");
+                // 記事一覧に追加するViewクラス。
+                // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
+                var ListItemView;
+                
+                switch (model.get("modelType")) {
+                case "youtube":
+                    template = require("ldsh!/app/templates/news/youTubeListItem");
+                    ListItemView = YouTubeListItemView;
+                    break;
+                case "event":
+                    template = require("ldsh!/app/templates/news/eventsListItem");
+                    ListItemView = ArticleListItemView;
+                    break;
+                default:
+                    template = require("ldsh!/app/templates/news/articleListItem");
+                    if (model.get("rawHTML")) {
+                        template = require("ldsh!/app/templates/news/articleListItemForHtml");
+                    }
+                    ListItemView = ArticleListItemView;
+                    break;
                 }
-                ListItemView = ArticleListItemView;
-                break;
-            }
 
-            this.setView("#articleList", new ListItemView({
-                model : model,
-                template: template
-            }));
+                this.insertView("#articleList", new ListItemView({
+                    model : model,
+                    template: template
+                }));
+            }.bind(this));
+
+            /*
+            var animationDeley = 0;
+            this.collection.each($.proxy(function(model) {
+                var template = require("ldsh!/app/templates/news/articleListItem");
+                switch (model.get("modelType")) {
+                    case "youtube":
+                        template = require("ldsh!/app/templates/news/articleListItem");
+                        break;
+                    case "event":
+                        template = require("ldsh!/app/templates/news/eventsListItem");
+                        break;
+                    default:
+                        template = require("ldsh!/app/templates/news/articleListItem");
+                        break;
+                }
+                this.insertView("#articleList", new ArticleListItemView({
+                    model : model,
+                    template: template,
+                    animationDeley : animationDeley
+                }));
+                animationDeley += 0.2;
+            }, this));
+            */
         },
         
         /**

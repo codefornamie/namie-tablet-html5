@@ -19,47 +19,24 @@ define(function(require, exports, module) {
         },
 
         events : {
-            //"click #topLink" : "onClickTopLink",
-            //"click #newsLink" : "onClickNewsLink",
-            //"click #eventsLink" : "onClickEventsLink",
-            //"click #showEventsLink" : "onClickShowEventsLink",
-            //"click #tvLink" : "onClickTvLink"
-            'click #goto-scrap': 'onClickScrap',
-            'click #goto-tutorial': 'onClickTutorial',
-            'click #goto-backnumber': 'onClickBacknumber',
-            'click #goto-settings': 'onClickSettings'
+            'click a': 'onClickAnchor'
         },
         
-        onClickScrap: function () {
-            app.router.go("scrap");
-        },
-        
-        onClickTutorial: function () {
-            app.router.go("tutorial");
-        },
-        
-        onClickBacknumber: function () {
-            app.router.go("backnumber");
-        },
-        
-        onClickSettings: function () {
-            app.router.go("settings");
+        /**
+         * aタグをクリックした際の挙動を
+         * ブラウザデフォルトではなく
+         * pushStateに変更する
+         */
+        onClickAnchor: function (evt) {
+            var $target = $(evt.currentTarget);
+            var href = { prop: $target.prop("href"), attr: $target.attr("href") };
+            var root = location.protocol + "//" + location.host + app.root;
+            
+            if (href.prop && href.prop.slice(0, root.length) === root) {
+                evt.preventDefault();
+                Backbone.history.navigate(href.attr, true);
+            }
         }
-        //onClickTopLink : function() {
-        //    app.router.go("top");
-        //},
-        //onClickNewsLink : function() {
-        //    app.router.go("news");
-        //},
-        //onClickEventsLink : function() {
-        //    app.router.go("events");
-        //},
-        //onClickShowEventsLink : function() {
-        //    app.router.go("showEvents");
-        //},
-        //onClickTvLink : function() {
-        //    app.router.go("top");
-        //}
     });
 
     module.exports = MenuView;
