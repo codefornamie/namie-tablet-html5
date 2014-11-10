@@ -173,7 +173,7 @@ define(function(require, exports, module) {
                 break;
             }
 
-            this.setView("#articleList", new ArticleListItemView({
+            this.setView("#articleList", new ListItemView({
                 model : model,
                 template: template
             }));
