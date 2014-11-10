@@ -3,7 +3,7 @@
 define(function(require, exports, module) {
     "use strict";
     
-    require('iscroll-namie');
+    require('iscroll-zoom');
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
@@ -29,6 +29,10 @@ define(function(require, exports, module) {
 
         afterRendered : function() {
             //this.initIScroll();
+            //var $container = $('#contents__primary');
+            //this.iscroll = new IScroll($container[0], {
+            //    zoom: true
+            //});
         },
         /**
          * 初期化処理
