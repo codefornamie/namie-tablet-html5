@@ -37,24 +37,29 @@ define(function(require, exports, module) {
          */
         showImage : function() {
             var articleImage = $(this.el).find(".articleDetailImage");
+            var onGetBinary = function(binary) {
+                var arrayBufferView = new Uint8Array(binary);
+                var blob = new Blob([ arrayBufferView ], {
+                    type : "image/jpg"
+                });
+                var url = FileAPIUtil.createObjectURL(blob);
+                articleImage.load(function() {
+                    articleImage.parent().show();
+                    window.URL.revokeObjectURL(articleImage.attr("src"));
+                });
+                articleImage.attr("src", url);
+            };
 
             if (this.model.get("imageUrl")) {
                 articleImage.attr("src", this.model.get("imageUrl"));
             } else if (this.model.get("fileName")) {
-                app.box.col("dav").getBinary(this.model.get("fileName"), {
-                    success : function(binary) {
-                        var arrayBufferView = new Uint8Array(binary);
-                        var blob = new Blob([ arrayBufferView ], {
-                            type : "image/jpg"
-                        });
-                        var url = FileAPIUtil.createObjectURL(blob);
-                        articleImage.load(function() {
-                            articleImage.parent().show();
-                            window.URL.revokeObjectURL(articleImage.attr("src"));
-                        });
-                        articleImage.attr("src", url);
-                    }
-                });
+                try {
+                    app.box.col("dav").getBinary(this.model.get("fileName"), {
+                        success : onGetBinary
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
                 // iscroll.jsが正確に高さを把握できなくなるため,
                 // 後から画像が読み込まれる場合はhideしない
                 //articleImage.parent().hide();
