@@ -175,7 +175,7 @@ define(function(require, exports, module) {
                     break;
                 }
 
-                this.setView("#articleList", new ListItemView({
+                this.insertView("#articleList", new ListItemView({
                     model : model,
                     template: template
                 }));
