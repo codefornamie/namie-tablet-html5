@@ -5,7 +5,6 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var Snap = require("snap");
     var RadiationModel = require("modules/model/radiation/RadiationModel");
     var RadiationCollection = require("modules/collection/radiation/RadiationCollection");
     var Equal = require("modules/util/filter/Equal");
@@ -23,11 +22,6 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
-            this.snapper = new Snap({
-                element: document.getElementById('snap-content'),
-                tapToClose: true,
-                touchToDrag: false
-            });
         },
 
         /**
@@ -46,13 +40,6 @@ define(function(require, exports, module) {
             'click [data-drawer-opener]': 'onClickDrawerOpener',
             'change #selectRadiation' : "onChangeRadiationStation",
             'click .fontResizeButton' : "onClickFontResizeButton"
-        },
-
-        /**
-         *  サンドイッチボタンがクリックされたら呼ばれる
-         */
-        onClickDrawerOpener: function () {
-            this.snapper.open('left');
         },
 
         /**

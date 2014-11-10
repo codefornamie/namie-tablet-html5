@@ -36,20 +36,26 @@ define(function(require, exports, module) {
                 articleImageElement.attr("src", this.model.get("imageUrl"));
             } else if (this.model.get("fileName")) {
                 // TODO サムネイル画像取得処理に変更するべき
-                app.box.col("dav").getBinary(this.model.get("fileName"), {
-                    success : function(binary) {
-                        var arrayBufferView = new Uint8Array(binary);
-                        var blob = new Blob([ arrayBufferView ], {
-                            type : "image/jpg"
-                        });
-                        var url = FileAPIUtil.createObjectURL(blob);
-                        articleImageElement.load(function() {
-                            articleImageElement.parent().show();
-                            window.URL.revokeObjectURL(articleImageElement.attr("src"));
-                        });
-                        articleImageElement.attr("src", url);
-                    }
-                });
+                var onGetBinary = function(binary) {
+                    var arrayBufferView = new Uint8Array(binary);
+                    var blob = new Blob([ arrayBufferView ], {
+                        type : "image/jpg"
+                    });
+                    var url = FileAPIUtil.createObjectURL(blob);
+                    articleImageElement.load(function() {
+                        articleImageElement.parent().show();
+                        window.URL.revokeObjectURL(articleImageElement.attr("src"));
+                    });
+                    articleImageElement.attr("src", url);
+                };
+
+                try {
+                    app.box.col("dav").getBinary(this.model.get("fileName"), {
+                        success : onGetBinary
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
                 articleImageElement.parent().hide();
             } else {
                 articleImageElement.parent().hide();

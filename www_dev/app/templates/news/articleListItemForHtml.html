@@ -2,22 +2,20 @@
     <section class='post__body'>
         <div class="row">
             <div class="large-12 columns">
-                <%= model.get("dispSite") %>
+                <div class="post-header">
+                    <div class="post-header__site">
+                        <div class="post-label">
+                            <%= model.get("dispSite") %>
+                        </div>
+                    </div>
+
+                    <div class="post-header__title">
+                        <%= model.get("dispTitle") %>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="post-header__title">
-                <%= model.get("dispTitle") %>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="large-12 columns" style="font-size: large;font-weight: bold;">
-                <hr/>
-            </div>
-        </div>
-    
         <%= model.get("rawHTML") %>
         <%= model.get("rawHTML2") %>
         <%= model.get("rawHTML3") %>
@@ -30,7 +28,7 @@
             </button>
 
             <button data-favorite-register-button type="button" class="small button">
-                スクラップ
+                切り抜き
             </button>
         </div>
 
