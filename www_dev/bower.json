@@ -21,7 +21,6 @@
     "Snap.js": "~1.9.3",
     "iscroll": "~5.1.3",
     "async": "~0.9.0",
-    "vex": "~2.2.1",
-    "jquery-visible": "teamdf/jquery-visible#~1.1.0"
+    "vex": "~2.2.1"
   }
 }

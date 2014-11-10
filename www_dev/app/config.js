@@ -21,8 +21,7 @@ require.config({
         "iscroll-namie": "../lib/iscroll-namie",
         "async": "../bower_components/async/lib/async",
         "vex" : "../bower_components/vex/js/vex",
-        "vexDialog" : "../bower_components/vex/js/vex.dialog",
-        "jquery-visible": "../bower_components/jquery-visible/jquery.visible.min"
+        "vexDialog" : "../bower_components/vex/js/vex.dialog"
     },
 
     deps : [ "main" ],
@@ -44,7 +43,6 @@ require.config({
         "blockui" : [ "jquery" ],
         "panzoom" : [ "jquery" ],
         "vex" : [ "jquery" ],
-        "vexDialog" : [ "vex" ],
-        "jquery-visible": [ "jquery" ]
+        "vexDialog" : [ "vex" ]
     }
 });

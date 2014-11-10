@@ -4,7 +4,6 @@ define(function(require, exports, module) {
     "use strict";
     
     require('iscroll-namie');
-    require('jquery-visible');
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
@@ -277,27 +276,11 @@ define(function(require, exports, module) {
          * 文字サイズを変更する直前に呼ばれる
          */
         willChangeFontSize: function () {
-            var $container = $('.contents__primary');
-            var heightTopBar = $('.top-bar').height();
-            var heightGlobalNav = $('.global-nav').height();
-            var offset = heightTopBar + heightGlobalNav;
-            var storedScrollTop = $container.scrollTop();
-            var articleId;
+            var $currentPost = $('.post').filter(function () {
+                return 0 <= $(this).position().top + $(this).height();
+            }).first();
             
-            // ヘッダーで隠れている分がvisibleとしてカウントされないように
-            // visible判定時は一時的にスクロールしておく
-            $container.scrollTop(storedScrollTop + offset);
-
-            $('.post').each(function () {
-                if ($(this).visible(true)) {
-                    articleId = this.id;
-                    return false;
-                }
-            });
-            
-            $container.scrollTop(storedScrollTop);
-
-            this._currentArticleId = articleId;
+            this._currentArticleId = $currentPost.attr('id');
         },
 
         /**
