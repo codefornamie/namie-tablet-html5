@@ -22,6 +22,7 @@ require.config({
         "async": "../bower_components/async/lib/async",
         "vex" : "../bower_components/vex/js/vex",
         "vexDialog" : "../bower_components/vex/js/vex.dialog",
+        "jquery-visible": "../bower_components/jquery-visible/jquery.visible.min"
     },
 
     deps : [ "main" ],
@@ -43,6 +44,7 @@ require.config({
         "blockui" : [ "jquery" ],
         "panzoom" : [ "jquery" ],
         "vex" : [ "jquery" ],
-        "vexDialog" : [ "vex" ]
+        "vexDialog" : [ "vex" ],
+        "jquery-visible": [ "jquery" ]
     }
 });

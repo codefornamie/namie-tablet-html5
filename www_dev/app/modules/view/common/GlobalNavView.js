@@ -74,10 +74,14 @@ define(function(require, exports, module) {
          *  フォントサイズ変更ボタンが押されたら呼ばれる
          */
         onClickFontSize: function (ev) {
+            app.trigger('willChangeFontSize');
+            
             var $target = $(ev.currentTarget);
             var size = parseInt($target.attr('data-font-size'), 10);
             
             $('html, body').css('font-size', size + 'px');
+
+            app.trigger('didChangeFontSize');
         }
     });
 
