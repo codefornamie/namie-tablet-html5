@@ -133,6 +133,22 @@ define(function(require, exports, module) {
         commonView: function() {
             this.layout.setGlobalNav(new common.GlobalNavView());
             this.layout.setView("#menu", new common.MenuView()).render();
+        },
+        
+        
+        /**
+         * 前の画面に戻る
+         * http://stackoverflow.com/questions/14860461/selective-history-back-using-backbone-js
+         */
+        back: function() {
+            if(this.routesHit > 1) {
+                //more than one route hit -> user did not land to current page directly
+                window.history.back();
+            } else {
+                //otherwise go to the home page. Use replaceState if available so
+                //the navigation doesn't create an extra history entry
+                this.navigate('/top', {trigger:true, replace:true});
+            }
         }
     });
 
