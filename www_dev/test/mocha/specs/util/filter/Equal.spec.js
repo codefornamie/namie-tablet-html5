@@ -5,7 +5,7 @@ define(function(require) {
     var Filter = require("modules/util/filter/Filter");
 
     app.noRendering = true;
-    // Test that the Router exists.
+
     describe("Equal", function() {
         it("TEST-01 Equal#expression", function() {
             var equal = new Equal("property", 111);
@@ -22,5 +22,11 @@ define(function(require) {
             var query = Filter.queryString([equal]);
             assert.equal(query, "( property eq 1 or property eq 2 or property eq 3 )");
         });
+        it("TEST-04 Equal#expression", function() {
+            var filters = [new Equal("country", "Japan"), new Equal("address", "Kanagawa")];
+            var filterQueryString = Filter.queryString(filters);
+            assert.equal(filterQueryString, "country eq 'Japan' and address eq 'Kanagawa'");
+        });
+
     });
 });

@@ -2,8 +2,14 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var ComparisonOperatorBase = require("modules/util/filter/ComparisonOperatorBase");
-
+    var ComparisonOperatorBase = require("modules/util/filter/base/ComparisonOperatorBase");
+    /**
+     * $filterのle,lt演算子を利用する式を生成する機能を提供するクラスを作成する。
+     * 
+     * @class $filterのle,lt演算子を利用する式を生成する機能を提供するクラス
+     * @exports Le
+     * @constructor
+     */
     var Le = ComparisonOperatorBase.extend({
         init : function(key, value, isThan) {
             this.key = key;
@@ -19,24 +25,5 @@ define(function(require, exports, module) {
         }
     });
 
-//    /**
-//     * この演算子が表現する式を生成する。
-//     * 
-//     * @returns {String} 式
-//     */
-//    Le.prototype.expression = function() {
-//        return this.makeExpression(this);
-//    };
-//    Le.prototype.makeExpression = function(equalOperator) {
-//        if (_.isString(equalOperator.value)) {
-//            return equalOperator.key + this.operator + this.escapeSingleQuote(equalOperator.value) + "'";
-//        } else if (_.isNumber(equalOperator.value)) {
-//            return equalOperator.key + this.operator + equalOperator.value;
-//        } else if (_.isBoolean(equalOperator.value)) {
-//            return this.key + this.operator + equalOperator.value;
-//        } else {
-//            throw new Error("unsupoported value type error.");
-//        }
-//    };
     module.exports = Le;
 });
