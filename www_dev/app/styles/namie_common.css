@@ -328,6 +328,11 @@ main {
     padding: 16px;
 }
 
+.tagInputArea {
+    /* 会議用に一時的に隠す */
+    display: none;
+}
+
 /**
  *  post-header
  */
