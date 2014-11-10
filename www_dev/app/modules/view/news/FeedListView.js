@@ -51,15 +51,9 @@ define(function(require, exports, module) {
         onClickFeedListItem : function(ev) {
             // クリックされたフィードに対応する記事のスクロール位置取得
             var articleId = $(ev.currentTarget).attr("data-article-id");
-            var heightTopBar = $('.top-bar').height();
-            var heightGlobalNav = $('.global-nav').height();
-            var position = $("#" + articleId).offset().top - heightTopBar - heightGlobalNav;
             
-            // 現在の記事詳細のスクロール位置と相対位置を加算した箇所までスクロールする
-            $(".contents__primary").animate({
-                scrollTop : position + $(".contents__primary").scrollTop()
-            }, {
-                queue : false
+            app.trigger('scrollToArticle', {
+                articleId: articleId
             });
         },
     });

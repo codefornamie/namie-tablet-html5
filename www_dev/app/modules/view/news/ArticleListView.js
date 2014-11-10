@@ -3,7 +3,7 @@
 define(function(require, exports, module) {
     "use strict";
     
-    require('iscroll-namie');
+    require('iscroll-zoom');
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
@@ -17,6 +17,11 @@ define(function(require, exports, module) {
     var ArticleListView = AbstractView.extend({
         template : require("ldsh!/app/templates/news/articleList"),
         
+        /**
+         * 表示中の記事のID
+         */
+        _currentArticleId: null,
+        
         beforeRendered : function() {
             this.destroyIScroll();
             this.setArticleList();
@@ -24,6 +29,10 @@ define(function(require, exports, module) {
 
         afterRendered : function() {
             //this.initIScroll();
+            //var $container = $('#contents__primary');
+            //this.iscroll = new IScroll($container[0], {
+            //    zoom: true
+            //});
         },
         /**
          * 初期化処理
@@ -32,6 +41,11 @@ define(function(require, exports, module) {
             // 表示する記事ページのインデックス
             app.set('currentPage', 0);
             this.listenTo(app, 'change:currentPage', this.onChangeCurrentPage);
+            
+            // イベントを登録
+            app.on('scrollToArticle', this.scrollToArticle.bind(this));
+            app.on('willChangeFontSize', this.willChangeFontSize.bind(this));
+            app.on('didChangeFontSize', this.didChangeFontSize.bind(this));
         },
         
         /**
@@ -145,6 +159,26 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 指定されたarticleIdの記事までスクロール
+         * @param {Object} param
+         */
+        scrollToArticle: function (param) {
+            var articleId = param.articleId;
+            var immediate = !!param.immediate;
+            var heightTopBar = $('.top-bar').height();
+            var heightGlobalNav = $('.global-nav').height();
+            var position = $("#" + articleId).offset().top - heightTopBar - heightGlobalNav;
+            
+            // 現在の記事詳細のスクロール位置と相対位置を加算した箇所までスクロールする
+            $(".contents__primary").animate({
+                scrollTop : position + $(".contents__primary").scrollTop()
+            }, {
+                queue : false,
+                duration: (immediate) ? 0 : 400
+            });
+        },
+        
+        /**
          * 取得した動画一覧を描画する
          */
         setArticleList : function() {
@@ -240,7 +274,28 @@ define(function(require, exports, module) {
          */
         onChangeCurrentPage: function () {
             this.render();
-        }
+        },
+        
+        /**
+         * 文字サイズを変更する直前に呼ばれる
+         */
+        willChangeFontSize: function () {
+            var $currentPost = $('.post').filter(function () {
+                return 0 <= $(this).position().top + $(this).height();
+            }).first();
+            
+            this._currentArticleId = $currentPost.attr('id');
+        },
+
+        /**
+         * 文字サイズを変更した直後に呼ばれる
+         */
+        didChangeFontSize: function () {
+            app.trigger('scrollToArticle', {
+                articleId: this._currentArticleId,
+                immediate: true
+            });
+        },
     });
 
     module.exports = ArticleListView;

@@ -66,7 +66,8 @@ define(function(require, exports, module) {
         /**
          *  今日の新聞に戻るボタンが押されたら呼ばれる
          */
-        onClickBackHome: function () {
+        onClickBackHome: function (ev) {
+            ev.preventDefault();
             app.router.back();
         },
         
@@ -74,10 +75,14 @@ define(function(require, exports, module) {
          *  フォントサイズ変更ボタンが押されたら呼ばれる
          */
         onClickFontSize: function (ev) {
+            app.trigger('willChangeFontSize');
+            
             var $target = $(ev.currentTarget);
             var size = parseInt($target.attr('data-font-size'), 10);
             
             $('html, body').css('font-size', size + 'px');
+
+            app.trigger('didChangeFontSize');
         }
     });
 
