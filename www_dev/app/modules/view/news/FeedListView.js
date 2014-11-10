@@ -54,7 +54,7 @@ define(function(require, exports, module) {
 
             this.collection.find(function (m, i) {
                 index = i;
-                return m.id == articleId;
+                return m.get("__id") == articleId;
             });
             
             // 表示中の記事のページを変更する
