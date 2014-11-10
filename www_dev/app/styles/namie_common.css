@@ -313,7 +313,9 @@ main {
  *  post
  */
 .post {
-    margin: 16px;
+    margin: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.16);
 }
 
 .post__body {

@@ -77,8 +77,22 @@ define(function(require, exports, module) {
                 };
             };
 
+            var onLoadGAPI = function (next) {
+                window.onLoadGAPI = function () {
+                    delete window.onLoadGAPI;
+                    next(null);
+                };
+
+                loadScript("https://apis.google.com/js/client.js?onload=onLoadGAPI")(function (err) {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+                });
+            };
+            
             async.series([
-                loadScript("https://apis.google.com/js/client.js"),
+                onLoadGAPI,
                 loadScript("https://www.youtube.com/iframe_api")
             ], function (err) {
                 if (!err) {
