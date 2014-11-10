@@ -445,6 +445,13 @@ div.nehan-block.nehan-body:last-child {
 .tagColumnsLabel {
     padding-top: 7px;
 }
+.tagButtons {
+    display: inline-block;
+}
+.tagButtons button.deleteTag {
+    margin-left: 8px;
+    margin-bottom: 8px;
+}
 /**
  *  Events Detail
  */
