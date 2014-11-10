@@ -34,7 +34,10 @@ define(function(require, exports, module) {
             
             if (href.prop && href.prop.slice(0, root.length) === root) {
                 evt.preventDefault();
-                Backbone.history.navigate(href.attr, true);
+                app.router.navigate(href.attr, {
+                    trigger: true,
+                    replace: false
+                });
             }
         }
     });

@@ -66,7 +66,8 @@ define(function(require, exports, module) {
         /**
          *  今日の新聞に戻るボタンが押されたら呼ばれる
          */
-        onClickBackHome: function () {
+        onClickBackHome: function (ev) {
+            ev.preventDefault();
             app.router.back();
         },
         
