@@ -207,14 +207,14 @@ define(function(require, exports, module) {
             feedListView.collection = this.newsCollection;
             this.setView("#sidebar__list", feedListView);
             feedListView.render();
-            feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
+//            feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
 
             // ArticleListView初期化
             var articleListView = new ArticleListView();
             articleListView.collection = this.newsCollection;
             this.setView("#article-list", articleListView);
             articleListView.render();
-            articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
+//            articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
 
             this.hideLoading();
         },

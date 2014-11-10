@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var TagListView = require("modules/view/news/TagListView");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var FavoriteModel = require("modules/model/article/FavoriteModel");
     var CommonUtil = require("modules/util/CommonUtil");
@@ -31,6 +32,11 @@ define(function(require, exports, module) {
         afterRendered : function() {
             this.showImage();
             this.afterRenderCommon();
+            // タグリストの追加
+            this.tagListView = new TagListView();
+            this.tagListView.tagsArray = this.model.get("tagsArray");
+            this.setView(".tagListArea", this.tagListView);
+            this.tagListView.render();
         },
         /**
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
@@ -99,14 +105,6 @@ define(function(require, exports, module) {
                 contain : "invert"
             });
 
-            // タグボタンの追加
-            // beforeRenderで実施すると要素がなくタグが挿入できなかったためここで実装
-            if (this.model.get("tagsArray").length) {
-                _.each(this.model.get("tagsArray"), $.proxy(function(tag) {
-                    var tagLabel = CommonUtil.sanitizing(tag);
-                    $(this.el).find(".tagButtons").append("<button type='button' class='tiny button secondary deleteTag'>" + tagLabel + "</button>");
-                }, this));
-            }
             if (this.model.get("isNotArticle")) {
                 $(this.el).find(".tagInputArea").hide();
             }
@@ -152,6 +150,7 @@ define(function(require, exports, module) {
             if ($(this.el).find("#tagInput").val()) {
                 this.model.get("tagsArray").push($(this.el).find("#tagInput").val());
                 this.model.set("tagsArray", _.uniq(this.model.get("tagsArray")));
+                $(this.el).find("#tagInput").val("");
                 this.model.save(null, {
                     success : $.proxy(this.onSave, this)
                 });
@@ -163,7 +162,8 @@ define(function(require, exports, module) {
         onSave : function() {
             this.model.fetch({
                 success : $.proxy(function() {
-                    this.render();
+                    this.tagListView.tagsArray = this.model.get("tagsArray");
+                    this.tagListView.render();
                 }, this)
             });
         },
