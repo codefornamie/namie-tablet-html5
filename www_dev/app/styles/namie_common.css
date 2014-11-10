@@ -452,6 +452,14 @@ div.nehan-block.nehan-body:last-child {
     margin-left: 8px;
     margin-bottom: 8px;
 }
+
+.tagList div button.deleteTag {
+    margin-bottom: 0.1rem;
+}
+.tagList div:not(:last-child) {
+    float: left;
+}
+
 /**
  *  Events Detail
  */
