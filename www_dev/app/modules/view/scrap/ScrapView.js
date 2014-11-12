@@ -52,7 +52,10 @@ define(function(require, exports, module) {
             favoriteFeedListView.parent = this;
             this.setView("#sidebar__favorite__list", favoriteFeedListView);
             favoriteFeedListView.render();
-
+            
+            // 初期表示処理
+            var firstView = favoriteFeedListView.views["#feedList"][0];
+            $(firstView.el).find("li")[0].click();
             this.hideLoading();
         },
         /**
