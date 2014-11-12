@@ -33,7 +33,7 @@ define(function(require, exports, module) {
          * YouTube動画プレイヤーの設定を行う。
          */
         setYouTubePlayer : function() {
-            this.player = new YT.Player('youtubePlayer-' + this.model.get("videoId"), {
+            this.player = new YT.Player('youtubePlayer-' + this.model.get("link"), {
                 width : '640',
                 height : '390',
                 playerVars : {
@@ -68,7 +68,7 @@ define(function(require, exports, module) {
             if (!this.player || !video) {
                 return;
             }
-            this.player.cueVideoById(video.get("videoId"));
+            this.player.cueVideoById(video.get("link"));
             $("#videoTitle").text(video.get("title"));
             $("#videoDescription").text(video.get("description"));
         },

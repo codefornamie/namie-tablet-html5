@@ -128,13 +128,14 @@ define(function(require, exports, module) {
         onClickFavoriteRegisterButton : function() {
             var favoriteModel = new FavoriteModel();
             var source = this.model.get("__id");
-            if (this.model.get("url")) {
-                source = this.model.get("url");
-            }
             favoriteModel.set("source", source);
             favoriteModel.set("userId", "namie");
             favoriteModel.set("contents", this.model.get("description"));
             favoriteModel.set("title", this.model.get("title"));
+            favoriteModel.set("site", this.model.get("site"));
+            favoriteModel.set("imageUrl", this.model.get("imageUrl"));
+            // TODO 配信日が記事情報に設定されるようになった際には下記を書き換える
+            favoriteModel.set("deliveryDate", new Date().toLocaleDateString());
             favoriteModel.set("createdAt", new Date().toISOString());
             favoriteModel.save(null, {
                 success : $.proxy(function() {

@@ -22,6 +22,7 @@ define(function(require, exports, module) {
             res.__id = response.id.videoId;
             res.kind = response.id.kind;
             res.videoId = response.id.videoId;
+            res.link = response.id.videoId;
             res.dispCreatedAt = DateUtil.formatDate(new Date(res.publishedAt),"yyyy年MM月dd日 HH時mm分");
             res.imageUrl = res.thumbnails["default"].url;
             res.dispTitle = CommonUtil.sanitizing(res.title);

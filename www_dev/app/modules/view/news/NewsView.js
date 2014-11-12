@@ -157,7 +157,7 @@ define(function(require, exports, module) {
                     // articleCollectionにfav状態を反映する
                     self.articleCollection.each(function (article) {
                         self.favoriteCollection.each(function (favorite) {
-                            if (article.get("url") === favorite.get("source")) {
+                            if (article.get("__id") === favorite.get("source")) {
                                 article.set("isFavorite", true);
                             }
                         });

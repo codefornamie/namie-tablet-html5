@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var CommonUtil = require("modules/util/CommonUtil");
     /**
      * お気に入り情報のモデルクラスを作成する。
      * 
@@ -18,7 +19,9 @@ define(function(require, exports, module) {
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            return {};
+            response.dispSite = CommonUtil.sanitizing(response.site ? response.site : "youtube");
+            response.dispTitle = CommonUtil.sanitizing(response.title);
+            return response;
         },
         /**
          * モデル固有の永続化データを生成する。
@@ -32,6 +35,9 @@ define(function(require, exports, module) {
             }
             saveData.contents = contents;
             saveData.title = this.get("title");
+            saveData.site = this.get("site");
+            saveData.imageUrl = this.get("imageUrl");
+            saveData.deliveryDate = this.get("deliveryDate");
             saveData.createdAt = this.get("createdAt");
         }
 
