@@ -191,21 +191,24 @@ define(function(require, exports, module) {
                 // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
                 var ListItemView;
                 
-                switch (model.get("modelType")) {
-                case "youtube":
+                switch (model.get("type")) {
+                case "2":
                     template = require("ldsh!/app/templates/news/youTubeListItem");
                     ListItemView = YouTubeListItemView;
                     break;
-                case "event":
-                    template = require("ldsh!/app/templates/news/eventsListItem");
-                    ListItemView = ArticleListItemView;
-                    break;
                 default:
                     template = require("ldsh!/app/templates/news/articleListItem");
+                    ListItemView = ArticleListItemView;
+                    if (model.get("modelType") === "event") {
+                        template = require("ldsh!/app/templates/news/eventsListItem");
+                    } 
                     if (model.get("rawHTML")) {
                         template = require("ldsh!/app/templates/news/articleListItemForHtml");
+                    } else if (model.get("modelType") === "youtube") {
+                        // TODO articleにtypeが全て登録されたら
+                        template = require("ldsh!/app/templates/news/youTubeListItem");
+                        ListItemView = YouTubeListItemView;
                     }
-                    ListItemView = ArticleListItemView;
                     break;
                 }
 

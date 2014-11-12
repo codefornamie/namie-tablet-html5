@@ -398,7 +398,7 @@ main {
     font-size: 16px;
 }
 
-.article-list {
+.article-list,.article-favorite-list {
     margin: 0;
     overflow: hidden;
     list-style: none;
@@ -408,7 +408,7 @@ main {
     -webkit-transition: .4s ease opacity;
     transition: .4s ease opacity;
 }
-    .article-list.is-ready {
+    .article-list.is-ready,.article-favorite-list.is-ready {
         opacity: 1;
     }
 
