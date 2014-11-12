@@ -8,19 +8,19 @@ define(function(require, exports, module) {
     var YouTubeListItemView = require("modules/view/news/YouTubeListItemView");
 
     /**
-     * 記事一覧(メニュー用)のViewクラス
+     * 切り抜き記事一覧(メニュー用)のViewクラス
      */
     var FavoriteFeedListView = FeedListView.extend({
         template : require("ldsh!/app/templates/news/feedList"),
         articleModel : new ArticleModel(),
         /**
-         * 記事リストアイテムをクリックされたときのコールバック関数
+         * 切り抜き記事リストアイテムをクリックされたときのコールバック関数
          *  
          *  @param {Event} ev
          */
         onClickFeedListItem : function(ev) {
             this.showLoading();
-            // クリックされたフィードに対応する記事情報取得
+            // クリックされたフィードに対応するarticle情報取得
             var targetView = _.find(this.views["#feedList"],function(view) {
                 return view.model.id === $(ev.currentTarget).attr("data-article-id");
             });
@@ -34,7 +34,7 @@ define(function(require, exports, module) {
             
         },
         /**
-         *  記事情報検索失敗後のコールバック関数
+         *  article情報検索失敗後のコールバック関数
          */
         onFetch: function () {
             var template = require("ldsh!/app/templates/news/articleListItem");
@@ -71,7 +71,7 @@ define(function(require, exports, module) {
 
         },
         /**
-         *  記事情報検索失敗後のコールバック関数
+         *  article情報検索失敗後のコールバック関数
          */
         onFailure: function (err) {
             console.log(err);

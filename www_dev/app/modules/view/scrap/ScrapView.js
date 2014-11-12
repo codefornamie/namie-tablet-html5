@@ -9,6 +9,9 @@ define(function(require, exports, module) {
     var Equal = require("modules/util/filter/Equal");
     var Or = require("modules/util/filter/Or");
 
+    /**
+     * 切り抜き記事一覧・詳細画面のViewクラス
+     */
     var ScrapView = AbstractView.extend({
         template : require("ldsh!/app/templates/scrap/scrap"),
         articleCollection : new ArticleCollection(),
@@ -28,7 +31,6 @@ define(function(require, exports, module) {
         },
         /**
          *  自身のユーザIDで切り抜き情報を検索する
-         *  @param {Function} callback
          */
         searchFavorite: function () {
             var self = this;
@@ -42,11 +44,9 @@ define(function(require, exports, module) {
         },
         /**
          *  切り抜き情報検索完了後のコールバック関数
-         *  @param {Error|Undefined} err
          */
         onFetch: function () {
-
-            // FeedListView初期化
+            // FavoriteFeedListView初期化
             var favoriteFeedListView = new FavoriteFeedListView();
             favoriteFeedListView.collection = this.favoriteCollection;
             favoriteFeedListView.parent = this;
