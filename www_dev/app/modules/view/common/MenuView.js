@@ -39,6 +39,7 @@ define(function(require, exports, module) {
                     replace: false
                 });
             }
+            $('#snap-content').data("snap").close();
         }
     });
 

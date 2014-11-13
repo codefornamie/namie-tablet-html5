@@ -11,6 +11,7 @@ define(function(require, exports, module) {
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
     var YouTubeCollection = require("modules/collection/youtube/YouTubeCollection");
     var EventsCollection = require("modules/collection/events/EventsCollection");
+    var Equal = require("modules/util/filter/Equal");
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラス
@@ -124,7 +125,7 @@ define(function(require, exports, module) {
             };
 
             gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
-            gapi.client.load('youtube', 'v3', $.proxy(onload, this));
+            gapi.client.load('youtube', 'v3', $.proxy(callback, this));
         },
         
         /**
@@ -151,6 +152,7 @@ define(function(require, exports, module) {
          */
         loadFavorite: function (callback) {
             var self = this;
+            this.favoriteCollection.condition.filters = [new Equal("userId", app.user.id)];
 
             this.favoriteCollection.fetch({
                 success: function () {
@@ -158,7 +160,8 @@ define(function(require, exports, module) {
                     self.articleCollection.each(function (article) {
                         self.favoriteCollection.each(function (favorite) {
                             if (article.get("__id") === favorite.get("source")) {
-                                article.set("isFavorite", true);
+                                article.set("isFavorite", !favorite.get("deletedAt"));
+                                article.favorite = favorite;
                             }
                         });
                     });
@@ -198,7 +201,7 @@ define(function(require, exports, module) {
                 return;
             }
 
-            this.newsCollection.add(this.youtubeCollection.models);
+//            this.newsCollection.add(this.youtubeCollection.models);
             this.newsCollection.add(this.articleCollection.models);
             this.newsCollection.add(this.eventsCollection.models);
 
@@ -207,6 +210,9 @@ define(function(require, exports, module) {
             feedListView.collection = this.newsCollection;
             this.setView("#sidebar__list", feedListView);
             feedListView.render();
+            if (this.newsCollection.size() === 0) {
+                $(this.el).find("#feedList").text("記事情報がありません");
+            }
 //            feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
 
             // ArticleListView初期化

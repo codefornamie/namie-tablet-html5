@@ -19,10 +19,11 @@ define(function(require, exports, module) {
 
         initialize : function() {
             this.snapper = new Snap({
-                element: document.getElementById('snap-content'),
+                element: $('#snap-content')[0],
                 tapToClose: true,
                 touchToDrag: false
             });
+            $('#snap-content').data("snap",this.snapper);
         },
 
         /**

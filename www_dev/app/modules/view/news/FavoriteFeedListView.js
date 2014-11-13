@@ -4,11 +4,16 @@ define(function(require, exports, module) {
     var app = require("app");
     var FeedListView = require("modules/view/news/FeedListView");
     var ArticleModel = require("modules/model/article/ArticleModel");
-    var ArticleListItemView = require("modules/view/news/ArticleListItemView");
-    var YouTubeListItemView = require("modules/view/news/YouTubeListItemView");
+    var AbstractView = require("modules/view/AbstractView");
+    var FavoriteArticleListItemView = require("modules/view/news/FavoriteArticleListItemView");
+    var FavoriteYouTubeListItemView = require("modules/view/news/FavoriteYouTubeListItemView");
 
     /**
      * 切り抜き記事一覧(メニュー用)のViewクラス
+     * 
+     * @class 切り抜き記事一覧のViewクラス
+     * @exports FavoriteFeedListView
+     * @constructor
      */
     var FavoriteFeedListView = FeedListView.extend({
         template : require("ldsh!/app/templates/news/feedList"),
@@ -16,7 +21,7 @@ define(function(require, exports, module) {
         /**
          * 切り抜き記事リストアイテムをクリックされたときのコールバック関数
          *  
-         *  @param {Event} ev
+         *  @param {Event} ev クリックイベント
          */
         onClickFeedListItem : function(ev) {
             this.showLoading();
@@ -26,6 +31,7 @@ define(function(require, exports, module) {
             });
             if (targetView && targetView.model) {
                 this.articleModel.set("__id",targetView.model.get("source"));
+                this.articleModel.favorite = targetView.model;
                 this.articleModel.fetch({
                     success : $.proxy(this.onFetch, this),
                     error : $.proxy(this.onFailure,this)
@@ -34,39 +40,58 @@ define(function(require, exports, module) {
             
         },
         /**
-         *  article情報検索失敗後のコールバック関数
+         *  article情報検索成功後のコールバック関数
+         *  
+         *  @param {ArticleModel} model 記事情報モデル
+         *  @param {Event} event Odata取得イベント
          */
-        onFetch: function () {
+        onFetch: function (model, event) {
             var template = require("ldsh!/app/templates/news/articleListItem");
-            // 記事一覧に追加するViewクラス。
+            // 記事一覧に追加するViewクラス
             // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
             var ListItemView;
+            this.articleModel.set("isFavorite",true);
             
             switch (this.articleModel.get("type")) {
             case "2":
+                // youtubeの場合
                 template = require("ldsh!/app/templates/news/youTubeListItem");
-                ListItemView = new YouTubeListItemView({
+                ListItemView = new FavoriteYouTubeListItemView({
+                    model : this.articleModel,
+                    template: template
+                });
+                break;
+            case "1":
+                // RSS記事情報の場合
+                template = require("ldsh!/app/templates/news/articleListItem");
+                if (this.articleModel.get("rawHTML")) {
+                    template = require("ldsh!/app/templates/news/articleListItemForHtml");
+                }
+                ListItemView = new FavoriteArticleListItemView({
                     model : this.articleModel,
                     template: template
                 });
                 break;
             default:
-                template = require("ldsh!/app/templates/news/articleListItem");
-                if (this.articleModel.get("modelType") === "event") {
-                    template = require("ldsh!/app/templates/news/eventsListItem");
-                }
-                if (this.articleModel.get("rawHTML")) {
-                    template = require("ldsh!/app/templates/news/articleListItemForHtml");
-                }
-                ListItemView = new ArticleListItemView({
+                template = require("ldsh!/app/templates/news/eventsListItem");
+                ListItemView = new FavoriteArticleListItemView({
                     model : this.articleModel,
                     template: template
                 });
                 break;
             }
+            // 記事情報が物理削除または論理削除されている場合
+            if (event.code === "PR404-OD-0002" || this.articleModel.get("deletedAt")) {
+                template = require("ldsh!/app/templates/news/notFoundArticleListItem");
+                ListItemView = new FavoriteArticleListItemView({
+                    model : this.articleModel,
+                    template: template
+                });
+            }
 
             this.parent.setView("#article-favorite-list", ListItemView);
             ListItemView.render();
+            $("#contents__primary_favorite").scrollTop(0);
             this.hideLoading();
 
         },

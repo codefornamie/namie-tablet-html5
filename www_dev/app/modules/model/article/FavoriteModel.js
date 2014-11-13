@@ -19,7 +19,7 @@ define(function(require, exports, module) {
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            response.dispSite = CommonUtil.sanitizing(response.site ? response.site : "youtube");
+            response.dispSite = CommonUtil.sanitizing(response.site);
             response.dispTitle = CommonUtil.sanitizing(response.title);
             return response;
         },
@@ -37,7 +37,7 @@ define(function(require, exports, module) {
             saveData.title = this.get("title");
             saveData.site = this.get("site");
             saveData.imageUrl = this.get("imageUrl");
-            saveData.deliveryDate = this.get("deliveryDate");
+            saveData.publishedAt = this.get("publishedAt");
             saveData.createdAt = this.get("createdAt");
         }
 
