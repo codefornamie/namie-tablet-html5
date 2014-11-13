@@ -1,14 +1,38 @@
 /**
+ *  variables
+ *
+ *  $blue = #156bbb;
+ *  $gray = #d5d5d5;
+ *  $black = #2c2c2c;
+ */
+
+/**
  *  general
  */
 html,
 body {
     height: 100%;
+    background-color: #fcfcfc;
 }
 
 html {
     /* 文字サイズ中 */
     font-size: 20px;
+}
+
+/**
+ *  foundation overrides
+ */
+.button {
+  background-color: rgb(213, 213, 213) !important;
+  box-shadow: inset 0 2px 2px 0 rgba(255,255,255,0.7),
+              inset 0 -4px 2px 0 rgba(0,0,0,0.2),
+              inset -3px 0 2px 0 rgba(0,0,0,0.1),
+              inset 3px 0 2px 0 rgba(0,0,0,0.1),
+              inset 0 1px 1px 0 rgba(0,0,0,0.5);
+  border-radius: 3px;
+  color: #156bbb !important;
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1), 0px 1px 0px rgba(255,255,255, 0.8);
 }
 
 /**
@@ -39,9 +63,9 @@ main {
     height: 100%;
     position: absolute;
     top: 0;
-    padding-top: 90px;
+    padding-top: 106px;
     width: 100%;
-    background-color: #fff;
+    background-color: #fcfcfc;
 }
 
 .contents > .row {
@@ -72,7 +96,17 @@ main {
  *  header
  */
 .header {
-    
+}
+
+.header nav {
+    height: 20px;
+    line-height: 20px;
+    background: #fcfcfc;
+    overflow: hidden;
+}
+
+.header nav h1 {
+    margin: 0;
 }
 
 .header .button.small {
@@ -82,63 +116,151 @@ main {
     padding-bottom: 0;
 }
 
-#selectRadiation {
-    margin-top:4px;
-    background-color:#262626;
-    border-color:#262626;
-    text-align:right;
-    color:white;
+/**
+ *  編集部の一言
+ */
+.header__comment {
+    font-family: serif;
+    font-size: 16px;
 }
 
-#radiationValue {
-    color:white;
-    line-height:42px;
+.header__comment p {
+    height: 30px;
+    line-height: 30px;
+    margin: 0;
+    font-size: 0.8rem;
 }
 
 /**
  *  global-nav
  */
 .global-nav {
-    height: 45px;
+    height: 81px;
     position: relative;
     z-index: 10;
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16);
+    border-top: 3px solid #2c2c2c;
+    margin: 0 10px;
+}
+
+.global-nav::before {
+    content: '';
+    display: block;
+    border-top: 2px solid #444444;
+    margin-top: 2px;
+}
+
+.global-nav::after {
+    content: '';
+    display: block;
+    border-top: 2px solid #444444;
+    height: 12px;
 }
 
 .global-nav .top-bar {
-    background: white !important;
+    height: 70px;
+    background: #fcfcfc !important;
 }
 
 .global-nav .top-bar li {
     background: transparent !important;
 }
 
-.global-nav__center {
-    position: absolute;
-    width: 100%;
-    height: 0;
+/**
+ *  global-navの子要素
+ */
+[class^=global-nav__] {
+    display: inline-block;
+    height: 70px;
+    line-height: 70px;
+    vertical-align: middle;
+    float: left;
+}
+
+.global-nav nav section::after {
+    content: '';
     display: block;
+    clear: both;
+}
+
+.global-nav .button {
     top: 0;
-    left: 0;
-    text-align: center;
 }
 
-.global-nav__center ul {
+/**
+ *  global-nav__menu
+ *  メニューボタンのエリア
+ */
+.global-nav__menu {
+    width: 15%;
+}
+
+/**
+ *  global-nav__info
+ *  俳句のエリア
+ */
+.global-nav__info {
+    width: 23%;
+}
+
+/**
+ *  global-nav__title
+ *  タイトルのエリア
+ */
+.global-nav__title {
+    width: 24%;
+    border: 2px double #444;
+}
+
+.title__main {
+    font-size: 48px;
+    margin: 0;
+}
+
+.title__sub {
+    font-size: 24px;
+    margin: 0;
+}
+
+/**
+ *  global-nav__date
+ *  日付のエリア
+ */
+.global-nav__date {
+    width: 15%;
+}
+
+/**
+ *  global-nav__weather
+ *  天気のエリア
+ */
+.global-nav__weather {
+    width: 10%;
+}
+
+/**
+ *  global-nav__font
+ *  フォントサイズ指定
+ */
+.global-nav__font {
+    width: 13%;
+}
+
+.global-nav__font ul {
+    list-style: none;
+    margin: 0;
     display: inline-block;
-    line-height: 45px;
 }
 
-.global-nav__center li {
+.global-nav__font ul li {
     display: inline-block;
-    float: none;
+    vertical-align: middle;
 }
 
-.global-nav__right {
-    margin: 0 8px;
-}
-
-.top-bar-section ul li > a.button {
-    font-size: 12px !important;
+.global-nav__font .button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    margin: 0;
 }
 
 /**
@@ -402,7 +524,7 @@ main {
     margin: 0;
     overflow: hidden;
     list-style: none;
-    background: white;
+    background: #fcfcfc;
     min-height: 750px;
     opacity: 0;
     -webkit-transition: .4s ease opacity;
