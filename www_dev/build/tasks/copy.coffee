@@ -7,4 +7,5 @@ module.exports = ->
       files: [
         {src: "bower_components/**", dest: "../www/"}
         {src: "app/img/**", dest: "../www/"}
+        {src: "app/styles/**", dest: "../www/"}
       ]
