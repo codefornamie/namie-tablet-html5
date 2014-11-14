@@ -10,7 +10,7 @@ define(function(require, exports, module) {
      * 記事一覧(メニュー用)のViewクラス
      */
     var FeedListView = AbstractView.extend({
-        template : require("ldsh!/app/templates/news/feedList"),
+        template : require("ldsh!templates/{mode}/news/feedList"),
         events: {
             "click .feedListItem" : "onClickFeedListItem"
         },

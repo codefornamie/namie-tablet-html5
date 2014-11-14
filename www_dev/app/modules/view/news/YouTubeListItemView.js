@@ -16,7 +16,7 @@ define(function(require, exports, module) {
         /**
          * Viewのテンプレートファイルパス
          */
-        template : require("ldsh!/app/templates/news/youTubeListItem"),
+        template : require("ldsh!templates/{mode}/news/youTubeListItem"),
         /**
          * YouTubePlayerのインスタンス
          */

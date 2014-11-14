@@ -1,0 +1,82 @@
+
+<div id="eventsPage" class="large-10 columns" role="content">
+	<article>
+
+		<h3>
+			<a href="#">イベント登録</a>
+		</h3>
+		<h6>2014/10/15</h6>
+
+		<div class="row">
+			<div class="large-6 columns">
+				<p>イベント情報を登録してください。</p>
+			</div>
+		</div>
+<form id="eventsRegistForm">
+        <div class="row">
+            <div class="large-2 columns">
+                <label class="eventColumnsTitle">日時</label>
+            </div>
+            <div class="large-6 columns end">
+                <input id="eventDatetime" name="eventDatetime" type="datetime-local" class="required" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-2 columns">
+                <label class="eventColumnsTitle">イベント名</label>
+            </div>
+            <div class="large-6 columns end">
+                <input id="eventName" name="eventName" type="text" class="required" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-2 columns">
+                <label class="eventColumnsTitle">場所</label>
+            </div>
+            <div class="large-6 columns end">
+                <input id="eventPlace" name="eventPlace" type="text" class="required"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-2 columns">
+                <label class="eventColumnsTitle">画像</label>
+            </div>
+            <div class="large-6 columns end">
+                <button type="button" id="fileInputButton">画像を登録</button>
+                <input type="file" id="eventFile" style="display:none;" accept="image/jpeg, image/gif, image/png"/>
+                <img id="previewFile" style="display:none;padding-bottom: 10px;"></img>
+                <button type="button" id="fileDeleteButton" style="display:none;">画像を削除</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-2 columns">
+                <label class="eventColumnsTitle">詳細</label>
+            </div>
+            <div class="large-6 columns end">
+                <textArea id="eventDetail" rows="5"></textArea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-2 columns">
+                <label class="eventColumnsTitle">連絡先</label>
+            </div>
+            <div class="large-6 columns end">
+                                     電話番号<input id="eventTel" type="tel" name="eventTel" class="telnum"/>
+                E-mail<input id="eventEmail" name="eventEmail" type="text" class ="email"/>
+            </div>
+        </div>
+        </form>
+        <div class="row">
+            <div class="large-2 columns">
+            <button id="eventRegistButton" class="ladda-button" data-style="contract-overlay"><span class="ladda-label">登録</span></button>
+          <!--       <button id="eventRegistButton">登録</button> -->
+            </div>
+        </div>
+	</article>
+	<hr />
+</div>
+
+<aside class="menu large-2 columns">
+
+
+</aside>

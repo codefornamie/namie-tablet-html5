@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
 
     var TutorialView = AbstractView.extend({
-        template : require("ldsh!/app/templates/tutorial/tutorial"),
+        template : require("ldsh!templates/{mode}/tutorial/tutorial"),
         beforeRendered : function() {
 
         },

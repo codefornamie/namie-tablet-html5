@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var EventsListItemView = AbstractView.extend({
-        template : require("ldsh!/app/templates/events/eventsListItem"),
+        template : require("ldsh!templates/{mode}/events/eventsListItem"),
         serialize : function() {
             return {
                 model : this.model

@@ -3,7 +3,7 @@ require.config({
         "dc1-client" : "../lib/dao/dc1-client",
         "underscore" : "../bower_components/lodash/dist/lodash.underscore",
         "lodash" : "../bower_components/lodash/dist/lodash",
-        "ldsh" : "../bower_components/lodash-template-loader/loader",
+        "ldsh" : "../lib/lodash-template-loader/loader",
         "jquery" : "../bower_components/jquery/dist/jquery",
         "backbone" : "../bower_components/backbone/backbone",
         "layoutmanager" : "../bower_components/layoutmanager/backbone.layoutmanager",
@@ -42,5 +42,9 @@ require.config({
         "panzoom" : [ "jquery" ],
         "vex" : [ "jquery" ],
         "vexDialog" : [ "vex" ]
+    },
+    lodashLoader : {
+        // view category (ex. news, posting..).
+        mode : ""
     }
 });

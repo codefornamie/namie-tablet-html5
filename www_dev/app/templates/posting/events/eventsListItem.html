@@ -1,0 +1,19 @@
+<tr data-events-id="<%= model.get('__id') %>" class="eventsListItem">
+    <td>
+        <span class="eventsTitle" style="font-size: small; font-weight: bold;">
+            <%= model.get("eventPlace") %>
+        </span>
+    
+        <span>
+            <%= model.get("eventDate") %>
+        </span>
+
+        <span>
+            <%= model.get("fileName") %>
+        </span>
+    
+        <img src="" alt="" />
+
+        <span class="descriptionText" style="font-size: small;"><%= model.get("description") %></span>
+    </td>
+</tr>

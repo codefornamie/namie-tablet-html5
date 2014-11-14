@@ -8,7 +8,7 @@ define(function(require, exports, module) {
     var Snap = require("snap");
 
     var GlobalNavView = AbstractView.extend({
-        template : require("ldsh!/app/templates/common/global-nav"),
+        template : require("ldsh!templates/{mode}/common/global-nav"),
 
         beforeRendered : function() {
         },
