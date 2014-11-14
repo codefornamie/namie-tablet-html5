@@ -4,17 +4,16 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var FavoriteFeedListView = require("modules/view/news/FavoriteFeedListView");
-    var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
     var Equal = require("modules/util/filter/Equal");
-    var Or = require("modules/util/filter/Or");
+    var And = require("modules/util/filter/And");
+    var IsNull = require("modules/util/filter/IsNull");
 
     /**
      * 切り抜き記事一覧・詳細画面のViewクラス
      */
     var ScrapView = AbstractView.extend({
         template : require("ldsh!/app/templates/scrap/scrap"),
-        articleCollection : new ArticleCollection(),
         favoriteCollection : new FavoriteCollection(),
 
         beforeRendered : function() {
@@ -35,7 +34,9 @@ define(function(require, exports, module) {
         searchFavorite: function () {
             var self = this;
             // 自身のユーザIDでフィルタ
-            this.favoriteCollection.condition.filters = [new Equal("userId", app.user.id)];
+            this.favoriteCollection.condition.filters = [ new And([
+                    new Equal("userId", app.user.id),
+                    new IsNull("deletedAt") ]) ];
             
             this.favoriteCollection.fetch({
                 success: $.proxy(this.onFetch,this),
@@ -48,14 +49,23 @@ define(function(require, exports, module) {
         onFetch: function () {
             // FavoriteFeedListView初期化
             var favoriteFeedListView = new FavoriteFeedListView();
+
+            this.favoriteCollection.models = this.favoriteCollection.sortBy(function(favorite) {
+                                return favorite.get("updatedAt");
+                            });
             favoriteFeedListView.collection = this.favoriteCollection;
             favoriteFeedListView.parent = this;
             this.setView("#sidebar__favorite__list", favoriteFeedListView);
             favoriteFeedListView.render();
+            if (this.favoriteCollection.size() === 0) {
+                $(this.el).find("#feedList").text("記事情報がありません");
+            }
             
             // 初期表示処理
-            var firstView = favoriteFeedListView.views["#feedList"][0];
-            $(firstView.el).find("li")[0].click();
+            if (favoriteFeedListView.collection.size() !== 0) {
+                var firstView = favoriteFeedListView.views["#feedList"][0];
+                $(firstView.el).find("li")[0].click();
+            }
             this.hideLoading();
         },
         /**
