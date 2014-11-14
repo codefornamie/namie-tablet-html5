@@ -29,6 +29,12 @@ define(function(require, exports, module) {
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.tagsArray = [];
             response.tagsLabel = "";
+            // TODO 記事情報にpublishedAtが登録されるようになったら、このif文ごと削除すること｛
+            if (!response.publishedAt) {
+                response.publishedAt = DateUtil.formatDate(new Date(),"yyyy-MM-dd");
+            }
+            // ｝
+            
             if (response.tags) {
                 var arr = response.tags.split(",");
                 _.each(arr,function (tag) {
