@@ -1,11 +1,12 @@
-/*-- Pure CSS (http://purecss.io/). -----------------------------------------*/
+/*-- 3rd party stylesheets. -----------------------------------------------*/
 
-/* @import "../../bower_components/pure/pure.css"; */
 @import "../../bower_components/foundation/css/foundation.css";
+@import "../../bower_components/Font-Awesome/css/font-awesome.min.css";
 @import "../../bower_components/animate.css/animate.css";
 @import "../../bower_components/Snap.js/snap.css";
-@import "namie_common.css";
 @import "../../bower_components/vex/css/vex.css";
 @import "../../bower_components/vex/css/vex-theme-default.css";
 
 /*-- Application stylesheets. -----------------------------------------------*/
+
+@import "namie_common.css";
