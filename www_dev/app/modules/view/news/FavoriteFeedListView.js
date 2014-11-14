@@ -75,7 +75,7 @@ define(function(require, exports, module) {
                 }
             },this)); 
             
-            var template = require("ldsh!/app/templates/news/articleListItem");
+            var template = require("ldsh!templates/{mode}/news/articleListItem");
             // 記事一覧に追加するViewクラス
             // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
             var ListItemView;
