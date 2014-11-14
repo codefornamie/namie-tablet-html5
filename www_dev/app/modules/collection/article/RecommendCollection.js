@@ -6,7 +6,11 @@ define(function(require, exports, module) {
     var RecommendModel = require("modules/model/article/RecommendModel");
 
     /**
-     * 記事情報のコレクションクラス
+     * おすすめ情報のコレクションクラス
+     * 
+     * @class おすすめ情報のコレクションクラス
+     * @exports RecommendCollection
+     * @constructor
      */
     var RecommendCollection = AbstractODataCollection.extend({
         model : RecommendModel,
