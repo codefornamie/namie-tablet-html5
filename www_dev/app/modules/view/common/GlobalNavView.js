@@ -18,10 +18,14 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
-            this.snapper = new Snap({
+            var snapper = this.snapper = new Snap({
                 element: document.getElementById('snap-content'),
                 tapToClose: true,
                 touchToDrag: false
+            });
+
+            app.router.on('route', function () {
+                snapper.close();
             });
         },
 
