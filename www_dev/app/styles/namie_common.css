@@ -12,7 +12,6 @@
 html,
 body {
     height: 100%;
-    background-color: #fcfcfc;
 }
 
 html {
@@ -83,6 +82,24 @@ main {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
 }
 
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px 10px 0;
+}
+
+.background::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background-color: #f00;
+    display: block;
+    background: url(../img/bg-newspaper.jpg);
+}
+
 /**
  *  header
  */
@@ -93,7 +110,6 @@ main {
 .header nav {
     height: 20px;
     line-height: 20px;
-    background: #fcfcfc;
     overflow: hidden;
 }
 
@@ -131,7 +147,6 @@ main {
     position: relative;
     z-index: 10;
     margin: 0 10px 10px;
-    background: #fcfcfc;
     padding: 8px 10px;
 }
 
@@ -281,6 +296,57 @@ main {
     border-bottom: 2px solid #2c2c2c;
 }
 
+.global-nav__weather .nav-content {
+    padding-left: 10px;
+}
+
+.weather__label {
+    display: inline-block;
+    width: 20px;
+    height: 100%;
+    text-align: center;
+    background-color: #e39815;
+    color: white;
+    font-family: serif;
+    float: left;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.weather__content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    margin: auto 0;
+    padding: 0 5px 0 35px;
+    font-family: serif;
+    font-size: 14px;
+}
+
+.weather__table {
+    background: none;
+    margin: 0;
+    border: none;
+}
+
+.weather__table thead tr td {
+    font-size: 0.7rem;
+    padding: 2px;
+    line-height: 1;
+    background-color: #cecece;
+    text-align: center;
+}
+
+.weather__table tbody tr td {
+    font-size: 0.7rem;
+    padding: 2px;
+    line-height: 1;
+    text-align: center;
+}
+
 /**
  *  global-nav__font
  *  フォントサイズ指定
@@ -324,12 +390,10 @@ main {
  *  contents
  */
 .contents-wrapper {
-    background-color: #c1c1c1;
 }
 
 .contents {
     height: 100%;
-    background: #fcfcfc;
     padding: 0 10px;
 }
 
@@ -351,7 +415,6 @@ main {
     position: relative;
     overflow: auto;
     padding: 0 0 0 16px;
-    background: #fcfcfc;
 }
 
 .background-sign-container {
@@ -389,6 +452,7 @@ main {
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     overflow: auto;
     background: #f2f2f2;
+    border-right: 2px solid #2c2c2c;
 }
 
 .contents__secondary > div {
@@ -468,9 +532,18 @@ main {
 }
 
 .side-action__label {
+    background-color: #156bbb;
+    color: white;
+    float: left;
+    padding: 0 5px;
+    margin-right: 15px;
+    font-size: 0.9rem;
+    font-family: serif;
 }
 
 .side-action__description {
+    font-size: 0.9rem;
+    font-weight: bold;
 }
 
 .side-action__body {
@@ -618,7 +691,6 @@ main {
     margin: 0;
     overflow: hidden;
     list-style: none;
-    background: #fcfcfc;
     min-height: 750px;
     opacity: 0;
     -webkit-transition: .4s ease opacity;
