@@ -6,8 +6,10 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var ArticleListView = require("modules/view/news/ArticleListView");
     var FeedListView = require("modules/view/news/FeedListView");
+    var DateUtil = require("modules/util/DateUtil");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var RecommendCollection = require("modules/collection/article/RecommendCollection");
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
     var YouTubeCollection = require("modules/collection/youtube/YouTubeCollection");
     var EventsCollection = require("modules/collection/events/EventsCollection");
@@ -22,6 +24,7 @@ define(function(require, exports, module) {
         model : new ArticleModel(),
         fetchCounter : 0,
         articleCollection : new ArticleCollection(),
+        recommendCollection : new RecommendCollection(),
         favoriteCollection : new FavoriteCollection(),
         youtubeCollection : new YouTubeCollection(),
         eventsCollection : new EventsCollection(),
@@ -39,6 +42,7 @@ define(function(require, exports, module) {
             async.parallel([
                 this.loadYoutube.bind(this),
                 this.loadArticle.bind(this),
+                this.loadRecommend.bind(this),
                 this.loadEvents.bind(this)
             ], this.onFetchAll.bind(this));
         },
@@ -151,21 +155,10 @@ define(function(require, exports, module) {
          *  @param {Function} callback
          */
         loadFavorite: function (callback) {
-            var self = this;
             this.favoriteCollection.condition.filters = [new Equal("userId", app.user.id)];
 
             this.favoriteCollection.fetch({
                 success: function () {
-                    // articleCollectionにfav状態を反映する
-                    self.articleCollection.each(function (article) {
-                        self.favoriteCollection.each(function (favorite) {
-                            if (article.get("__id") === favorite.get("source")) {
-                                article.set("isFavorite", !favorite.get("deletedAt"));
-                                article.favorite = favorite;
-                            }
-                        });
-                    });
-
                     callback();
                 },
                 
@@ -190,6 +183,22 @@ define(function(require, exports, module) {
                 }
             });
         },
+        /**
+         *  Recommendを読み込む
+         *  @param {Function} callback
+         */
+        loadRecommend: function (callback) {
+            this.recommendCollection.condition.filters = [new Equal("publishedAt", DateUtil.formatDate(new Date(),"yyyy-MM-dd"))];
+            this.recommendCollection.fetch({
+                success: function () {
+                    callback();
+                },
+                
+                error: function () {
+                    callback('error');
+                }
+            });
+        },
 
         /**
          *  全ての情報検索完了後のコールバック関数
@@ -204,6 +213,32 @@ define(function(require, exports, module) {
 //            this.newsCollection.add(this.youtubeCollection.models);
             this.newsCollection.add(this.articleCollection.models);
             this.newsCollection.add(this.eventsCollection.models);
+            
+            // articleCollectionに切抜き、おすすめ状態を反映する
+            this.newsCollection.each($.proxy(function (article) {
+                this.favoriteCollection.each(function (favorite) {
+                    if (article.get("__id") === favorite.get("source")) {
+                        article.set("isFavorite", !favorite.get("deletedAt"));
+                        article.favorite = favorite;
+                    }
+                });
+                
+                // おすすめ数取得
+                var recommends = this.recommendCollection.filter($.proxy(function(recommend){
+                    return article.get("__id") === recommend.get("source");
+                },this));
+                article.recommendAmount = recommends.length;
+                
+                //自身のおすすめ情報を記事に付加
+                _.each(recommends,$.proxy(function (recommend) {
+                    if (recommend.get("isMine")) {
+                        article.set("isRecommend", !recommend.get("deletedAt"));
+                        article.recommend = recommend;
+                    }
+                },this));
+                
+            },this));
+
 
             // FeedListView初期化
             var feedListView = new FeedListView();

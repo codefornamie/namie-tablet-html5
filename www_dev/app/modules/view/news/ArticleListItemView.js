@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var TagListView = require("modules/view/news/TagListView");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var FavoriteModel = require("modules/model/article/FavoriteModel");
+    var RecommendModel = require("modules/model/article/RecommendModel");
     var CommonUtil = require("modules/util/CommonUtil");
     var DateUtil = require("modules/util/DateUtil");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
@@ -102,6 +103,11 @@ define(function(require, exports, module) {
             } else {
                 this.$el.find('[data-favorite-delete-button]').hide();
             }
+            if (this.model.get("isRecommend")) {
+                this.$el.find('[data-recommend-register-button]').hide();
+            } else {
+                this.$el.find('[data-recommend-delete-button]').hide();
+            }
             $(".panzoom-elements").panzoom({
                 minScale : 1,
                 contain : "invert"
@@ -117,6 +123,8 @@ define(function(require, exports, module) {
         events : {
             "click [data-favorite-register-button]" : "onClickFavoriteRegisterButton",
             "click [data-favorite-delete-button]" : "onClickFavoriteDeleteButton",
+            "click [data-recommend-register-button]" : "onClickRecommendRegisterButton",
+            "click [data-recommend-delete-button]" : "onClickRecommendDeleteButton",
             "click #tagAddButton" : "onClickTagAddButton",
             "click .deleteTag" : "onClickDeleteTag",
             "click a" : "onClickAnchorTag"
@@ -126,9 +134,10 @@ define(function(require, exports, module) {
          */
         onClickFavoriteRegisterButton : function() {
             this.showLoading();
-            this.favoriteModel = new FavoriteModel();
             if (this.model.favorite) {
-            this.favoriteModel = this.model.favorite;
+                this.favoriteModel = this.model.favorite;
+            } else {
+                this.favoriteModel = new FavoriteModel();
             }
             var source = this.model.get("__id");
             this.favoriteModel.set("source", source);
@@ -190,6 +199,39 @@ define(function(require, exports, module) {
                     this.hideLoading();
                 }, this)
             });
+        },
+        /**
+         * おすすめボタン押下時に呼び出されるコールバック関数。
+         */
+        onClickRecommendRegisterButton : function() {
+            if (this.model.recommend) {
+                this.recommendModel = this.model.recommend;
+            } else {
+                this.recommendModel = new RecommendModel();
+            }
+            var source = this.model.get("__id");
+            this.recommendModel.set("source", source);
+            this.recommendModel.set("userId", app.user.id);
+            this.recommendModel.set("publishedAt", this.model.get("publishedAt"));
+            this.recommendModel.set("etag", "*");
+            this.recommendModel.save(null, {
+                success : $.proxy(this.onRecommendSave, this)
+            });
+        },
+        /**
+         * おすすめ情報保存後に呼び出されるコールバック関数。
+         */
+        onRecommendSave : function() {
+            this.model.set("isRecommend", true);
+            this.model.recommendAmount++;
+            this.$el.find("[data-recommend-register-button]").hide();
+            this.$el.find("[data-recommend-delete-button]").show();
+            this.render();
+        },
+        /**
+         * おすすめ取消押下時に呼び出されるコールバック関数。
+         */
+        onClickRecommendDeleteButton : function() {
         },
         /**
          * タグ追加ボタン押下時に呼び出されるコールバック関数。
