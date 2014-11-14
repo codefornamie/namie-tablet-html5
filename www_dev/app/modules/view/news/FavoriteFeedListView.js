@@ -46,7 +46,7 @@ define(function(require, exports, module) {
          *  @param {Event} event Odata取得イベント
          */
         onFetch: function (model, event) {
-            var template = require("ldsh!/app/templates/news/articleListItem");
+            var template = require("ldsh!templates/{mode}/news/articleListItem");
             // 記事一覧に追加するViewクラス
             // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
             var ListItemView;
@@ -55,7 +55,7 @@ define(function(require, exports, module) {
             switch (this.articleModel.get("type")) {
             case "2":
                 // youtubeの場合
-                template = require("ldsh!/app/templates/news/youTubeListItem");
+                template = require("ldsh!templates/{mode}/news/youTubeListItem");
                 ListItemView = new FavoriteYouTubeListItemView({
                     model : this.articleModel,
                     template: template
@@ -63,9 +63,9 @@ define(function(require, exports, module) {
                 break;
             case "1":
                 // RSS記事情報の場合
-                template = require("ldsh!/app/templates/news/articleListItem");
+                template = require("ldsh!templates/{mode}/news/articleListItem");
                 if (this.articleModel.get("rawHTML")) {
-                    template = require("ldsh!/app/templates/news/articleListItemForHtml");
+                    template = require("ldsh!templates/{mode}/news/articleListItemForHtml");
                 }
                 ListItemView = new FavoriteArticleListItemView({
                     model : this.articleModel,
@@ -73,7 +73,7 @@ define(function(require, exports, module) {
                 });
                 break;
             default:
-                template = require("ldsh!/app/templates/news/eventsListItem");
+                template = require("ldsh!templates/{mode}/news/eventsListItem");
                 ListItemView = new FavoriteArticleListItemView({
                     model : this.articleModel,
                     template: template
@@ -82,7 +82,7 @@ define(function(require, exports, module) {
             }
             // 記事情報が物理削除または論理削除されている場合
             if (event.code === "PR404-OD-0002" || this.articleModel.get("deletedAt")) {
-                template = require("ldsh!/app/templates/news/notFoundArticleListItem");
+                template = require("ldsh!templates/{mode}/news/notFoundArticleListItem");
                 ListItemView = new FavoriteArticleListItemView({
                     model : this.articleModel,
                     template: template
