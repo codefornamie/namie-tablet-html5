@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var FavoriteArticleListItemView = require("modules/view/news/FavoriteArticleListItemView");
     var FavoriteYouTubeListItemView = require("modules/view/news/FavoriteYouTubeListItemView");
+    var RecommendCollection = require("modules/collection/article/RecommendCollection");
+    var Equal = require("modules/util/filter/Equal");
 
     /**
      * 切り抜き記事一覧(メニュー用)のViewクラス
@@ -30,10 +32,11 @@ define(function(require, exports, module) {
                 return view.model.id === $(ev.currentTarget).attr("data-article-id");
             });
             if (targetView && targetView.model) {
+                this.articleModel = new ArticleModel();
                 this.articleModel.set("__id",targetView.model.get("source"));
                 this.articleModel.favorite = targetView.model;
                 this.articleModel.fetch({
-                    success : $.proxy(this.onFetch, this),
+                    success : $.proxy(this.onArticleFetch, this),
                     error : $.proxy(this.onFailure,this)
                 });
             }
@@ -45,7 +48,33 @@ define(function(require, exports, module) {
          *  @param {ArticleModel} model 記事情報モデル
          *  @param {Event} event Odata取得イベント
          */
+        onArticleFetch : function(model, event) {
+            this.recommendCollection = new RecommendCollection();
+            this.recommendCollection.condition.filters = [new Equal("source", this.articleModel.get("__id"))];
+            this.recommendCollection.fetch({
+                success: $.proxy(function () {
+                    this.onFetch(model,event);
+                },this),
+                error: $.proxy(this.onFailure,this)
+            });
+        },
+        /**
+         *  article情報検索成功後のコールバック関数
+         *  
+         *  @param {ArticleModel} model 記事情報モデル
+         *  @param {Event} event Odata取得イベント
+         */
         onFetch: function (model, event) {
+            // おすすめ数と自身のおすすめ情報を記事情報に付加
+            this.articleModel.recommendAmount =this.recommendCollection.size();
+            this.recommendCollection.each($.proxy(function(recommend){
+                if (recommend.get("isMine")) {
+                    this.articleModel.set("isRecommend", !recommend.get("deletedAt"));
+                    this.articleModel.recommend = recommend;
+                    
+                }
+            },this)); 
+            
             var template = require("ldsh!templates/{mode}/news/articleListItem");
             // 記事一覧に追加するViewクラス
             // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
