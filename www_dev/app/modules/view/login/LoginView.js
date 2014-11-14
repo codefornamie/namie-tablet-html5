@@ -13,7 +13,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var LoginView = AbstractView.extend({
-        template : require("ldsh!/app/templates/login/login"),
+        template : require("ldsh!templates/{mode}/login/login"),
         model : null,
         events : {
             "click #loginButton" : "onClickLoginButton"
@@ -63,11 +63,16 @@ define(function(require, exports, module) {
                             id: this.model.get("loginId")
                         };
                 
-                app.router.go("top");
+                //app.router.go("top");
+                this.goNextView();
             } else {
                 alert(msg);
             }
+        },
+        goNextView: function() {
+            app.router.go("top");
         }
+            
     });
 
     module.exports = LoginView;

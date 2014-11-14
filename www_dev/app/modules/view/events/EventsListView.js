@@ -7,7 +7,7 @@ define(function(require, exports, module) {
     var EventsListItemView = require("modules/view/events/EventsListItemView");
 
     var EventsListView = AbstractView.extend({
-        template : require("ldsh!/app/templates/events/eventsList"),
+        template : require("ldsh!templates/{mode}/events/eventsList"),
 
         beforeRendered : function() {
             this.setEventsList();

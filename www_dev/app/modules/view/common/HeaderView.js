@@ -10,7 +10,7 @@ define(function(require, exports, module) {
     var Equal = require("modules/util/filter/Equal");
     
     var HeaderView = AbstractView.extend({
-        template : require("ldsh!/app/templates/common/header"),
+        template : require("ldsh!templates/{mode}/common/header"),
         model : new RadiationModel(),
         collection : new RadiationCollection(),
 

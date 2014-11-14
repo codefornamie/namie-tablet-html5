@@ -6,7 +6,7 @@ define(function(require, exports, module) {
 
 
     var EventsRegistedView = AbstractView.extend({
-        template : require("ldsh!/app/templates/events/eventsRegisted"),
+        template : require("ldsh!templates/{mode}/events/eventsRegisted"),
         beforeRendered : function() {
 
         },

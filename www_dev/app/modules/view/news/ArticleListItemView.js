@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var TagListView = require("modules/view/news/TagListView");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var FavoriteModel = require("modules/model/article/FavoriteModel");
+    var RecommendModel = require("modules/model/article/RecommendModel");
     var CommonUtil = require("modules/util/CommonUtil");
     var DateUtil = require("modules/util/DateUtil");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
@@ -22,7 +23,7 @@ define(function(require, exports, module) {
         /**
          * このViewを表示する際に利用するアニメーション
          */
-        template : require("ldsh!/app/templates/news/articleListItem"),
+        template : require("ldsh!templates/{mode}/news/articleListItem"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * <p>
@@ -99,15 +100,18 @@ define(function(require, exports, module) {
             // 既にお気に入り登録されている記事のお気に入りボタンを非表示にする
             if (this.model.get("isFavorite")) {
                 this.$el.find('[data-favorite-register-button]').hide();
+            } else {
+                this.$el.find('[data-favorite-delete-button]').hide();
+            }
+            if (this.model.get("isRecommend")) {
+                this.$el.find('[data-recommend-register-button]').hide();
+            } else {
+                this.$el.find('[data-recommend-delete-button]').hide();
             }
             $(".panzoom-elements").panzoom({
                 minScale : 1,
                 contain : "invert"
             });
-
-            if (this.model.get("isNotArticle")) {
-                $(this.el).find(".tagInputArea").hide();
-            }
 
             // 画像クリックイベント
             this.$el.find("#articleDetailImageArea").on("click", $.proxy(this.onClickImage, this));
@@ -118,31 +122,116 @@ define(function(require, exports, module) {
          */
         events : {
             "click [data-favorite-register-button]" : "onClickFavoriteRegisterButton",
+            "click [data-favorite-delete-button]" : "onClickFavoriteDeleteButton",
+            "click [data-recommend-register-button]" : "onClickRecommendRegisterButton",
+            "click [data-recommend-delete-button]" : "onClickRecommendDeleteButton",
             "click #tagAddButton" : "onClickTagAddButton",
             "click .deleteTag" : "onClickDeleteTag",
             "click a" : "onClickAnchorTag"
         },
         /**
-         * お気に入りボタン押下時に呼び出されるコールバック関数。
+         * 切り抜きボタン押下時に呼び出されるコールバック関数。
          */
         onClickFavoriteRegisterButton : function() {
-            var favoriteModel = new FavoriteModel();
+            this.showLoading();
+            if (this.model.favorite) {
+                this.favoriteModel = this.model.favorite;
+            } else {
+                this.favoriteModel = new FavoriteModel();
+            }
             var source = this.model.get("__id");
-            favoriteModel.set("source", source);
-            favoriteModel.set("userId", "namie");
-            favoriteModel.set("contents", this.model.get("description"));
-            favoriteModel.set("title", this.model.get("title"));
-            favoriteModel.set("site", this.model.get("site"));
-            favoriteModel.set("imageUrl", this.model.get("imageUrl"));
+            this.favoriteModel.set("source", source);
+            this.favoriteModel.set("userId", "namie");
+            this.favoriteModel.set("contents", this.model.get("description"));
+            this.favoriteModel.set("title", this.model.get("title"));
+            this.favoriteModel.set("site", this.model.get("site"));
+            this.favoriteModel.set("imageUrl", this.model.get("imageUrl"));
             // TODO 配信日が記事情報に設定されるようになった際には下記を書き換える
-            favoriteModel.set("deliveryDate", new Date().toLocaleDateString());
-            favoriteModel.set("createdAt", new Date().toISOString());
-            favoriteModel.save(null, {
+            this.favoriteModel.set("publishedAt", new Date().toLocaleDateString());
+            this.favoriteModel.set("createdAt", new Date().toISOString());
+            this.favoriteModel.save(null, {
+                success : $.proxy(this.onFavoriteSave, this)
+            });
+        },
+        /**
+         * 切り抜き情報保存後に呼び出されるコールバック関数。
+         */
+        onFavoriteSave : function() {
+            this.$el.find("[data-favorite-register-button]").hide();
+            this.$el.find("[data-favorite-delete-button]").show();
+            this.model.set("isFavorite", true);
+            this.favoriteModel.fetch({
                 success : $.proxy(function() {
-                    this.$el.find("[data-favorite-register-button]").hide();
-                    this.model.set("isFavorite", true);
+                    this.model.favorite = this.favoriteModel;
+                    this.hideLoading();
                 }, this)
             });
+        },
+        /**
+         * 切り抜き削除ボタン押下時に呼び出されるコールバック関数。
+         */
+        onClickFavoriteDeleteButton : function() {
+            // 確認ダイアログを表示
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.confirm({
+                message: 'この記事を切り抜きから削除しますが、よろしいですか？',
+                callback: $.proxy(function(value) {
+                    if (value) {
+                        this.showLoading();
+                        var favoriteModel = this.model.favorite;
+                        favoriteModel.set("isDelete", true);
+                        favoriteModel.save(null, {
+                            success : $.proxy(this.onFavoriteDelete, this)
+                        });
+                    }
+                },this)
+              });
+        },
+        /**
+         * 切り抜き情報削除後に呼び出されるコールバック関数。
+         */
+        onFavoriteDelete : function() {
+            this.$el.find("[data-favorite-delete-button]").hide();
+            this.$el.find("[data-favorite-register-button]").show();
+            this.model.set("isFavorite", false);
+            this.model.favorite.fetch({
+                success : $.proxy(function() {
+                    this.hideLoading();
+                }, this)
+            });
+        },
+        /**
+         * おすすめボタン押下時に呼び出されるコールバック関数。
+         */
+        onClickRecommendRegisterButton : function() {
+            if (this.model.recommend) {
+                this.recommendModel = this.model.recommend;
+            } else {
+                this.recommendModel = new RecommendModel();
+            }
+            var source = this.model.get("__id");
+            this.recommendModel.set("source", source);
+            this.recommendModel.set("userId", app.user.id);
+            this.recommendModel.set("publishedAt", this.model.get("publishedAt"));
+            this.recommendModel.set("etag", "*");
+            this.recommendModel.save(null, {
+                success : $.proxy(this.onRecommendSave, this)
+            });
+        },
+        /**
+         * おすすめ情報保存後に呼び出されるコールバック関数。
+         */
+        onRecommendSave : function() {
+            this.model.set("isRecommend", true);
+            this.model.recommendAmount++;
+            this.$el.find("[data-recommend-register-button]").hide();
+            this.$el.find("[data-recommend-delete-button]").show();
+            this.render();
+        },
+        /**
+         * おすすめ取消押下時に呼び出されるコールバック関数。
+         */
+        onClickRecommendDeleteButton : function() {
         },
         /**
          * タグ追加ボタン押下時に呼び出されるコールバック関数。

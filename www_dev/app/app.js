@@ -1,22 +1,23 @@
 define(function(require, exports, module) {
-  "use strict";
+    "use strict";
 
-  var Backbone = require("backbone");
-  var Layout = require("layoutmanager");
-  var dc1 = require("dc1-client");
-  var jqueryvalidation = require("jqueryvalidation");
-  var nehan = require("jquerynehan");
-  var blockui = require("blockui");
-  var panzoom = require("panzoom");
-  var config = require("resources/appConfig");
+    var Backbone = require("backbone");
+    var Layout = require("layoutmanager");
+    var dc1 = require("dc1-client");
+    var jqueryvalidation = require("jqueryvalidation");
+    var nehan = require("jquerynehan");
+    var blockui = require("blockui");
+    var panzoom = require("panzoom");
+    var config = require("resources/appConfig");
 
-//  var messageja = require("messageja");
+    // var messageja = require("messageja");
 
-  // グローバルに利用できるModel
-  var app = module.exports = new Backbone.Model();
+    // グローバルに利用できるModel
+    var app = module.exports = new Backbone.Model();
 
-  // The root path to run the application through.
-  app.root = "/";
-  // アプリの設定情報を保持
-  app.config = config;
+    // The root path to run the application through.
+    app.root = "/";
+    // アプリの設定情報を保持
+    config.basic.mode = requirejs.s.contexts._.config.lodashLoader.mode;
+    app.config = config;
 });

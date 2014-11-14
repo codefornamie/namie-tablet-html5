@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
 
     var MenuView = AbstractView.extend({
-        template : require("ldsh!/app/templates/common/menu"),
+        template : require("ldsh!templates/{mode}/common/menu"),
 
         beforeRendered : function() {
 
@@ -39,6 +39,7 @@ define(function(require, exports, module) {
                     replace: false
                 });
             }
+            $('#snap-content').data("snap").close();
         }
     });
 

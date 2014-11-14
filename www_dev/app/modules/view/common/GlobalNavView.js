@@ -8,7 +8,7 @@ define(function(require, exports, module) {
     var Snap = require("snap");
 
     var GlobalNavView = AbstractView.extend({
-        template : require("ldsh!/app/templates/common/global-nav"),
+        template : require("ldsh!templates/{mode}/common/global-nav"),
 
         beforeRendered : function() {
         },
@@ -18,15 +18,12 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
-            var snapper = this.snapper = new Snap({
-                element: document.getElementById('snap-content'),
+            this.snapper = new Snap({
+                element: $('#snap-content')[0],
                 tapToClose: true,
                 touchToDrag: false
             });
-
-            app.router.on('route', function () {
-                snapper.close();
-            });
+            $('#snap-content').data("snap",this.snapper);
         },
 
         /**
