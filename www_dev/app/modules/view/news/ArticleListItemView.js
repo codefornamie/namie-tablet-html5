@@ -162,12 +162,21 @@ define(function(require, exports, module) {
          * 切り抜き削除ボタン押下時に呼び出されるコールバック関数。
          */
         onClickFavoriteDeleteButton : function() {
-            this.showLoading();
-            var favoriteModel = this.model.favorite;
-            favoriteModel.set("isDelete", true);
-            favoriteModel.save(null, {
-                success : $.proxy(this.onFavoriteDelete, this)
-            });
+            // 確認ダイアログを表示
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.confirm({
+                message: 'この記事を切り抜きから削除しますが、よろしいですか？',
+                callback: $.proxy(function(value) {
+                    if (value) {
+                        this.showLoading();
+                        var favoriteModel = this.model.favorite;
+                        favoriteModel.set("isDelete", true);
+                        favoriteModel.save(null, {
+                            success : $.proxy(this.onFavoriteDelete, this)
+                        });
+                    }
+                },this)
+              });
         },
         /**
          * 切り抜き情報削除後に呼び出されるコールバック関数。
