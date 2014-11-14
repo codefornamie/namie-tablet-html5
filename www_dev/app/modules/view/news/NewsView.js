@@ -17,7 +17,7 @@ define(function(require, exports, module) {
      */
     var NewsView = AbstractView.extend({
 
-        template : require("ldsh!/app/templates/news/news"),
+        template : require("ldsh!templates/{mode}/news/news"),
         model : new ArticleModel(),
         fetchCounter : 0,
         articleCollection : new ArticleCollection(),

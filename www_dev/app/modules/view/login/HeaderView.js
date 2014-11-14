@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
 
     var HeaderView = AbstractView.extend({
-        template : require("ldsh!/app/templates/login/header"),
+        template : require("ldsh!templates/{mode}/login/header"),
 
         beforeRendered : function() {
 

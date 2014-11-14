@@ -11,7 +11,7 @@ define(function(require, exports, module) {
      * 切り抜き記事一覧(メニュー用)のViewクラス
      */
     var FavoriteFeedListView = FeedListView.extend({
-        template : require("ldsh!/app/templates/news/feedList"),
+        template : require("ldsh!templates/{mode}/news/feedList"),
         articleModel : new ArticleModel(),
         /**
          * 切り抜き記事リストアイテムをクリックされたときのコールバック関数
@@ -37,26 +37,26 @@ define(function(require, exports, module) {
          *  article情報検索失敗後のコールバック関数
          */
         onFetch: function () {
-            var template = require("ldsh!/app/templates/news/articleListItem");
+            var template = require("ldsh!templates/{mode}/news/articleListItem");
             // 記事一覧に追加するViewクラス。
             // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
             var ListItemView;
             
             switch (this.articleModel.get("type")) {
             case "2":
-                template = require("ldsh!/app/templates/news/youTubeListItem");
+                template = require("ldsh!templates/{mode}/news/youTubeListItem");
                 ListItemView = new YouTubeListItemView({
                     model : this.articleModel,
                     template: template
                 });
                 break;
             default:
-                template = require("ldsh!/app/templates/news/articleListItem");
+                template = require("ldsh!templates/{mode}/news/articleListItem");
                 if (this.articleModel.get("modelType") === "event") {
-                    template = require("ldsh!/app/templates/news/eventsListItem");
+                    template = require("ldsh!templates/{mode}/news/eventsListItem");
                 }
                 if (this.articleModel.get("rawHTML")) {
-                    template = require("ldsh!/app/templates/news/articleListItemForHtml");
+                    template = require("ldsh!templates/{mode}/news/articleListItemForHtml");
                 }
                 ListItemView = new ArticleListItemView({
                     model : this.articleModel,
