@@ -22,7 +22,7 @@ define(function(require, exports, module) {
         /**
          * このViewを表示する際に利用するアニメーション
          */
-        template : require("ldsh!/app/templates/news/articleListItem"),
+        template : require("ldsh!templates/{mode}/news/articleListItem"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * <p>

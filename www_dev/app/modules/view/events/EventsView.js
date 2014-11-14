@@ -8,7 +8,7 @@ define(function(require, exports, module) {
 
 
     var EventsView = AbstractView.extend({
-        template : require("ldsh!/app/templates/events/events"),
+        template : require("ldsh!templates/{mode}/events/events"),
         model : new EventsModel(),
         /**
          * フォーム要素のID

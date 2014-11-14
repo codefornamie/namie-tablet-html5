@@ -13,7 +13,7 @@ define(function(require, exports, module) {
      * 切り抜き記事一覧・詳細画面のViewクラス
      */
     var ScrapView = AbstractView.extend({
-        template : require("ldsh!/app/templates/scrap/scrap"),
+        template : require("ldsh!templates/{mode}/scrap/scrap"),
         favoriteCollection : new FavoriteCollection(),
 
         beforeRendered : function() {

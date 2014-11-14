@@ -42,5 +42,9 @@ require.config({
         "panzoom" : [ "jquery" ],
         "vex" : [ "jquery" ],
         "vexDialog" : [ "vex" ]
+    },
+    lodashLoader : {
+        // view category (ex. news, posting..).
+        mode : ""
     }
 });

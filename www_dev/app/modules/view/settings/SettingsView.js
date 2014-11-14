@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
 
     var SettingsView = AbstractView.extend({
-        template : require("ldsh!/app/templates/settings/settings"),
+        template : require("ldsh!templates/{mode}/settings/settings"),
         beforeRendered : function() {
 
         },

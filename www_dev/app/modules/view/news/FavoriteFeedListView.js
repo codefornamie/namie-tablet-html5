@@ -16,7 +16,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var FavoriteFeedListView = FeedListView.extend({
-        template : require("ldsh!/app/templates/news/feedList"),
+        template : require("ldsh!templates/{mode}/news/feedList"),
         articleModel : new ArticleModel(),
         /**
          * 切り抜き記事リストアイテムをクリックされたときのコールバック関数
