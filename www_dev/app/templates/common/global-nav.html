@@ -1,41 +1,128 @@
-<nav class="top-bar" data-topbar role="navigation">
-    <section class="top-bar-section">
-        <ul class="title-area left">
-            <li class="has-form">
+<nav role="navigation">
+    <section>
+        <div class="global-nav__menu">
+            <div>
                 <a href="#" class='button small' data-drawer-opener>
+                    <i class="fa fa-bars"></i>
                     メニュー
                 </a>
-            </li>
+            </div>
 
-            <li class="has-form">
+            <div>
                 <a href="#" class='button small' data-back-home>
                     &lt; 戻る
                 </a>
-            </li>
-        </ul>
-        
-        <div class='global-nav__center'>
-            <ul>
-                <li class='has-form'>
-                    <a href="#" class="button small" data-prev-day>
-                        &lt; 前の日
-                    </a>
-                </li>
-                
-                <li>
-                    2014年11月11日(火)
-                </li>
-
-                <li class='has-form'>
-                    <a href="#" class="button small" data-next-day>
-                        次の日 &gt;
-                    </a>
-                </li>
-            </ul>
+            </div>
         </div>
-        
-        <div class="global-nav__right right">
-            <ul class="button-group right">
+
+        <div class="global-nav__info">
+            <div class="nav-content">
+                <span class='info__label'>
+                    今日の雑学
+                </span>
+
+                <p class='info__content'>
+                    今日は豆腐の日：「とう(10)ふ(2)」の語呂合せ。
+                </p>
+            </div>
+        </div>
+
+        <div class="global-nav__date">
+            <div class="nav-content">
+                <div class="date-area">
+                    <div class="date-area__year">
+                        2014年(平成26年)
+                    </div>
+
+                    <div class="date-area__date">
+                        <span class="date--month">
+                            10
+                        </span>
+
+                        <span class="date--unit">
+                            月
+                        </span>
+
+                        <span class="date--day">
+                            02
+                        </span>
+
+                        <span class="date--unit">
+                            日
+                        </span>
+                    </div>
+
+                    <div class="date-area__weekday">
+                        木曜日
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="global-nav__title">
+            なみえ新聞
+        </div>
+
+        <div class="global-nav__weather">
+            <div class="nav-content">
+                <span class='weather__label'>
+                    今日の天気
+                </span>
+
+                <div class="weather__content">
+                    <table class='weather__table'>
+                        <thead>
+                            <tr>
+                                <td>
+                                    地名
+                                </td>
+
+                                <td>
+                                    9時
+                                </td>
+
+                                <td>
+                                    15時
+                                </td>
+
+                                <td>
+                                    21時
+                                </td>
+
+                                <td>
+                                    降水確率
+                                </td>
+
+                                <td>
+                                    最低気温
+                                </td>
+
+                                <td>
+                                    最高気温
+                                </td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>
+                                    浪江町
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    郡山市
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="global-nav__font">
+            <ul>
                 <li>
                     <a href="#" class="button" data-font-size='16'>
                         小
@@ -54,8 +141,6 @@
                     </a>
                 </li>
             </ul>
-
-            <span class='right' style='margin: 0 8px; font-size: 14px;'>文字サイズ</span>
         </div>
     </section>
 </nav>

@@ -59,8 +59,10 @@ define(function(require, exports, module) {
 
         /**
          *  サンドイッチボタンがクリックされたら呼ばれる
+         *  @param {Event} ev
          */
-        onClickDrawerOpener: function () {
+        onClickDrawerOpener: function (ev) {
+            ev.preventDefault();
             this.snapper.open('left');
         },
 

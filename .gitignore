@@ -17,3 +17,6 @@ www_dev/test/coverage/
 www_dev/reports/
 plugins/*/.fetch.json
 !.gitkeep
+
+# vim
+.*.sw*

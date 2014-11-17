@@ -1,4 +1,12 @@
 /**
+ *  variables
+ *
+ *  $blue = #156bbb;
+ *  $gray = #d5d5d5;
+ *  $black = #2c2c2c;
+ */
+
+/**
  *  general
  */
 html,
@@ -9,6 +17,21 @@ body {
 html {
     /* 文字サイズ中 */
     font-size: 20px;
+}
+
+/**
+ *  foundation overrides
+ */
+.button {
+  background-color: rgb(213, 213, 213) !important;
+  box-shadow: inset 0 2px 2px 0 rgba(255,255,255,0.7),
+              inset 0 -4px 2px 0 rgba(0,0,0,0.2),
+              inset -3px 0 2px 0 rgba(0,0,0,0.1),
+              inset 3px 0 2px 0 rgba(0,0,0,0.1),
+              inset 0 1px 1px 0 rgba(0,0,0,0.5);
+  border-radius: 3px;
+  color: #156bbb !important;
+  text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.1), 0px 1px 0px rgba(255,255,255, 0.8);
 }
 
 /**
@@ -35,21 +58,12 @@ main {
     width: 266px;
 }
 
-.contents {
+.contents-wrapper {
     height: 100%;
     position: absolute;
     top: 0;
-    padding-top: 90px;
+    padding: 114px 10px 0;
     width: 100%;
-    background-color: #fff;
-}
-
-.contents > .row {
-    height: 100%;
-}
-
-.contents > .row > .columns {
-    height: 100%;
 }
 
 .footer {
@@ -66,13 +80,42 @@ main {
  */
 .snap-content {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
+    background: #c1c1c1;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10px 10px 0;
+}
+
+.background::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background-color: #f00;
+    display: block;
+    background: url(../img/bg-newspaper.jpg);
 }
 
 /**
  *  header
  */
 .header {
-    
+    margin: 10px 10px 0;
+}
+
+.header nav {
+    height: 20px;
+    line-height: 20px;
+    overflow: hidden;
+}
+
+.header nav h1 {
+    margin: 0;
 }
 
 .header .button.small {
@@ -82,63 +125,296 @@ main {
     padding-bottom: 0;
 }
 
-#selectRadiation {
-    margin-top:4px;
-    background-color:#262626;
-    border-color:#262626;
-    text-align:right;
-    color:white;
+/**
+ *  編集部の一言
+ */
+.header__comment {
+    font-family: serif;
+    font-size: 16px;
 }
 
-#radiationValue {
-    color:white;
-    line-height:42px;
+.header__comment p {
+    height: 30px;
+    line-height: 30px;
+    margin: 0;
+    font-size: 0.8rem;
 }
 
 /**
  *  global-nav
  */
 .global-nav {
-    height: 45px;
+    height: 84px;
     position: relative;
     z-index: 10;
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.16);
+    margin: 0 10px 10px;
+    padding: 8px 10px;
 }
 
-.global-nav .top-bar {
-    background: white !important;
+.global-nav nav {
+    padding: 0 10px;
+    border-left: 2px solid #2c2c2c;
+    border-right: 2px solid #2c2c2c;
 }
 
-.global-nav .top-bar li {
-    background: transparent !important;
+/**
+ *  global-navの子要素
+ */
+[class^=global-nav__] {
+    position: relative;
+    box-sizing: content-box;
+    display: inline-block;
+    height: 72px;
+    line-height: 72px;
+    vertical-align: middle;
+    float: left;
 }
 
-.global-nav__center {
-    position: absolute;
-    width: 100%;
-    height: 0;
+.global-nav nav section::after {
+    content: '';
     display: block;
+    clear: both;
+}
+
+.global-nav .button {
+    padding: 0 15px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0;
+}
+
+/**
+ *  global-navの子要素の共通の中身
+ */
+.nav-content {
+    height: 100%;
+    padding: 6px 0;
+}
+
+.nav-content::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+/**
+ *  global-nav__menu
+ *  メニューボタンのエリア
+ */
+.global-nav__menu {
+    width: 12.5%;
+    border-top: 2px solid #2c2c2c;
+    border-bottom: 2px solid #2c2c2c;
+}
+
+/**
+ *  global-nav__info
+ *  情報のエリア
+ */
+.global-nav__info {
+    width: 16.0%;
+    border-top: 2px solid #2c2c2c;
+    border-bottom: 2px solid #2c2c2c;
+}
+
+.info__label {
+    display: inline-block;
+    width: 20px;
+    height: 100%;
+    text-align: center;
+    background-color: #156bbb;
+    color: white;
+    font-family: serif;
+    float: left;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.info__content {
+    position: absolute;
     top: 0;
+    bottom: 0;
     left: 0;
+    width: 100%;
+    height: 40px;
+    margin: auto 0;
+    padding: 0 5px 0 25px;
+    font-family: serif;
+    font-size: 14px;
+}
+
+.info__content {
+}
+
+/**
+ *  global-nav__date
+ *  日付のエリア
+ */
+.global-nav__date {
+    width: 16.5%;
+    border-top: 2px solid #2c2c2c;
+    border-bottom: 2px solid #2c2c2c;
+    font-family: serif;
+}
+
+.global-nav__date::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    height: 60px;
+    width: 2px;
+    background-color: #2c2c2c;
+}
+
+.date-area {
+    line-height: 1;
+}
+
+.date-area__year {
+    font-size: 20px;
+}
+
+.date-area__date {
+    float: left;
+}
+
+.date-area__date::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.date--month {
+    font-size: 30px;
+    float: left;
+}
+
+.date--day {
+    font-size: 30px;
+    float: left;
+}
+
+.date--unit {
+    font-size: 24px;
+    float: left;
+}
+
+.date-area__weekday {
+    font-size: 22px;
+    padding: 5px;
+    border: 1px solid #444;
+    float: left;
+}
+
+/**
+ *  global-nav__title
+ *  タイトルのエリア
+ */
+.global-nav__title {
+    width: 9.9%;
+    background: #1a79d2;
+    font-size: 0.5rem;
     text-align: center;
 }
 
-.global-nav__center ul {
+.title__main {
+    font-size: 48px;
+    margin: 0;
+}
+
+.title__sub {
+    font-size: 24px;
+    margin: 0;
+}
+
+/**
+ *  global-nav__weather
+ *  天気のエリア
+ */
+.global-nav__weather {
+    width: 33.9%;
+    border-top: 2px solid #2c2c2c;
+    border-bottom: 2px solid #2c2c2c;
+}
+
+.global-nav__weather .nav-content {
+    padding-left: 10px;
+}
+
+.weather__label {
     display: inline-block;
-    line-height: 45px;
+    width: 20px;
+    height: 100%;
+    text-align: center;
+    background-color: #e39815;
+    color: white;
+    font-family: serif;
+    float: left;
+    font-size: 12px;
+    line-height: 1;
 }
 
-.global-nav__center li {
+.weather__content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    margin: auto 0;
+    padding: 0 5px 0 35px;
+    font-family: serif;
+    font-size: 14px;
+}
+
+.weather__table {
+    background: none;
+    margin: 0;
+    border: none;
+}
+
+.weather__table thead tr td {
+    font-size: 0.7rem;
+    padding: 2px;
+    line-height: 1;
+    background-color: #cecece;
+    text-align: center;
+}
+
+.weather__table tbody tr td {
+    font-size: 0.7rem;
+    padding: 2px;
+    line-height: 1;
+    text-align: center;
+}
+
+/**
+ *  global-nav__font
+ *  フォントサイズ指定
+ */
+.global-nav__font {
+    width: 11.2%;
+    border-top: 2px solid #2c2c2c;
+    border-bottom: 2px solid #2c2c2c;
+}
+
+.global-nav__font ul {
+    list-style: none;
+    margin: 0;
     display: inline-block;
-    float: none;
 }
 
-.global-nav__right {
-    margin: 0 8px;
+.global-nav__font ul li {
+    display: inline-block;
+    vertical-align: middle;
 }
 
-.top-bar-section ul li > a.button {
-    font-size: 12px !important;
+.global-nav__font .button {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    margin: 0;
 }
 
 /**
@@ -154,12 +430,20 @@ main {
 /**
  *  contents
  */
+.contents-wrapper {
+}
+
 .contents {
+    height: 100%;
+    padding: 0 10px;
 }
 
 .contents > div {
     height: 100%;
     overflow: hidden;
+    padding: 0 10px;
+    border-left: 2px solid #2c2c2c;
+    border-right: 2px solid #2c2c2c;
 }
 
 .contents__primary,
@@ -169,10 +453,9 @@ main {
 }
 
 .contents__primary {
+    position: relative;
     overflow: auto;
-    padding: 0;
-    background: #777;
-    box-shadow: -1px 0 1px 0 rgba(0,0,0,0.16);
+    padding: 0 0 0 16px;
 }
 
 .background-sign-container {
@@ -206,9 +489,11 @@ main {
     }
 
 .contents__secondary {
-    padding: 0;
+    padding: 10px 10px 10px 0;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     overflow: auto;
+    background: #f2f2f2;
+    border-right: 2px solid #2c2c2c;
 }
 
 .contents__secondary > div {
@@ -224,8 +509,40 @@ main {
 .sidebar__header {
     background: #333;
     color: white;
+    text-shadow: -2px 0 0 #2c2c2c,
+                 0 -2px 0 #2c2c2c,
+                 2px 0 0 #2c2c2c,
+                 0 2px 0 #2c2c2c,
+                 -2px -2px 0 #2c2c2c,
+                 2px -2px 0 #2c2c2c,
+                 -2px 2px 0 #2c2c2c,
+                 2px 2px 0 #2c2c2c;
     padding: 8px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.16);
+
+    -webkit-background-size: 4px 4px;
+    -moz-background-size: 4px 4px;
+    background-size: 4px 4px;
+    background-color: #ddd;
+    background-image: -webkit-gradient(linear, 0 100%, 100% 0,
+                color-stop(.25, #444), color-stop(.25, transparent),
+                            color-stop(.5, transparent), color-stop(.5, #444),
+                                        color-stop(.75, #444), color-stop(.75, transparent),
+                                                    to(transparent));
+    background-image: -webkit-linear-gradient(45deg, #444 25%, transparent 25%,
+              transparent 50%, #444 50%, #444 75%,
+                        transparent 75%, transparent);
+    background-image: -moz-linear-gradient(45deg, #444 25%, transparent 25%,
+              transparent 50%, #444 50%, #444 75%,
+                        transparent 75%, transparent);
+    background-image: -ms-linear-gradient(45deg, #444 25%, transparent 25%,
+              transparent 50%, #444 50%, #444 75%,
+                        transparent 75%, transparent);
+    background-image: -o-linear-gradient(45deg, #444 25%, transparent 25%,
+              transparent 50%, #444 50%, #444 75%,
+                        transparent 75%, transparent);
+    background-image: linear-gradient(45deg, #444 25%, transparent 25%,
+              transparent 50%, #444 50%, #444 75%,
+                        transparent 75%, transparent);
 }
 
 .sidebar__list {
@@ -241,6 +558,7 @@ main {
 .side-action {
     width: 100%;
     z-index: 2;
+    border: 4px solid #156bbb;
 }
 
 .side-action__content {
@@ -250,10 +568,23 @@ main {
 }
 
 .side-action__header {
-    background: #333;
+    margin: 8px;
+    border-bottom: 3px solid #444;
+}
+
+.side-action__label {
+    background-color: #156bbb;
     color: white;
-    padding: 8px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.16);
+    float: left;
+    padding: 0 5px;
+    margin-right: 15px;
+    font-size: 0.9rem;
+    font-family: serif;
+}
+
+.side-action__description {
+    font-size: 0.9rem;
+    font-weight: bold;
 }
 
 .side-action__body {
@@ -315,7 +646,6 @@ main {
 .post {
     margin: 8px;
     padding: 16px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.16);
 }
 
 .post__body {
@@ -402,7 +732,6 @@ main {
     margin: 0;
     overflow: hidden;
     list-style: none;
-    background: white;
     min-height: 750px;
     opacity: 0;
     -webkit-transition: .4s ease opacity;

@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
 
     var BacknumberView = AbstractView.extend({
-        template : require("ldsh!app/templates/{mode}/backnumber/backnumber"),
+        template : require("ldsh!templates/{mode}/backnumber/backnumber"),
         beforeRendered : function() {
 
         },
