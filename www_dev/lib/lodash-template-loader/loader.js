@@ -66,6 +66,7 @@ define(function(require, exports) {
             contents = String(fs.readFileSync(url));
         } catch (ex2) {
             console.log("Skip read file ." + url);
+            contents="";
         }
         
       }
@@ -100,10 +101,12 @@ define(function(require, exports) {
   // call that will work with loaders such as almond.js that cannot read
   // the configuration data.
   exports.write = function(pluginName, moduleName, write) {
-    var template = buildMap[moduleName].source;
-
-    // Write out the actual definition
-    write(strDefine(pluginName, moduleName, template));
+      if (!buildMap[moduleName]) {
+          return;
+      }
+      var template = buildMap[moduleName].source;
+      // Write out the actual definition
+      write(strDefine(pluginName, moduleName, template));
   };
 
   // This is for curl.js/cram.js build-time support.
