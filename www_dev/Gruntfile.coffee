@@ -1,5 +1,4 @@
 module.exports = ->
-
   # Load task configurations.
   @loadTasks "build/tasks"
 
@@ -21,4 +20,5 @@ module.exports = ->
     "styles"
     # "cssmin"
     "copy"
+    "replace:mode"
   ]
