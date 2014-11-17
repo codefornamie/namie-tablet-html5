@@ -228,7 +228,7 @@ define(function(require, exports, module) {
                     return article.get("__id") === recommend.get("source");
                 },this));
                 article.recommendAmount = _.filter(recommends, function(recommend) {
-                    return !recommend.get("deletedAt")
+                    return !recommend.get("deletedAt");
                 }).length;
                 
                 //自身のおすすめ情報を記事に付加

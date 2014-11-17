@@ -205,7 +205,7 @@ define(function(require, exports, module) {
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            return {};
+            return response;
         },
         /**
          * PCSへの永続化データを生成する。

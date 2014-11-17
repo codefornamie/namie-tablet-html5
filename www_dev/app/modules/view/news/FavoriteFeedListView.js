@@ -68,7 +68,7 @@ define(function(require, exports, module) {
             // おすすめ数と自身のおすすめ情報を記事情報に付加
             this.articleModel.recommendAmount = this.recommendCollection
                     .filter(function(recommend) {
-                        return !recommend.get("deletedAt")
+                        return !recommend.get("deletedAt");
                     }).length;
             this.recommendCollection.each($.proxy(function(recommend){
                 if (recommend.get("isMine")) {
