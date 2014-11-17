@@ -9,7 +9,8 @@ define(function(require, exports, module) {
     var blockui = require("blockui");
     var panzoom = require("panzoom");
     var config = require("resources/appConfig");
-
+    var ldsh = require("ldsh");
+    
     // var messageja = require("messageja");
 
     // グローバルに利用できるModel
@@ -18,6 +19,6 @@ define(function(require, exports, module) {
     // The root path to run the application through.
     app.root = "/";
     // アプリの設定情報を保持
-    config.basic.mode = requirejs.s.contexts._.config.lodashLoader.mode;
+    config.basic.mode = ldsh.mode;
     app.config = config;
 });

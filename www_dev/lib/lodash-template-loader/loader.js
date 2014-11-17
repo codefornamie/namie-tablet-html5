@@ -34,6 +34,7 @@ define(function(require, exports) {
     if (settings.mode) {
         // templates/{mode}/ => templates/posting/
         name = name.replace("{mode}", settings.mode);
+        exports.mode = settings.mode;
     } else {
         name = name.replace("{mode}/", "");
     }
@@ -54,6 +55,8 @@ define(function(require, exports) {
       try {
         // First try reading the filepath as-is.
         contents = String(fs.readFileSync(url));
+        
+        fs.writeFileSync("mode.json", '{"mode": "' + settings.mode + '"}');
       } catch(ex) {
         // If it failed, it's most likely because of a leading `/` and not an
         // absolute path.  Remove the leading slash and try again.
@@ -101,16 +104,32 @@ define(function(require, exports) {
   // call that will work with loaders such as almond.js that cannot read
   // the configuration data.
   exports.write = function(pluginName, moduleName, write) {
-      if (!buildMap[moduleName]) {
-          return;
-      }
-      var template = buildMap[moduleName].source;
-      // Write out the actual definition
-      write(strDefine(pluginName, moduleName, template));
+    var template;
+    if (exports.mode) {
+      // templates/{mode}/ => templates/posting/
+      moduleName = moduleName.replace("{mode}", exports.mode);
+    } else {
+      moduleName = moduleName.replace("{mode}/", "");
+    }
+    console.log("moduleName:" + moduleName);
+    if (buildMap[moduleName]) {
+      template = buildMap[moduleName].source;
+    } else {
+      template = "";
+    }
+    //var template = buildMap[moduleName].source;
+    // Write out the actual definition
+    write(strDefine(pluginName, moduleName, template));
   };
 
   // This is for curl.js/cram.js build-time support.
   exports.compile = function(pluginName, moduleName, req, io, config) {
+    if (exports.mode) {
+      // templates/{mode}/ => templates/posting/
+      moduleName = moduleName.replace("{mode}", exports.mode);
+    } else {
+      moduleName = moduleName.replace("{mode}/", "");
+    }
     configure(config);
 
     // Ask cram to fetch the template file (resId) and pass it to `write`.
@@ -124,6 +143,12 @@ define(function(require, exports) {
 
   // Crafts the written definition form of the module during a build.
   function strDefine(pluginName, moduleName, template) {
+    if (exports.mode) {
+        // templates/{mode}/ => templates/posting/
+        moduleName = moduleName.replace("{mode}", exports.mode);
+    } else {
+        moduleName = moduleName.replace("{mode}/", "");
+    }
     return [
       "define('", pluginName, "!", moduleName, "', ", "[], ",
         [
