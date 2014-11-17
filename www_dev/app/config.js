@@ -45,6 +45,6 @@ require.config({
     },
     lodashLoader : {
         // view category (ex. news, posting..).
-        mode : ""
+        mode : "news"
     }
 });
