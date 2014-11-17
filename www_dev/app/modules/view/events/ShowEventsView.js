@@ -8,7 +8,7 @@ define(function(require, exports, module) {
     var EventsDetailView = require("modules/view/events/EventsDetailView");
 
     var EventsView = AbstractView.extend({
-        template : require("ldsh!/app/templates/events/showEvents"),
+        template : require("ldsh!templates/{mode}/events/showEvents"),
 
         beforeRendered : function() {
 
