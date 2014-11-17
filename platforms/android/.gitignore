@@ -12,3 +12,5 @@ gen
 out
 # Gradle builds
 /build
+# Max OSX
+.DS_Store
