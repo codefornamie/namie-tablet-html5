@@ -66,7 +66,10 @@ define(function(require, exports, module) {
          */
         onFetch: function (model, event) {
             // おすすめ数と自身のおすすめ情報を記事情報に付加
-            this.articleModel.recommendAmount =this.recommendCollection.size();
+            this.articleModel.recommendAmount = this.recommendCollection
+                    .filter(function(recommend) {
+                        return !recommend.get("deletedAt");
+                    }).length;
             this.recommendCollection.each($.proxy(function(recommend){
                 if (recommend.get("isMine")) {
                     this.articleModel.set("isRecommend", !recommend.get("deletedAt"));

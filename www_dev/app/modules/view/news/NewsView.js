@@ -227,7 +227,9 @@ define(function(require, exports, module) {
                 var recommends = this.recommendCollection.filter($.proxy(function(recommend){
                     return article.get("__id") === recommend.get("source");
                 },this));
-                article.recommendAmount = recommends.length;
+                article.recommendAmount = _.filter(recommends, function(recommend) {
+                    return !recommend.get("deletedAt");
+                }).length;
                 
                 //自身のおすすめ情報を記事に付加
                 _.each(recommends,$.proxy(function (recommend) {

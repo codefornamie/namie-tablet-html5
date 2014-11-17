@@ -148,7 +148,7 @@ define(function(require, exports, module) {
             this.favoriteModel.set("imageUrl", this.model.get("imageUrl"));
             // TODO 配信日が記事情報に設定されるようになった際には下記を書き換える
             this.favoriteModel.set("publishedAt", new Date().toLocaleDateString());
-            this.favoriteModel.set("createdAt", new Date().toISOString());
+            this.favoriteModel.set("isDelete",false);
             this.favoriteModel.save(null, {
                 success : $.proxy(this.onFavoriteSave, this)
             });
@@ -157,14 +157,13 @@ define(function(require, exports, module) {
          * 切り抜き情報保存後に呼び出されるコールバック関数。
          */
         onFavoriteSave : function() {
-            this.$el.find("[data-favorite-register-button]").hide();
-            this.$el.find("[data-favorite-delete-button]").show();
-            this.model.set("isFavorite", true);
+            this.onChangeStatus("favorite");
             this.favoriteModel.fetch({
                 success : $.proxy(function() {
                     this.model.favorite = this.favoriteModel;
                     this.hideLoading();
-                }, this)
+                }, this),
+                error: $.proxy(this.onFailure,this)
             });
         },
         /**
@@ -181,7 +180,8 @@ define(function(require, exports, module) {
                         var favoriteModel = this.model.favorite;
                         favoriteModel.set("isDelete", true);
                         favoriteModel.save(null, {
-                            success : $.proxy(this.onFavoriteDelete, this)
+                            success : $.proxy(this.onFavoriteDelete, this),
+                            error: $.proxy(this.onFailure,this)
                         });
                     }
                 },this)
@@ -191,13 +191,12 @@ define(function(require, exports, module) {
          * 切り抜き情報削除後に呼び出されるコールバック関数。
          */
         onFavoriteDelete : function() {
-            this.$el.find("[data-favorite-delete-button]").hide();
-            this.$el.find("[data-favorite-register-button]").show();
-            this.model.set("isFavorite", false);
+            this.onChangeStatus("favorite");
             this.model.favorite.fetch({
                 success : $.proxy(function() {
                     this.hideLoading();
-                }, this)
+                }, this),
+                error: $.proxy(this.onFailure,this)
             });
         },
         /**
@@ -213,25 +212,58 @@ define(function(require, exports, module) {
             this.recommendModel.set("source", source);
             this.recommendModel.set("userId", app.user.id);
             this.recommendModel.set("publishedAt", this.model.get("publishedAt"));
+            this.recommendModel.set("isDelete", false);
             this.recommendModel.set("etag", "*");
             this.recommendModel.save(null, {
-                success : $.proxy(this.onRecommendSave, this)
+                success : $.proxy(this.onRecommendSave, this),
+                error: $.proxy(this.onFailure,this)
             });
         },
         /**
          * おすすめ情報保存後に呼び出されるコールバック関数。
          */
         onRecommendSave : function() {
-            this.model.set("isRecommend", true);
+            this.model.recommend = this.recommendModel;
             this.model.recommendAmount++;
-            this.$el.find("[data-recommend-register-button]").hide();
-            this.$el.find("[data-recommend-delete-button]").show();
+            this.onChangeStatus("recommend");
             this.render();
         },
         /**
          * おすすめ取消押下時に呼び出されるコールバック関数。
          */
         onClickRecommendDeleteButton : function() {
+            this.recommendModel = this.model.recommend;
+            this.recommendModel.set("isDelete",true);
+            this.recommendModel.set("etag", "*");
+            this.recommendModel.save(null, {
+                success : $.proxy(this.onRecommendDelete, this),
+                error: $.proxy(this.onFailure,this)
+            });
+        },
+        /**
+         * おすすめ情報削除後に呼び出されるコールバック関数。
+         */
+        onRecommendDelete : function() {
+            this.model.recommend = this.recommendModel;
+            this.model.recommendAmount--;
+            this.onChangeStatus("recommend");
+            this.render();
+        },
+        /**
+         * 情報変更後に呼び出されるコールバック関数。
+         * ボタン表示非表示切り替え、および状態の切り替えを行う
+         * 
+         * @params {String} type "favorite" or "recommend"
+         */
+        onChangeStatus : function(type) {
+            if (type === "favorite") {
+                this.model.set("isFavorite", !this.model.get("isFavorite"));
+            } else {
+                this.model.set("isRecommend", !this.model.get("isRecommend"));
+            }
+            // 対応するボタンの切り替え
+            this.$el.find("[data-"+ type +"-register-button]").toggle();
+            this.$el.find("[data-"+ type +"-delete-button]").toggle();
         },
         /**
          * タグ追加ボタン押下時に呼び出されるコールバック関数。
@@ -242,7 +274,8 @@ define(function(require, exports, module) {
                 this.model.set("tagsArray", _.uniq(this.model.get("tagsArray")));
                 $(this.el).find("#tagInput").val("");
                 this.model.save(null, {
-                    success : $.proxy(this.onSave, this)
+                    success : $.proxy(this.onSave, this),
+                    error: $.proxy(this.onFailure,this)
                 });
             }
         },
@@ -254,9 +287,18 @@ define(function(require, exports, module) {
                 success : $.proxy(function() {
                     this.tagListView.tagsArray = this.model.get("tagsArray");
                     this.tagListView.render();
-                }, this)
+                }, this),
+                error: $.proxy(this.onFailure,this)
             });
         },
+        /**
+         *  非同期通信失敗後のコールバック関数
+         */
+        onFailure: function (err) {
+            console.log(err);
+            this.hideLoading();
+        },
+
         /**
          * タグボタン押下時に呼び出されるコールバック関数。
          * 
