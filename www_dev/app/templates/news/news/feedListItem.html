@@ -1,16 +1,12 @@
 <li data-article-id="<%= model.get('__id') %>" class="feedListItem feed-item">
-    <p>
-        <span class="feed-item__label">
+    <div class="feed-item__label">
+        <span>
             <%= model.get("dispSite") %>
         </span>
-    </p>
+    </div>
 
     <div class="feed-item__body">
-        <a class="feed-item__thumbnail th right" href="javascript:void(0)">
-            <img class="articleImage" src="" />
-        </a>
-
-        <p class="articleTitle" style="font-weight: bold;">
+        <p class="articleTitle">
             <%= model.get("dispTitle") %>
         </p>
     </div>

@@ -191,6 +191,7 @@ main {
     height: 40px;
     line-height: 40px;
     margin: 0;
+    font-size: 1rem;
 }
 
 /**
@@ -215,6 +216,14 @@ main {
     width: 30%;
 }
 
+.global-nav__menu .button {
+    font-size: 20px;
+}
+
+.global-nav__menu .button span {
+    text-decoration: underline;
+}
+
 /**
  *  global-nav__date
  *  日付のエリア
@@ -225,44 +234,55 @@ main {
     font-family: serif;
 }
 
+.global-nav__date .nav-content {
+}
+
 .date-area {
-    line-height: 1;
+    line-height: 60px;
+    font-size: 0;
 }
 
+/* year */
 .date-area__year {
-    font-size: 20px;
+    display: inline-block;
 }
 
-.date-area__date {
-    float: left;
+.date-area__year .date--year {
+    font-size: 28px;
 }
 
-.date-area__date::after {
-    content: '';
-    display: block;
-    clear: both;
-}
-
-.date--month {
-    font-size: 30px;
-    float: left;
-}
-
-.date--day {
-    font-size: 30px;
-    float: left;
-}
-
-.date--unit {
+.date-area__year .date--unit {
     font-size: 24px;
-    float: left;
 }
 
+/* date */
+.date-area__date {
+    display: inline-block;
+}
+
+.date-area__date .date--month {
+    font-size: 34px;
+}
+
+.date-area__date .date--day {
+    font-size: 34px;
+}
+
+.date-area__date .date--unit {
+    font-size: 28px;
+}
+
+/* weekday */
 .date-area__weekday {
-    font-size: 22px;
-    padding: 5px;
-    border: 1px solid #444;
-    float: left;
+    display: inline-block;
+}
+
+.date-area__weekday .date--paren {
+    font-size: 28px;
+}
+
+.date-area__weekday .date--weekday {
+    font-size: 34px;
 }
 
 /**
@@ -291,6 +311,8 @@ main {
     line-height: 30px;
     padding: 0;
     margin: 0;
+    text-decoration: underline;
+    font-size: 20px;
 }
 
 /**
@@ -364,7 +386,7 @@ main {
     }
 
 .contents__secondary {
-    padding: 10px 10px 10px 0;
+    padding: 15px;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     overflow: auto;
     background: #f2eaca;
@@ -382,7 +404,7 @@ main {
 }
 
 .sidebar__header {
-    padding: 8px;
+    margin: 15px 0 0 0;
     font-family: serif;
 }
 
@@ -408,7 +430,8 @@ main {
 }
 
 .side-action__header {
-    margin: 8px;
+    margin: 0 0 15px 0;
+    font-family: serif;
 }
 
 .side-action__label {
@@ -426,8 +449,12 @@ main {
     font-weight: bold;
 }
 
+.side-action__description p {
+    margin: 16px 0;
+}
+
 .side-action__body {
-    padding: 8px 16px;
+    padding: 8px 0 0;
 }
 
 .side-action__image {
@@ -446,9 +473,13 @@ main {
 }
 
 .feed-item {
-    margin: 4px;
-    padding: 16px;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.16);
+    display: table;
+    margin: 15px 0;
+    padding: 5px;
+    background: white;
+    border-radius: 4px;
+    font-family: serif;
+    width: 100%;
 }
 
 .feed-item:active {
@@ -456,17 +487,24 @@ main {
 }
 
 .feed-item__label {
-    display: inline-block;
-    background: #333;
-    color: white;
-    padding: 0 16px;
-    border-radius: 2px;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 8px;
+    letter-spacing: -0.1em;
     font-size: 16px;
-    margin-bottom: 8px;
+    min-width: 80px;
+
+    background: #db748c;
+    color: white;
+    border-radius: 2px;
 }
 
 .feed-item__body {
-    padding: 8px 0;
+    display: table-cell;
+    padding: 0 8px;
+    vertical-align: middle;
+    color: #d06a00;
+    text-decoration: underline;
 }
 
 .feed-item__body::after {
@@ -483,12 +521,17 @@ main {
  *  post
  */
 .post {
-    margin: 8px;
-    padding: 16px;
+    margin: 0 0 8px;
+    padding: 0 0 16px 16px;
 }
 
 .post__body {
-    margin: 16px;
+    margin: 0 32px 16px;
+}
+
+.post__body > .row > .columns {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .post__footer {
@@ -506,16 +549,20 @@ main {
  *  post-header
  */
 .post-header {
-    margin: 16px 0 16px;
+    margin: 0 0 16px;
 }
 
 .post-header__site {
     font-size: 1rem;
+    margin: 0 -32px;
 }
 
 .post-header__title {
-    font-size: 2rem;
+    font-size: 2.3rem;
     font-family: serif;
+    font-weight: bold;
+    margin: 24px 0;
+    line-height: 1.4;
 }
 
 .post-label {
@@ -525,6 +572,28 @@ main {
     border-radius: 2px;
     font-size: 1rem;
     margin-bottom: 8px;
+}
+
+.post-label::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.post-label__site {
+    padding: 6px 0;
+}
+
+.post-recommend {
+}
+
+.post-recommend__amount {
+    padding: 2px 10px;
+    background: white;
+    border-radius: 2px;
+    color: #db801d;
+    display: inline-block;
+    margin: 4px;
 }
 
 /**
