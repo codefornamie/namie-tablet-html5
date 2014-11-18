@@ -852,34 +852,3 @@ div.nehan-block.nehan-body:last-child {
 .feedListItem p{
 	margin-bottom: 0.20rem;
 }
-/**
- * 文字サイズ変更用
-**/
-input[name='fontSize'][value='fontSizeSmall']:checked~#contents .post__body,
-input[name='fontSize'][value='fontSizeSmall']:checked~#contents .post__body p {
-    font-size: 80%;
-}
-input[name='fontSize'][value='fontSizeSmall']:checked~#contents .post__body h1 {
-    font-size: 220%;
-}
-input[name='fontSize'][value='fontSizeSmall']:checked~#contents .post__body h2 {
-    font-size: 200%;
-}
-input[name='fontSize'][value='fontSizeSmall']:checked~#contents .post-header__title {
-    font-size: 24px;
-}
-
-input[name='fontSize'][value='fontSizeLarge']:checked~#contents .post__body,
-input[name='fontSize'][value='fontSizeLarge']:checked~#contents .post__body p {
-    font-size: 120%;
-}
-input[name='fontSize'][value='fontSizeLarge']:checked~#contents .post__body h1 {
-    font-size: 320%;
-}
-input[name='fontSize'][value='fontSizeLarge']:checked~#contents .post__body h2 {
-    font-size: 300%;
-}
-input[name='fontSize'][value='fontSizeLarge']:checked~#contents .post-header__title {
-    font-size: 40px;
-}
-

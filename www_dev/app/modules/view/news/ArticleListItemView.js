@@ -141,7 +141,7 @@ define(function(require, exports, module) {
             }
             var source = this.model.get("__id");
             this.favoriteModel.set("source", source);
-            this.favoriteModel.set("userId", "namie");
+            this.favoriteModel.set("userId", app.user.get("__id"));
             this.favoriteModel.set("contents", this.model.get("description"));
             this.favoriteModel.set("title", this.model.get("title"));
             this.favoriteModel.set("site", this.model.get("site"));
@@ -210,7 +210,7 @@ define(function(require, exports, module) {
             }
             var source = this.model.get("__id");
             this.recommendModel.set("source", source);
-            this.recommendModel.set("userId", app.user.id);
+            this.recommendModel.set("userId", app.user.get("__id"));
             this.recommendModel.set("publishedAt", this.model.get("publishedAt"));
             this.recommendModel.set("isDelete", false);
             this.recommendModel.set("etag", "*");

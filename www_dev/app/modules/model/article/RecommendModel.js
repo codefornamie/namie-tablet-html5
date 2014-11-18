@@ -18,7 +18,7 @@ define(function(require, exports, module) {
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            response.isMine = response.userId === app.user.id;
+            response.isMine = response.userId === app.user.get("__id");
             return response;
         },
         /**

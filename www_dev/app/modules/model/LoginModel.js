@@ -2,6 +2,12 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var PersonalCollection = require("modules/collection/personal/PersonalCollection");
+    var PersonalModel = require("modules/model/personal/PersonalModel");
+    var Equal = require("modules/util/filter/Equal");
+    var And = require("modules/util/filter/And");
+    var IsNull = require("modules/util/filter/IsNull");
+
     /**
      * ログイン画面のモデルクラスを作成する。
      * 
@@ -82,7 +88,41 @@ define(function(require, exports, module) {
                 this.onLogin(message);
                 return;
             }
-            this.onLogin();
+            var collection = new PersonalCollection();
+            collection.condition.filters = [
+                new And([
+                        new Equal("loginId", this.get("loginId")), new IsNull("deletedAt")
+                ])
+            ];
+            collection.fetch({
+                success : $.proxy(function() {
+                    if (collection.size() !== 0) {
+                        // 既にパーソナル情報が登録されている場合
+                        app.user = collection.models[0];
+                        this.onLogin();
+                    } else {
+                        // パーソナル情報が登録されていない場合
+                        var personalModel = new PersonalModel();
+                        personalModel.set("loginId",this.get("loginId"));
+                        personalModel.set("fontSize","middle");
+                        personalModel.save(null,{
+                            success : $.proxy(function() {
+                                // パーソナル情報新規登録成功
+                                app.user = personalModel;
+                                this.onLogin();
+                            }, this),
+                            error: $.proxy(function() {
+                                // パーソナル情報新規登録に失敗
+                                this.onLogin("ユーザ情報の登録に失敗しました。再度ログインしてください。");
+                            },this)
+                        });
+                    }
+                }, this),
+                error: $.proxy(function() {
+                    // パーソナル情報検索に失敗
+                    this.onLogin("ユーザ情報の取得に失敗しました。再度ログインしてください。");
+                },this)
+            });
         },
     });
     module.exports = LoginModel;
