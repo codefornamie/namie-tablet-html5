@@ -103,7 +103,7 @@ define(function(require, exports, module) {
             }
             this.fontTimer = setTimeout($.proxy(function() {
                 this.saveFontSize($target.attr("value"));
-            },this),1500)
+            },this),1500);
             
         },
         /**
