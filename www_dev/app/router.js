@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var login = require("modules/view/login/index");
     login.posting = require("modules/view/posting/login/index");
+    login.ope = require("modules/view/ope/login/index");
 
     var common = require("modules/view/common/index");
     var YouTubeView = require("modules/view/top/YouTubeView");
@@ -16,6 +17,8 @@ define(function(require, exports, module) {
     var TutorialView = require("modules/view/tutorial/TutorialView");
     var BacknumberView = require("modules/view/backnumber/BacknumberView");
     var SettingsView = require("modules/view/settings/SettingsView");
+
+    var TopView = require("modules/view/ope/top/TopView");
 
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -36,6 +39,14 @@ define(function(require, exports, module) {
                         "#global-nav" : new login.GlobalNavView(),
                         "#menu" : new login.MenuView(),
                         "#contents" : new login.posting.LoginView(),
+                        "#footer" : new login.FooterView()
+                    };
+                } else if (app.config.basic.mode === "ope") {
+                    return {
+                        "#header" : new login.HeaderView(),
+                        "#global-nav" : new login.GlobalNavView(),
+                        "#menu" : new login.MenuView(),
+                        "#contents" : new login.ope.LoginView(),
                         "#footer" : new login.FooterView()
                     };
                 }
@@ -81,7 +92,8 @@ define(function(require, exports, module) {
             'tutorial' : 'tutorial',
             'backnumber' : 'backnumber',
             'settings' : 'settings',
-            'posting-top' : 'posting_top'
+            'posting-top' : 'postingTop',
+            'ope-top' : 'opeTop'
         },
 
         index : function() {
@@ -95,8 +107,12 @@ define(function(require, exports, module) {
             this.layout.setFooter(new common.FooterView());
             this.commonView();
         },
-        posting_top : function() {
+        postingTop : function() {
             this.layout.showView(new ShowEventsView());
+            this.commonView();
+        },
+        opeTop : function() {
+            this.layout.showView(new TopView());
             this.commonView();
         },
         scrap : function() {
