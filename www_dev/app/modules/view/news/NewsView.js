@@ -155,7 +155,7 @@ define(function(require, exports, module) {
          *  @param {Function} callback
          */
         loadFavorite: function (callback) {
-            this.favoriteCollection.condition.filters = [new Equal("userId", app.user.id)];
+            this.favoriteCollection.condition.filters = [new Equal("userId", app.user.get("__id"))];
 
             this.favoriteCollection.fetch({
                 success: function () {

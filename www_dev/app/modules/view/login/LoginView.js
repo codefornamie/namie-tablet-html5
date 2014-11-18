@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var LoginModel = require("modules/model/LoginModel");
+    var vexDialog = require("vexDialog");
     
     /**
      * ログイン画面を表示するためのViewクラスを作成する。
@@ -45,7 +46,8 @@ define(function(require, exports, module) {
 
             var errmsg = this.model.validate();
             if (errmsg) {
-                return alert(errmsg);
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                return vexDialog.alert(errmsg);
             }
             this.model.login($.proxy(this.onLogin, this));
         },
@@ -58,15 +60,10 @@ define(function(require, exports, module) {
          */
         onLogin : function(msg) {
             if (!msg) {
-                // TODO ログインユーザ情報が正式に出来た際に以下を正しく直してください。
-                app.user = {
-                            id: this.model.get("loginId")
-                        };
-                
-                //app.router.go("top");
                 this.goNextView();
             } else {
-                alert(msg);
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert(msg);
             }
         },
         goNextView: function() {
