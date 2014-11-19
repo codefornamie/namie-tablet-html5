@@ -96,7 +96,6 @@ define(function(require, exports, module) {
                     if (json && json.d) {
                         json = json.d.results;
                     }
-                    alert(JSON.stringify(json));
                     options.success(json);
                 }
 

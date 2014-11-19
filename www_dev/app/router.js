@@ -4,18 +4,19 @@ define(function(require, exports, module) {
     var app = require("app");
     var login = require("modules/view/login/index");
     login.posting = require("modules/view/posting/login/index");
+    login.ope = require("modules/view/ope/login/index");
 
     var common = require("modules/view/common/index");
     var YouTubeView = require("modules/view/top/YouTubeView");
     var NewsView = require("modules/view/news/NewsView");
-    var EventsView = require("modules/view/events/EventsView");
-    var EventsRegistedView = require("modules/view/events/EventsRegistedView");
-    var ShowEventsView = require("modules/view/events/ShowEventsView");
 
     var ScrapView = require("modules/view/scrap/ScrapView");
     var TutorialView = require("modules/view/tutorial/TutorialView");
     var BacknumberView = require("modules/view/backnumber/BacknumberView");
     var SettingsView = require("modules/view/settings/SettingsView");
+
+    var EventNewsView = require("modules/view/posting/news/NewsView");
+    var TopView = require("modules/view/ope/top/TopView");
 
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -33,9 +34,14 @@ define(function(require, exports, module) {
                 } else if (app.config.basic.mode === "posting") {
                     return {
                         "#header" : new login.HeaderView(),
+                        "#contents" : new login.posting.LoginView(),
+                    };
+                } else if (app.config.basic.mode === "ope") {
+                    return {
+                        "#header" : new login.HeaderView(),
                         "#global-nav" : new login.GlobalNavView(),
                         "#menu" : new login.MenuView(),
-                        "#contents" : new login.posting.LoginView(),
+                        "#contents" : new login.ope.LoginView(),
                         "#footer" : new login.FooterView()
                     };
                 }
@@ -81,7 +87,8 @@ define(function(require, exports, module) {
             'tutorial' : 'tutorial',
             'backnumber' : 'backnumber',
             'settings' : 'settings',
-            'posting-top' : 'posting_top'
+            'posting-top' : 'postingTop',
+            'ope-top' : 'opeTop'
         },
 
         index : function() {
@@ -95,8 +102,12 @@ define(function(require, exports, module) {
             this.layout.setFooter(new common.FooterView());
             this.commonView();
         },
-        posting_top : function() {
-            this.layout.showView(new ShowEventsView());
+        postingTop : function() {
+            this.layout.showView(new EventNewsView());
+            this.eventCommonView();
+        },
+        opeTop : function() {
+            this.layout.showView(new TopView());
             this.commonView();
         },
         scrap : function() {
@@ -141,6 +152,9 @@ define(function(require, exports, module) {
         commonView : function() {
             this.layout.setGlobalNav(new common.GlobalNavView());
             this.layout.setView("#menu", new common.MenuView()).render();
+        },
+        eventCommonView : function() {
+            this.layout.setHeader(new common.GlobalNavView());
         },
 
         /**

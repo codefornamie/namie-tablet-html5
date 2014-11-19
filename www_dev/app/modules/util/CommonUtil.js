@@ -9,13 +9,6 @@ define(function(require, exports, module) {
 
     };
     /**
-     * ログインユーザ情報を取得する。
-     * @return {object} ログインユーザ情報
-     */
-    CommonUtil.getLoginUser = function() {
-        return app.user;
-    };
-    /**
      * 文字列をコンテンツに表示できる形に置換する
      *
      * @param {String}

@@ -3,6 +3,12 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var JsSha = require("jsSha");
+    var PersonalCollection = require("modules/collection/personal/PersonalCollection");
+    var PersonalModel = require("modules/model/personal/PersonalModel");
+    var Equal = require("modules/util/filter/Equal");
+    var And = require("modules/util/filter/And");
+    var IsNull = require("modules/util/filter/IsNull");
+
     /**
      * ログイン画面のモデルクラスを作成する。
      *
@@ -27,52 +33,51 @@ define(function(require, exports, module) {
         accountManager : null,
         /** package name */
         packageName : "jp.fukushima.namie.town.Pcs",
+        /** Access Token */
+        accessToken : "",
 
         /**
          * モデルの初期化処理を行う。
+         * @memberOf LoginModel
          */
         initialize : function(options) {
             this.baseUrl = app.config.basic.baseUrl;
             this.cellId = app.config.basic.cellId;
             this.box = app.config.basic.boxName;
-            alert("初期化");
-            alert(window);
-            alert(window.plugins);
             if (window.plugins) {
                 this.accountManager = window.plugins.accountmanager;
             }
         },
 
         /**
-         * AccountManager経由でトークンを取得
+         * AccountManagerにアカウントが登録されていればトークンの取得を行う。
          * @memberOf LoginModel
          * @param {Function} callback トークン取得成功時のコールバック
          */
-        authAccountManager : function(callback) {
+        isExistAccountInAccountManager : function(callback) {
             if (window.plugins) {
                 this.accountManager = window.plugins.accountmanager;
             }
-            alert("アカウントマネージャ存在確認");
-            alert(this.accountManager);
-
             if (!this.accountManager) {
                 console.log("account maanger undefined (not android)");
+                callback("");
                 return;
             }
-            alert("アカウントマネージャ認証開始");
+            //alert("アカウントマネージャ認証開始");
             this.accountManager.getAccountsByType(this.packageName, $.proxy(function(error, accounts) {
-                alert("アカウント情報あり ");
+                //alert("アカウントマネージャチェック終了 : " + accounts.length + "件");
                 console.log("account manager getAccountsByType method responsed ");
                 if (error) {
                     console.log("account manager error : " + error);
+                    callback("");
                     return;
                 } else if (!accounts || !accounts.length) {
                     console.log("this device has no accounts");
+                    callback("");
                     return;
                 }
-                // alert('#' + accounts.length + ' ACCOUNTS ON THIS DEVICE');
                 var account = accounts[0];
-                console.log("account : " + JSON.stringify(account));
+                this.set("loginId", account.name);
                 this.accountManager.getAuthToken(0, "oauth", function(dummy, token) {
                     alert("トークン取得成功 : " + token);
                     console.log("account manager getAuthToken responsed : " + token);
@@ -97,6 +102,74 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ID/PWでPCS認証を行う。
+         * @memberOf LoginModel
+         * @param {String} id ユーザーID
+         * @param {String} pw パスワード
+         */
+        certificationWithAccount : function(id, pw) {
+            var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
+            dcContext.setAsync(true);
+            var accessor = dcContext.asAccount(this.cellId, id, pw);
+            var cellobj = accessor.cell(this.cellId);
+            var targetBox = cellobj.box("data");
+            app.accessor = cellobj.accessor;
+            app.box = targetBox;
+        },
+
+        /**
+         * トークンを指定してPCS接続。
+         * @memberOf LoginModel
+         * @param {String} token アクセストークン
+         */
+        certificationWithToken : function() {
+            //alert("トークン認証(?)開始");
+            console.log("set access token : " + this.accessToken);
+            var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
+            dcContext.setAsync(true);
+            try {
+                var cellobj = dcContext.withToken(this.accessToken).cell(this.cellId);
+                var targetBox = cellobj.box("data");
+                app.accessor = cellobj.accessor;
+                app.box = targetBox;
+            } catch (e) {
+                //alert("トークン認証でエラー : " + e);
+                console.log("certificate failure : " + e);
+            }
+        },
+
+        /**
+         * AccountManagerにアカウントを登録する。
+         * @param {String} id ユーザーID
+         * @param {String} pw パスワード
+         */
+        registAccountManager : function(id, pw) {
+            if (window.plugins) {
+                this.accountManager = window.plugins.accountmanager;
+            }
+            if (this.accountManager) {
+                //alert("アカウントマネージャ登録開始");
+                var param = {
+                    baseUrl : this.baseUrl,
+                    cellName : this.cellId,
+                    schema : "",
+                    boxName : this.box
+                };
+                this.accountManager.addAccountExplicitly(this.packageName, id, pw, param,
+                        function(error, account) {
+                            console.log("account manager addAccountExplicitly responsed");
+                            if (error) {
+                                this.onLogin("login failure : " + error);
+                                return;
+                            }
+                            alert("アカウントマネージャ登録成功");
+                        });
+            } else {
+                console.log("account maanger undefined (not android)");
+            }
+        },
+
+        /**
          * 認証処理を行う。
          * <p>
          * このモデルのloginId,passwordプロパティの値を利用して、認証処理を行う。<br>
@@ -112,64 +185,20 @@ define(function(require, exports, module) {
         login : function(onLogin) {
             console.log("login method in LoginModel start");
             this.onLogin = onLogin;
-            console.log("1");
             try {
-                alert("ログイン処理開始");
-                var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
-                dcContext.setAsync(true);
-                console.log("2");
-
-                // パスワードを暗号化
-                var shaPassword = "";
-                var shaObj = new JsSha(this.get("password"), "ASCII");
-                shaPassword = shaObj.getHash("SHA-256", "HEX");
-                shaPassword = shaPassword.substr(0, 32);
-                console.log("3 " + this.get("loginId") + " / " + shaPassword);
-                console.log(this.cellId);
-                // PCSアクセス
-                var accessor = dcContext.asAccount(this.cellId, this.get("loginId"), shaPassword);
-                console.log("3a");
-                console.log(accessor);
-                console.log(accessor.accessToken);
-                var cellobj = accessor.cell(this.cellId);
-                console.log("4");
-                var targetBox = cellobj.box("data");
-                app.accessor = cellobj.accessor;
-                app.box = targetBox;
-                console.log("5");
-
-                if (window.plugins) {
-                    this.accountManager = window.plugins.accountmanager;
-                }
-                alert("アカウントマネージャ存在確認");
-                alert(this.accountManager);
-                // Androidで動作している場合、AccountManagerにアカウントを登録する
-                if (this.accountManager) {
-                    alert("アカウントマネージャ登録開始");
-                    console.log("5");
-                    var param = {
-                        baseUrl : this.baseUrl,
-                        cellName : this.cellId,
-                        schema : "",
-                        boxName : this.box
-                    };
-                    this.accountManager.addAccountExplicitly(this.packageName, this.get("loginId"), shaPassword, param,
-                            function(error, account) {
-                                console.log("account manager addAccountExplicitly responsed");
-                                if (error) {
-                                    var msg = "login failure : " + error;
-                                    this.onLogin(msg);
-                                    return;
-                                }
-                                alert("アカウントマネージャ登録成功");
-                            });
+                if (this.accessToken) {
+                    this.certificationWithToken();
                 } else {
-                    console.log("7");
-                    console.log("account maanger undefined (not android)");
+                    // パスワードを暗号化
+                    var shaPassword = "";
+                    var shaObj = new JsSha(this.get("password"), "ASCII");
+                    shaPassword = shaObj.getHash("SHA-256", "HEX");
+                    var id = this.get("loginId");
+                    var pw = shaPassword.substr(0, 32);
+                    this.certificationWithAccount(id, pw);
+                    this.registAccountManager(id, pw);
                 }
             } catch (e) {
-                console.log("8");
-                console.log(e);
                 var message = "";
                 if (e.name === "NetworkError") {
                     message = "ネットワーク接続エラーが発生しました。";
@@ -180,27 +209,48 @@ define(function(require, exports, module) {
                 this.onLogin(message);
                 return;
             }
-            this.onLogin();
+            //alert("パ情作成開始");
+            //alert(this.get("loginId"));
+            var collection = new PersonalCollection();
+            collection.condition.filters = [
+                new And([
+                        new Equal("loginId", this.get("loginId")), new IsNull("deletedAt")
+                ])
+            ];
+            collection.fetch({
+                success : $.proxy(function() {
+                    if (collection.size() !== 0) {
+                        // 既にパーソナル情報が登録されている場合
+                        app.user = collection.models[0];
+                        this.onLogin();
+                    } else {
+                        // パーソナル情報が登録されていない場合
+                        var personalModel = new PersonalModel();
+                        personalModel.set("loginId",this.get("loginId"));
+                        personalModel.set("fontSize","middle");
+                        personalModel.save(null,{
+                            success : $.proxy(function() {
+                                // パーソナル情報新規登録成功
+                                app.user = personalModel;
+                                this.onLogin();
+                            }, this),
+                            error: $.proxy(function() {
+                                // パーソナル情報新規登録に失敗
+                                this.onLogin("ユーザ情報の登録に失敗しました。再度ログインしてください。");
+                            },this)
+                        });
+                    }
+                }, this),
+                error: $.proxy(function() {
+                    // パーソナル情報検索に失敗
+                    this.onLogin("ユーザ情報の取得に失敗しました。再度ログインしてください。");
+                },this)
+            });
         },
 
-        /**
-         * トークンを指定してPCS接続.
-         * @memberOf LoginModel
-         * @param {String} token アクセストークン
-         */
         setAccessToken : function(token) {
             console.log("set access token : " + token);
-            alert(token);
-            var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
-            dcContext.setAsync(true);
-            try {
-                var cellobj = dcContext.withToken(token).cell(this.cellId);
-                var targetBox = cellobj.box("data");
-                app.accessor = cellobj.accessor;
-                app.box = targetBox;
-            } catch (e) {
-                console.log("certificate failure : " + e);
-            }
+            this.accessToken = token;
         }
     });
     module.exports = LoginModel;

@@ -35,7 +35,7 @@ define(function(require, exports, module) {
             var self = this;
             // 自身のユーザIDでフィルタ
             this.favoriteCollection.condition.filters = [ new And([
-                    new Equal("userId", app.user.id),
+                    new Equal("userId", app.user.get("__id")),
                     new IsNull("deletedAt") ]) ];
             
             this.favoriteCollection.fetch({
