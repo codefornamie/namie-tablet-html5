@@ -14,7 +14,8 @@ var nodeRequire = typeof requirejs === "function" && requirejs.nodeRequire;
 // Define the plugin using the CommonJS syntax.
 define(function(require, exports) {
   var _ = require("lodash");
-
+  var appConfig = require("resources/appConfig");
+  
   exports.version = "0.1.6";
 
   // Invoked by the AMD builder, passed the path to resolve, the require
@@ -167,6 +168,8 @@ define(function(require, exports) {
       root: config.baseUrl,
       templateSettings: {}
     }, config.lodashLoader);
+
+    settings.mode = appConfig.basic.mode;
 
     // Ensure the root has been properly configured with a trailing slash,
     // unless it's an empty string or undefined, in which case work off the

@@ -129,6 +129,11 @@ main {
 
 .header nav {
 }
+.eventHeader nav {
+    height: 100%;
+    line-height: 20px;
+    overflow: hidden;
+}
 
 .header nav h1 {
     margin: 0;
