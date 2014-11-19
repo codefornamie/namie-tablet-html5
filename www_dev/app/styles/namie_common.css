@@ -89,6 +89,10 @@ main {
 /**
  *  snap
  */
+.snap-drawers {
+    background: #14434a;
+}
+
 .snap-content {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
     background: #14434a;
@@ -120,9 +124,6 @@ main {
 }
 
 .header nav {
-    height: 20px;
-    line-height: 20px;
-    overflow: hidden;
 }
 
 .header nav h1 {
@@ -137,18 +138,76 @@ main {
 }
 
 /**
- *  編集部の一言
+ *  俳句
  */
-.header__comment {
+.header-haiku {
+    color: #3c828d;
     font-family: serif;
-    font-size: 16px;
+    position: relative;
+    top: 20px;
+    left: 20px;
 }
 
-.header__comment p {
+.header-haiku__heading {
+    display: inline-block;
+    font-size: 20px;
+    padding: 0 16px;
+    background: white;
+    border-radius: 30px;
     height: 30px;
     line-height: 30px;
-    margin: 0;
-    font-size: 0.8rem;
+}
+
+.header-haiku__text {
+    display: inline-block;
+    font-size: 22px;
+    padding: 0 16px;
+    background: white;
+    border-radius: 40px;
+    height: 40px;
+    line-height: 40px;
+    position: absolute;
+    top: 28px;
+    left: 40px;
+}
+
+/**
+ *  header-weather
+ */
+.header-weather--local,
+.header-weather--namie {
+    position: absolute;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 25px;
+    color: #485a5d;
+    overflow: hidden;
+}
+
+.header-weather--local {
+    top: 40px;
+    right: 220px;
+}
+
+.header-weather--namie {
+    top: 30px;
+    right: 30px;
+}
+
+.header-weather__name {
+    height: 100%;
+    background-color: white;
+    float: left;
+    padding: 0 16px;
+    font-size: 18px;
+}
+
+.header-weather__state {
+    height: 100%;
+    background-color: #ddf1f3;
+    float: left;
+    font-size: 16px;
+    padding: 0 16px;
 }
 
 /**
@@ -232,6 +291,7 @@ main {
     width: 40%;
     text-align: center;
     font-family: serif;
+    color: #485a5d;
 }
 
 .global-nav__date .nav-content {
@@ -248,11 +308,14 @@ main {
 }
 
 .date-area__year .date--year {
-    font-size: 28px;
+    font-size: 34px;
+    display: inline-block;
+    transform: scale(0.8, 1);
 }
 
 .date-area__year .date--unit {
-    font-size: 24px;
+    font-size: 26px;
+    margin-left: -5px;
 }
 
 /* date */
@@ -261,15 +324,21 @@ main {
 }
 
 .date-area__date .date--month {
-    font-size: 34px;
+    font-size: 40px;
+    display: inline-block;
+    transform: scale(0.8, 1);
 }
 
 .date-area__date .date--day {
-    font-size: 34px;
+    font-size: 40px;
+    display: inline-block;
+    transform: scale(0.8, 1);
+    margin-left: -5px;
 }
 
 .date-area__date .date--unit {
-    font-size: 28px;
+    font-size: 30px;
+    margin-left: -5px;
 }
 
 /* weekday */
@@ -278,11 +347,11 @@ main {
 }
 
 .date-area__weekday .date--paren {
-    font-size: 28px;
+    font-size: 30px;
 }
 
 .date-area__weekday .date--weekday {
-    font-size: 34px;
+    font-size: 36px;
 }
 
 /**
@@ -486,23 +555,48 @@ main {
     background: rgba(120,200,255,0.16);
 }
 
+/**
+ *  feed-cell
+ */
+.feed-cell {
+    display: inline-table;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.feed-cell--label {
+    width: 80px;
+}
+
+.feed-cell--body {
+    width: 185px;
+}
+
+/**
+ *  feed-item
+ */
 .feed-item__label {
     display: table-cell;
     vertical-align: middle;
-    padding: 0 8px;
+    padding: 0;
     letter-spacing: -0.1em;
     font-size: 16px;
     min-width: 80px;
+}
+
+.feed-item__label .img {
+    display: block;
+    width: 80px;
+    height: 80px;
 
     background: #db748c;
-    color: white;
     border-radius: 2px;
 }
 
 .feed-item__body {
     display: table-cell;
-    padding: 0 8px;
     vertical-align: middle;
+    padding: 0 8px;
     color: #d06a00;
     text-decoration: underline;
 }
@@ -513,8 +607,9 @@ main {
     clear: both;
 }
 
-.feed-item__thumbnail {
-    margin: 0 0 0 8px;
+.article-list {
+    font-size: 1.3rem;
+    line-height: 1.4;
 }
 
 /**
