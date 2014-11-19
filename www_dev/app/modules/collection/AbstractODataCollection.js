@@ -84,13 +84,6 @@ define(function(require, exports, module) {
 
             var complete = function(res) {
                 // 取得したJSONオブジェクト
-                alert("取得成功");
-                alert(res);
-                if (res.bodyAsJson) {
-                    alert(res.bodyAsJson());
-                } else {
-                    alert("??????");
-                }
                 var json = null;
                 if (res.error) {
                     if (options.error) {

@@ -35,6 +35,9 @@ define(function(require, exports, module) {
             this.baseUrl = app.config.basic.baseUrl;
             this.cellId = app.config.basic.cellId;
             this.box = app.config.basic.boxName;
+            alert("初期化");
+            alert(window);
+            alert(window.plugins);
             if (window.plugins) {
                 this.accountManager = window.plugins.accountmanager;
             }
@@ -46,11 +49,19 @@ define(function(require, exports, module) {
          * @param {Function} callback トークン取得成功時のコールバック
          */
         authAccountManager : function(callback) {
+            if (window.plugins) {
+                this.accountManager = window.plugins.accountmanager;
+            }
+            alert("アカウントマネージャ存在確認");
+            alert(this.accountManager);
+
             if (!this.accountManager) {
                 console.log("account maanger undefined (not android)");
                 return;
             }
+            alert("アカウントマネージャ認証開始");
             this.accountManager.getAccountsByType(this.packageName, $.proxy(function(error, accounts) {
+                alert("アカウント情報あり ");
                 console.log("account manager getAccountsByType method responsed ");
                 if (error) {
                     console.log("account manager error : " + error);
@@ -63,6 +74,7 @@ define(function(require, exports, module) {
                 var account = accounts[0];
                 console.log("account : " + JSON.stringify(account));
                 this.accountManager.getAuthToken(0, "oauth", function(dummy, token) {
+                    alert("トークン取得成功 : " + token);
                     console.log("account manager getAuthToken responsed : " + token);
                     callback(token);
                 });
@@ -102,6 +114,7 @@ define(function(require, exports, module) {
             this.onLogin = onLogin;
             console.log("1");
             try {
+                alert("ログイン処理開始");
                 var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
                 dcContext.setAsync(true);
                 console.log("2");
@@ -125,8 +138,14 @@ define(function(require, exports, module) {
                 app.box = targetBox;
                 console.log("5");
 
+                if (window.plugins) {
+                    this.accountManager = window.plugins.accountmanager;
+                }
+                alert("アカウントマネージャ存在確認");
+                alert(this.accountManager);
                 // Androidで動作している場合、AccountManagerにアカウントを登録する
                 if (this.accountManager) {
+                    alert("アカウントマネージャ登録開始");
                     console.log("5");
                     var param = {
                         baseUrl : this.baseUrl,
@@ -142,6 +161,7 @@ define(function(require, exports, module) {
                                     this.onLogin(msg);
                                     return;
                                 }
+                                alert("アカウントマネージャ登録成功");
                             });
                 } else {
                     console.log("7");
