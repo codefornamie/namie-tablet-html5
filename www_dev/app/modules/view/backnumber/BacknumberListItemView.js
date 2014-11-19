@@ -5,17 +5,17 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
 
     /**
-     *  バックナンバーページのView
+     *  バックナンバーのアイテムのView
      *
      *  @class
-     *  @exports BacknumberView
+     *  @exports BacknumberListItemView
      *  @constructor
      */
-    var BacknumberView = AbstractView.extend({
+    var BacknumberListItemView = AbstractView.extend({
         /**
          *  テンプレートファイル
          */
-        template : require("ldsh!templates/{mode}/backnumber/backnumber"),
+        template : require("ldsh!templates/{mode}/backnumber/backnumberListItem"),
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
@@ -40,5 +40,5 @@ define(function(require, exports, module) {
         }
 
     });
-    module.exports = BacknumberView;
+    module.exports = BacknumberListItemView;
 });
