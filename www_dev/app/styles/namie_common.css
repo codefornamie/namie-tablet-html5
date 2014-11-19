@@ -232,9 +232,13 @@ main {
     width: 100%;
 }
 
-.header-logo img {
-    width: 330px;
-    margin-top: 7px;
+.header-logo .header-logo__logo {
+    background-image: url(../../app/img/img-title-logo.png);
+    background-size: 100%;
+    display: inline-block;
+    width: 345px;
+    height: 109px;
+    margin-top: 10px;
 }
 
 /**
