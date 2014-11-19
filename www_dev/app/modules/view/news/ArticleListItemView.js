@@ -55,6 +55,7 @@ define(function(require, exports, module) {
                     window.URL.revokeObjectURL(articleImage.attr("src"));
                 });
                 articleImage.attr("src", url);
+                articleImage.data("blob", blob);
             };
 
             if (this.model.get("imageUrl")) {
@@ -114,7 +115,7 @@ define(function(require, exports, module) {
             });
 
             // 画像クリックイベント
-            this.$el.find("#articleDetailImageArea").on("click", $.proxy(this.onClickImage, this));
+            this.$el.find(".post__body img").on("click", $.proxy(this.onClickImage, this));
         },
 
         /**
@@ -141,7 +142,7 @@ define(function(require, exports, module) {
             }
             var source = this.model.get("__id");
             this.favoriteModel.set("source", source);
-            this.favoriteModel.set("userId", "namie");
+            this.favoriteModel.set("userId", app.user.get("__id"));
             this.favoriteModel.set("contents", this.model.get("description"));
             this.favoriteModel.set("title", this.model.get("title"));
             this.favoriteModel.set("site", this.model.get("site"));
@@ -210,7 +211,7 @@ define(function(require, exports, module) {
             }
             var source = this.model.get("__id");
             this.recommendModel.set("source", source);
-            this.recommendModel.set("userId", app.user.id);
+            this.recommendModel.set("userId", app.user.get("__id"));
             this.recommendModel.set("publishedAt", this.model.get("publishedAt"));
             this.recommendModel.set("isDelete", false);
             this.recommendModel.set("etag", "*");
@@ -321,13 +322,16 @@ define(function(require, exports, module) {
          */
         onClickImage : function(ev) {
             var uri = ev.target.src;
+            var blob = $(ev.target).data("blob");
+            
             var base = DateUtil.formatDate(new Date(), "yyyy-MM-dd_HH-mm-ss");
             var ext = uri.replace(/.*\//, "").replace(/.*\./, "");
-            if (!ext) {
+            // TODO blob型の場合、拡張子が取れない
+            if (!ext || ext.length > 4) {
                 ext = "jpg";
             }
-            var fileName = this.getLocalPath() + "/" + base + "." + ext;
-            this.saveImage(uri, fileName);
+            var fileName = base + "." + ext;
+            this.saveImage((blob) ? blob : uri, fileName);
         },
         /**
          * 記事詳細内のアンカータグがクリックされた際のハンドラ
@@ -337,41 +341,70 @@ define(function(require, exports, module) {
             vexDialog.alert(this.model.get("dispSite") + "のHPを直接開いてリンクを参照してください。");
         },
         /**
-         * アプリから保存可能なローカルストレージのパスを取得する。
-         * 
-         * @return {String} ローカルストレージのパス
-         */
-        getLocalPath : function() {
-            return "/mnt/sdcard/Pictures/namie-town";
-        },
-        /**
          * 指定URiの画像データをストレージに保存する。
          * 
-         * @param {String}
-         *            uri 対象画像のURI
+         * @param {Object}
+         *            data 対象画像のURIまたはBlob
          * @param {String}
          *            filePath 保存先のストレージのパス
          * 
          */
-        saveImage : function(uri, filePath) {
+        saveImage : function(data, fileName) {
+            console.log("scanFile start. filePath: " + fileName);
             if (window.FileTransfer === undefined) {
                 alert("ご使用の端末では保存できません。");
                 return;
             }
-            var fileTransfer = new FileTransfer();
-            fileTransfer.download(encodeURI(uri), filePath, function(entry) {
+            var sdPath = "/mnt/sdcard/";
+            var picturePath = "Pictures/";
+            var filePath = sdPath + picturePath + fileName;
+            
+            // ファイルシステムエラーハンドラ
+            var onFileSystemError = function(e) {
+                console.log("FileSystemError: code=" + e.code);
+                window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
+            };
+            // メディアスキャン
+            var mediaScan = function(filePath){
+                console.log("scanFile start. filePath: " + filePath);
                 window.MediaScanPlugin.scanFile(filePath, function(msg) {
-                    window.plugins.toast.showLongBottom("画像を保存しました。");
+                    window.plugins.toast.showLongBottom("画像を保存しました。"); 
                 }, function(err) {
                     window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                    console.log(err);
+                    console.log(err); 
                 });
-            }, function(error) {
-                window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                console.log("download error source: " + error.source);
-                console.log("download error target: " + error.target);
-                console.log("download error code: " + error.code);
-            }, false, {});
+            };
+
+            if(data instanceof Blob){
+                var blob = data;
+                window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 50 * 1024 * 1024, $.proxy(function(fs){ 
+                    fs.root.getFile(picturePath + fileName, {create: true}, $.proxy(function(fileEntry) {
+                        fileEntry.createWriter($.proxy(function(fileWriter) {
+                            fileWriter.onwriteend = function(e) {
+                                mediaScan(filePath);
+                            };
+                            fileWriter.onerror = function(e) {
+                                window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
+                                console.log('Write failed: ' + e.toString());
+                            };
+                            fileWriter.write(blob);
+        
+                        }, this), this.onFileSystemError);
+                    }, this), this.onFileSystemError);
+                }, this), this.onFileSystemError);
+            } else {
+                var uri = data;
+                var fileTransfer = new FileTransfer();
+                fileTransfer.download(encodeURI(uri), filePath, function(entry) {
+                    mediaScan(filePath);
+                }, function(error) { 
+                    window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
+                    console.log("download error source: " + error.source);
+                    console.log("download error target: " + error.target);
+                    console.log("download error code: " + error.code); 
+                }, false, {});
+            }
         }
     });
     module.exports = ArticleListItemView;

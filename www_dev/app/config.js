@@ -44,7 +44,7 @@ require.config({
         "vexDialog" : [ "vex" ]
     },
     lodashLoader : {
-        // view category (ex. news, posting..).
+        // view category (ex. news, posting, ope ..).
         mode : "news"
     }
 });
