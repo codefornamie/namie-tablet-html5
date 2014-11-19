@@ -33,7 +33,7 @@ define(function(require, exports, module) {
          * 検索条件
          */
         condition : {
-            top : 100,
+            top : 1,
             orderby : ""
         },
         /**
@@ -96,6 +96,7 @@ define(function(require, exports, module) {
                     if (json && json.d) {
                         json = json.d.results;
                     }
+                    alert(JSON.stringify(json));
                     options.success(json);
                 }
 
