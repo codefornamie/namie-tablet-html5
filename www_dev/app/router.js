@@ -9,15 +9,13 @@ define(function(require, exports, module) {
     var common = require("modules/view/common/index");
     var YouTubeView = require("modules/view/top/YouTubeView");
     var NewsView = require("modules/view/news/NewsView");
-    var EventsView = require("modules/view/events/EventsView");
-    var EventsRegistedView = require("modules/view/events/EventsRegistedView");
-    var ShowEventsView = require("modules/view/events/ShowEventsView");
 
     var ScrapView = require("modules/view/scrap/ScrapView");
     var TutorialView = require("modules/view/tutorial/TutorialView");
     var BacknumberView = require("modules/view/backnumber/BacknumberView");
     var SettingsView = require("modules/view/settings/SettingsView");
 
+    var EventNewsView = require("modules/view/posting/news/NewsView");
     var TopView = require("modules/view/ope/top/TopView");
 
     // Defining the application router.
@@ -36,10 +34,7 @@ define(function(require, exports, module) {
                 } else if (app.config.basic.mode === "posting") {
                     return {
                         "#header" : new login.HeaderView(),
-                        "#global-nav" : new login.GlobalNavView(),
-                        "#menu" : new login.MenuView(),
                         "#contents" : new login.posting.LoginView(),
-                        "#footer" : new login.FooterView()
                     };
                 } else if (app.config.basic.mode === "ope") {
                     return {
@@ -108,8 +103,8 @@ define(function(require, exports, module) {
             this.commonView();
         },
         postingTop : function() {
-            this.layout.showView(new ShowEventsView());
-            this.commonView();
+            this.layout.showView(new EventNewsView());
+            this.eventCommonView();
         },
         opeTop : function() {
             this.layout.showView(new TopView());
@@ -157,6 +152,9 @@ define(function(require, exports, module) {
         commonView : function() {
             this.layout.setGlobalNav(new common.GlobalNavView());
             this.layout.setView("#menu", new common.MenuView()).render();
+        },
+        eventCommonView : function() {
+            this.layout.setHeader(new common.GlobalNavView());
         },
 
         /**
