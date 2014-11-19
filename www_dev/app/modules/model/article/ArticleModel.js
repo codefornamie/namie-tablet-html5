@@ -25,8 +25,17 @@ define(function(require, exports, module) {
          */
         parseOData : function(response, options) {
             response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt),"yyyy年MM月dd日 HH時mm分");
+            response.dispUpdatedAt = DateUtil.formatDate(new Date(response.updatedAt),"yyyy年MM月dd日 HH時mm分");
             response.dispSite = CommonUtil.sanitizing(response.site);
             response.dispTitle = CommonUtil.sanitizing(response.title);
+            response.dispPlace = CommonUtil.sanitizing(response.place);
+            if (response.startDate) {
+                if (response.startDate.length > 10) {
+                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate),"yyyy年MM月dd日 HH時mm分");
+                } else {
+                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate),"yyyy年MM月dd日");
+                }
+            }
             response.tagsArray = [];
             response.tagsLabel = "";
             // TODO 記事情報にpublishedAtが登録されるようになったら、このif文ごと削除すること｛
