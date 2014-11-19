@@ -1,3 +1,5 @@
 <article>
-    backnumber list item
+    <a href="/backnumber/<%= model.generateDateString() %>">
+        <%= model.get('createdAt') %>
+    </a>
 </article>

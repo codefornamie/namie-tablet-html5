@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var BacknumberListItemView = require("modules/view/backnumber/BacknumberListItemView");
 
     /**
      *  バックナンバーのリストのView
@@ -21,6 +22,7 @@ define(function(require, exports, module) {
          *  ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
          */
         beforeRendered : function() {
+            this.setBacknumberList();
         },
 
         /**
@@ -33,12 +35,25 @@ define(function(require, exports, module) {
          *  初期化処理
          */
         initialize : function() {
-
         },
 
         events : {
-        }
+        },
 
+        /**
+         *  バックナンバー一覧を描画する
+         */
+        setBacknumberList: function () {
+            var self = this;
+
+            this.collection.each(function (model) {
+                var backnumberListView = new BacknumberListView();
+
+                self.insertView('#backnumber-list', new BacknumberListItemView({
+                    model: model
+                }));
+            });
+        }
     });
     module.exports = BacknumberListView;
 });
