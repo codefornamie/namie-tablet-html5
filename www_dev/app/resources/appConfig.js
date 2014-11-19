@@ -5,7 +5,9 @@ define(function(require, exports, module) {
             "cellId" : "kizuna01",
             "boxName" : "data",
             "odataName" : "odata",
-            "pcsVersion" : "1.3.18"
+            "pcsVersion" : "1.3.18",
+            // view category (ex. news, posting, ope ..).
+            "mode" : "news"
         },
         "logger" : {
             "enable" : true,
