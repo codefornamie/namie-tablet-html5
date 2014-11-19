@@ -149,7 +149,7 @@ main {
     position: relative;
     top: 20px;
     left: 20px;
-    height: 50%;
+    width: 50%;
 }
 
 .header-haiku__heading {
