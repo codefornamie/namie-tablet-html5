@@ -8,6 +8,10 @@ define(function(require, exports, module) {
 
     /**
      * 記事一覧のViewクラス
+     * 
+     * @class 記事一覧のViewクラス
+     * @exports ArticleListView
+     * @constructor
      */
     var ArticleListView = TabletArticleListView.extend({
         template : require("ldsh!templates/{mode}/news/articleList"),

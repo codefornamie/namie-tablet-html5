@@ -10,6 +10,10 @@ define(function(require, exports, module) {
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラス
+     * 
+     * @class 記事一覧・詳細のメインとなる画面のViewクラス
+     * @exports NewsView
+     * @constructor
      */
     var NewsView = AbstractView.extend({
 
