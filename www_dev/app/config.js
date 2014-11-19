@@ -19,7 +19,8 @@ require.config({
         "iscroll-zoom": "../bower_components/iscroll/build/iscroll-zoom",
         "async": "../bower_components/async/lib/async",
         "vex" : "../bower_components/vex/js/vex",
-        "vexDialog" : "../bower_components/vex/js/vex.dialog"
+        "vexDialog" : "../bower_components/vex/js/vex.dialog",
+        "jsSha" : "../bower_components/jsSHA/src/sha256"
     },
 
     deps : [ "main" ],

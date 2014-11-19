@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var JsSha = require("jsSha");
     /**
      * ログイン画面のモデルクラスを作成する。
      *
@@ -45,24 +46,24 @@ define(function(require, exports, module) {
          * @param {Function} callback トークン取得成功時のコールバック
          */
         authAccountManager : function(callback) {
-            alert("authAccountManager ");
             if (!this.accountManager) {
-                alert("accountManager null");
+                console.log("account maanger undefined (not android)");
                 return;
             }
             this.accountManager.getAccountsByType(this.packageName, $.proxy(function(error, accounts) {
-                alert("onGetAccount");
+                console.log("account manager getAccountsByType method responsed ");
                 if (error) {
-                    alert('ERROR: ' + error);
+                    console.log("account manager error : " + error);
                     return;
                 } else if (!accounts || !accounts.length) {
-                    alert('This device has no accounts');
+                    console.log("this device has no accounts");
                     return;
                 }
-                //alert('#' + accounts.length + ' ACCOUNTS ON THIS DEVICE');
+                // alert('#' + accounts.length + ' ACCOUNTS ON THIS DEVICE');
                 var account = accounts[0];
-                alert('Account: ' + JSON.stringify(account));
+                console.log("account : " + JSON.stringify(account));
                 this.accountManager.getAuthToken(0, "oauth", function(dummy, token) {
+                    console.log("account manager getAuthToken responsed : " + token);
                     callback(token);
                 });
             }, this));
@@ -97,39 +98,65 @@ define(function(require, exports, module) {
          * @param {Function} onLogin 認証完了後に呼び出されるコールバック関数。
          */
         login : function(onLogin) {
+            console.log("login method in LoginModel start");
             this.onLogin = onLogin;
-
+            console.log("1");
             try {
                 var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
                 dcContext.setAsync(true);
+                console.log("2");
 
-                var tokenStr = "AA~oGWKabNT2a-CIGqrfOuTl30EMSRHmiMIfJ6aI3Mq8ifZRQqlnI2Ukz-9F6FLF694CD-obyZyCXFRR-NCziZ-iC0p7cxaw_B6UnUkO1ycleM";
-                var accessor = dcContext.withToken(tokenStr);
-
-                //var accessor = dcContext.asAccount(this.cellId, this.get("loginId"), this.get("password"));
-                // ODataコレクションへのアクセス準備（実際の認証処理）
-                var cellobj = accessor.cell();
+                // パスワードを暗号化
+                var shaPassword = "";
+                var shaObj = new JsSha(this.get("password"), "ASCII");
+                shaPassword = shaObj.getHash("SHA-256", "HEX");
+                shaPassword = shaPassword.substr(0, 32);
+                console.log("3 " + this.get("loginId") + " / " + shaPassword);
+                console.log(this.cellId);
+                // PCSアクセス
+                var accessor = dcContext.asAccount(this.cellId, this.get("loginId"), shaPassword);
+                console.log("3a");
+                console.log(accessor);
+                console.log(accessor.accessToken);
+                var cellobj = accessor.cell(this.cellId);
+                console.log("4");
                 var targetBox = cellobj.box("data");
                 app.accessor = cellobj.accessor;
                 app.box = targetBox;
+                console.log("5");
 
+                // Androidで動作している場合、AccountManagerにアカウントを登録する
                 if (this.accountManager) {
-                    alert("login accountManager aru");
-                    this.accountManager.addAccountExplicitly(this.packageName, this.get("loginId"), this.get("password"), {}, function(error, account) {
-                        alert("onAddAccount");
-                        if (error) {
-                            alert('ERROR: ' + error);
-                            return;
-                        }
-                    });
+                    console.log("5");
+                    var param = {
+                        baseUrl : this.baseUrl,
+                        cellName : this.cellId,
+                        schema : "",
+                        boxName : this.box
+                    };
+                    this.accountManager.addAccountExplicitly(this.packageName, this.get("loginId"), shaPassword, param,
+                            function(error, account) {
+                                console.log("account manager addAccountExplicitly responsed");
+                                if (error) {
+                                    var msg = "login failure : " + error;
+                                    this.onLogin(msg);
+                                    return;
+                                }
+                            });
+                } else {
+                    console.log("7");
+                    console.log("account maanger undefined (not android)");
                 }
             } catch (e) {
+                console.log("8");
+                console.log(e);
                 var message = "";
                 if (e.name === "NetworkError") {
                     message = "ネットワーク接続エラーが発生しました。";
                 } else {
                     message = "ユーザーID、または、パスワードが正しくありません。";
                 }
+                console.log("login exception : " + message);
                 this.onLogin(message);
                 return;
             }
@@ -142,21 +169,17 @@ define(function(require, exports, module) {
          * @param {String} token アクセストークン
          */
         setAccessToken : function(token) {
-            alert("setToken");
+            console.log("set access token : " + token);
+            alert(token);
             var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
-            alert("a");
             dcContext.setAsync(true);
-            alert("b");
             try {
-                alert(token);
-                var cellobj = dcContext.withToken(token).cell(this.cellId).box("data");
-                alert("c");
+                var cellobj = dcContext.withToken(token).cell(this.cellId);
                 var targetBox = cellobj.box("data");
                 app.accessor = cellobj.accessor;
                 app.box = targetBox;
-                alert("d");
             } catch (e) {
-                alert(e);
+                console.log("certificate failure : " + e);
             }
         }
     });

@@ -12,17 +12,16 @@ public class Encryption {
     public MessageDigest md = null;
 
     public static void main(String[] args) {
-    		final String algorithmName = "SHA-256";
-    		final String source = args[0];
+        final String algorithmName = "SHA-256";
+        final String source = args[0];
 
-    		Encryption encryption = new Encryption(algorithmName);
-    		String result = encryption.toHashedString(source);
-    		System.out.println(result);
-  	}
+        Encryption encryption = new Encryption(algorithmName);
+        String result = encryption.toHashedString(source);
+        System.out.println(result);
+    }
 
     /*
-     * 引数でメッセージダイジェストアルゴリズムを指定する。
-     *  MD2, MD5, SHA, SHA-256, SHA-384, SHA-512が利用可能。
+     * 引数でメッセージダイジェストアルゴリズムを指定する。 MD2, MD5, SHA, SHA-256, SHA-384, SHA-512が利用可能。
      */
     public Encryption(String algorithmName) {
         try {

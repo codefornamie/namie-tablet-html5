@@ -10,7 +10,7 @@ define(function(require, exports, module) {
     var panzoom = require("panzoom");
     var config = require("resources/appConfig");
     var ldsh = require("ldsh");
-    
+
     // var messageja = require("messageja");
 
     // グローバルに利用できるModel

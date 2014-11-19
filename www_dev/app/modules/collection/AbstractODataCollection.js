@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 
     /**
      * PCS ODataの検索操作を行うモデルの基底クラスを作成する。
-     * 
+     *
      * @class PCS ODataの検索操作を行うモデルの基底クラス
      * @exports AbstractODataCollection
      * @constructor
@@ -52,16 +52,16 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスは、本メソッドをオーバライドして、独自のパース処理を実装することができる。
          * </p>
-         * 
+         *
          * @return {Object} パース後のデータ
-         * 
+         *
          */
         parseOData : function(response, options) {
             return response;
         },
         /**
          * PCS ODataの検索処理を行う。
-         * 
+         *
          * @param {String}
          *            method メソッド
          * @param {Object}
@@ -84,6 +84,13 @@ define(function(require, exports, module) {
 
             var complete = function(res) {
                 // 取得したJSONオブジェクト
+                alert("取得成功");
+                alert(res);
+                if (res.bodyAsJson) {
+                    alert(res.bodyAsJson());
+                } else {
+                    alert("??????");
+                }
                 var json = null;
                 if (res.error) {
                     if (options.error) {
@@ -107,7 +114,7 @@ define(function(require, exports, module) {
         },
         /**
          * PCS ODataの検索処理を行う。
-         * 
+         *
          * @param {String}
          *            method メソッド
          * @param {Object}

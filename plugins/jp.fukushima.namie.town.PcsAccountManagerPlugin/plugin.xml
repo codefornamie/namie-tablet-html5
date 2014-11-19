@@ -47,6 +47,11 @@
 
         <source-file src="src/android/authenticator.xml"
             target-dir="res/xml" />
+        <source-file src="src/android/dc1-client-1.3.18.jar"
+            target-dir="libs" />
+        <source-file src="src/android/json-simple-1.1.jar"
+            target-dir="libs" />
+
         <source-file src="src/android/AccountManagerPlugin.java"
             target-dir="src/jp/fukushima/namie/town/PcsAccountManagerPlugin" />
         <source-file src="src/android/Authenticator.java"
