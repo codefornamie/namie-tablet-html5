@@ -1,8 +1,8 @@
 
-<div id="eventsPage" class="large-12 columns" role="content">
+<div id="articleRegistPage" class="large-12 columns" role="content">
     <article>
 
-        <form id="eventsRegistForm">
+        <form id="articleRegistForm">
             <div class="row">
                 <div class="large-3 columns">
                     <label class="eventColumnsTitle">記事カテゴリ</label>
@@ -77,28 +77,11 @@
                     <textArea id="articleDetail" rows="5"></textArea>
                 </div>
             </div>
-            <div class="row">
-                <div class="large-3 columns">
-                    <label class="eventColumnsTitle">画像</label>
-                </div>
-                <div class="large-9 columns end">
-                    <button type="button" id="fileInputButton">画像選択</button>
-                    <input type="file" id="eventFile"
-                        style="display: none;"
-                        accept="image/jpeg, image/gif, image/png" /> <img
-                        id="previewFile"
-                        style="display: none; padding-bottom: 10px;"></img>
-                    <button type="button" id="fileDeleteButton"
-                        style="display: none;">画像削除</button>
-                </div>
+            <div id="fileArea">
             </div>
             <div class="row">
-                <div class="large-3 columns">
-                    <label class="eventColumnsTitle">画像への一言</label>
-                </div>
-                <div class="large-9 columns end">
-                    <input id="articleFileComent"
-                        name="articleFileComent" type="text" />
+                <div class="large-9 columns right">
+                        <a href="javascript:void(0);" id="addFileForm">＋画像を追加</a>
                 </div>
             </div>
             <div class="row">
@@ -113,7 +96,7 @@
         </form>
         <div class="row">
             <div class="large-9 columns">
-                <button id="eventRegistButton" class="ladda-button"
+                <button id="articleRegistButton" class="ladda-button"
                     data-style="contract-overlay">
                     <span class="ladda-label">確認画面へ</span>
                 </button>
