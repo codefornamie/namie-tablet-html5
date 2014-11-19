@@ -146,7 +146,6 @@ main {
  */
 .header-haiku {
     color: #3c828d;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
     position: relative;
     top: 20px;
     left: 20px;
@@ -184,9 +183,7 @@ main {
     position: absolute;
     height: 50px;
     line-height: 50px;
-    border-radius: 25px;
     color: #485a5d;
-    overflow: hidden;
     font-size: 0;
 }
 
@@ -205,9 +202,9 @@ main {
     background-color: white;
     padding: 0 16px;
     font-size: 18px;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
     display: inline-block;
     vertical-align: middle;
+    border-radius: 25px 0 0 25px;
 }
 
 .header-weather__state {
@@ -217,6 +214,7 @@ main {
     padding: 0 16px;
     display: inline-block;
     vertical-align: middle;
+    border-radius: 0 25px 25px 0;
 }
 
 /**
@@ -483,7 +481,6 @@ main {
 
 .sidebar__header {
     margin: 15px 0 0 0;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
 }
 
 .sidebar__list {
@@ -509,7 +506,6 @@ main {
 
 .side-action__header {
     margin: 0 0 15px 0;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
 }
 
 .side-action__label {
@@ -519,7 +515,6 @@ main {
     padding: 0 5px;
     margin-right: 15px;
     font-size: 0.9rem;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
 }
 
 .side-action__description {
@@ -556,7 +551,6 @@ main {
     padding: 5px;
     background: white;
     border-radius: 4px;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
     width: 100%;
 }
 
@@ -663,7 +657,6 @@ main {
 
 .post-header__title {
     font-size: 2.3rem;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
     font-weight: bold;
     margin: 24px 0;
     line-height: 1.4;
