@@ -31,6 +31,13 @@ define(function(require, exports, module) {
             this.loadArticle();
         },
         /**
+         * このViewのイベントを定義する。
+         */
+        events : {
+            "click [data-article-register-button]" : "onClickArticleRegisterButton",
+            "click [data-report-register-button]" : "onClickReportRegisterButton",
+        },
+        /**
          *  articleを読み込む
          */
         loadArticle: function () {
@@ -67,6 +74,17 @@ define(function(require, exports, module) {
             }
 
             this.hideLoading();
+        },
+        /**
+         *  新規記事投稿ボタン押下時に呼び出されるコールバック関数
+         */
+        onClickArticleRegisterButton: function () {
+            app.router.go("articleRegist");
+        },
+        /**
+         *  レポート投稿ボタン押下時に呼び出されるコールバック関数
+         */
+        onClickReportRegisterButton: function () {
         },
 
     });

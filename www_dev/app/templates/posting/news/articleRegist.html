@@ -1,0 +1,125 @@
+
+<div id="eventsPage" class="large-12 columns" role="content">
+    <article>
+
+        <form id="eventsRegistForm">
+            <div class="row">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">記事カテゴリ</label>
+                </div>
+                <div class="large-9 columns end">
+                    <select id="articleCategory" name="articleCategory">
+                        <option value="event">イベント</option>
+                        <option value="article">記事</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">タイトル</label>
+                </div>
+                <div class="large-9 columns end">
+                    <input id="articleTitle" name="articleTitle"
+                        type="text" class="required" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">日時</label>
+                </div>
+                <div class="large-9 columns end">
+                    <div class="row">
+                        <div class="large-2 columns">
+                            <label class="eventColumnsTitle">日付</label>
+                        </div>
+                        <div class="large-10 columns">
+                            <div class="row">
+                                <input type="checkbox" />日程が複数の日に渡る
+                            </div>
+                            <div class="row">
+                                <input id="articleDate1"
+                                    name="articleDate1" type="date"
+                                    class="required" /> <span>～<input
+                                    id="articleDate2"
+                                    name="articleDate2" type="date" /></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="large-2 columns">
+                            <label class="eventColumnsTitle">時間</label>
+                        </div>
+                        <div class="large-10 columns">
+                            <input id="articleTime1" name="articleTime1"
+                                type="time" />～ <input id="articleTime2"
+                                name="articleTime2" type="time" /> <span><input
+                                id="articleTime3" name="articleTime3"
+                                type="time" />～ <input id="articleTime4"
+                                name="articleTime4" type="time" /></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">場所</label>
+                </div>
+                <div class="large-9 columns end">
+                    <input id="articlePlace" name="articlePlace"
+                        type="text" class="required" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">内容</label>
+                </div>
+                <div class="large-9 columns end">
+                    <textArea id="articleDetail" rows="5"></textArea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">画像</label>
+                </div>
+                <div class="large-9 columns end">
+                    <button type="button" id="fileInputButton">画像選択</button>
+                    <input type="file" id="eventFile"
+                        style="display: none;"
+                        accept="image/jpeg, image/gif, image/png" /> <img
+                        id="previewFile"
+                        style="display: none; padding-bottom: 10px;"></img>
+                    <button type="button" id="fileDeleteButton"
+                        style="display: none;">画像削除</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">画像への一言</label>
+                </div>
+                <div class="large-9 columns end">
+                    <input id="articleFileComent"
+                        name="articleFileComent" type="text" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">主催者連絡先</label>
+                </div>
+                <div class="large-9 columns end">
+                    <textArea id="articleContact" name="articleContact"
+                        rows="5"></textArea>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="large-9 columns">
+                <button id="eventRegistButton" class="ladda-button"
+                    data-style="contract-overlay">
+                    <span class="ladda-label">確認画面へ</span>
+                </button>
+                <!--       <button id="eventRegistButton">登録</button> -->
+            </div>
+        </div>
+    </article>
+    <hr />
+</div>
