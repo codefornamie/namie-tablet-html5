@@ -3,7 +3,9 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var foundation_calendar = require("foundation-calendar");
+    var foundationCalendar = require("foundation-calendar");
+    var jquerySortable = require("jquery-sortable");
+
     /**
      * 運用管理アプリのトップ画面を表示するためのViewクラスを作成する。
      * 
@@ -21,6 +23,7 @@ define(function(require, exports, module) {
         afterRendered : function() {
             var calendar = this.$el.find("[data-date]");
             calendar.fcdp({fixed: true, dateSelector: true});
+            $('.sortable').sortable();
         },
     });
 
