@@ -23,7 +23,8 @@ require.config({
         "datejs": "../lib/foundation-calendar/js/date",
         "foundation-calendar": "../lib/foundation-calendar/foundation_calendar",
         "date-helpers": "../lib/foundation-calendar/helpers/date-helpers",
-        "string-helpers": "../lib/foundation-calendar/helpers/string-helpers"
+        "string-helpers": "../lib/foundation-calendar/helpers/string-helpers",
+        "jquery-sortable": "../bower_components/html5sortable/jquery.sortable"
     },
 
     deps : [ "main" ],
@@ -47,6 +48,7 @@ require.config({
         "vex" : [ "jquery" ],
         "vexDialog" : [ "vex" ],
         "date-helpers": [ "datejs"],
-        "foundation-calendar": ["date-helpers", "string-helpers", "foundation"]
+        "foundation-calendar": ["date-helpers", "string-helpers", "foundation"],
+        "jquery-sortable" : [ "jquery" ]
     }
 });

@@ -1,12 +1,80 @@
+<style>
+/**
+ *  カレンダーが崩れるため、仮修正でheaderをオーバーライドしている。
+ */
+.header {
+    margin: 0px 0px 0;
+}
+</style>
 <aside id='contents__secondary'
-    class="contents__secondary columns small-3">
+    class="contents__secondary columns large-3">
     <input type="text" data-date data-fixed />
+    <div>
+        <input id="eventCalendar" type="text" data-date-time />
+    </div>
 
     <div class="sidebar">
         <ul id='sidebar__list' class='sidebar__list'></ul>
     </div>
 </aside>
 
-<div id='contents__primary' class="contents__primary columns small-9" role='content'>
-    <section id="article-list" class='iscroll-container'></section>
+<div id='contents__primary' class="contents__primary columns large-9"
+    role='content'>
+    <section>
+    <div class="panel">
+        <div class="clearfix">
+            <h3 class="left">配信予定の記事</h3>
+            <button class="button right">新規記事投稿</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th width='5%'>配信</th>
+                    <th width='5%'>おすすめ</th>
+                    <th width='60%'>記事タイトル</th>
+                    <th width='20%'>タグ</th>
+                    <th width='10%'>編集</th>
+                </tr>
+            </thead>
+            <tbody class="sortable">
+                <tr>
+                    <td><input type="checkbox" checked="checked"></td>
+                    <td><input type="checkbox"></td>
+                    <td>記事のタイトルが入ります１</td>
+                    <td><span class='radius label'>県内ニュース</span> <span
+                        class='radius label'>浪江町</span></td>
+                    <td><button class="button tiny radius">編集</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" checked="checked"></td>
+                    <td><input type="checkbox"></td>
+                    <td>記事のタイトルが入ります２</td>
+                    <td><span class='radius label'>県外ニュース</span> <span
+                        class='radius label'>東京</span> <span
+                        class='radius label'>大阪</span></td>
+                    <td><button class="button tiny radius">編集</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" checked="checked"></td>
+                    <td><input type="checkbox"></td>
+                    <td>記事のタイトルが入ります３</td>
+                    <td><span class='radius label'>youtube</span>
+                        <span class='radius label'>浪江町</span></td>
+                    <td><button class="button tiny radius">編集</button></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" checked="checked"></td>
+                    <td><input type="checkbox"></td>
+                    <td>記事のタイトルが入ります４</td>
+                    <td><span class='radius label'>イベント</span> <span
+                        class='radius label'>浪江町</span></td>
+                    <td><button class="button tiny radius">編集</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            <button class="button">プレビュー表示</button>
+        </div>
+        </div>
+    </section>
 </div>

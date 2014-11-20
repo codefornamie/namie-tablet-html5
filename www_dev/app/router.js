@@ -39,8 +39,6 @@ define(function(require, exports, module) {
                 } else if (app.config.basic.mode === "ope") {
                     return {
                         "#header" : new login.HeaderView(),
-                        "#global-nav" : new login.GlobalNavView(),
-                        "#menu" : new login.MenuView(),
                         "#contents" : new login.ope.LoginView(),
                         "#footer" : new login.FooterView()
                     };
@@ -108,7 +106,8 @@ define(function(require, exports, module) {
         },
         opeTop : function() {
             this.layout.showView(new TopView());
-            this.commonView();
+            this.layout.setHeader(new common.HeaderView());
+            this.layout.setFooter(new common.FooterView());
         },
         scrap : function() {
             console.log('[route] scrap');
