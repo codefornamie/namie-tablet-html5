@@ -205,7 +205,7 @@ define(function(require, exports, module) {
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            return {};
+            return response;
         },
         /**
          * PCSへの永続化データを生成する。
@@ -218,10 +218,15 @@ define(function(require, exports, module) {
                 saveData.__id = this.get("__id");
             }
             saveData.createdAt = this.get("createdAt");
-            if (!saveData.created) {
+            if (!saveData.createdAt) {
                 saveData.createdAt = new Date().toISOString();
             }
             saveData.updatedAt = new Date().toISOString();
+            if (this.get("isDelete")) {
+                saveData.deletedAt = new Date().toISOString();
+            } else {
+                saveData.deletedAt = null;
+            }
 
             this.makeSaveData(saveData);
 

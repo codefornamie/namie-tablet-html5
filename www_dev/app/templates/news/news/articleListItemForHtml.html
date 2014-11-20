@@ -1,0 +1,69 @@
+<article class='post' id="<%= model.get('__id') %>">
+    <section class='post__body'>
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="post-header">
+                    <div class="post-header__site">
+                        <div class="post-label">
+                            <div class="post-label__site left">
+                                <%= model.get("dispSite") %>
+                            </div>
+
+                            <div class="post-recommend right">
+                                <div class="post-recommend__amount">
+                                    <%= model.recommendAmount %>
+                                </div>
+
+                                おすすめ
+                            </div>
+                        </div>
+
+                        <div class="tagListArea"></div>
+                    </div>
+
+                    <div class="post-header__title">
+                        <%= model.get("dispTitle") %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%= model.get("rawHTML") %>
+        <%= model.get("rawHTML2") %>
+        <%= model.get("rawHTML3") %>
+    </section>
+
+    <section class='post__footer'>
+        <div class="post-action">
+            <button data-recommend-register-button type="button" class="button button--recommend">
+                おすすめ
+            </button>
+
+            <button data-recommend-delete-button type="button" class="button button--recommend">
+                おすすめ取消
+            </button>
+
+            <button data-favorite-register-button type="button" class="button button--scrap">
+                切り抜き
+            </button>
+
+            <button data-favorite-delete-button type="button" class="button button--scrap">
+                切り抜き削除
+            </button>
+        </div>
+
+        <div class="row tagInputArea collapse">
+            <div class="large-2 columns tagColumnsLabel">
+                <span>タグ追加</span>
+            </div>
+            <div class="large-5 columns">
+                <input id="tagInput" type="text">
+            </div>
+            <div class="large-1 columns end" style="font-size: small;">
+                <button id="tagAddButton" type="button" style="font-size: small;" class="button postfix">追加</button>
+            </div>
+        </div>
+
+    </section>
+    
+</article>

@@ -8,7 +8,7 @@ define(function(require, exports, module) {
      * タグ一覧アイテムのViewクラス
      */
     var TagListItemView = AbstractView.extend({
-        template : require("ldsh!/app/templates/news/tagListItem"),
+        template : require("ldsh!templates/{mode}/news/tagListItem"),
         events: {
         },
 

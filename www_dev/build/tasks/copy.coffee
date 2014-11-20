@@ -6,5 +6,7 @@ module.exports = ->
     release:
       files: [
         {src: "bower_components/**", dest: "../www/"}
+        {src: "lib/**", dest: "../www/"}
         {src: "app/img/**", dest: "../www/"}
+        {src: "app/styles/**", dest: "../www/"}
       ]

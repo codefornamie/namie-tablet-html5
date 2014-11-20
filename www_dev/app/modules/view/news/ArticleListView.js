@@ -15,7 +15,7 @@ define(function(require, exports, module) {
      * 記事一覧のViewクラス
      */
     var ArticleListView = AbstractView.extend({
-        template : require("ldsh!/app/templates/news/articleList"),
+        template : require("ldsh!templates/{mode}/news/articleList"),
         
         /**
          * 表示中の記事のID
@@ -186,26 +186,29 @@ define(function(require, exports, module) {
             var model = this.collection.at(currentPage);
             
             this.collection.each(function (model) {
-                var template = require("ldsh!/app/templates/news/articleListItem");
+                var template = require("ldsh!templates/{mode}/news/articleListItem");
                 // 記事一覧に追加するViewクラス。
                 // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
                 var ListItemView;
                 
-                switch (model.get("modelType")) {
-                case "youtube":
-                    template = require("ldsh!/app/templates/news/youTubeListItem");
+                switch (model.get("type")) {
+                case "2":
+                    template = require("ldsh!templates/{mode}/news/youTubeListItem");
                     ListItemView = YouTubeListItemView;
                     break;
-                case "event":
-                    template = require("ldsh!/app/templates/news/eventsListItem");
-                    ListItemView = ArticleListItemView;
-                    break;
                 default:
-                    template = require("ldsh!/app/templates/news/articleListItem");
-                    if (model.get("rawHTML")) {
-                        template = require("ldsh!/app/templates/news/articleListItemForHtml");
-                    }
+                    template = require("ldsh!templates/{mode}/news/articleListItem");
                     ListItemView = ArticleListItemView;
+                    if (model.get("modelType") === "event") {
+                        template = require("ldsh!templates/{mode}/news/eventsListItem");
+                    } 
+                    if (model.get("rawHTML")) {
+                        template = require("ldsh!templates/{mode}/news/articleListItemForHtml");
+                    } else if (model.get("modelType") === "youtube") {
+                        // TODO articleにtypeが全て登録されたら
+                        template = require("ldsh!templates/{mode}/news/youTubeListItem");
+                        ListItemView = YouTubeListItemView;
+                    }
                     break;
                 }
 
@@ -218,16 +221,16 @@ define(function(require, exports, module) {
             /*
             var animationDeley = 0;
             this.collection.each($.proxy(function(model) {
-                var template = require("ldsh!/app/templates/news/articleListItem");
+                var template = require("ldsh!templates/{mode}/news/articleListItem");
                 switch (model.get("modelType")) {
                     case "youtube":
-                        template = require("ldsh!/app/templates/news/articleListItem");
+                        template = require("ldsh!templates/{mode}/news/articleListItem");
                         break;
                     case "event":
-                        template = require("ldsh!/app/templates/news/eventsListItem");
+                        template = require("ldsh!templates/{mode}/news/eventsListItem");
                         break;
                     default:
-                        template = require("ldsh!/app/templates/news/articleListItem");
+                        template = require("ldsh!templates/{mode}/news/articleListItem");
                         break;
                 }
                 this.insertView("#articleList", new ArticleListItemView({

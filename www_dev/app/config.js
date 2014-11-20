@@ -3,7 +3,7 @@ require.config({
         "dc1-client" : "../lib/dao/dc1-client",
         "underscore" : "../bower_components/lodash/dist/lodash.underscore",
         "lodash" : "../bower_components/lodash/dist/lodash",
-        "ldsh" : "../bower_components/lodash-template-loader/loader",
+        "ldsh" : "../lib/lodash-template-loader/loader",
         "jquery" : "../bower_components/jquery/dist/jquery",
         "backbone" : "../bower_components/backbone/backbone",
         "layoutmanager" : "../bower_components/layoutmanager/backbone.layoutmanager",
@@ -19,7 +19,14 @@ require.config({
         "iscroll-zoom": "../bower_components/iscroll/build/iscroll-zoom",
         "async": "../bower_components/async/lib/async",
         "vex" : "../bower_components/vex/js/vex",
-        "vexDialog" : "../bower_components/vex/js/vex.dialog"
+        "vexDialog" : "../bower_components/vex/js/vex.dialog",
+        "jsSha" : "../bower_components/jsSHA/src/sha256",
+        "datejs": "../lib/foundation-calendar/js/date",
+        "foundation-calendar": "../lib/foundation-calendar/foundation_calendar",
+        "date-helpers": "../lib/foundation-calendar/helpers/date-helpers",
+        "string-helpers": "../lib/foundation-calendar/helpers/string-helpers",
+        "jquery-sortable": "../bower_components/html5sortable/jquery.sortable",
+        "galocalstorage" : "../bower_components/GALocalStorage/GALocalStorage"
     },
 
     deps : [ "main" ],
@@ -41,6 +48,9 @@ require.config({
         "blockui" : [ "jquery" ],
         "panzoom" : [ "jquery" ],
         "vex" : [ "jquery" ],
-        "vexDialog" : [ "vex" ]
+        "vexDialog" : [ "vex" ],
+        "date-helpers": [ "datejs"],
+        "foundation-calendar": ["date-helpers", "string-helpers", "foundation"],
+        "jquery-sortable" : [ "jquery" ]
     }
 });

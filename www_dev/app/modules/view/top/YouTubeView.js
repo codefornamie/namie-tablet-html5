@@ -7,7 +7,7 @@ define(function(require, exports, module) {
     var YouTubeListView = require("modules/view/top/YouTubeListView");
 
     var YouTubeView = AbstractView.extend({
-        template : require("ldsh!/app/templates/top/youTube"),
+        template : require("ldsh!templates/{mode}/top/youTube"),
         /**
          * youtubePlayer
          */

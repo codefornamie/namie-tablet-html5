@@ -20,7 +20,7 @@ define(function(require, exports, module) {
         /**
          * このViewのテンプレートファイパス
          */
-        template : require("ldsh!/app/templates/news/feedListItem"),
+        template : require("ldsh!templates/{mode}/news/feedListItem"),
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。

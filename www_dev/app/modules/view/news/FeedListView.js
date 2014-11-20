@@ -10,7 +10,7 @@ define(function(require, exports, module) {
      * 記事一覧(メニュー用)のViewクラス
      */
     var FeedListView = AbstractView.extend({
-        template : require("ldsh!/app/templates/news/feedList"),
+        template : require("ldsh!templates/{mode}/news/feedList"),
         events: {
             "click .feedListItem" : "onClickFeedListItem"
         },
@@ -45,13 +45,16 @@ define(function(require, exports, module) {
         },
         /**
          * 記事リストアイテムをクリックされたときのコールバック関数
-         *  
+         *
          *  @param {Event} ev
          */
         onClickFeedListItem : function(ev) {
             // クリックされたフィードに対応する記事のスクロール位置取得
             var articleId = $(ev.currentTarget).attr("data-article-id");
-            
+
+            app.ga.trackEvent("ニュース", "記事参照", articleId);
+
+
             app.trigger('scrollToArticle', {
                 articleId: articleId
             });
