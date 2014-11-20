@@ -506,21 +506,49 @@ main {
     }
 
 .contents__secondary {
-    padding: 15px;
+    padding: 0;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     overflow: auto;
-    background: #f2eaca;
+}
+
+.contents__secondary::before {
+    content: '';
+    display: block;
+    background-image: url(../../app/img/img-side-menu-top.png);
+    background-size: 307px;
+    height: 3px;
+    background-position: -1px 0;
+}
+
+.contents__secondary::after {
+    content: '';
+    display: block;
+    background-image: url(../../app/img/img-side-menu-bottom.png);
+    background-size: 100%;
+    height: 4px;
+    margin-bottom: 20px;
 }
 
 .contents__secondary > div {
     position: relative;
+    background-image: url(../../app/img/img-side-menu-middle.png);
+    background-size: 100%;
+    overflow: hidden;
 }
 
 /**
  *  sidebar
  */
 .sidebar {
-    border-top: 3px solid #ddd1a5;
+    padding: 0 15px 15px;
+}
+
+.sidebar::before {
+    content: '';
+    display: block;
+    background-image: url(../../app/img/img-line.png);
+    background-size: 100%;
+    height: 3px;
 }
 
 .sidebar__header {
@@ -540,6 +568,7 @@ main {
 .side-action {
     width: 100%;
     z-index: 2;
+    padding: 15px 15px 0;
 }
 
 .side-action__content {
@@ -634,9 +663,10 @@ main {
 .feed-item__label .img {
     display: block;
     width: 80px;
-    height: 80px;
+    height: 70px;
 
     background: #db748c;
+    background-image: url(../../app/img/img-feed-label-pink.png);
     border-radius: 2px;
 }
 
