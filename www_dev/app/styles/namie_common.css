@@ -649,9 +649,9 @@ main {
 }
 
 /**
- *  feed-item
+ *  feed-label
  */
-.feed-item__label {
+.feed-label {
     display: table-cell;
     vertical-align: middle;
     padding: 0;
@@ -660,14 +660,33 @@ main {
     min-width: 80px;
 }
 
-.feed-item__label .img {
-    display: block;
+.feed-label .img {
+    display: table;
     width: 80px;
     height: 70px;
+    background-size: 100%;
+}
 
-    background: #db748c;
+.feed-label.feed-label--pink .img {
     background-image: url(../../app/img/img-feed-label-pink.png);
-    border-radius: 2px;
+}
+
+.feed-label.feed-label--green .img {
+    background-image: url(../../app/img/img-feed-label-green.png);
+}
+
+.feed-label.feed-label--pink .img {
+    background-image: url(../../app/img/img-feed-label-pink.png);
+}
+
+.feed-label__text {
+    display: table-cell;
+    vertical-align: middle;
+    color: white;
+    padding: 4px;
+    text-align: center;
+    letter-spacing: 0;
+    font-size: 14px;
 }
 
 .feed-item__body {

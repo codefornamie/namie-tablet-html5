@@ -1,12 +1,11 @@
 <li data-article-id="<%= model.get('__id') %>" class="feedListItem feed-item">
     <div class="feed-cell feed-cell--label">
-        <div class="feed-item__label">
-            <!--
-            <span>
-                <%= model.get("dispSite") %>
-            </span>
-            -->
-            <div class='img'></div>
+        <div class="feed-label feed-label--pink">
+            <div class='img'>
+                <span class='feed-label__text'>
+                    <%= model.get("dispSite") %>
+                </span>
+            </div>
         </div>
     </div>
 
