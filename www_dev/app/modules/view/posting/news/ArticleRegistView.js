@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var DateUtil = require("modules/util/DateUtil");
 
     /**
      * 記事新規登録画面のViewクラス
@@ -30,6 +31,8 @@ define(function(require, exports, module) {
 
         afterRendered : function() {
             this.chageMultiDateCheckbox();
+            var tomorrow = DateUtil.addDay(new Date(),1);
+            $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
         },
 
         initialize : function() {

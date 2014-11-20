@@ -46,6 +46,7 @@ define(function(require, exports, module) {
                 $(".contents-wrapper").css("padding-top","55px");
             } else {
                 $(".eventGlobal-nav").show();
+                $("#headerTitle").text("記事入力");
                 $(".contents-wrapper").css("padding-top","144px");
             }
         },
