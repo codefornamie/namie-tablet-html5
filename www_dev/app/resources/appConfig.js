@@ -14,6 +14,9 @@ define(function(require, exports, module) {
             "threshold" : "DEBUG",
             "patternLayout" : "%d{yyyy/MM/dd HH:mm:ss,SSS} %c [%p] %m{1}",
             "useConsoleLog" : true
+        },
+        "googleAnalytics" : {
+            "trackingId" : "UA-56712876-2"
         }
     };
 });

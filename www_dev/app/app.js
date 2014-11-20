@@ -9,8 +9,7 @@ define(function(require, exports, module) {
     var blockui = require("blockui");
     var panzoom = require("panzoom");
     var config = require("resources/appConfig");
-
-    // var messageja = require("messageja");
+    var galocalstorage = require("galocalstorage");
 
     // グローバルに利用できるModel
     var app = module.exports = new Backbone.Model();
@@ -19,4 +18,8 @@ define(function(require, exports, module) {
     app.root = "/";
     // アプリの設定情報を保持
     app.config = config;
+
+    // Google Analyticsの初期化
+    app.ga = require("modules/util/AnalyticsUtil");
+    app.ga.initialize(app);
 });

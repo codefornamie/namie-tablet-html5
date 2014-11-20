@@ -85,6 +85,7 @@ define(function(require, exports, module) {
          * ビュー初期化
          */
         initialize : function() {
+            app.ga.trackPageView("/LoginView", "ログイン");
             this.model = new LoginModel();
         },
 
@@ -94,6 +95,8 @@ define(function(require, exports, module) {
          * @memberOf LoginView
          */
         onClickLoginButton : function() {
+            app.ga.trackEvent("ニュース", "ログイン");
+
             var loginId = $("#loginId").val();
             var password = $("#password").val();
 

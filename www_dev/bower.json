@@ -24,6 +24,7 @@
     "vex": "~2.2.1",
     "Font-Awesome": "~4.2.0",
     "jsSHA": "~1.5.0",
-    "html5sortable": "*"
+    "html5sortable": "*",
+    "GALocalStorage": "https://github.com/ggendre/GALocalStorage.git"
   }
 }
