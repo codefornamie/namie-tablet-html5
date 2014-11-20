@@ -45,6 +45,21 @@ define(function(require, exports, module) {
         },
         
         /**
+         *  戻るボタンが押されたら呼ばれる
+         */
+        onClickBackHome: function (ev) {
+            if($("#articleRegistConfirmWrapperPage").children().size()){
+                ev.preventDefault();
+                $("#articleRegistConfirmWrapperPage").children().remove();
+                $("#articleRegistPage").show();
+                $("#snap-content").scrollTop(0);
+            }else{
+                ev.preventDefault();
+                app.router.back();
+            }
+        },
+        
+        /**
          *  今日の新聞に戻るボタンは
          *  topでは表示しない
          */
@@ -52,6 +67,16 @@ define(function(require, exports, module) {
             if (Backbone.history.fragment == 'posting-top') {
                 $(".eventGlobal-nav").hide();
                 $(".contents-wrapper").css("padding-top","55px");
+            } else if(Backbone.history.fragment == 'articleRegist'){
+                if(!$("#articleRegistConfirmWrapperPage").children().size()){
+                    $(".eventGlobal-nav").show();
+                    $("#headerTitle").text("記事入力");
+                    $(".contents-wrapper").css("padding-top","144px");
+                } else {
+                    $(".eventGlobal-nav").show();
+                    $("#headerTitle").text("記事確認");
+                    $(".contents-wrapper").css("padding-top","144px");
+                }
             } else {
                 $(".eventGlobal-nav").show();
                 $("#headerTitle").text(this.headerTitle[Backbone.history.fragment]);
