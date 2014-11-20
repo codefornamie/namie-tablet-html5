@@ -37,30 +37,48 @@ define(function(require, exports, module) {
          * アカウントマネージャのチェック完了時のハンドラ。
          * @param {String} res アカウントマネージャからレスポンス
          */
-        onAuthSuccess : function(res) {
-            if (!res) {
-                // ログイン画面を表示
+        onAuthSuccess : function(type, res) {
+            if (type === "showLoginView") {
+                //
+                // ログイン画面を表示する必要がある場合
+                //
                 $("#main").css("display","block");
                 return;
-            }
-            var ar = res.split(":");
-            if (ar[0] === "msg") {
-                if ((ar[1]) && (ar[1] === "401")) {
-                    alert("認証に失敗しました。正しいログインIDまたはパスワードを入力してください。");
-                    $("#main").css("display","block"); // ログイン画面を表示
-                    return;
-                } else {
-                    alert("通信に失敗しました。電波状態を見直してください。");
-                    // 画面に何も表示しない
-                    return;
+            } else if (type === "skipLoginView") {
+                //
+                // AccountManagerに登録されたID/PWで認証し、ログイン画面をスキップする場合
+                //
+                this.model.login($.proxy(this.onLogin, this));
+                return;
+            } else if (type === "error") {
+                //
+                // エラーが発生した場合
+                // 「msg:401」の場合、認証失敗、ログイン画面表示
+                //  上記以外はログイン画面を表示せずにエラーメッセージ表示のみ
+                //
+                var ar = res.split(":");
+                if (ar[0] === "msg") {
+                    if ((ar[1]) && (ar[1] === "401")) {
+                        alert("認証に失敗しました。正しいログインIDまたはパスワードを入力してください。");
+                        $("#main").css("display","block"); // ログイン画面を表示
+                        return;
+                    }
                 }
-            }
-            if (res) {
+                alert("通信に失敗しました。電波状態を見直してください。(" + ar[1] + ")");
+                return;
+            } else if (type === "token") {
+                //
+                // AccountManagerからトークンが取得できた場合
+                //
                 this.model.setAccessToken(res);
                 this.model.login($.proxy(this.onLogin, this));
                 return;
+            } else {
+                //
+                // 上記以外の場合
+                //
+                $("#main").css("display","block");
             }
-            $("#main").css("display","block");
         },
 
         /**

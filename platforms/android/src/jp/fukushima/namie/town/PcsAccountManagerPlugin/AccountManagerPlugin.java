@@ -231,15 +231,21 @@ public class AccountManagerPlugin extends CordovaPlugin {
                 AccountManagerFuture<Bundle> future = manager.getAuthToken(account, args.getString(1), options,
                                 true/* args.getBoolean(3) */, null, null);
                 try {
-                    JSONObject result = new JSONObject();
-                    result.put("value", future.getResult().getString(AccountManager.KEY_AUTHTOKEN));
-                    callbackContext.success(result);
+                    Bundle ret = future.getResult();
+                    String errorCode = ret.getString(AccountManager.KEY_ERROR_CODE);
+                    if (errorCode != null) {
+                        callbackContext.error("msg:" + errorCode);
+                    } else {
+                        JSONObject result = new JSONObject();
+                        result.put("value", ret.getString(AccountManager.KEY_AUTHTOKEN));
+                        callbackContext.success(result);
+                    }
                 } catch (OperationCanceledException e) {
-                    callbackContext.error("Operation canceled: " + e.getLocalizedMessage());
+                    callbackContext.error(e.getLocalizedMessage());
                 } catch (AuthenticatorException e) {
-                    callbackContext.error("Authenticator error: " + e.getLocalizedMessage());
+                    callbackContext.error(e.getLocalizedMessage());
                 } catch (IOException e) {
-                    callbackContext.error("IO error: " + e.getLocalizedMessage());
+                    callbackContext.error(e.getLocalizedMessage());
                 }
 
                 return true;

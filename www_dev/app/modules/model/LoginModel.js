@@ -21,6 +21,8 @@ define(function(require, exports, module) {
         loginId : null,
         /** パスワード */
         password : null,
+        /** 暗号化済みパスワード */
+        encryptionPassword : null,
         /** ログイン完了後に呼び出されるコールバック関数 */
         onLogin : null,
         /** baseurl */
@@ -60,7 +62,7 @@ define(function(require, exports, module) {
             }
             if (!this.accountManager) {
                 console.log("account maanger undefined (not android)");
-                callback("");
+                callback("showLoginView", "");
                 return;
             }
             //alert("アカウントマネージャ認証開始");
@@ -69,20 +71,37 @@ define(function(require, exports, module) {
                 console.log("account manager getAccountsByType method responsed ");
                 if (error) {
                     console.log("account manager error : " + error);
-                    callback("");
+                    callback("showLoginView", "");
                     return;
                 } else if (!accounts || !accounts.length) {
                     console.log("this device has no accounts");
-                    callback("");
+                    callback("showLoginView", "");
                     return;
                 }
                 var account = accounts[0];
                 this.set("loginId", account.name);
-                this.accountManager.getAuthToken(0, "oauth", function(dummy, token) {
+                /*
+                this.accountManager.getPassword(account, $.proxy(function(error, password) {
+                    if (!error) {
+                        this.set("encryptionPassword", password);
+                        alert(password);
+                        callback("skipLoginView", "");
+                    } else {
+                        callback("showLoginView", "");
+                    }
+                }, this));
+                */
+
+                this.accountManager.getAuthToken(0, "oauth", function(error, token) {
                     //alert("トークン取得成功 : " + token);
                     console.log("account manager getAuthToken responsed : " + token);
-                    callback(token);
+                    if (error) {
+                        callback("error", error);
+                    } else {
+                        callback("token", token);
+                    }
                 });
+
             }, this));
         },
 
@@ -189,12 +208,16 @@ define(function(require, exports, module) {
                 if (this.accessToken) {
                     this.certificationWithToken();
                 } else {
-                    // パスワードを暗号化
-                    var shaPassword = "";
-                    var shaObj = new JsSha(this.get("password"), "ASCII");
-                    shaPassword = shaObj.getHash("SHA-256", "HEX");
                     var id = this.get("loginId");
-                    var pw = shaPassword.substr(0, 32);
+                    var pw = this.get("encryptionPassword");
+                    if (!pw) {
+                        // パスワードを暗号化
+                        var shaPassword = "";
+                        var shaObj = new JsSha(this.get("password"), "ASCII");
+                        shaPassword = shaObj.getHash("SHA-256", "HEX");
+                        pw = shaPassword.substr(0, 32);
+                    }
+
                     this.certificationWithAccount(id, pw);
                     this.registAccountManager(id, pw);
                 }
