@@ -7,7 +7,7 @@ define(function(require, exports, module) {
             "odataName" : "odata",
             "pcsVersion" : "1.3.18",
             // view category (ex. news, posting, ope ..).
-            "mode" : "ope"
+            "mode" : "news"
         },
         "logger" : {
             "enable" : true,
