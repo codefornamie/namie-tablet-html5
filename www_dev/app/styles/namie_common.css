@@ -135,6 +135,12 @@ main {
 
 .header nav {
 }
+
+.opeHeader nav {
+    height: 100%;
+    line-height: 20px;
+    overflow: hidden;
+}
 .eventHeader nav {
     height: 100%;
     line-height: 20px;
