@@ -39,14 +39,21 @@ define(function(require, exports, module) {
          */
         onAuthSuccess : function(res) {
             if (!res) {
-                alert("通信に失敗しました。電波状態を見直してください。");
+                // ログイン画面を表示
+                $("#main").css("display","block");
                 return;
             }
             var ar = res.split(":");
             if (ar[0] === "msg") {
-                alert(ar[1]);
-                $("#main").css("display","block");
-                return;
+                if ((ar[1]) && (ar[1] === "401")) {
+                    alert("認証に失敗しました。正しいログインIDまたはパスワードを入力してください。");
+                    $("#main").css("display","block"); // ログイン画面を表示
+                    return;
+                } else {
+                    alert("通信に失敗しました。電波状態を見直してください。");
+                    // 画面に何も表示しない
+                    return;
+                }
             }
             if (res) {
                 this.model.setAccessToken(res);

@@ -66,12 +66,15 @@ public class Authenticator extends AbstractAccountAuthenticator {
                 Accessor ac = dc.getAccessorWithAccount(cellName, account.name, password);
                 Cell cell = ac.cell();
                 authToken = ac.getAccessToken();
-            } catch (DaoException e) {
+            } catch (DaoException ex) {
+                String message = "msg:" + ex.getCode();
                 final Bundle result = new Bundle();
-                result.putString(AccountManager.KEY_ERROR_MESSAGE, e.getMessage());
+                result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+                result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+                result.putString(AccountManager.KEY_AUTHTOKEN, message);
                 return result;
-            }
-            ;
+              }
+
             if (!TextUtils.isEmpty(authToken)) {
                 final Bundle result = new Bundle();
                 result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);

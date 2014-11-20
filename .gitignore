@@ -21,3 +21,4 @@ plugins/*/.fetch.json
 # vim
 .*.sw*
 www_dev/mode.json
+.DS_Store
