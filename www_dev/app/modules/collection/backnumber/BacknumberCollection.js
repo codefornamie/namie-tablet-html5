@@ -20,7 +20,7 @@ define(function(require, exports, module) {
          */
         initialize: function () {
             // [TODO]
-          　// ダミーデータを5件入れているので
+            // ダミーデータを5件入れているので
             // 正式なデータ取得処理に置き換えるべき
             for (var i = 0; i < 5; i++) {
                 this.push(new BacknumberModel());
