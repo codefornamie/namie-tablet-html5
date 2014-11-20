@@ -96,32 +96,10 @@ define(function(require, exports, module) {
             'ope-top' : 'opeTop'
         },
 
-        forceJumpToTop: function () {
-            if (!app._isRunning) {
-                this.navigate('', {
-                    trigger: true,
-                    replace: true
-                });
-                app._isRunning = true;
-                return true;
-            }
-
-            return false;
-        },
-
         index : function() {
-            app._isRunning = true;
-            if (app._isRunning) {
-                setTimeout(function () {
-                    console.log('click!');
-                    $('#loginButton').click();
-                }, 0);
-            }
             console.log("Welcome to your / route.");
         },
         top : function() {
-            if (this.forceJumpToTop()) return;
-
             console.log("It's a top page.");
             this.layout.showView(new NewsView());
             this.layout.setHeader(new common.HeaderView());
@@ -130,37 +108,27 @@ define(function(require, exports, module) {
             this.commonView();
         },
         postingTop : function() {
-            if (this.forceJumpToTop()) return;
-
             this.layout.showView(new EventNewsView());
             this.layout.setHeader(new postingCommon.HeaderView());
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
         opeTop : function() {
-            if (this.forceJumpToTop()) return;
-
             this.layout.showView(new TopView());
             this.commonView();
         },
         scrap : function() {
-            if (this.forceJumpToTop()) return;
-
             console.log('[route] scrap');
             this.layout.showView(new ScrapView());
             this.commonView();
         },
 
         tutorial : function() {
-            if (this.forceJumpToTop()) return;
-
             console.log('[route] tutorial');
             this.layout.showView(new TutorialView());
             this.commonView();
         },
 
         backnumber : function() {
-            if (this.forceJumpToTop()) return;
-
             console.log('[route] backnumber');
             this.layout.showView(new BacknumberView());
             this.commonView();
@@ -177,8 +145,6 @@ define(function(require, exports, module) {
         },
 
         settings : function() {
-            if (this.forceJumpToTop()) return;
-
             console.log('[route] settings');
             this.layout.showView(new SettingsView());
             this.commonView();
