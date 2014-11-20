@@ -82,7 +82,10 @@ main {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
     background: #c1c1c1;
 }
-
+.posting-content {
+    box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
+    background: #ffffff;
+}
 .background {
     position: absolute;
     top: 0;

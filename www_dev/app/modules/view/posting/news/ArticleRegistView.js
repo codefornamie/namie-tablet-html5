@@ -41,40 +41,61 @@ define(function(require, exports, module) {
             "click #articleRegistButton" : "onClickArticleRegistButton",
             "change #articleMultiDate" : "chageMultiDateCheckbox"
         },
-        onAddFileForm: function () {
-            this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
-        },
-        onClickArticleRegistButton : function () {
-            if ($(this.formId).validate().form()) {
-                this.showLoading();
-//                this.onSubmit();
+        /**
+         * 複数日チェックボックスのチェック有無でフォームを切り替える関数
+         */
+        chageMultiDateCheckbox : function() {
+            if ($("#articleMultiDate").is(":checked")) {
+                $(".articleDateTo").show();
+            } else {
+                $(".articleDateTo").hide();
             }
         },
-        setInputValue : function () {
+        /**
+         * 画像を追加ボタンを押された際のコールバック関数
+         */
+        onAddFileForm : function() {
+            this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
+            if ($("#fileArea").children().size() >= 3) {
+                $("#addFileForm").hide();
+            }
+        },
+        /**
+         * 確認画面へボタンを押された際のコールバック関数
+         */
+        onClickArticleRegistButton : function() {
+            if ($(this.formId).validate().form()) {
+                this.showLoading();
+                // this.onSubmit();
+            }
+        },
+        /**
+         * モデルにデータをセットする関数
+         */
+        setInputValue : function() {
         },
         /**
          * 添付された画像をdavへ登録する
          */
         saveArticlePicture : function() {
-          var reader = new FileReader();
-          var contentType = "";
-          reader.onload = $.proxy(function(fileEvent) {
-              var options = {
-                      body : fileEvent.currentTarget.result,
-                      headers : {
-                          "Content-Type":contentType,
-                          "If-Match":"*"
-                      }
-              };
-              app.box.col("dav").put(this.fileName,options);
-          },this);
-          // Read in the image file as a data URL.
-          var file = $("#articleFile").prop("files")[0];
-          contentType = file.type; 
-          var preName = file.name.substr(0,file.name.lastIndexOf("."));
-          var suffName = file.name.substr(file.name.lastIndexOf("."));
-          this.fileName = preName + "_" + String(new Date().getTime()) + suffName; 
-          reader.readAsArrayBuffer(file);
+            var reader = new FileReader();
+            var contentType = "";
+            reader.onload = $.proxy(function(fileEvent) {
+                var options = {
+                    body : fileEvent.currentTarget.result,
+                    headers : {
+                        "Content-Type" : contentType,
+                        "If-Match" : "*"
+                    }
+                };
+                app.box.col("dav").put(this.fileName, options);
+            }, this);
+            var file = $("#articleFile").prop("files")[0];
+            contentType = file.type;
+            var preName = file.name.substr(0, file.name.lastIndexOf("."));
+            var suffName = file.name.substr(file.name.lastIndexOf("."));
+            this.fileName = preName + "_" + String(new Date().getTime()) + suffName;
+            reader.readAsArrayBuffer(file);
         },
         /**
          * バリデーションチェックがOKとなり、登録処理が開始された際に呼び出されるコールバック関数。
@@ -87,9 +108,9 @@ define(function(require, exports, module) {
                 }
                 this.setInputValue();
                 var self = this;
-                this.model.save(null,{
-                    success: function() {
-                        setTimeout(function () {
+                this.model.save(null, {
+                    success : function() {
+                        setTimeout(function() {
                             self.hideLoading();
                             app.router.go("eventsRegisted");
                         }, 1000);
