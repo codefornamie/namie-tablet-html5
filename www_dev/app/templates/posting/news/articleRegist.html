@@ -27,35 +27,41 @@
                 <div class="large-3 columns">
                     <label class="eventColumnsTitle">日時</label>
                 </div>
-                <div class="large-9 columns end">
-                    <div class="row">
+                <div class="large-9 columns">
+	                <div class="row">
                         <div class="large-2 columns">
                             <label class="eventColumnsTitle">日付</label>
                         </div>
                         <div class="large-10 columns">
-                            <div class="row">
-                                <input type="checkbox" />日程が複数の日に渡る
-                            </div>
-                            <div class="row">
-                                <input id="articleDate1"
-                                    name="articleDate1" type="date"
-                                    class="required" /> <span>～<input
-                                    id="articleDate2"
-                                    name="articleDate2" type="date" /></span>
-                            </div>
+	                        <input id="articleMultiDate" type="checkbox" />日程が複数の日に渡る
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="large-push-2 large-3 columns">
+		                    <input id="articleDate1" name="articleDate1" type="date" class="required" />
+                        </div>
+                        <div class="large-push-2 large-1 columns">
+                            <label class="eventColumnsTitle articleDateTo">～</label>
+                        </div>
+                        <div class="large-push-2 large-3 columns end">
+	                        <input id="articleDate2" class="articleDateTo" name="articleDate2" type="date" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="large-2 columns">
                             <label class="eventColumnsTitle">時間</label>
                         </div>
-                        <div class="large-10 columns">
-                            <input id="articleTime1" name="articleTime1"
-                                type="time" />～ <input id="articleTime2"
-                                name="articleTime2" type="time" /> <span><input
-                                id="articleTime3" name="articleTime3"
-                                type="time" />～ <input id="articleTime4"
-                                name="articleTime4" type="time" /></span>
+                        <div class="large-2 columns">
+							<input id="articleTime1" name="articleTime1" type="time" />
+                        </div>
+                        <div class="large-1 columns">
+                            <label class="eventColumnsTitle event">～</label>
+                        </div>
+                        <div class="large-2 columns">
+							<input id="articleTime2" name="articleTime2" type="time" />
+                        </div>
+                        <div class="large-5 columns end">
+	                        <input id="articleAllDay" type="checkbox" />終日
                         </div>
                     </div>
                 </div>

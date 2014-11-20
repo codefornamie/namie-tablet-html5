@@ -24,13 +24,14 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            this.chageMultiDateCheckbox();
         },
 
         initialize : function() {
-
         },
 
         events : {
+            "change #articleMultiDate" : "chageMultiDateCheckbox"
         },
         setSelectOption: function() {
             var thisYear = new Date().getFullYear();
@@ -81,6 +82,13 @@ define(function(require, exports, module) {
             $("#previewFile").attr("src","");
             $("#previewFile").hide();
             $("#fileDeleteButton").hide();
+        },
+        chageMultiDateCheckbox : function (){
+            if($("#articleMultiDate").is(":checked")){
+                $(".articleDateTo").show();
+            }else{
+                $(".articleDateTo").hide();
+            }
         },
         onClickEventRegistButton : function () {
             if ($(this.formId).validate().form()) {
