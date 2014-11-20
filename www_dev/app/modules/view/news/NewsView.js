@@ -37,6 +37,8 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
+            app.ga.trackPageView("/NewsView", "ニュース");
+
             this.showLoading();
 
             async.parallel([
@@ -46,7 +48,7 @@ define(function(require, exports, module) {
                 this.loadEvents.bind(this)
             ], this.onFetchAll.bind(this));
         },
-        
+
         /**
          *  youtubeのコンテンツを読み込む
          *  @param {Function} callback
@@ -69,7 +71,7 @@ define(function(require, exports, module) {
             }
 
             var self = this;
-            
+
             var loadScript = function (url) {
                 return function (next) {
                     $.getScript(url)
@@ -95,7 +97,7 @@ define(function(require, exports, module) {
                     }
                 });
             };
-            
+
             async.series([
                 onLoadGAPI,
                 loadScript("https://www.youtube.com/iframe_api")
@@ -121,7 +123,7 @@ define(function(require, exports, module) {
                     success: function () {
                         callback();
                     },
-                    
+
                     error: function onErrorSearchYoutube() {
                         callback('error');
                     }
@@ -131,7 +133,7 @@ define(function(require, exports, module) {
             gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
             gapi.client.load('youtube', 'v3', $.proxy(callback, this));
         },
-        
+
         /**
          *  articleを読み込む
          *  @param {Function} callback
@@ -143,13 +145,13 @@ define(function(require, exports, module) {
                 success: function () {
                     self.loadFavorite(callback);
                 },
-                
+
                 error: function onErrorLoadArticle() {
                     callback('err');
                 }
             });
         },
-        
+
         /**
          *  favoriteを読み込む
          *  @param {Function} callback
@@ -161,13 +163,13 @@ define(function(require, exports, module) {
                 success: function () {
                     callback();
                 },
-                
+
                 error: function onErrorLoadFavorite() {
                     callback('error');
                 }
             });
         },
-        
+
         /**
          *  eventsを読み込む
          *  @param {Function} callback
@@ -177,7 +179,7 @@ define(function(require, exports, module) {
                 success: function () {
                     callback();
                 },
-                
+
                 error: function onErrorLoadEvents() {
                     callback('error');
                 }
@@ -193,7 +195,7 @@ define(function(require, exports, module) {
                 success: function () {
                     callback();
                 },
-                
+
                 error: function () {
                     callback('error');
                 }
@@ -213,7 +215,7 @@ define(function(require, exports, module) {
 //            this.newsCollection.add(this.youtubeCollection.models);
             this.newsCollection.add(this.articleCollection.models);
             this.newsCollection.add(this.eventsCollection.models);
-            
+
             // articleCollectionに切抜き、おすすめ状態を反映する
             this.newsCollection.each($.proxy(function (article) {
                 this.favoriteCollection.each(function (favorite) {
@@ -222,7 +224,7 @@ define(function(require, exports, module) {
                         article.favorite = favorite;
                     }
                 });
-                
+
                 // おすすめ数取得
                 var recommends = this.recommendCollection.filter($.proxy(function(recommend){
                     return article.get("__id") === recommend.get("source");
@@ -230,7 +232,7 @@ define(function(require, exports, module) {
                 article.recommendAmount = _.filter(recommends, function(recommend) {
                     return !recommend.get("deletedAt");
                 }).length;
-                
+
                 //自身のおすすめ情報を記事に付加
                 _.each(recommends,$.proxy(function (recommend) {
                     if (recommend.get("isMine")) {
@@ -238,7 +240,7 @@ define(function(require, exports, module) {
                         article.recommend = recommend;
                     }
                 },this));
-                
+
             },this));
 
 

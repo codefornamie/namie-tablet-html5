@@ -14,7 +14,7 @@ define(function(require, exports, module) {
 
     /**
      * 記事一覧アイテムのViewを作成する。
-     * 
+     *
      * @class 記事一覧アイテムのView
      * @exports ArticleListItemView
      * @constructor
@@ -95,7 +95,7 @@ define(function(require, exports, module) {
          * <li>タグの表示</li>
          * <li>画像クリックイベントのバインド<br/> 画像クリック時に、対象画像の保存処理を行うためのイベントをバインドする。 </li>
          * </p>
-         * 
+         *
          */
         afterRenderCommon : function() {
             // 既にお気に入り登録されている記事のお気に入りボタンを非表示にする
@@ -134,6 +134,8 @@ define(function(require, exports, module) {
          * 切り抜きボタン押下時に呼び出されるコールバック関数。
          */
         onClickFavoriteRegisterButton : function() {
+            app.ga.trackEvent("ニュース", "切り抜き登録", this.model.get("title"));
+
             this.showLoading();
             if (this.model.favorite) {
                 this.favoriteModel = this.model.favorite;
@@ -171,6 +173,7 @@ define(function(require, exports, module) {
          * 切り抜き削除ボタン押下時に呼び出されるコールバック関数。
          */
         onClickFavoriteDeleteButton : function() {
+            app.ga.trackEvent("ニュース", "切り抜き削除", this.model.get("title"));
             // 確認ダイアログを表示
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.confirm({
@@ -204,6 +207,7 @@ define(function(require, exports, module) {
          * おすすめボタン押下時に呼び出されるコールバック関数。
          */
         onClickRecommendRegisterButton : function() {
+            app.ga.trackEvent("ニュース", "おすすめ登録", this.model.get("title"));
             if (this.model.recommend) {
                 this.recommendModel = this.model.recommend;
             } else {
@@ -233,6 +237,7 @@ define(function(require, exports, module) {
          * おすすめ取消押下時に呼び出されるコールバック関数。
          */
         onClickRecommendDeleteButton : function() {
+            app.ga.trackEvent("ニュース", "おすすめ削除", this.model.get("title"));
             this.recommendModel = this.model.recommend;
             this.recommendModel.set("isDelete",true);
             this.recommendModel.set("etag", "*");
@@ -253,7 +258,7 @@ define(function(require, exports, module) {
         /**
          * 情報変更後に呼び出されるコールバック関数。
          * ボタン表示非表示切り替え、および状態の切り替えを行う
-         * 
+         *
          * @params {String} type "favorite" or "recommend"
          */
         onChangeStatus : function(type) {
@@ -302,7 +307,7 @@ define(function(require, exports, module) {
 
         /**
          * タグボタン押下時に呼び出されるコールバック関数。
-         * 
+         *
          * @params {event} タグボタンのクリックイベント
          */
         onClickDeleteTag : function(ev) {
@@ -323,7 +328,7 @@ define(function(require, exports, module) {
         onClickImage : function(ev) {
             var uri = ev.target.src;
             var blob = $(ev.target).data("blob");
-            
+
             var base = DateUtil.formatDate(new Date(), "yyyy-MM-dd_HH-mm-ss");
             var ext = uri.replace(/.*\//, "").replace(/.*\./, "");
             // TODO blob型の場合、拡張子が取れない
@@ -342,12 +347,12 @@ define(function(require, exports, module) {
         },
         /**
          * 指定URiの画像データをストレージに保存する。
-         * 
+         *
          * @param {Object}
          *            data 対象画像のURIまたはBlob
          * @param {String}
          *            filePath 保存先のストレージのパス
-         * 
+         *
          */
         saveImage : function(data, fileName) {
             console.log("scanFile start. filePath: " + fileName);
@@ -358,7 +363,7 @@ define(function(require, exports, module) {
             var sdPath = "/mnt/sdcard/";
             var picturePath = "Pictures/";
             var filePath = sdPath + picturePath + fileName;
-            
+
             // ファイルシステムエラーハンドラ
             var onFileSystemError = function(e) {
                 console.log("FileSystemError: code=" + e.code);
@@ -368,17 +373,17 @@ define(function(require, exports, module) {
             var mediaScan = function(filePath){
                 console.log("scanFile start. filePath: " + filePath);
                 window.MediaScanPlugin.scanFile(filePath, function(msg) {
-                    window.plugins.toast.showLongBottom("画像を保存しました。"); 
+                    window.plugins.toast.showLongBottom("画像を保存しました。");
                 }, function(err) {
                     window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                    console.log(err); 
+                    console.log(err);
                 });
             };
 
             if(data instanceof Blob){
                 var blob = data;
                 window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-                window.requestFileSystem(LocalFileSystem.PERSISTENT, 50 * 1024 * 1024, $.proxy(function(fs){ 
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 50 * 1024 * 1024, $.proxy(function(fs){
                     fs.root.getFile(picturePath + fileName, {create: true}, $.proxy(function(fileEntry) {
                         fileEntry.createWriter($.proxy(function(fileWriter) {
                             fileWriter.onwriteend = function(e) {
@@ -389,7 +394,7 @@ define(function(require, exports, module) {
                                 console.log('Write failed: ' + e.toString());
                             };
                             fileWriter.write(blob);
-        
+
                         }, this), this.onFileSystemError);
                     }, this), this.onFileSystemError);
                 }, this), this.onFileSystemError);
@@ -398,11 +403,11 @@ define(function(require, exports, module) {
                 var fileTransfer = new FileTransfer();
                 fileTransfer.download(encodeURI(uri), filePath, function(entry) {
                     mediaScan(filePath);
-                }, function(error) { 
+                }, function(error) {
                     window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
                     console.log("download error source: " + error.source);
                     console.log("download error target: " + error.target);
-                    console.log("download error code: " + error.code); 
+                    console.log("download error code: " + error.code);
                 }, false, {});
             }
         }
