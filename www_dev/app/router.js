@@ -87,6 +87,7 @@ define(function(require, exports, module) {
             'scrap' : 'scrap',
             'tutorial' : 'tutorial',
             'backnumber' : 'backnumber',
+            'backnumber/:date' : 'backnumberDate',
             'settings' : 'settings',
             'posting-top' : 'postingTop',
             'ope-top' : 'opeTop'
@@ -165,7 +166,9 @@ define(function(require, exports, module) {
             if (this.forceJumpToTop()) return;
 
             console.log('[route] backnumber/%s', date);
-            this.layout.showView(new BacknumberDateView());
+            this.layout.showView(new BacknumberDateView({
+                date: date
+            }));
             this.commonView();
         },
 

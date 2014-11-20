@@ -1,5 +1,36 @@
-<article>
-    <a href="/backnumber/<%= model.generateDateString() %>">
-        <%= model.get('createdAt') %>
+<li class='backnumber-li'>
+    <a class='backnumber-item row' href="/backnumber/<%= model.generateDateString() %>">
+        <div class="backnumber-item__date columns small-2">
+            <%= model.get('createdAt') %>
+        </div>
+
+        <div class="backnumber-item__body columns small-7">
+            <ul>
+                <li>
+                    <i class="fa fa-caret-right"></i>
+                    郡山市制90周年祝う記念式典「市民の歌」合唱
+                </li>
+
+                <li>
+                    <i class="fa fa-caret-right"></i>
+                    広野町「道の駅」整備へ 防災、復興の拠点に
+                </li>
+
+                <li>
+                    <i class="fa fa-caret-right"></i>
+                    今日のレシピ 「豚の角煮」
+                </li>
+
+                <li>
+                    <span class='right'>
+                        ほか
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="backnumber-item__thumbnail columns small-3">
+            <img src="app/img/dummy-manga.png" alt="">
+        </div>
     </a>
-</article>
+</li>

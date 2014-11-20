@@ -480,6 +480,7 @@ main {
 }
 
 .contents > div {
+    position: relative;
     height: 100%;
     overflow: hidden;
     padding: 0 10px;
@@ -975,4 +976,49 @@ div.nehan-block.nehan-body:last-child {
 }
 .feedListItem p{
 	margin-bottom: 0.20rem;
+}
+
+/**
+ *  Backnumber
+ */
+.backnumber-nav {
+    height: 40px;
+}
+
+.backnumber-news {
+    padding-top: 40px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+    .backnumber-news > div {
+        height: 100%;
+    }
+
+.backnumber-list {
+    list-style: none;
+}
+
+.backnumber-li {
+    margin: 15px;
+    background-color: #f7f6ef;
+    box-shadow: 0 1px 0 0 #d0cdb3;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.backnumber-item {
+    background-color: white;
+    border-radius: 10px;
+    display: block;
+    color: inherit;
+}
+
+.backnumber-item__body {
+}
+
+.backnumber-item__body ul {
+    list-style: none;
 }
