@@ -67,6 +67,7 @@ main {
 
 .menu {
     width: 266px;
+    padding-left: 10px;
 }
 
 .menu h3 {
@@ -167,6 +168,7 @@ main {
     border-radius: 30px;
     height: 34px;
     line-height: 34px;
+    vertical-align: top;
 }
 
 .header-haiku__text {
@@ -415,24 +417,52 @@ main {
 }
 
 .global-nav__font ul {
+    font-size: 0;
     list-style: none;
-    margin: 0;
+    margin: 8px 6px 0 0;
     display: inline-block;
+    background-image: url(../../app/img/img-header-fontsize-middle.png);
+    background-size: auto 100%;
+    height: 55px;
+}
+
+.global-nav__font ul::before {
+    content: '';
+    display: inline-block;
+    background-image: url(../../app/img/img-header-fontsize-left.png);
+    background-size: 100%;
+    width: 6px;
+    height: 55px;
+    position: relative;
+    left: -6px;
+}
+
+.global-nav__font ul::after {
+    content: '';
+    display: inline-block;
+    background-image: url(../../app/img/img-header-fontsize-right.png);
+    background-size: 100%;
+    width: 6px;
+    height: 55px;
+    position: relative;
+    right: -6px;
 }
 
 .global-nav__font ul li {
     display: inline-block;
-    vertical-align: middle;
+    vertical-align: top;
+    margin-top: 8px;
 }
 
 .global-nav__font .button {
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
     padding: 0;
     margin: 0;
     text-decoration: underline;
     font-size: 20px;
+    margin: 0 3px;
 }
 
 /**
@@ -987,6 +1017,7 @@ div.nehan-block.nehan-body:last-child {
 
 .backnumber-news {
     padding-top: 40px;
+    width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
