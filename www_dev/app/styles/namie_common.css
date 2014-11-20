@@ -867,6 +867,29 @@ main {
     text-align: center;
 }
 
+.button--scrap,
+.button--recommend {
+    width: 257px;
+    height: 59px;
+    color: #d9791b;
+    font-size: 22px;
+    text-indent: 30px;
+    box-shadow: none;
+    text-decoration: underline;
+}
+
+.button--recommend {
+    background: none;
+    background-image: url(../../app/img/img-btn-recommend.png);
+    background-size: 100%;
+}
+
+.button--scrap {
+    background: none;
+    background-image: url(../../app/img/img-btn-favorite.png);
+    background-size: 100%;
+}
+
 /**
  *
  */
