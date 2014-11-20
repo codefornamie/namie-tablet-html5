@@ -19,6 +19,14 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/{mode}/common/global-nav"),
 
         /**
+         * タイトル文字列
+         */
+        headerTitle: {
+            "articleDetail" : "投稿した記事",
+            "articleRegist" : "記事入力"
+        },
+
+        /**
          * 文字サイズ変更後のタイマー
          */
         fontTimer : null,
@@ -46,7 +54,7 @@ define(function(require, exports, module) {
                 $(".contents-wrapper").css("padding-top","55px");
             } else {
                 $(".eventGlobal-nav").show();
-                $("#headerTitle").text("記事入力");
+                $("#headerTitle").text(this.headerTitle[Backbone.history.fragment]);
                 $(".contents-wrapper").css("padding-top","144px");
             }
         },

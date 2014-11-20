@@ -1138,3 +1138,32 @@ div.nehan-block.nehan-body:last-child {
 .backnumber-item__body ul {
     list-style: none;
 }
+
+/*
+ * Posting
+ */
+.eventColumnsHeader {
+    border: 1px solid #000;
+    border-radius: 2px;
+    margin: 20px 0;
+    padding: 5px 20px;
+}
+.eventStatus {
+    background: #333;
+    border-radius: 2px;
+    color: white;
+    display: inline-block;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    padding: 0 16px;
+}
+.eventTitle {
+    font-size: 32px;
+}
+.eventFile {
+    margin-bottom: 20px;
+}
+.eventFileImage {
+    margin-bottom: 5px;
+}
+
