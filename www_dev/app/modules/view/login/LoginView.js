@@ -20,10 +20,10 @@ define(function(require, exports, module) {
             "click #loginButton" : "onClickLoginButton"
         },
         beforeRendered : function() {
+            setTimeout($.proxy(this.onTimeout, this), 500);
         },
 
         afterRendered : function() {
-            setTimeout($.proxy(this.onTimeout, this), 1000);
         },
 
         /**
@@ -38,15 +38,22 @@ define(function(require, exports, module) {
          * @param {String} res アカウントマネージャからレスポンス
          */
         onAuthSuccess : function(res) {
+            if (!res) {
+                alert("通信に失敗しました。電波状態を見直してください。");
+                return;
+            }
             var ar = res.split(":");
             if (ar[0] === "msg") {
                 alert(ar[1]);
+                $("#main").css("display","block");
                 return;
             }
             if (res) {
                 this.model.setAccessToken(res);
                 this.model.login($.proxy(this.onLogin, this));
+                return;
             }
+            $("#main").css("display","block");
         },
 
         /**
@@ -88,6 +95,7 @@ define(function(require, exports, module) {
                 vexDialog.defaultOptions.className = 'vex-theme-default';
                 vexDialog.alert(msg);
             }
+            $("#main").css("display","block");
         },
         goNextView : function() {
             app.router.go("top");

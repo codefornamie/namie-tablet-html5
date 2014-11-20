@@ -79,7 +79,7 @@ define(function(require, exports, module) {
                 var account = accounts[0];
                 this.set("loginId", account.name);
                 this.accountManager.getAuthToken(0, "oauth", function(dummy, token) {
-                    alert("トークン取得成功 : " + token);
+                    //alert("トークン取得成功 : " + token);
                     console.log("account manager getAuthToken responsed : " + token);
                     callback(token);
                 });
@@ -162,7 +162,7 @@ define(function(require, exports, module) {
                                 this.onLogin("login failure : " + error);
                                 return;
                             }
-                            alert("アカウントマネージャ登録成功");
+                            //alert("アカウントマネージャ登録成功");
                         });
             } else {
                 console.log("account maanger undefined (not android)");
