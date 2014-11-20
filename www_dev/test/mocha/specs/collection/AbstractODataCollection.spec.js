@@ -11,7 +11,7 @@ define(function(require) {
             loginModel.baseUrl = "https://fj.baas.jp.fujitsu.com/";
             loginModel.cellId = "kizunatest01";
             loginModel.box = "data";
-            loginModel.set("loginId", "namie");
+            loginModel.set("loginId", "ukedon");
             loginModel.set("password", "namie01");
 
             loginModel.login(function() {
