@@ -22,8 +22,15 @@ define(function(require, exports, module) {
 
         afterRendered : function() {
             var calendar = this.$el.find("[data-date]");
-            calendar.fcdp({fixed: true, dateSelector: true});
-            $('.sortable').sortable();
+            calendar.fcdp({
+                fixed : true,
+                dateSelector : true
+            });
+            $('.sortable').sortable({
+                items : 'tr',
+                forcePlaceholderSize: true,
+                handle: '.handle'
+            });
         },
     });
 
