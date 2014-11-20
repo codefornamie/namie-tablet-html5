@@ -1109,11 +1109,21 @@ div.nehan-block.nehan-body:last-child {
     padding: 5px;
 }
 
+/**
+ *  backnumber-item
+ */
 .backnumber-item {
     background-color: white;
     border-radius: 10px;
     display: block;
     color: inherit;
+}
+
+.backnumber-item__date {
+}
+
+.backnumber-item__date .date-area {
+    line-height: 1;
 }
 
 .backnumber-item__body {
