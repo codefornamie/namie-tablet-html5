@@ -67,7 +67,7 @@ define(function(require, exports, module) {
         onClickArticleBackButton : function(){
             this.$el.remove();
             $("#articleRegistPage").show();
-            $("#snap-content").scrollTop(0)
+            $("#snap-content").scrollTop(0);
         },
         /**
          * 登録するボタンが押下された際に呼び出されるコールバック関数。

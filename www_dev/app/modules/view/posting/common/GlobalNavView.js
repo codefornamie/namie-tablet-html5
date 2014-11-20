@@ -52,7 +52,7 @@ define(function(require, exports, module) {
                 ev.preventDefault();
                 $("#articleRegistConfirmWrapperPage").children().remove();
                 $("#articleRegistPage").show();
-                $("#snap-content").scrollTop(0)
+                $("#snap-content").scrollTop(0);
             }else{
                 ev.preventDefault();
                 app.router.back();

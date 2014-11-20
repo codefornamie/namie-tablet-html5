@@ -93,12 +93,10 @@ define(function(require, exports, module) {
                     return "日時の日付が開始と終了で逆になっています。";
                 }
             }
-            if ($("#articleTime1").val() && $("#articleTime2").val()
-                    && $("#articleTime1").val() > $("#articleTime2").val()) {
+            if ($("#articleTime1").val() && $("#articleTime2").val() && $("#articleTime1").val() > $("#articleTime2").val()) {
                 return "日時の時間が開始と終了で逆になっています。";
             }
-            if ($("#articleRangeDate1").val() && $("#articleRangeDate2").val()
-                    && $("#articleRangeDate1").val() > $("#articleRangeDate2").val()) {
+            if ($("#articleRangeDate1").val() && $("#articleRangeDate2").val() && $("#articleRangeDate1").val() > $("#articleRangeDate2").val()) {
                 return "掲載期間の日付が開始と終了で逆になっています。";
             }
             return null;
@@ -167,7 +165,7 @@ define(function(require, exports, module) {
                     self.hideLoading();
                     vexDialog.defaultOptions.className = 'vex-theme-default';
                     vexDialog.alert("ファイルの読み込みに失敗しました。");
-                }
+                };
                 reader.readAsArrayBuffer(file);
                 
                 image.comment = $(fileItem).find("#articleFileComent").val();
@@ -189,7 +187,7 @@ define(function(require, exports, module) {
             this.setInputValue($.proxy(function(){
                 $("#articleRegistPage").hide();
                 this.setView("#articleRegistConfirmWrapperPage", new ArticleRegistConfirmView({model: this.model})).render();
-                $("#snap-content").scrollTop(0)
+                $("#snap-content").scrollTop(0);
             }, this));
         },
 
