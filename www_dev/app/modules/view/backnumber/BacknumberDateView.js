@@ -3,26 +3,26 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var BacknumberListView = require("modules/view/backnumber/BacknumberListView");
-    var BacknumberCollection = require("modules/collection/backnumber/BacknumberCollection");
+    var NewsView = require("modules/view/news/NewsView");
 
     /**
-     *  バックナンバーページのView
+     *  バックナンバーページで見る各日付の記事のView
      *
      *  @class
-     *  @exports BacknumberView
+     *  @exports BacknumberDateView
      *  @constructor
      */
-    var BacknumberView = AbstractView.extend({
+    var BacknumberDateView = AbstractView.extend({
         /**
          *  テンプレートファイル
          */
-        template : require("ldsh!templates/{mode}/backnumber/backnumber"),
+        template : require("ldsh!templates/{mode}/backnumber/backnumberDate"),
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
          */
         beforeRendered : function() {
+            this.setView('#backnumber-news', new NewsView());
         },
 
         /**
@@ -34,16 +34,13 @@ define(function(require, exports, module) {
         /**
          *  初期化処理
          */
-        initialize : function() {
-            var backnumberListView = new BacknumberListView();
-
-            backnumberListView.collection = new BacknumberCollection();
-            this.setView('#backnumber', backnumberListView);
+        initialize : function(param) {
+            console.assert(param && param.date, 'Please pass the date value');
         },
 
         events : {
         }
 
     });
-    module.exports = BacknumberView;
+    module.exports = BacknumberDateView;
 });

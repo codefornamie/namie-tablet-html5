@@ -5,7 +5,17 @@
                 <div class="post-header">
                     <div class="post-header__site">
                         <div class="post-label">
-                            <%= model.get("dispSite") %>
+                            <div class="post-label__site left">
+                                <%= model.get("dispSite") %>
+                            </div>
+
+                            <span class="post-recommend right">
+                                <div class="post-recommend__amount">
+                                    <%= model.recommendAmount %>
+                                </div>
+
+                                おすすめ
+                            </span>
                         </div>
                         <div class="tagListArea"></div>
                     </div>
@@ -13,7 +23,6 @@
                     <div class="post-header__title">
                         <%= model.get("dispTitle") %>
                     </div>
-                    <%= model.recommendAmount %>おすすめ
                 </div>
             </div>
         </div>
@@ -90,17 +99,19 @@
     
     <section class='post__footer'>
         <div class="post-action">
-            <button data-recommend-register-button type="button" class="small button">
+            <button data-recommend-register-button type="button" class="button button--recommend">
                 おすすめ
             </button>
-            <button data-recommend-delete-button type="button" class="small secondary button">
+
+            <button data-recommend-delete-button type="button" class="button button--recommend">
                 おすすめ取消
             </button>
 
-            <button data-favorite-register-button type="button" class="small button">
+            <button data-favorite-register-button type="button" class="button button--scrap">
                 切り抜き
             </button>
-            <button data-favorite-delete-button type="button" class="small button secondary">
+
+            <button data-favorite-delete-button type="button" class="button button--scrap">
                 切り抜き削除
             </button>
         </div>
