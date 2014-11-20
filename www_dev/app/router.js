@@ -17,6 +17,7 @@ define(function(require, exports, module) {
     var SettingsView = require("modules/view/settings/SettingsView");
 
     var EventNewsView = require("modules/view/posting/news/NewsView");
+    var ArticleDetailView = require("modules/view/posting/news/ArticleDetailView");
     var ArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
     var TopView = require("modules/view/ope/top/TopView");
 
@@ -90,6 +91,7 @@ define(function(require, exports, module) {
             'backnumber' : 'backnumber',
             'settings' : 'settings',
             'posting-top' : 'postingTop',
+            'articleDetail(#:id)' : 'articleDetail',
             'articleRegist' : 'articleRegist',
             'ope-top' : 'opeTop'
         },
@@ -136,6 +138,11 @@ define(function(require, exports, module) {
             console.log('[route] settings');
             this.layout.showView(new SettingsView());
             this.commonView();
+        },
+        articleDetail : function(id) {
+            console.log('[route] articleDetail');
+            this.layout.showView(new ArticleDetailView());
+            this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
         articleRegist : function() {
             console.log('[route] articleRegist');
