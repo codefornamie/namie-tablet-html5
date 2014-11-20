@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">なみえタブレット</string>
+    <string name="launcher_name">@string/app_name</string>
+    <string name="activity_name">@string/launcher_name</string>
+    <string name="character_name">なみちゃん</string>
+    <string-array name="messages">
+        <item>こんにちは&lt;br/&gt;なみちゃんです！&lt;br/&gt;よろしくね！</item>
+        <item>&lt;font color="red"&gt;新しいニュース&lt;/font&gt;があるよ！</item>
+        <item>毒キノコに注意してね！</item>
+        <item>なみえ焼きそば食べたいなぁ</item>
+        <item>おはよう♪&lt;br/&gt;今日は寒いんだすけ！</item>
+    </string-array>
+</resources>
