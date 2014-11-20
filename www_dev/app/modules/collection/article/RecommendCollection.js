@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 
     /**
      * おすすめ情報のコレクションクラス
-     * 
+     *
      * @class おすすめ情報のコレクションクラス
      * @exports RecommendCollection
      * @constructor
@@ -16,7 +16,7 @@ define(function(require, exports, module) {
         model : RecommendModel,
         entity : "recommend",
         condition : {
-            top : 10000,
+            top : 10,
         },
     });
 

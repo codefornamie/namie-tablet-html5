@@ -9,7 +9,7 @@ define(function(require, exports, module) {
     var blockui = require("blockui");
     var panzoom = require("panzoom");
     var config = require("resources/appConfig");
-    
+
     // var messageja = require("messageja");
 
     // グローバルに利用できるModel

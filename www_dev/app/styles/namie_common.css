@@ -102,7 +102,10 @@ main {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
     background: #14434a;
 }
-
+.posting-content {
+    box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
+    background: #ffffff;
+}
 .background {
     position: absolute;
     top: 0;
@@ -334,6 +337,22 @@ main {
 
 .global-nav__menu .button span {
     text-decoration: underline;
+}
+
+.posting__global-nav__menu {
+    width: 100%;
+    border-top: 2px solid #2c2c2c;
+    border-bottom: 2px solid #2c2c2c;
+}
+
+/**
+ *  global-nav__info
+ *  情報のエリア
+ */
+.global-nav__info {
+    width: 16.0%;
+    border-top: 2px solid #2c2c2c;
+    border-bottom: 2px solid #2c2c2c;
 }
 
 /**

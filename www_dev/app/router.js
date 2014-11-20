@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     login.ope = require("modules/view/ope/login/index");
 
     var common = require("modules/view/common/index");
+    var postingCommon = require("modules/view/posting/common/index");
     var YouTubeView = require("modules/view/top/YouTubeView");
     var NewsView = require("modules/view/news/NewsView");
 
@@ -17,6 +18,7 @@ define(function(require, exports, module) {
     var SettingsView = require("modules/view/settings/SettingsView");
 
     var EventNewsView = require("modules/view/posting/news/NewsView");
+    var ArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
     var TopView = require("modules/view/ope/top/TopView");
 
     // Defining the application router.
@@ -90,6 +92,7 @@ define(function(require, exports, module) {
             'backnumber/:date' : 'backnumberDate',
             'settings' : 'settings',
             'posting-top' : 'postingTop',
+            'articleRegist' : 'articleRegist',
             'ope-top' : 'opeTop'
         },
 
@@ -130,7 +133,8 @@ define(function(require, exports, module) {
             if (this.forceJumpToTop()) return;
 
             this.layout.showView(new EventNewsView());
-            this.eventCommonView();
+            this.layout.setHeader(new postingCommon.HeaderView());
+            this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
         opeTop : function() {
             if (this.forceJumpToTop()) return;
@@ -179,6 +183,11 @@ define(function(require, exports, module) {
             this.layout.showView(new SettingsView());
             this.commonView();
         },
+        articleRegist : function() {
+            console.log('[route] articleRegist');
+            this.layout.showView(new ArticleRegistView());
+            this.layout.setGlobalNav(new postingCommon.GlobalNavView());
+        },
 
         /*
          * events : function() { console.log("It's a events page.");
@@ -199,10 +208,6 @@ define(function(require, exports, module) {
             this.layout.setGlobalNav(new common.GlobalNavView());
             this.layout.setView("#menu", new common.MenuView()).render();
         },
-        eventCommonView : function() {
-            this.layout.setHeader(new common.GlobalNavView());
-        },
-
         /**
          * 前の画面に戻る
          * http://stackoverflow.com/questions/14860461/selective-history-back-using-backbone-js

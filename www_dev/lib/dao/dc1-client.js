@@ -897,7 +897,7 @@ dcc.DcContext.prototype.newJson = function() {
 //* @throws org.json.simple.parser.ParseException JSONパース例外
 //*/
 /**
- * This method generates JSONObject object from JSON string. 
+ * This method generates JSONObject object from JSON string.
  * @param {String} jsonStr JSON string
  * @return {Object} JSONObject
  * @throws org.json.simple.parser.ParseException JSON object
@@ -1338,6 +1338,9 @@ dcc.http.DcHttpClient.prototype.bodyAsXml = function() {
  * @returns {dcc.Promise} Promise object
  */
 dcc.http.DcHttpClient.prototype._execute = function(method, requestUrl, requestBody, callback) {
+  console.log("[PCS] ReqURL : " + requestUrl);
+  console.log("[PCS] Method : " + method);
+  console.log("[PCS] ReqBod : " + requestBody);
   var self = this;
   var xhr = this.httpClient;
   var promise = new dcc.Promise();
@@ -1379,7 +1382,7 @@ dcc.http.DcHttpClient.prototype._execute = function(method, requestUrl, requestB
 };
 
 /**
- * Execute method is used to send an HTTP Request, 
+ * Execute method is used to send an HTTP Request,
  * decides request mode based on this.async.
  * @private
  * @param {String} method GET, POST, PUT,DELETE
@@ -1471,7 +1474,7 @@ dcc.http.DcHttpClient.prototype.setAsync = function(async){
 
 ///**
 //* リクエストオブジェクトを生成するBuilderクラス.
-//* @class Represents DcRequestHeaderBuilder. 
+//* @class Represents DcRequestHeaderBuilder.
 //*/
 /**
  * It creates a new object dcc.http.DcHttpClient.
@@ -1646,7 +1649,7 @@ dcc.http.DcRequestHeaderBuilder.prototype.depth = function(value) {
 //* @return 自分自身のオブジェクト
 //*/
 /**
- * This method sets Default Headers. 
+ * This method sets Default Headers.
  * @param {String} DefaultHeader value
  * @return {Object} Its own object
  */
@@ -2397,7 +2400,7 @@ dcc.http.RestAdapter.prototype.mkService = function(requestUrl, callback) {
  * The purpose of this method is to set service(s) single/multiple in one API call
  * through PROPATCH.
  * @param {String} requestUrl target URL
- * @param {String[]} arrServiceNameAndSrcFile service list in combination of service name and source file 
+ * @param {String[]} arrServiceNameAndSrcFile service list in combination of service name and source file
  * example {"serviceName":"name","sourceFileName" : "filename.js"}.
  * @param {String} subject Service
  * @param {Object} options refers to optional parameters - callback, headers.
@@ -2925,7 +2928,7 @@ dcc.box.odata.BatchAdapter.prototype.appendChangeSet = function(value) {
 };
 
 /**
- * This method appends value of ChangeSet to Batch and overwrites ChangeSet. 
+ * This method appends value of ChangeSet to Batch and overwrites ChangeSet.
  */
 dcc.box.odata.BatchAdapter.prototype.writeChangeSet = function() {
   if ( (null !== this.changeSet) && (undefined !== this.changeSet)) {
@@ -3242,7 +3245,7 @@ dcc.box.odata.ChangeSet.prototype.get = function(){
 
 ///**
 //* ＄Batchアクセスのためのリクエストを作成するクラス..
-//* @class Represents a command. 
+//* @class Represents a command.
 //*/
 /**
  * It creates a new object dcc.box.odata.Command.
@@ -3340,11 +3343,11 @@ dcc.box.odata.Command.prototype.get = function() {
 
 ///**
 //* Batchのレスポンス型.
-//* @class Represents BatchResponse. 
+//* @class Represents BatchResponse.
 //*/
 /**
  * It creates a new object dcc.box.odata.DcBatchResponse.
- * @class This class represents the response class for Batch. 
+ * @class This class represents the response class for Batch.
  * @constructor
  */
 dcc.box.odata.DcBatchResponse = function() {
@@ -3750,7 +3753,7 @@ dcc.box.odata.DcQuery.prototype.parentId = function(value) {
 //*/
 /**
  * It creates a new object dcc.AbstractODataContext.
- * @class This is the super class inherited by other cell control classes 
+ * @class This is the super class inherited by other cell control classes
  * showing function of each entity.
  * @constructor
  * @param {dcc.Accessor} as Accessor
@@ -3971,7 +3974,7 @@ dcc.DcCollection.prototype.getClassName = function() {
 
 /**
  * The purpose of this method is to perform service configure operation for both single or multiple service
- * in one API call. 
+ * in one API call.
  * @param {array} arrServiceNameAndSrcFile service list in combination of service name and source file
  * example {"serviceName":"name","sourceFileName" : "filename.js"}.
  * @param {String} subject Service
@@ -4517,7 +4520,7 @@ dcc.box.DavCollection.prototype.put = function(pathValue, options) {
   if(!options.headers){
     options.headers = {};
   }
-  //TODO: Remove extra parameters from restAdapter put,as options itself contains all optional params 
+  //TODO: Remove extra parameters from restAdapter put,as options itself contains all optional params
   response = restAdapter.put(url, null, null,
       null, null, options);
   if(!callbackExist){
@@ -4654,8 +4657,8 @@ dcc.box.DavCollection.prototype.getJSON = function(pathValue, etag) {
 };
 
 /**
- * This method calls PROPFIND API for specified path to get 
- * registered service file detail. 
+ * This method calls PROPFIND API for specified path to get
+ * registered service file detail.
  * @param {String} name filename
  * @param {Object} options optional parameters
  * @returns {dcc.DcHttpClient} response.
@@ -5245,7 +5248,7 @@ dcc.box.odata.ODataManager.prototype.update = function(id, body, etag, options) 
   (options.success !== undefined ||
       options.error !== undefined ||
       options.complete !== undefined);
-  /*  
+  /*
   if (callback !== undefined) {
     this._internalUpdate(id, body, etag, {}, function(resp) {
       if (resp.getStatusCode() >= 300) {
@@ -5262,7 +5265,7 @@ dcc.box.odata.ODataManager.prototype.update = function(id, body, etag, options) 
         callback.complete(resp);
       }
     });
-  } 
+  }
    */
 
   if (callbackExist) {
@@ -5879,7 +5882,7 @@ dcc.Accessor.prototype.cell = function(cellUrl, opts) {
     }
     var useCookie = opts.useCookie === undefined ? false : opts.useCookie;
     // create a clone so that the original accessor (this object)
-    // should be kept untouched. 
+    // should be kept untouched.
     // In the rest of this method, only cloned accessor is to be handled.
     var clone = this.clone();
 
@@ -5891,43 +5894,45 @@ dcc.Accessor.prototype.cell = function(cellUrl, opts) {
         targetCellUrl = dcc.UrlUtils.append(this.baseUrl, targetCellUrl) + "/";
     }
 
-    // Compare the given cellUrl parameter and home cell URL () if provided, if they are same or parameter is not provided
-    // Returns the home Cell client object. 
-    if (!targetCellUrl || myCellUrl === targetCellUrl) {
-        if (!this.schema){
-            //Pattern 1
-            clone._obtainAccessTokenFromMyCell(myCellUrl , useCookie);
-        }else{
-            //Pattern 3
-            clone._obtainAccessTokenFromMyCellWithSchema(myCellUrl , useCookie);
+    if (this.accessType !== "token") {
+        // Compare the given cellUrl parameter and home cell URL () if provided, if they are same or parameter is not provided
+        // Returns the home Cell client object.
+        if (!targetCellUrl || myCellUrl === targetCellUrl) {
+            if (!this.schema){
+                //Pattern 1
+                clone._obtainAccessTokenFromMyCell(myCellUrl , useCookie);
+            }else{
+                //Pattern 3
+                clone._obtainAccessTokenFromMyCellWithSchema(myCellUrl , useCookie);
+            }
+            //return myCell instance
+            var myCell = new dcc.unitctl.Cell(clone);
+            //console.log(myCell);
+            return myCell;
         }
-        //return myCell instance
-        var myCell = new dcc.unitctl.Cell(clone);
-        //console.log(myCell);
-        return myCell;
-    }
-    clone.targetCellName = dcc.UrlUtils.extractFirstPath(cellUrl);
-    //Fetch tokens unless this accessor is elevated to Unit User.
-    //create target URL
-    if (dcc.UrlUtils.isUrl(clone.targetCellName)) {
-        targetCellUrl = clone.targetCellName + "/";
-    } else {
-        targetCellUrl = dcc.UrlUtils.append(this.baseUrl, clone.targetCellName) + "/";
-    }
-    if (!clone.owner) {
-        if(!this.schema){
-            //Pattern 2
-            //clone.authenticate(useCookie);
-            clone._obtainAccessTokenFromExtCell(myCellUrl , targetCellUrl , useCookie);
-        }else{
-            //Pattern 4
-            clone._obtainAccessTokenFromExtCellWithSchema(myCellUrl , targetCellUrl , useCookie);
-            //clone.authenticate(useCookie);
+        clone.targetCellName = dcc.UrlUtils.extractFirstPath(cellUrl);
+        //Fetch tokens unless this accessor is elevated to Unit User.
+        //create target URL
+        if (dcc.UrlUtils.isUrl(clone.targetCellName)) {
+            targetCellUrl = clone.targetCellName + "/";
+        } else {
+            targetCellUrl = dcc.UrlUtils.append(this.baseUrl, clone.targetCellName) + "/";
+        }
+        if (!clone.owner) {
+            if(!this.schema){
+                //Pattern 2
+                //clone.authenticate(useCookie);
+                clone._obtainAccessTokenFromExtCell(myCellUrl , targetCellUrl , useCookie);
+            }else{
+                //Pattern 4
+                clone._obtainAccessTokenFromExtCellWithSchema(myCellUrl , targetCellUrl , useCookie);
+                //clone.authenticate(useCookie);
+            }
         }
     }
     //Tentative implementation since cross-unit access is not supported.
-    //TODO need to support cross-unit access. Probably it is better to 
-    //get rid of cellName and baseUrl from Accessor members and introduce cell URL. 
+    //TODO need to support cross-unit access. Probably it is better to
+    //get rid of cellName and baseUrl from Accessor members and introduce cell URL.
     clone.cellName = dcc.UrlUtils.extractFirstPath(cellUrl);
     //return extCell instance
     var extCell =  new dcc.unitctl.Cell(clone, dcc.UrlUtils.extractFirstPath(cellUrl));
@@ -6774,7 +6779,7 @@ dcc.Accessor.prototype.getCellUrl = function() {
 /**
  * @private
  * This method performs no-schema authentication of current user based on token.
- * This is a scenario when authentication is done on same cell & without schema authentication. 
+ * This is a scenario when authentication is done on same cell & without schema authentication.
  * @param {String} myCellUrl cell URL to be authenticated
  * @param {Boolean} useCookie to check dc_cookie
  * @throws {dcc.ClientException} DAO exception
@@ -6830,7 +6835,7 @@ dcc.Accessor.prototype._obtainAccessTokenFromMyCell = function (myCellUrl , useC
 /**
  * @private
  * This method performs schema authentication of current user based on token.
- * This is a scenario when authentication is done on same cell with schema authentication. 
+ * This is a scenario when authentication is done on same cell with schema authentication.
  * @param {String} myCellUrl cell URL to be authenticated
  * @param {Boolean} useCookie to check dc_cookie
  * @throws {dcc.ClientException} DAO exception
@@ -6906,8 +6911,8 @@ dcc.Accessor.prototype._obtainAccessTokenFromMyCellWithSchema = function (myCell
 
 /**
  * @private
- * This method performs no-schema authentication of current user based on token. 
- * This is a scenario when authentication is done on external cell & without schema authentication. 
+ * This method performs no-schema authentication of current user based on token.
+ * This is a scenario when authentication is done on external cell & without schema authentication.
  * @param {String} myCellUrl
  * @param {String} targetCellUrl
  * @param {Boolean} useCookie to check dc_cookie
@@ -6986,8 +6991,8 @@ dcc.Accessor.prototype._obtainAccessTokenFromExtCell = function (myCellUrl, targ
 
 /**
  * @private
- * This method performs schema authentication of current user based on token. 
- * This is a scenario when authentication is done with schema authentication on same cell. 
+ * This method performs schema authentication of current user based on token.
+ * This is a scenario when authentication is done with schema authentication on same cell.
  * @param {String} myCellUrl
  * @param {String} targetCellUrl
  * @param {Boolean} useCookie to check dc_cookie
@@ -7089,13 +7094,13 @@ if(responseJson.dc_cookie_peer !== undefined && responseJson.dc_cookie_peer !== 
 dcc.Accessor.prototype._makeAccessTokenRequest = function (cellUrl , opts) {
     var formatedRequestBody  = dcc.UrlUtils.jsonToW3Form(opts);
     var httpClient = new dcc.http.DcHttpClient(false);
-    
+
     //Creation of request headers
     //Setting requestheader's value to builder instance.
     var builder = new dcc.http.DcRequestHeaderBuilder();
     builder.contentTypeHeaderValue = "application/x-www-form-urlencoded";
     builder.defaultHeaders(this.getDefaultHeaders());
-    
+
     //incorporate request header in builder
     builder.build(httpClient);
     httpClient._execute2("POST", cellUrl, {
@@ -7125,7 +7130,7 @@ dcc.Accessor.prototype._makeAccessTokenRequest = function (cellUrl , opts) {
  * @constructor
  * @augments dcc.AbstractODataContext
  * @param {dcc.Accessor} Accessor
- * @param {Object} body 
+ * @param {Object} body
  */
 dcc.cellctl.Account = function(as, body) {
   this.initializeProperties(this, as, body);
@@ -8199,7 +8204,7 @@ dcc.DcClass.extend(dcc.box.odata.schema.AssociationEnd, dcc.AbstractODataContext
  * @param {dcc.AbstractODataContext} self
  * @param {dcc.Accessor} as accessor
  * @param {Object} json JSON object
- * @param {String} path 
+ * @param {String} path
  */
 dcc.box.odata.schema.AssociationEnd.prototype.initializeProperties = function(self, as, json, path) {
   this.uber = dcc.AbstractODataContext.prototype;
@@ -8375,7 +8380,7 @@ dcc.DcClass.extend(dcc.box.odata.schema.AssociationEndManager, dcc.box.odata.ODa
  * This method initializes the properties of this class.
  * @param {dcc.box.odata.schema.AssociationEndManager} self
  * @param {dcc.Accessor} as accessor
- * @param {dcc.box.DavCollection} col 
+ * @param {dcc.box.DavCollection} col
  */
 dcc.box.odata.schema.AssociationEndManager.prototype.initializeProperties = function(self, as, col) {
   this.uber = dcc.box.odata.ODataManager.prototype;
@@ -8541,7 +8546,7 @@ dcc.box.odata.schema.AssociationEndManager.prototype.del = function(name, entity
  * To create assocend_navpro_list
  * @param {dcc.box.odata.schema.AssociationEnd} obj
  * @param {String} fromEntityTypeName
- * @param {String} fromAssEnd 
+ * @param {String} fromAssEnd
  * @param {Object} options
  * @return {dcc.http.DcHttpClient} response
  */
@@ -8567,7 +8572,7 @@ dcc.box.odata.schema.AssociationEndManager.prototype.createNavProList = function
 };
 
 /**
- * The purpose of this function is to create association URI 
+ * The purpose of this function is to create association URI
  * for particular entityType.
  * @param {String} entityTypeName
  * @return {String} URL
@@ -8584,7 +8589,7 @@ dcc.box.odata.schema.AssociationEndManager.prototype.getAssociationUri = functio
 /**
  * The purpose of this function is to retrieve association
  * list against one entity type.
- * @param {String} entityTypeName 
+ * @param {String} entityTypeName
  * @param {String} associationEndName
  * @return {Object} JSON
  */
@@ -8636,7 +8641,7 @@ dcc.box.odata.schema.AssociationEndManager.prototype.delAssociationLink = functi
  * @augments dcc.box.DavCollection
  * @param {dcc.Accessor} as Accessor
  * @param {Object} json
- * @param {String} path 
+ * @param {String} path
  */
 dcc.box.Box = function(as, json, path) {
   this.initializeProperties(this, as, json, path);
@@ -8916,7 +8921,7 @@ dcc.box.BoxManager.prototype.retrieve = function(name, options) {
   //return new dcc.box.Box(this.accessor, json);
   return new dcc.box.Box(this.accessor, json,dcc.UrlUtils.append(this.accessor.getCurrentCell().getUrl(), name));
   //var json = this._internalRetrieve(name);
-  //return new dcc.box.Box(this.accessor, json, dcc.UrlUtils.append(this.accessor.getCurrentCell().getUrl(), name)); 
+  //return new dcc.box.Box(this.accessor, json, dcc.UrlUtils.append(this.accessor.getCurrentCell().getUrl(), name));
 };
 /**
  * The purpose of this function is to return array of boxes.
@@ -8952,8 +8957,8 @@ dcc.box.BoxManager.prototype.getEtag = function(name) {
 
 /**
  * This method update the box details.
- * @param {String} boxName name 
- * @param {Object} body request 
+ * @param {String} boxName name
+ * @param {Object} body request
  * @param {String} etag value
  * @param {Object} options object optional containing callback, headers
  * @return {dcc.box.odata.ODataResponse} response
@@ -8982,10 +8987,10 @@ dcc.box.BoxManager.prototype.update = function(boxName, body, etag, options) {
  * @property {dcc.box.Box} box class instance to access Box.
  * @property {dcc.cellctl.Message} message Manager classes for sending and receiving messages.
  * @property {dcc.cellctl.Relation} relation class instance to access Relation.
- * @property {dcc.cellctl.Role} role class instance to access Role. 
+ * @property {dcc.cellctl.Role} role class instance to access Role.
  * @property {dcc.cellctl.ExtRole} extRole class instance to access External Role.
  * @property {dcc.cellctl.ExtCell} extCell class instance to access External Cell.
- * @property {dcc.cellctl.Event} event class instance to access Event.  
+ * @property {dcc.cellctl.Event} event class instance to access Event.
  * @augments dcc.AbstractODataContext
  * @param {dcc.Accessor} as Accessor
  * @param {String} key
@@ -9031,7 +9036,7 @@ dcc.unitctl.Cell.prototype.initializeProperties = function(self, as, body) {
 
 ///** CellレベルACLへアクセスするためのクラス. */
   /** To access cell level ACL. */
-  
+
   self.ctl.acl = null;
 ///** メンバーへアクセスするためのクラスインスタンス。cell().accountでアクセス. */
   /** Class instance to access Account. */
@@ -10342,7 +10347,7 @@ dcc.cellctl.ExtCellManager.prototype.create = function(body, options) {
 /**
  * This method performs retrieve operation on External Cell.
  * @param {String} roleId RoleId
- * @param {Object} options object has callback and headers 
+ * @param {Object} options object has callback and headers
  * @return {dcc.cellctl.ExtCell} ExtCell object
  * @throws {dcc.ClientException} DAO exception
  */
@@ -11032,7 +11037,7 @@ dcc.box.odata.ODataLinkManager.prototype.unlink = function(cx, options) {
  * @param {String} entitySetName
  * @param {String} id
  * @param {dcc.Accessor} as Accessor
- * @param {String} collectionUrl 
+ * @param {String} collectionUrl
  */
 dcc.box.odata.BatchLinksEntity = function(entitySetName, id, as, collectionUrl) {
   this.initializeProperties(this, entitySetName, id, as, collectionUrl);
@@ -11777,7 +11782,7 @@ dcc.cellctl.SentMessageManager.prototype.getUrl = function() {
  * This method gets the outgoing messages.
  * @param {String} messageId MessageID
  * @param {Object} options object has callback and headers
- * @return {dcc.cellctl.Message} Message object 
+ * @return {dcc.cellctl.Message} Message object
  * @throws {dcc.ClientException} DAO exception
  */
 dcc.cellctl.SentMessageManager.prototype.retrieve = function(messageId, options) {
@@ -12237,7 +12242,7 @@ dcc.cellctl.RelationManager.prototype.create = function(obj,options) {
  * This method performs retrieve operation.
  * @param {String} relationName Relation name
  * @param {String} boxName Box name
- * @param {Object} options object has callback and headers 
+ * @param {Object} options object has callback and headers
  * @return {dcc.cellctl.Relation} Relation object
  * @throws {dcc.ClientException} DAO exception
  */
@@ -12612,7 +12617,7 @@ dcc.cellctl.RoleManager.prototype.create = function(obj, options) {
  * This method retrieves a Role object.
  * @param {String} roleName Role Name
  * @param {String}boxName Box name
- * @param {Object} options object has callback and headers 
+ * @param {Object} options object has callback and headers
  * @return {dcc.cellctl.Role} Role object
  * @throws {dcc.ClientException} DAO exception
  */
@@ -13063,8 +13068,8 @@ dcc.box.ServiceCollection.prototype.del = function(pathValue, etagOrOptions) {
 };
 
 /**
- * This method calls PROPFIND API for specified path to get 
- * registered service file detail. 
+ * This method calls PROPFIND API for specified path to get
+ * registered service file detail.
  * @returns {dcc.DcHttpClient} response.
  * @throws {dcc.ClientException} Exception thrown
  */
@@ -13076,7 +13081,7 @@ dcc.box.ServiceCollection.prototype.propfind = function () {
 
 /**
  * The purpose of this method is to perform service configure operation for multiple service
- * in one API call. 
+ * in one API call.
  * @param {String[]} arrServiceNameAndSrcFile service list in combination of service name and source file
  * @param {String} subject Service
  * @param {Object} options refers to optional parameters - callback, headers.
@@ -13736,7 +13741,7 @@ dcc.box.odata.EntityLinkManager.prototype.del = function(entityLinkID, etag) {
 ///**
 //* @class EntityTypeのCRUDのためのクラス.
 //* @constructor
-//* @augments jEntitySet 
+//* @augments jEntitySet
 //*/
 /**
  * It creates a new object dcc.box.odata.EntityManager.
@@ -13868,7 +13873,7 @@ dcc.box.odata.schema.ComplexTypeManager.prototype.initializeProperties = functio
 };
 
 /**
- * This method gets the URL. 
+ * This method gets the URL.
  * @return {String} URL
  */
 dcc.box.odata.schema.ComplexTypeManager.prototype.getUrl = function() {
