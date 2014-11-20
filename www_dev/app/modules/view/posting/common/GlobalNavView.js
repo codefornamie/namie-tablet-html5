@@ -8,6 +8,13 @@ define(function(require, exports, module) {
     var PersonalModel = require("modules/model/personal/PersonalModel");
     var Snap = require("snap");
 
+    /**
+     * グローバルナビゲーションのViewクラスを作成する。
+     * 
+     * @class グローバルナビゲーションのViewクラス
+     * @exports GlobalNavView
+     * @constructor
+     */
     var GlobalNavView = TabletGlobalNavView.extend({
         template : require("ldsh!templates/{mode}/common/global-nav"),
 

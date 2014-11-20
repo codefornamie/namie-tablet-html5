@@ -7,6 +7,13 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var Equal = require("modules/util/filter/Equal");
     
+    /**
+     * ヘッダのViewクラスを作成する。
+     * 
+     * @class ヘッダのViewクラス
+     * @exports HeaderView
+     * @constructor
+     */
     var HeaderView = AbstractView.extend({
         template : require("ldsh!templates/{mode}/common/header"),
 
