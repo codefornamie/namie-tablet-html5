@@ -19,7 +19,11 @@ require.config({
         "iscroll-zoom": "../bower_components/iscroll/build/iscroll-zoom",
         "async": "../bower_components/async/lib/async",
         "vex" : "../bower_components/vex/js/vex",
-        "vexDialog" : "../bower_components/vex/js/vex.dialog"
+        "vexDialog" : "../bower_components/vex/js/vex.dialog",
+        "datejs": "../lib/foundation-calendar/js/date",
+        "foundation-calendar": "../lib/foundation-calendar/foundation_calendar",
+        "date-helpers": "../lib/foundation-calendar/helpers/date-helpers",
+        "string-helpers": "../lib/foundation-calendar/helpers/string-helpers"
     },
 
     deps : [ "main" ],
@@ -41,6 +45,8 @@ require.config({
         "blockui" : [ "jquery" ],
         "panzoom" : [ "jquery" ],
         "vex" : [ "jquery" ],
-        "vexDialog" : [ "vex" ]
+        "vexDialog" : [ "vex" ],
+        "date-helpers": [ "datejs"],
+        "foundation-calendar": ["date-helpers", "string-helpers", "foundation"]
     }
 });
