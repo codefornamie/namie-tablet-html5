@@ -11,7 +11,7 @@ define(function(require) {
             loginModel.baseUrl = "https://fj.baas.jp.fujitsu.com/";
             loginModel.cellId = "kizunatest01";
             loginModel.box = "data";
-            loginModel.set("loginId", "namie");
+            loginModel.set("loginId", "ukedon");
             loginModel.set("password", "namie01");
 
             loginModel.login(function() {
@@ -25,6 +25,8 @@ define(function(require) {
             model.box = "data";
             model.odata = "odata";
             model.entity = "article";
+            model.set("loginId", "ukedon");
+            model.set("password", "namie01");
             this.model = model;
             model.save(null, {
                 success : function(model, response, options) {

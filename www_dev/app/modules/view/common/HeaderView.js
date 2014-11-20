@@ -5,20 +5,20 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var RadiationModel = require("modules/model/radiation/RadiationModel");
-    var RadiationCollection = require("modules/collection/radiation/RadiationCollection");
+    //var RadiationModel = require("modules/model/radiation/RadiationModel");
+    //var RadiationCollection = require("modules/collection/radiation/RadiationCollection");
     var Equal = require("modules/util/filter/Equal");
-    
+
     var HeaderView = AbstractView.extend({
         template : require("ldsh!templates/{mode}/common/header"),
-        model : new RadiationModel(),
-        collection : new RadiationCollection(),
+        //model : new RadiationModel(),
+        //collection : new RadiationCollection(),
 
         beforeRendered : function() {
         },
 
         afterRendered : function() {
-            this.collection.fetch({success: $.proxy(this.onFetchRadiation,this)});
+            //this.collection.fetch({success: $.proxy(this.onFetchRadiation,this)});
         },
 
         initialize : function() {
