@@ -798,8 +798,35 @@ main {
 
 .post-header__site {
     font-size: 1rem;
-    margin: 0 -32px;
+    margin: 0 -27px 0 -32px;
+    background-image: url(../../app/img/img-contents-head01-middle.png);
+    background-size: auto 100%;
+    position: relative;
+    height: 48px;
 }
+    .post-header__site::before {
+        content: '';
+        display: block;
+        background-image: url(../../app/img/img-contents-head01-left.png);
+        background-size: 100%;
+        width: 5px;
+        height: 49px;
+        position: absolute;
+        top: 0;
+        left: -5px;
+    }
+
+    .post-header__site::after {
+        content: '';
+        display: block;
+        background-image: url(../../app/img/img-contents-head01-right.png);
+        background-size: 100%;
+        width: 5px;
+        height: 49px;
+        position: absolute;
+        top: 0;
+        right: -5px;
+    }
 
 .post-header__title {
     font-size: 2.3rem;
@@ -811,7 +838,7 @@ main {
 .post-label {
     display: block;
     background: #f2eaca;
-    padding: 0 16px;
+    padding: 2px 16px 0;
     border-radius: 2px;
     font-size: 1rem;
     margin-bottom: 8px;
