@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-
+    var foundation_calendar = require("foundation-calendar");
     /**
      * 運用管理アプリのトップ画面を表示するためのViewクラスを作成する。
      * 
@@ -15,11 +15,12 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/{mode}/top/top"),
 
         beforeRendered : function() {
-
+            this.$el.foundation();
         },
 
         afterRendered : function() {
-
+            var calendar = this.$el.find("[data-date]");
+            calendar.fcdp({fixed: true, dateSelector: true});
         },
     });
 
