@@ -1090,7 +1090,7 @@ div.nehan-block.nehan-body:last-child {
     height: 40px;
 }
 
-.backnumber-news {
+.backnumber-main {
     padding-top: 40px;
     width: 100%;
     height: 100%;
@@ -1098,19 +1098,25 @@ div.nehan-block.nehan-body:last-child {
     top: 0;
     left: 0;
 }
-    .backnumber-news > div {
+    .backnumber-main > div {
         height: 100%;
     }
 
+.backnumber-list-container {
+    height: 100%;
+    overflow: auto;
+}
+
 .backnumber-list {
     list-style: none;
+    margin: 0;
 }
 
 .backnumber-li {
     margin: 15px;
     background-color: #f7f6ef;
-    box-shadow: 0 1px 0 0 #d0cdb3;
-    border-radius: 10px;
+    box-shadow: 0 1px 2px 0 #d0cdb3;
+    border-radius: 15px;
     overflow: hidden;
     padding: 5px;
 }
@@ -1125,18 +1131,36 @@ div.nehan-block.nehan-body:last-child {
     color: inherit;
 }
 
+.backnumber-item.row {
+    display: table;
+}
+
+.backnumber-item.row .columns {
+    display: table-cell;
+    float: none;
+    vertical-align: middle;
+}
+
 .backnumber-item__date {
 }
 
 .backnumber-item__date .date-area {
+    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
     line-height: 1;
 }
 
 .backnumber-item__body {
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .backnumber-item__body ul {
     list-style: none;
+    margin-left: 0;
+}
+
+.backnumber-item__body ul > li {
+
 }
 
 /*
