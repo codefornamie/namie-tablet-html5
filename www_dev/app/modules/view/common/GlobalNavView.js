@@ -52,7 +52,7 @@ define(function(require, exports, module) {
             'change #selectRadiation' : "onChangeRadiationStation",
             'click [data-font-size]': 'onClickFontSize'
         },
-        
+
         /**
          *  今日の新聞に戻るボタンは
          *  topでは表示しない
@@ -70,6 +70,7 @@ define(function(require, exports, module) {
          *  @param {Event} ev
          */
         onClickDrawerOpener: function (ev) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー","");
             ev.preventDefault();
             this.snapper.open('left');
         },
@@ -81,20 +82,21 @@ define(function(require, exports, module) {
             ev.preventDefault();
             app.router.back();
         },
-        
+
         /**
          *  フォントサイズ変更ボタンが押されたら呼ばれる
          */
         onClickFontSize: function (ev) {
             app.trigger('willChangeFontSize');
-            
+
             var $target = $(ev.currentTarget);
             var size = parseInt($target.attr('data-font-size'), 10);
-            
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "文字サイズ選択", parseInt(size));
+
             $('html, body').css('font-size', size + 'px');
 
             app.trigger('didChangeFontSize');
-            
+
             // 連続で押下された場合にリクエストが多数飛ばないようにするため
             // 数秒後に文字サイズ登録リクエストを飛ばす。
             // この間に再度文字サイズを変更されると前回の登録処理は無効とする
@@ -104,7 +106,7 @@ define(function(require, exports, module) {
             this.fontTimer = setTimeout($.proxy(function() {
                 this.saveFontSize($target.attr("value"));
             },this),1500);
-            
+
         },
         /**
          *  文字サイズの保存処理

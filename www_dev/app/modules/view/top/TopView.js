@@ -8,12 +8,13 @@ define(function(require, exports, module) {
     var TopView = AbstractView.extend({
         template : require("ldsh!templates/{mode}/top/top"),
 
+
         beforeRendered : function() {
 
         },
 
         afterRendered : function() {
-
+            app.ga.trackPageView("Top","新聞アプリ/TOPページ");
         },
     });
 

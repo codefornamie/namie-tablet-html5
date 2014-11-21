@@ -20,6 +20,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            app.ga.trackPageView("Favorite","新聞アプリ/切り抜き一覧ページ");
         },
 
         initialize : function() {
@@ -37,7 +38,7 @@ define(function(require, exports, module) {
             this.favoriteCollection.condition.filters = [ new And([
                     new Equal("userId", app.user.get("__id")),
                     new IsNull("deletedAt") ]) ];
-            
+
             this.favoriteCollection.fetch({
                 success: $.proxy(this.onFetch,this),
                 error: $.proxy(this.onFailure,this)
@@ -60,7 +61,7 @@ define(function(require, exports, module) {
             if (this.favoriteCollection.size() === 0) {
                 $(this.el).find("#feedList").text("記事情報がありません");
             }
-            
+
             // 初期表示処理
             if (favoriteFeedListView.collection.size() !== 0) {
                 var firstView = favoriteFeedListView.views["#feedList"][0];
