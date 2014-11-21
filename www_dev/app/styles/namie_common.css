@@ -432,6 +432,12 @@ main {
     font-size: 36px;
 }
 
+/* others */
+.date-area__span {
+    display: inline-block;
+    font-size: 30px;
+}
+
 /**
  *  global-nav__font
  *  フォントサイズ指定
@@ -1087,11 +1093,32 @@ div.nehan-block.nehan-body:last-child {
  *  Backnumber
  */
 .backnumber-nav {
-    height: 40px;
+    position: relative;
+    z-index: 50;
+    height: 60px;
+    text-align: center;
+}
+
+.backnumber-nav__item {
+    display: inline-block;
+}
+
+.backnumber-nav__month {
+    color: #485a5d;
+}
+
+.backnumber-nav__month .date-area {
+    line-height: 1;
+    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
+}
+
+.backnumber-nav__prev,
+.backnumber-nav__next {
+    color: #ec8c2c;
 }
 
 .backnumber-main {
-    padding-top: 40px;
+    padding-top: 60px;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -1160,7 +1187,15 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .backnumber-item__body ul > li {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 650px;
+    text-overflow: ellipsis;
+}
 
+.backnumber-item__thumbnail {
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 /*
