@@ -37,9 +37,14 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            if (this.model) {
+                // 編集時
+                this.setData();
+            } else {
+                var tomorrow = DateUtil.addDay(new Date(),1);
+                $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
+            }
             this.chageMultiDateCheckbox();
-            var tomorrow = DateUtil.addDay(new Date(),1);
-            $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
         },
 
         initialize : function() {
@@ -50,6 +55,12 @@ define(function(require, exports, module) {
             "click #addFileForm" : "onAddFileForm",
             "click #articleRegistButton" : "onClickArticleRegistButton",
             "change #articleMultiDate" : "chageMultiDateCheckbox"
+        },
+        /**
+         * 編集時にデータを各フォームにセットする
+         */
+        setData: function () {
+            
         },
         /**
          * 複数日チェックボックスのチェック有無でフォームを切り替える関数
