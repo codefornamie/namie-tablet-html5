@@ -16,7 +16,10 @@ define(function(require, exports, module) {
     var Equal = require("modules/util/filter/Equal");
 
     /**
-     * 記事一覧・詳細のメインとなる画面のViewクラス
+     * 記事一覧・詳細のメインとなる画面のViewクラスを作成する。
+     * @class 記事一覧・詳細のメインとなる画面のViewクラス
+     * @exports NewsView
+     * @constructor
      */
     var NewsView = AbstractView.extend({
 
@@ -37,9 +40,22 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
+            this.setArticleSearchCondition({targetDate: new Date()});
+            this.searchArticles();
+        },
+        /**
+         * 記事の検索処理を開始する。
+         */
+        searchArticles: function() {
             app.ga.trackPageView("/NewsView", "ニュース");
 
             this.showLoading();
+            
+            // 現在保持しているデータをクリア
+            this.articleCollection.reset();
+            this.recommendCollection.reset();
+            this.eventsCollection.reset();
+            this.youtubeCollection.reset();
 
             async.parallel([
                 this.loadYoutube.bind(this),
@@ -48,7 +64,17 @@ define(function(require, exports, module) {
                 this.loadEvents.bind(this)
             ], this.onFetchAll.bind(this));
         },
-
+        /**
+         * 記事の検索条件を指定する。
+         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         */
+        setArticleSearchCondition: function(condition) {
+            var targetDate = condition.targetDate;
+            var dateString = DateUtil.formatDate(targetDate,"yyyy-MM-dd");
+            this.articleCollection.condition.filters = new Equal("publishedAt", dateString);
+            this.recommendCollection.condition.filters = new Equal("publishedAt", dateString);
+            this.eventsCollection.condition.filters = new Equal("publishedAt", dateString);
+        },
         /**
          *  youtubeのコンテンツを読み込む
          *  @param {Function} callback
@@ -175,6 +201,7 @@ define(function(require, exports, module) {
          *  @param {Function} callback
          */
         loadEvents: function (callback) {
+            this.eventsCollection.reset();
             this.eventsCollection.fetch({
                 success: function () {
                     callback();
@@ -190,7 +217,6 @@ define(function(require, exports, module) {
          *  @param {Function} callback
          */
         loadRecommend: function (callback) {
-            this.recommendCollection.condition.filters = [new Equal("publishedAt", DateUtil.formatDate(new Date(),"yyyy-MM-dd"))];
             this.recommendCollection.fetch({
                 success: function () {
                     callback();
@@ -213,6 +239,7 @@ define(function(require, exports, module) {
             }
 
 //            this.newsCollection.add(this.youtubeCollection.models);
+            this.newsCollection.reset();
             this.newsCollection.add(this.articleCollection.models);
             this.newsCollection.add(this.eventsCollection.models);
 
@@ -245,24 +272,54 @@ define(function(require, exports, module) {
 
 
             // FeedListView初期化
-            var feedListView = new FeedListView();
-            feedListView.collection = this.newsCollection;
-            this.setView("#sidebar__list", feedListView);
-            feedListView.render();
-            if (this.newsCollection.size() === 0) {
-                $(this.el).find("#feedList").text("記事情報がありません");
-            }
-//            feedListView.listenTo(this.articleCollection, "reset sync request", feedListView.render);
+            this.showFeedListView();
 
             // ArticleListView初期化
-            var articleListView = new ArticleListView();
-            articleListView.collection = this.newsCollection;
-            this.setView("#article-list", articleListView);
-            articleListView.render();
-//            articleListView.listenTo(this.articleCollection, "reset sync request", articleListView.render);
+            this.showArticleListView();
 
             this.hideLoading();
         },
+        /**
+         * 左ペインの記事一覧メニューを表示する。
+         */
+        showFeedListView: function() {
+            var feedListView = this.createFeedListView();
+            feedListView.collection = this.newsCollection;
+
+            this.removeView(this.feedListElement);
+            this.setView(this.feedListElement, feedListView);
+            feedListView.render();
+            if (this.newsCollection.size() === 0) {
+                this.showFeetNotFoundMessage();
+            }
+        },
+        /**
+         * 記事が見つからなかった場合のメッセージを画面に表示する。
+         */
+        showFeetNotFoundMessage: function() {
+            $(this.el).find("#feedList").text("記事情報がありません");
+        },
+        /**
+         * 記事一覧を表示する要素のセレクタ
+         */
+        feedListElement: '#sidebar__list',
+        /**
+         * 右ペインの記事一覧を表示するViewのインスタンスを作成して返す。
+         * @return {FeedListView} 生成したFeedListViewのインスタンス
+         */
+        createFeedListView: function() {
+            return new FeedListView();
+        },
+        /**
+         * 右ペインの記事一覧を表示する。
+         */
+        showArticleListView: function() {
+            var articleListView = new ArticleListView();
+            articleListView.collection = this.newsCollection;
+            this.removeView("#article-list");
+            this.setView("#article-list", articleListView);
+            articleListView.render();
+        }
 
     });
 
