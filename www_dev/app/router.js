@@ -74,14 +74,16 @@ define(function(require, exports, module) {
                 },
 
                 /**
-                 *  セレクタで指定した部分のviewをremoveする
+                 *  セレクタで指定したviewをremoveする
                  *
                  *  @param {String} viewName
                  */
                 removeViewByName : function (viewName) {
                     var view = this.getView(viewName);
 
-                    view.remove();
+                    if (view) {
+                        view.remove();
+                    }
                 }
             });
 
