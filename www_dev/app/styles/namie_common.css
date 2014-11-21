@@ -1181,6 +1181,12 @@ div.nehan-block.nehan-body:last-child {
     height: 100%;
     background: rgba(0,0,0,0.3);
     z-index: 100;
+    opacity: 0;
+    transition: .3s ease opacity;
+}
+
+.settings-bg.is-ready {
+    opacity: 1;
 }
 
 .settings-dialog {
@@ -1195,6 +1201,12 @@ div.nehan-block.nehan-body:last-child {
     background: white;
     z-index: 110;
     box-shadow: 0 1px 5px 0 rgba(0,0,0,0.32);
+    opacity: 0;
+    transition: .3s ease opacity;
+}
+
+.settings-dialog.is-ready {
+    opacity: 1;
 }
 
 .settings-dialog__cross-button {

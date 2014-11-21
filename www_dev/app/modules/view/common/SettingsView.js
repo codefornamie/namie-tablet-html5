@@ -27,6 +27,12 @@ define(function(require, exports, module) {
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          */
         afterRendered : function() {
+            var $fadeIn = this.$el.find('[data-fade-in]');
+
+            // ダイアログをフェードインさせる
+            setTimeout(function () {
+                $fadeIn.addClass('is-ready');
+            }, 0);
         },
 
         /**
@@ -47,7 +53,7 @@ define(function(require, exports, module) {
         onClickSettingsCloser: function (ev) {
             ev.preventDefault();
 
-            app.router.go('top');
+            app.router.back();
         }
     });
 
