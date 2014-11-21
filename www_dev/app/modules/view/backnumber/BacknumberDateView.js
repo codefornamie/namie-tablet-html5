@@ -36,6 +36,8 @@ define(function(require, exports, module) {
          */
         initialize : function(param) {
             console.assert(param && param.date, 'Please pass the date value');
+
+            // [TODO] param.dateに日付が渡ってくるのでうまく利用する
         },
 
         events : {
