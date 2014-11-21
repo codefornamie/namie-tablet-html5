@@ -151,8 +151,6 @@ define(function(require, exports, module) {
         },
 
         backnumberDate : function (date) {
-            if (this.forceJumpToTop()) return;
-
             console.log('[route] backnumber/%s', date);
             this.layout.showView(new BacknumberDateView({
                 date: date
