@@ -33,7 +33,24 @@ define(function(require, exports, module) {
             this.tagListView.tagsArray = this.model.get("tagsArray");
             this.setView(".articleTags", this.tagListView);
             this.tagListView.render();
-        }
+        },
+        events : {
+            "click [data-article-edit-button]" : "onClickArticleEditButton"
+        },
+        /**
+         *  編集ボタン押下時に呼び出されるコールバック関数
+         */
+        onClickArticleEditButton: function () {
+            if (this.model.get("type") === "2") {
+                app.router.opeYouTubeRegist({model:this.model});
+            } else if (this.model.get("type") === "3" || this.model.get("type") === "4") {
+                app.router.opeArticleRegist({model:this.model});
+            } else {
+                alert("RSS記事です");
+            }
+            $("#contents__primary").scrollTop(0);
+        },
+
     });
 
     module.exports = OpeFeedListItemView;
