@@ -2,7 +2,7 @@
 
 define(function(require, exports, module) {
     "use strict";
-    
+
     require('iscroll-zoom');
 
     var app = require("app");
@@ -16,24 +16,20 @@ define(function(require, exports, module) {
      */
     var ArticleListView = AbstractView.extend({
         template : require("ldsh!templates/{mode}/news/articleList"),
-        
+
         /**
          * 表示中の記事のID
          */
         _currentArticleId: null,
-        
+
         beforeRendered : function() {
             this.destroyIScroll();
             this.setArticleList();
         },
 
         afterRendered : function() {
-            //this.initIScroll();
-            //var $container = $('#contents__primary');
-            //this.iscroll = new IScroll($container[0], {
-            //    zoom: true
-            //});
         },
+
         /**
          * 初期化処理
          */
@@ -41,13 +37,22 @@ define(function(require, exports, module) {
             // 表示する記事ページのインデックス
             app.set('currentPage', 0);
             this.listenTo(app, 'change:currentPage', this.onChangeCurrentPage);
-            
+
             // イベントを登録
-            app.on('scrollToArticle', this.scrollToArticle.bind(this));
-            app.on('willChangeFontSize', this.willChangeFontSize.bind(this));
-            app.on('didChangeFontSize', this.didChangeFontSize.bind(this));
+            app.on('scrollToArticle:articleList', this.scrollToArticle.bind(this));
+            app.on('willChangeFontSize:articleList', this.willChangeFontSize.bind(this));
+            app.on('didChangeFontSize:articleList', this.didChangeFontSize.bind(this));
         },
-        
+
+        /**
+         *  viewがremoveされる時に呼ばれる
+         */
+        cleanup: function () {
+            app.off('scrollToArticle:articleList');
+            app.off('willChangeFontSize:articleList');
+            app.off('didChangeFontSize:articleList');
+        },
+
         /**
          * iScrollを初期化する
          */
@@ -100,29 +105,29 @@ define(function(require, exports, module) {
             if ($img.length === 0) {
                 registerIScroll();
             }
-            
+
             function registerIScroll() {
                 if (count > 0) return;
-                
+
                 _initIScroll();
 
                 // 読み込み後のフェードインのため
                 $('.article-list').addClass('is-ready');
             }
-            
+
             function _initIScroll() {
                 // ページ遷移後はスクロール位置を0にする
                 $container.animate({
                     scrollTop: 0
                 }, 0);
-                
+
                 // iscrollインスタンスを生成する
                 self.iscroll = new IScroll($container[0], {
                     scrollbars: true,
                     zoom: true,
                     probeType: 1
                 });
-                
+
                 // scroll量に従ってページ切り替えを行う
                 var SCROLL_BUFFER = 50;
 
@@ -132,7 +137,7 @@ define(function(require, exports, module) {
                     var containerHeight = $container.height();
                     var contentHeight = $container.children().height();
                     var hiddenHeight = contentHeight - (scrollTop + containerHeight);
-                    
+
                     if (0 < y) {
                         if (SCROLL_BUFFER < y) {
                             self.goToPreviousPage();
@@ -147,7 +152,7 @@ define(function(require, exports, module) {
                 });
             }
         },
-        
+
         /**
          * 生成済みのiscrollインスタンスを破棄する
          */
@@ -168,7 +173,7 @@ define(function(require, exports, module) {
             var heightTopBar = $('.top-bar').height();
             var heightGlobalNav = $('.global-nav').height();
             var position = $("#" + articleId).offset().top - heightTopBar - heightGlobalNav;
-            
+
             // 現在の記事詳細のスクロール位置と相対位置を加算した箇所までスクロールする
             $(".contents__primary").animate({
                 scrollTop : position + $(".contents__primary").scrollTop()
@@ -177,20 +182,20 @@ define(function(require, exports, module) {
                 duration: (immediate) ? 0 : 400
             });
         },
-        
+
         /**
          * 取得した動画一覧を描画する
          */
         setArticleList : function() {
             var currentPage = app.get('currentPage');
             var model = this.collection.at(currentPage);
-            
+
             this.collection.each(function (model) {
                 var template = require("ldsh!templates/{mode}/news/articleListItem");
                 // 記事一覧に追加するViewクラス。
                 // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
                 var ListItemView;
-                
+
                 switch (model.get("type")) {
                 case "2":
                     template = require("ldsh!templates/{mode}/news/youTubeListItem");
@@ -201,7 +206,7 @@ define(function(require, exports, module) {
                     ListItemView = ArticleListItemView;
                     if (model.get("modelType") === "event") {
                         template = require("ldsh!templates/{mode}/news/eventsListItem");
-                    } 
+                    }
                     if (model.get("rawHTML")) {
                         template = require("ldsh!templates/{mode}/news/articleListItemForHtml");
                     } else if (model.get("modelType") === "youtube") {
@@ -217,32 +222,8 @@ define(function(require, exports, module) {
                     template: template
                 }));
             }.bind(this));
-
-            /*
-            var animationDeley = 0;
-            this.collection.each($.proxy(function(model) {
-                var template = require("ldsh!templates/{mode}/news/articleListItem");
-                switch (model.get("modelType")) {
-                    case "youtube":
-                        template = require("ldsh!templates/{mode}/news/articleListItem");
-                        break;
-                    case "event":
-                        template = require("ldsh!templates/{mode}/news/eventsListItem");
-                        break;
-                    default:
-                        template = require("ldsh!templates/{mode}/news/articleListItem");
-                        break;
-                }
-                this.insertView("#articleList", new ArticleListItemView({
-                    model : model,
-                    template: template,
-                    animationDeley : animationDeley
-                }));
-                animationDeley += 0.2;
-            }, this));
-            */
         },
-        
+
         /**
          * 指定したページに移動する
          * @param {Number} page
@@ -251,11 +232,11 @@ define(function(require, exports, module) {
             // 範囲外ならば移動しない
             if (page < 0) return;
             if (this.collection.length <= page) return;
-            
+
             // 範囲内ならば表示しているページを更新する
             app.set('currentPage', page);
         },
-        
+
         /**
          * 前のページに移動する
          */
@@ -263,7 +244,7 @@ define(function(require, exports, module) {
             var currentPage = app.get('currentPage');
             this.goToPage(currentPage - 1);
         },
-        
+
         /**
          * 次のページに移動する
          */
@@ -271,14 +252,14 @@ define(function(require, exports, module) {
             var currentPage = app.get('currentPage');
             this.goToPage(currentPage + 1);
         },
-        
+
         /**
          * currentPageが更新されたら呼ばれる
          */
         onChangeCurrentPage: function () {
             this.render();
         },
-        
+
         /**
          * 文字サイズを変更する直前に呼ばれる
          */
@@ -286,7 +267,7 @@ define(function(require, exports, module) {
             var $currentPost = $('.post').filter(function () {
                 return 0 <= $(this).position().top + $(this).height();
             }).first();
-            
+
             this._currentArticleId = $currentPost.attr('id');
         },
 
