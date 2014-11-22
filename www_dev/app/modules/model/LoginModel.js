@@ -184,7 +184,7 @@ define(function(require, exports, module) {
                             //alert("アカウントマネージャ登録成功");
                         });
             } else {
-                console.log("account maanger undefined (not android)");
+                console.log("account manager undefined (not android)");
             }
         },
 
