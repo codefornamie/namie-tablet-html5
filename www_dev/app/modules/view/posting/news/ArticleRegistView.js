@@ -234,7 +234,7 @@ define(function(require, exports, module) {
                         image = {};
                         var preName = file.name.substr(0, file.name.lastIndexOf("."));
                         var suffName = file.name.substr(file.name.lastIndexOf("."));
-                        image.fileName = preName + "_" + String(new Date().getTime()) + suffName;
+                        image.fileName = preName + "_" + String(new Date().getTime()) + _.uniqueId("") + suffName;
                         image.contentType = file.type;
                         image.data = $(fileArea).find("#articleFile").prop("data");
                     }else{
