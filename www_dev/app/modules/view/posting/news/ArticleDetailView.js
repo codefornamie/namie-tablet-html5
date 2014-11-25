@@ -38,8 +38,6 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             console.assert(this.model, 'model is not defined');
-
-            console.log('[ArticleDetailView]', this.model);
         },
 
         /**
