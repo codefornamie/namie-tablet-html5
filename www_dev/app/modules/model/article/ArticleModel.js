@@ -114,6 +114,21 @@ define(function(require, exports, module) {
             ][status];
 
             return str || status;
+        },
+
+        /**
+         *  掲載期間の文字列を返す
+         *
+         *  @return {String}
+         */
+        getPubDateString: function () {
+            var pubDateString = DateUtil.formatDate(new Date(this.get("publishedAt")),"yyyy年MM月dd日(ddd)");
+
+            if(this.get("depublishedAt")){
+                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")) ,"yyyy年MM月dd日(ddd)");
+            }
+
+            return pubDateString;
         }
     });
 

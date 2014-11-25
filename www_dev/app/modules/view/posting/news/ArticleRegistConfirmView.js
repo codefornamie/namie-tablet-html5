@@ -41,7 +41,7 @@ define(function(require, exports, module) {
             if(this.model.get("depublishedAt")){
                 pubDateString += " ～ " + DateUtil.formatDate(new Date(this.model.get("endDate")) ,"yyyy年MM月dd日(ddd)");
             }
-            $("#articlePublishRange").text("掲載期間： " + pubDateString);
+            $("#articlePublishRange").text(pubDateString);
             
             $("#articleDescription").html(CommonUtil.sanitizing(this.model.get("description")));
             $("#articleContactInfo").html(CommonUtil.sanitizing(this.model.get("contactInfo")));

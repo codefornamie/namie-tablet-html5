@@ -181,10 +181,16 @@ define(function(require, exports, module) {
         articleRegist : function(options) {
             console.log('[route] articleRegist');
 
+            var param = {};
+
+            options = options || {};
+
+            if (options.model) {
+                param.model = options.model;
+            }
+
             this.navigate("articleRegist");
-            this.layout.showView(new ArticleRegistView({
-                model: options.model
-            }));
+            this.layout.showView(new ArticleRegistView(param));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
 
