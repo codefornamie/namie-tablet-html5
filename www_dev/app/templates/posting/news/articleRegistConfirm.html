@@ -1,93 +1,89 @@
-<article class='post' id="<%= model.get('__id') %>"
-    style="border-bottom: solid 1px;">
-    <section class='post__body'>
-        <div class="confirmAttention event-confirm__attention">
-            入力した項目の確認です。
-            入力内容が正しければ「登録する」を押してください。
+<div id="articleRegistConfirmPage" role="content">
+    <div class="eventDetailHeader">
+        <div class="row">
+            <div class="large-12 columns">
+                入力した項目の確認です。<br>
+                入力内容が正しければ「登録する」を押してください。
+            </div>
         </div>
+    </div>
+    <article id="<%= model.get('__id') %>">
+        <aside id='contents__secondary'
+            class="contents__secondary columns small-3">
+            <div class="dummy-pickup"></div>
+            <div class="dummy-article">
+                <div class="dummy-article-inner">
+                    <%= model.get("title") %>
+                </div>
+            </div>
+        </aside>
+        
+        <div id='contents__primary' class="contents__primary columns small-9" role='content'>
 
-        <table class='event-confirm__table'>
-            <thead>
-                <tr>
-                    <th colspan='2'>
-                        <h3><%= model.get("title") %></h3>
-                    </th>
-                </tr>
-            </thead>
+            <div class="row">
+                <div class="large-12 columns">
+                    <div class="eventTitle">
+                        <%= model.get("title") %>
+                    </div>
+                </div>
 
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="column_title">日時</div>
-                    </td>
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">日時</div>
+                </div>
+                <div class="large-11 large-centered columns">
+                    <div id="articleDateTime"></div>
+                </div>
 
-                    <td>
-                        <div id="articleDateTime"></div>
-                    </td>
-                </tr>
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">場所</div>
+                </div>
+                <div class="large-11 large-centered columns">
+                    <div id="articlePlace"><%= model.get("place") %></div>
+                </div>
 
-                <tr>
-                    <td>
-                        <div class="column_title">場所</div>
-                    </td>
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">内容</div>
+                </div>
+                <div class="large-11 large-centered columns">
+                    <div id="articleDescription"></div>
+                </div>
 
-                    <td>
-                        <div id="articlePlace"><%= model.get("place") %></div>
-                    </td>
-                </tr>
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">画像</div>
+                </div>
+                <div id="articleImageArea" class="row">
+                    <div class="large-4 columns"><img id="articleImage1"></img></div>
+                    <div class="large-4 columns"><img id="articleImage2"></img></div>
+                    <div class="large-4 columns"><img id="articleImage3"></img></div>
+                </div>
 
-                <tr>
-                    <td>
-                        <div class="column_title">内容</div>
-                    </td>
-
-                    <td>
-                        <div id="articleDescription"></div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="column_title">画像</div>
-                    </td>
-
-                    <td>
-                        <div id="articleImageArea" class="row">
-                            <div class="large-4 columns"><img id="articleImage1"></img></div>
-                            <div class="large-4 columns"><img id="articleImage2"></img></div>
-                            <div class="large-4 columns"><img id="articleImage3"></img></div>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="column_title">主催者連絡先</div>
-                    </td>
-
-                    <td>
-                        <div id="articleContactInfo"></div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <div class="column_title">
-                            掲載期間
-                        </div>
-                    </td>
-
-                    <td>
-                        <div id="articlePublishRange" class="column_title"></div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <div class="post-action">
-            <button id="articleRegistButton" type="button" class="small button">登録する</button>
-
-            <button id="articleBackButton" type="button" class="small button">戻る</button>
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">主催者連絡先</div>
+                </div>
+                <div class="large-11 large-centered columns end">
+                    <div id="articleContactInfo"></div>
+                </div>
+            </div>
         </div>
-    </section>
-</article>
+    </article>
+    <div class="eventDetailFooter">
+        <div class="row">
+            <div class="large-12 text-center columns">
+                <div id="articlePublishRange" class="column_title"></div>
+            </div>
+
+            <div class="large-12 columns">
+                <div class="post-action">
+                    <div class="row">
+                        <div class="large-6 text-right columns">
+                            <button id="articleRegistButton" type="button" class="small button">登録する</button>
+                        </div>
+                        <div class="large-6 text-left columns">
+                            <button id="articleBackButton" type="button" class="small button">戻る</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+</div>

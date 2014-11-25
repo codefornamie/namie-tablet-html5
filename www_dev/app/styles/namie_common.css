@@ -1344,7 +1344,7 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .posting-content .contents__primary {
-    border-left: 2px solid #333;
+    border-left: 1px solid #333;
     padding: 40px;
 }
 .posting-content .contents__primary .post {
@@ -1413,6 +1413,43 @@ div.nehan-block.nehan-body:last-child {
 }
 .posting-content .file-action {
     margin-bottom: 20px;
+}
+
+#articleRegistConfirmPage > article {
+    border-top: 1px solid #333;
+}
+#articleRegistConfirmPage #articleDateTime,
+#articleRegistConfirmPage #articlePlace,
+#articleRegistConfirmPage #articleDescription,
+#articleRegistConfirmPage #articleContactInfo {
+    line-height: 1.2rem;
+}
+#articleRegistConfirmPage .eventDetailHeader {
+    padding-bottom: 30px;
+}
+#articleRegistConfirmPage .eventDetailFooter  {
+    border-top: 1px solid #333;
+    clear: both;
+}
+#articleRegistConfirmPage .eventDetailFooter #articlePublishRange {
+    border: 1px solid #333;
+    margin: 2rem auto;
+    padding: 10px;
+    width: 60%;
+}
+#articleRegistConfirmPage .contents__secondary .dummy-pickup {
+    background: #ccc;
+    border-bottom: 1px solid #333;
+    height: 200px;
+}
+#articleRegistConfirmPage .contents__secondary .dummy-article {
+    border-bottom: 1px solid #333;
+    padding: 15px 15px 15px 70px;
+}
+#articleRegistConfirmPage .contents__secondary .dummy-article-inner {
+    line-height: 1.4rem;
+    height: 2.8rem;
+    overflow: hidden;
 }
 
 /**
