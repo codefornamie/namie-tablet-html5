@@ -21,6 +21,10 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
 //            this.showImage();
+            if(this.model.get("parent")){
+                $("#articleEditButton").text("レポート詳細");
+                $("#articleReportButton").hide();
+            }
         },
 
         /**
@@ -43,6 +47,13 @@ define(function(require, exports, module) {
             app.router.articleDetail({
                 model: model
             });
+        },
+
+        /**
+         * レポートを書くボタンを押下された際のハンドラ
+         */
+        onClickGotoReport : function(e){
+            app.router.articleRegist({parentModel: this.model, articleCategory: "4"});
         }
     });
     module.exports = ArticleListItemView;
