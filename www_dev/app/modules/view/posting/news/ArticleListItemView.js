@@ -32,7 +32,7 @@ define(function(require, exports, module) {
         },
         
         onClickArticleEditButton : function(e){
-            app.router.go("articleRegist");
+            app.router.articleRegist({model:this.model});
         }
     });
     module.exports = ArticleListItemView;

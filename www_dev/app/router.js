@@ -159,9 +159,10 @@ define(function(require, exports, module) {
             this.layout.showView(new ArticleDetailView());
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
-        articleRegist : function() {
+        articleRegist : function(options) {
             console.log('[route] articleRegist');
-            this.layout.showView(new ArticleRegistView());
+            this.layout.showView(new ArticleRegistView(options));
+            this.navigate("articleRegist");
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
         opeArticleRegist : function(options) {
