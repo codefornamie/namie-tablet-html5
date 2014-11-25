@@ -107,14 +107,14 @@ define(function(require, exports, module) {
          *  フォントサイズ変更ボタンが押されたら呼ばれる
          */
         onClickFontSize: function (ev) {
-            app.trigger('willChangeFontSize');
+            $(document).trigger('willChangeFontSize');
 
             var $target = $(ev.currentTarget);
             var size = parseInt($target.attr('data-font-size'), 10);
 
             $('html, body').css('font-size', size + 'px');
 
-            app.trigger('didChangeFontSize');
+            $(document).trigger('didChangeFontSize');
 
             // 連続で押下された場合にリクエストが多数飛ばないようにするため
             // 数秒後に文字サイズ登録リクエストを飛ばす。

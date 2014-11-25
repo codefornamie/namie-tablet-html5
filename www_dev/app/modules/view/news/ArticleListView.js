@@ -34,30 +34,33 @@ define(function(require, exports, module) {
             this.listenTo(app, 'change:currentPage', this.onChangeCurrentPage);
 
             // イベントを登録
-            app.on('scrollToArticle:articleList', this.scrollToArticle.bind(this));
-            app.on('willChangeFontSize:articleList', this.willChangeFontSize.bind(this));
-            app.on('didChangeFontSize:articleList', this.didChangeFontSize.bind(this));
+            $(document).on('scrollToArticle.articleList', this.scrollToArticle.bind(this));
+            $(document).on('willChangeFontSize.articleList', this.willChangeFontSize.bind(this));
+            $(document).on('didChangeFontSize.articleList', this.didChangeFontSize.bind(this));
         },
 
         /**
          *  viewがremoveされる時に呼ばれる
          */
         cleanup: function () {
-            app.off('scrollToArticle:articleList');
-            app.off('willChangeFontSize:articleList');
-            app.off('didChangeFontSize:articleList');
+            $(document).off('scrollToArticle.articleList');
+            $(document).off('willChangeFontSize.articleList');
+            $(document).off('didChangeFontSize.articleList');
         },
 
         /**
          * 指定されたarticleIdの記事までスクロール
+         *
+         * @param {jQuery.Event} ev
          * @param {Object} param
          */
-        scrollToArticle: function (param) {
+        scrollToArticle: function (ev, param) {
             var articleId = param.articleId;
             var immediate = !!param.immediate;
-            var heightTopBar = $('.top-bar').height();
+            var heightHeader = $('.header').height();
             var heightGlobalNav = $('.global-nav').height();
-            var position = $("#" + articleId).offset().top - heightTopBar - heightGlobalNav;
+            var heightMargin = 10;
+            var position = $("#" + articleId).offset().top - heightHeader - heightGlobalNav - heightMargin;
 
             // 現在の記事詳細のスクロール位置と相対位置を加算した箇所までスクロールする
             $(".contents__primary").animate({
@@ -147,8 +150,11 @@ define(function(require, exports, module) {
 
         /**
          * 文字サイズを変更する直前に呼ばれる
+         *
+         * @param {jQuery.Event} ev
+         * @param {Object} param
          */
-        willChangeFontSize: function () {
+        willChangeFontSize: function (ev, param) {
             var $currentPost = $('.post').filter(function () {
                 return 0 <= $(this).position().top + $(this).height();
             }).first();
@@ -158,9 +164,12 @@ define(function(require, exports, module) {
 
         /**
          * 文字サイズを変更した直後に呼ばれる
+         *
+         * @param {jQuery.Event} ev
+         * @param {Object} param
          */
         didChangeFontSize: function () {
-            app.trigger('scrollToArticle', {
+            $(document).trigger('scrollToArticle', {
                 articleId: this._currentArticleId,
                 immediate: true
             });

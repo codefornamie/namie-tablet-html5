@@ -67,7 +67,7 @@ define(function(require, exports, module) {
             app.ga.trackEvent("ニュース", "記事参照", articleId);
 
 
-            app.trigger('scrollToArticle', {
+            $(document).trigger('scrollToArticle', {
                 articleId: articleId
             });
         },
