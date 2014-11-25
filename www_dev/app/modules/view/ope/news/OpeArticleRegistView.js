@@ -79,18 +79,6 @@ define(function(require, exports, module) {
                 },this));
             }
         },
-        saveModel : function(){
-            this.model.save(null, {
-                success : $.proxy(function() {
-                    app.router.go("ope-top");
-                }, this),
-                error: function(e){
-                    this.hideLoading();
-                    vexDialog.alert("保存に失敗しました。");
-                }
-            });
-        }
-
     });
     module.exports = OpeArticleRegistView;
 });

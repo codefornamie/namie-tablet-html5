@@ -23,6 +23,7 @@ define(function(require, exports, module) {
         afterRendered : function() {
             // TODO データ読み込み終わったら以下を実行
             this.showImage();
+            $("#articleRecommend").text($("#articleRecommendCheck").is(":checked") ? "する":"しない");
             this.hideLoading();
         },
         events : {
