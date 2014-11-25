@@ -100,8 +100,21 @@ define(function(require, exports, module) {
                 });
             }
             saveData.tags = tags;
-        }
+        },
 
+        /**
+         *  「掲載中」などのイベントのステータス文字列を返す
+         *
+         *  @return {String}
+         */
+        getStatusString: function () {
+            var status = this.get('status');
+            var str = [
+                '掲載中'
+            ][status];
+
+            return str || status;
+        }
     });
 
     module.exports = ArticleModel;

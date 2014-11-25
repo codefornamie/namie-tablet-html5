@@ -156,11 +156,12 @@ define(function(require, exports, module) {
          */
         articleDetail : function(options) {
             console.log('[route] articleDetail');
+
+            this.navigate("articleDetail");
             this.layout.showView(new ArticleDetailView({
                 model: options.model
             }));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
-            this.navigate("articleDetail");
         },
 
         /**
@@ -168,11 +169,12 @@ define(function(require, exports, module) {
          */
         articleRegist : function(options) {
             console.log('[route] articleRegist');
+
+            this.navigate("articleRegist");
             this.layout.showView(new ArticleRegistView({
                 model: options.model
             }));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
-            this.navigate("articleRegist");
         },
 
         /**

@@ -1,29 +1,46 @@
-
-<div id="articleDetailPage" class="large-12 columns" role="content">
+<div id="articleDetailPage" role="content">
     <div class="eventDetailHeader">
         <div class="row">
-            <div class="large-12 columns"></div>
+            <div class="large-8 columns">
 
-            <div class="eventStatus">
-                <%= model.get('status') %>
+                <div class="row">
+                    <div class="large-2 columns event__status">
+                        <div class="eventStatus">
+                            <%= model.getStatusString() %>
+                        </div>
+                    </div>
+
+                    <div class="large-10 columns">
+                        <div class="row">
+                            <div class="large-12 columns event__publication">
+                                掲載期間: YYYY年MM月dd日(W) 〜 YYYY年MM月dd日(W)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="large-12 columns event__updated">
+                                YYYY年MM月dd日(W) 更新
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            掲載期間: YYYY年MM月dd日(W) 〜 YYYY年MM月dd日(W)
-        </div>
+            <div class="large-4 columns">
+                <div class="row event__actions">
+                    <div class="large-6 columns">
+                        <button id="articleEditButton" data-goto-edit>
+                            <i class="fa fa-pencil"></i> 編集
+                        </button>
+                    </div>
 
-        <div class="row">
-            <div class="large-6 columns">
-                YYYY年MM月dd日(W) 更新
-            </div>
-
-            <div class="large-6 text-right columns">
-                <button id="articleEditButton" data-goto-edit>
-                    <i class="fa fa-pencil"></i> 編集
-                </button>
-
-                <button id="articleDeleteButton" data-goto-delete>
-                    <i class="fa fa-trash"></i> 削除
-                </button>
+                    <div class="large-6 columns">
+                        <button id="articleDeleteButton" data-goto-delete>
+                            <i class="fa fa-trash"></i> 削除
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -36,9 +53,6 @@
         <div id='contents__primary' class="contents__primary columns small-9" role='content'>
 
             <div class="row">
-                <div class="large-12 columns">
-                    <div class="eventStatus">イベント</div>
-                </div>
                 <div class="large-12 columns">
                     <div class="eventTitle">
                         <%= model.get('title') %>
@@ -66,9 +80,6 @@
                     <%= model.get('description') %>
                 </div>
 
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">画像</div>
-                </div>
                 <div class="large-11 large-centered columns">
                     <div class="eventFile">
                         <div class="eventFileImage">

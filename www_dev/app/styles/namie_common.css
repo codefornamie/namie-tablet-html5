@@ -1142,21 +1142,47 @@ div.nehan-block.nehan-body:last-child {
 /*
  * Posting
  */
+.eventDetailHeader {
+    border-bottom: 2px solid #333;
+}
+
 .eventColumnsHeader {
     border: 1px solid #000;
     border-radius: 2px;
     margin: 20px 0;
     padding: 5px 20px;
 }
-.eventStatus {
+
+.event__status {
+    padding: 10px 0;
+    text-align: center;
+}
+
+.event__status .eventStatus {
     background: #333;
     border-radius: 2px;
     color: white;
     display: inline-block;
     font-size: 1rem;
     margin-bottom: 8px;
-    padding: 0 16px;
+    padding: 16px;
 }
+
+.event__publication {
+    padding: 10px 0;
+}
+
+.event__updated {
+    padding: 10px 0;
+}
+
+.event__actions {
+}
+
+.event__actions button {
+    margin: 16px 0;
+}
+
 .eventTitle {
     font-size: 32px;
 }
