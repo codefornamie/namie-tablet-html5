@@ -15,7 +15,6 @@ define(function(require, exports, module) {
     var TutorialView = require("modules/view/tutorial/TutorialView");
     var BacknumberView = require("modules/view/backnumber/BacknumberView");
     var BacknumberDateView = require("modules/view/backnumber/BacknumberDateView");
-    var SettingsView = require("modules/view/settings/SettingsView");
 
     var EventNewsView = require("modules/view/posting/news/NewsView");
     var ArticleDetailView = require("modules/view/posting/news/ArticleDetailView");
@@ -69,8 +68,24 @@ define(function(require, exports, module) {
                 setMenu : function(menuView) {
                     this.setView("#menu", menuView).render();
                 },
+                setSettings : function(settingsView) {
+                    this.setView("#settings", settingsView).render();
+                },
                 showView : function(view) {
                     this.setView("#contents", view).render();
+                },
+
+                /**
+                 *  セレクタで指定したviewをremoveする
+                 *
+                 *  @param {String} viewName
+                 */
+                removeViewByName : function (viewName) {
+                    var view = this.getView(viewName);
+
+                    if (view) {
+                        view.remove();
+                    }
                 }
             });
 
@@ -140,8 +155,6 @@ define(function(require, exports, module) {
         },
 
         backnumberDate : function (date) {
-            if (this.forceJumpToTop()) return;
-
             console.log('[route] backnumber/%s', date);
             this.layout.showView(new BacknumberDateView({
                 date: date
@@ -151,9 +164,9 @@ define(function(require, exports, module) {
 
         settings : function() {
             console.log('[route] settings');
-            this.layout.showView(new SettingsView());
-            this.commonView();
+            this.layout.setSettings(new common.SettingsView());
         },
+
         articleDetail : function(id) {
             console.log('[route] articleDetail');
             this.layout.showView(new ArticleDetailView());
@@ -193,6 +206,7 @@ define(function(require, exports, module) {
         commonView : function() {
             this.layout.setGlobalNav(new common.GlobalNavView());
             this.layout.setView("#menu", new common.MenuView()).render();
+            this.layout.removeViewByName('#settings');
         },
         /**
          * 前の画面に戻る

@@ -5,6 +5,7 @@ define(function(require, exports, module) {
         MenuView : require("./MenuView"),
         HeaderView : require("./HeaderView"),
         GlobalNavView : require("./GlobalNavView"),
-        FooterView : require("./FooterView")
+        FooterView : require("./FooterView"),
+        SettingsView : require("./SettingsView")
     };
 });
