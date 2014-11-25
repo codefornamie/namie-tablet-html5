@@ -13,6 +13,11 @@ define(function(require, exports, module) {
      * @constructor
      */
     var LoginView = NewsLoginView.extend({
+        afterRendered : function() {
+            $(".eventGlobal-nav").hide();
+            $(".contents-wrapper").css("padding-top","55px");
+        },
+
         goNextView: function() {
             app.router.go("posting-top");
         }

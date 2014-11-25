@@ -1174,7 +1174,7 @@ div.nehan-block.nehan-body:last-child {
     background: #008cba;
     border: none;
     border-radius: 5px;
-    -webkit-border-radius: 0;
+    -webkit-border-radius: 5px;
     box-shadow: none;
     font-size: 21px;
 }
