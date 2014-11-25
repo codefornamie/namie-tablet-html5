@@ -79,7 +79,7 @@ define(function(require, exports, module) {
          *  新規記事投稿ボタン押下時に呼び出されるコールバック関数
          */
         onClickArticleRegisterButton: function () {
-            app.router.go("articleRegist");
+            app.router.articleRegist();
         },
         /**
          *  レポート投稿ボタン押下時に呼び出されるコールバック関数

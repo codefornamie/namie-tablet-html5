@@ -48,6 +48,9 @@ define(function(require, exports, module) {
          *  編集ボタンをクリックしたら呼ばれる
          */
         onClickGotoEdit: function () {
+            app.router.articleRegist({
+                model: this.model
+            });
         },
 
         /**

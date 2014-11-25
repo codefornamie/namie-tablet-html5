@@ -12,7 +12,7 @@ define(function(require, exports, module) {
 
     /**
      * 記事新規登録画面のViewクラス
-     * 
+     *
      * @class 記事新規登録画面のViewクラス
      * @exports ArticleRegistView
      * @constructor
@@ -32,10 +32,16 @@ define(function(require, exports, module) {
          */
         fileName : '',
 
+        /**
+         *  Viewを初期化する
+         */
         beforeRendered : function() {
 
         },
 
+        /**
+         *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         */
         afterRendered : function() {
             if (this.model) {
                 // 編集時
@@ -48,6 +54,9 @@ define(function(require, exports, module) {
             this.chageMultiDateCheckbox();
         },
 
+        /**
+         *  Viewを初期化する
+         */
         initialize : function() {
         },
 
@@ -61,7 +70,7 @@ define(function(require, exports, module) {
          * 編集時にデータを各フォームにセットする
          */
         setData: function () {
-            
+
         },
         /**
          * キャンセルボタン押下時のコールバック関数
@@ -124,12 +133,12 @@ define(function(require, exports, module) {
          */
         setInputValue : function(callback) {
             if(this.model === null){
-                this.model = new ArticleModel(); 
+                this.model = new ArticleModel();
             }
             this.model.set("type", $("#articleCategory").val());
             this.model.set("site", $("#articleCategory").text());
             this.model.set("title", $("#articleTitle").val());
-            
+
             this.model.set("startDate", $("#articleDate1").val());
             if ($("#articleMultiDate").is(":checked")) {
                 this.model.set("endDate", $("#articleDate2").val());
@@ -140,13 +149,13 @@ define(function(require, exports, module) {
             this.model.set("place", $("#articlePlace").val());
             this.model.set("description", $("#articleDetail").val());
             this.model.set("contactInfo", $("#articleContact").val());
-            
+
             this.model.set("publishedAt", $("#articleRangeDate1").val());
             this.model.set("depublishedAt", $("#articleRangeDate2").val());
-            
+
             this.model.set("status", "0");
             this.model.set("createUserId", app.user.get("__id"));
-            
+
             var imageCount = this.$el.find("#fileArea").children().size();
             if(imageCount === 0){
                 callback();
@@ -186,7 +195,7 @@ define(function(require, exports, module) {
                     vexDialog.alert("ファイルの読み込みに失敗しました。");
                 };
                 reader.readAsArrayBuffer(file);
-                
+
                 image.comment = $(fileItem).find("#articleFileComent").val();
                 image.blob = $(fileItem).find("#previewFile").attr("src");
                 images.push(image);
