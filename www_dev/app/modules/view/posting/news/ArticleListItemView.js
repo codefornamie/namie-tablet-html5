@@ -32,20 +32,27 @@ define(function(require, exports, module) {
          */
         events : {
             "click a" : "onClickAnchorTag",
-            "click #articleEditButton" : "onClickArticleEditButton",
-            "click #articleReportButton" : "onClickArticleReportButton"
+            "click [data-goto-detail]" : "onClickGotoDetail",
+            "click [data-goto-report]" : "onClickGotoReport"
         },
-        
+
         /**
-         * イベント詳細ボタンを押下された際のハンドラ
+         * イベント詳細ボタンをクリックされたときのコールバック関数
+         *
+         *  @param {Event} ev
          */
-        onClickArticleEditButton : function(e){
-            app.router.articleRegist({model:this.model});
+        onClickGotoDetail : function(ev) {
+            var model = this.model;
+
+            app.router.articleDetail({
+                model: model
+            });
         },
+
         /**
          * レポートを書くボタンを押下された際のハンドラ
          */
-        onClickArticleReportButton : function(e){
+        onClickGotoReport : function(e){
             app.router.articleRegist({parentModel: this.model, articleCategory: "4"});
         }
     });

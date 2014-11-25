@@ -1,16 +1,46 @@
-
-<div id="articleDetailPage" class="large-12 columns" role="content">
+<div id="articleDetailPage" role="content">
     <div class="eventDetailHeader">
         <div class="row">
-            <div class="large-12 columns"></div>
-            <div class="eventStatus">掲載中</div>
-            掲載期間: 2014年11月10日(月)〜2014年12月11日(月)
-        </div>
-        <div class="row">
-            <div class="large-6 columns">2014年11月10日(月) 更新</div>
-            <div class="large-6 text-right columns">
-                <button id="articleEditButton"><i class="fa fa-pencil"></i> 編集</button>
-                <button id="articleDeleteButton"><i class="fa fa-trash"></i> 削除</button>
+            <div class="large-7 columns">
+
+                <div class="row">
+                    <div class="large-2 columns event__status">
+                        <div class="eventStatus">
+                            <%= model.getStatusString() %>
+                        </div>
+                    </div>
+
+                    <div class="large-10 columns">
+                        <div class="row">
+                            <div class="large-12 columns event__publication">
+                                掲載期間: <%= model.getPubDateString() %>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="large-12 columns event__updated">
+                                <%= model.getUpdatedString() %> 更新
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="large-5 columns">
+                <div class="row event__actions">
+                    <div class="large-6 columns">
+                        <button id="articleEditButton" data-goto-edit>
+                            <i class="fa fa-pencil"></i> 編集
+                        </button>
+                    </div>
+
+                    <div class="large-6 columns">
+                        <button id="articleDeleteButton" data-goto-delete>
+                            <i class="fa fa-trash"></i> 削除
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -19,16 +49,13 @@
         <aside id='contents__secondary'
             class="contents__secondary columns small-3">
         </aside>
-        
+
         <div id='contents__primary' class="contents__primary columns small-9" role='content'>
 
             <div class="row">
                 <div class="large-12 columns">
-                    <div class="eventStatus">イベント</div>
-                </div>
-                <div class="large-12 columns">
                     <div class="eventTitle">
-                        かしまに集まっ会
+                        <%= model.get('title') %>
                     </div>
                 </div>
 
@@ -36,47 +63,52 @@
                     <div class="eventColumnsHeader">日時</div>
                 </div>
                 <div class="large-11 large-centered columns">
-                    2014年12月11日(月) 10時〜11時30分
+                    <%= model.getDateString() %>
                 </div>
 
                 <div class="large-12 columns">
                     <div class="eventColumnsHeader">場所</div>
                 </div>
                 <div class="large-11 large-centered columns">
-                    南相馬市鹿島保健センター（南相馬市鹿島区西町三丁目2）<br>
-                    電話：0244-46-1451
+                    <%= model.get('place') %>
                 </div>
 
                 <div class="large-12 columns">
                     <div class="eventColumnsHeader">内容</div>
                 </div>
                 <div class="large-11 large-centered columns">
-                    双葉郡から避難している方々のサロン（交流会）を開催しています。<br>
-                    みなさんで情報交換したり、軽い体操などをしながら心と体をリフレッシュしませんか。<br>
-                    おしゃべり、軽体操、健康相談（血圧測定）
+                    <%= model.get('description') %>
                 </div>
 
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">画像</div>
-                </div>
                 <div class="large-11 large-centered columns">
                     <div class="eventFile">
                         <div class="eventFileImage">
-                            <img style="background: #aaa; width: 300px; height: 200px;">
+                            <img src='<%= model.get("imageUrl") %>'>
                         </div>
-                        画像1の「画像への一言」が入ります
+
+                        <p>
+                            <%= model.get('imageComment') %>
+                        </p>
                     </div>
+
                     <div class="eventFile">
                         <div class="eventFileImage">
-                            <img style="background: #aaa; width: 300px; height: 200px;">
+                            <img src='<%= model.get("imageUrl2") %>'>
                         </div>
-                        画像2の「画像への一言」が入ります
+
+                        <p>
+                            <%= model.get('imageComment2') %>
+                        </p>
                     </div>
+
                     <div class="eventFile">
                         <div class="eventFileImage">
-                            <img style="background: #aaa; width: 300px; height: 200px;">
+                            <img src='<%= model.get("imageUrl3") %>'>
                         </div>
-                        画像3の「画像への一言」が入ります
+
+                        <p>
+                            <%= model.get('imageComment3') %>
+                        </p>
                     </div>
                 </div>
 
@@ -84,10 +116,7 @@
                     <div class="eventColumnsHeader">主催者連絡先</div>
                 </div>
                 <div class="large-11 large-centered columns end">
-                    ◯南相馬市健康づくり課　原町保健センター<br>
-                    電話：0244-23-3680<br>
-                    ◯相馬広域こころのケアセンター<br>
-                    電話：0244-26-9753
+                    <%= model.get('contactInfo') %>
                 </div>
             </div>
         </div>

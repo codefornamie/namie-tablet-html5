@@ -107,11 +107,6 @@ define(function(require, exports, module) {
             'backnumber/:date' : 'backnumberDate',
             'settings' : 'settings',
             'posting-top' : 'postingTop',
-            'articleDetail(#:id)' : 'articleDetail',
-            'articleRegist' : 'articleRegist',
-            'articleReport' : 'articleReport',
-            'opeArticleRegist' : 'opeArticleRegist',
-            'opeYouTubeRegist' : 'opeYouTubeRegist',
             'ope-top' : 'opeTop'
         },
 
@@ -167,28 +162,60 @@ define(function(require, exports, module) {
             this.layout.setSettings(new common.SettingsView());
         },
 
-        articleDetail : function(id) {
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        articleDetail : function(options) {
             console.log('[route] articleDetail');
-            this.layout.showView(new ArticleDetailView());
+
+            this.navigate("articleDetail");
+            this.layout.showView(new ArticleDetailView({
+                model: options.model
+            }));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
         articleRegist : function(options) {
             console.log('[route] articleRegist');
-            this.layout.showView(new ArticleRegistView(options));
+
+            var param = {};
+
+            options = options || {};
+
+            if (options.model) {
+                param.model = options.model;
+            }
+
             this.navigate("articleRegist");
+            this.layout.showView(new ArticleRegistView(param));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
         articleReport : function() {
             console.log('[route] articleReport');
             this.layout.showView(new ArticleRegistView({articleCategory: "4"}));
             this.navigate("articleReport");
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
         opeArticleRegist : function(options) {
             console.log('[route] opeArticleRegist');
             this.layout.setView("#contents__primary", new OpeArticleRegistView(options)).render();
             this.navigate("opeArticleRegist");
         },
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
         opeYouTubeRegist : function(options) {
             console.log('[route] opeYouTubeRegist');
             this.layout.setView("#contents__primary", new OpeYouTubeRegistView(options)).render();
