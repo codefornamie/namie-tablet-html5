@@ -80,13 +80,16 @@ define(function(require, exports, module) {
          * 添付された画像をdavへ登録する
          */
         saveArticlePicture : function() {
-            var imageCount = this.model.get("images").length;
-            if(imageCount === 0){
+            var images = this.model.get("images");
+            var imageCount = images ? images.length : 0;
+
+            if (imageCount === 0){
                 this.hideLoading();
                 this.saveModel();
                 return;
             }
-            _.each(this.model.get("images"), $.proxy(function(image){
+
+            _.each(images, $.proxy(function(image){
                 app.box.col("dav").put(image.fileName, {
                     body : image.data,
                     headers : {
@@ -106,6 +109,7 @@ define(function(require, exports, module) {
                 });
             }, this));
         },
+
         saveModel : function(){
             this.model.save(null, {
                 success : $.proxy(function() {
