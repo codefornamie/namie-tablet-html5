@@ -48,6 +48,24 @@ define(function(require, exports, module) {
                 var tomorrow = DateUtil.addDay(new Date(),1);
                 $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
                 this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
+
+                // 記事カテゴリ
+                if(this.articleCategory){
+                    $("#articleCategory").val(this.articleCategory);
+                }
+                // レポートを書く場合
+                if(this.parentModel){
+                    $("#articleTitle").val(this.parentModel.get("title") + "の報告");
+                    $("#articleDate1").val(this.parentModel.get("startDate"));
+                    if (this.parentModel.get("endDate")) {
+                        $("#articleMultiDate").attr("checked","checked");
+                        $("#articleDate2").val(this.parentModel.get("endDate"));
+                    }
+                    $("#articleTime1").val(this.parentModel.get("startTime"));
+                    $("#articleTime2").val(this.parentModel.get("endTime"));
+                    $("#articlePlace").val(this.parentModel.get("place"));
+                    $("#articleContact").val(this.parentModel.get("contactInfo"));
+                }
             }
             this.chageMultiDateCheckbox();
         },
@@ -178,6 +196,9 @@ define(function(require, exports, module) {
             if(this.model === null){
                 this.model = new ArticleModel(); 
             }
+            if(this.parentModel){
+                this.model.set("parent", this.parentModel.get("__id"));
+            }
             this.model.set("type", $("#articleCategory").val());
             this.model.set("site", $("#articleCategory").text());
             this.model.set("title", $("#articleTitle").val());
@@ -207,7 +228,7 @@ define(function(require, exports, module) {
                 var fileArea = fileAreas[i];
                 var previewImg = $(fileArea).find("#previewFile");
                 var file = previewImg.prop("file");
-                if(previewImg.attr("src") !== ""){
+                if(previewImg.attr("src")){
                     var image = null;
                     if(file){
                         image = {};

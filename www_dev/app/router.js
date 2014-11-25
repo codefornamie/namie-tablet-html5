@@ -95,6 +95,7 @@ define(function(require, exports, module) {
             'posting-top' : 'postingTop',
             'articleDetail(#:id)' : 'articleDetail',
             'articleRegist' : 'articleRegist',
+            'articleReport' : 'articleReport',
             'opeArticleRegist' : 'opeArticleRegist',
             'opeYouTubeRegist' : 'opeYouTubeRegist',
             'ope-top' : 'opeTop'
@@ -163,6 +164,12 @@ define(function(require, exports, module) {
             console.log('[route] articleRegist');
             this.layout.showView(new ArticleRegistView(options));
             this.navigate("articleRegist");
+            this.layout.setGlobalNav(new postingCommon.GlobalNavView());
+        },
+        articleReport : function() {
+            console.log('[route] articleReport');
+            this.layout.showView(new ArticleRegistView({articleCategory: "4"}));
+            this.navigate("articleReport");
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
         opeArticleRegist : function(options) {

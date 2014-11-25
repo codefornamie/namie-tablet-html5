@@ -21,6 +21,10 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
 //            this.showImage();
+            if(this.model.get("parent")){
+                $("#articleEditButton").text("レポート詳細");
+                $("#articleReportButton").hide();
+            }
         },
 
         /**
@@ -28,11 +32,21 @@ define(function(require, exports, module) {
          */
         events : {
             "click a" : "onClickAnchorTag",
-            "click #articleEditButton" : "onClickArticleEditButton"
+            "click #articleEditButton" : "onClickArticleEditButton",
+            "click #articleReportButton" : "onClickArticleReportButton"
         },
         
+        /**
+         * イベント詳細ボタンを押下された際のハンドラ
+         */
         onClickArticleEditButton : function(e){
             app.router.articleRegist({model:this.model});
+        },
+        /**
+         * レポートを書くボタンを押下された際のハンドラ
+         */
+        onClickArticleReportButton : function(e){
+            app.router.articleRegist({parentModel: this.model, articleCategory: "4"});
         }
     });
     module.exports = ArticleListItemView;

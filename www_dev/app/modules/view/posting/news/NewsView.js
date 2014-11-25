@@ -43,7 +43,7 @@ define(function(require, exports, module) {
         loadArticle: function () {
             this.articleCollection.condition.filters = [
                 new And([
-                        new Equal("type", "3"), new Equal("createUserId", app.user.get("__id"))
+                        new Equal("type", ["3", "4"]), new Equal("createUserId", app.user.get("__id"))
                 ])
             ];
 
@@ -85,6 +85,7 @@ define(function(require, exports, module) {
          *  レポート投稿ボタン押下時に呼び出されるコールバック関数
          */
         onClickReportRegisterButton: function () {
+            app.router.go("articleReport");
         },
 
     });
