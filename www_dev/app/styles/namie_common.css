@@ -1167,3 +1167,92 @@ div.nehan-block.nehan-body:last-child {
     margin-bottom: 5px;
 }
 
+.posting-content {
+    color: #333;
+}
+.posting-content .button {
+    background: #008cba;
+    border: none;
+    border-radius: 5px;
+    -webkit-border-radius: 0;
+    box-shadow: none;
+    font-size: 21px;
+}
+
+.posting-content #header {
+    background: #fff;
+    height: 55px;
+    margin: 0;
+}
+
+.posting-content .eventHeader nav {
+    height: 55px;
+    padding-right: 15px;
+}
+.posting-content #header .top-bar .name h1 {
+    margin-top: 5px;
+}
+.posting-content #header .top-bar .button {
+    border: 1px solid #333;
+    font-size: 21px;
+    padding: 2px 20px;
+}
+.posting-content .contents-wrapper {
+    padding: 0;
+}
+
+.posting-content .contents__secondary::before,
+.posting-content .contents__secondary::after {
+    display: none;
+}
+.posting-content .contents__secondary > div {
+    background: #fff;
+    padding: 40px 20px;
+}
+.posting-content .contents__secondary .button {
+    padding: 30px;
+    width: 100%;
+}
+
+.posting-content .contents__primary {
+    border-left: 2px solid #333;
+    padding: 40px;
+}
+.posting-content .contents__primary .post {
+    border: 1px solid #333;
+    margin: 0 0 20px 0;
+    padding: 20px 30px;
+}
+.posting-content .contents__primary .post__body {
+    font-size: 21px;
+    margin: 0;
+}
+.posting-content .contents__primary .post-header {
+    margin-bottom: 20px;
+}
+.posting-content .contents__primary .post-header__site::before,
+.posting-content .contents__primary .post-header__site::after {
+    display: none;
+}
+.posting-content .contents__primary .post-header__site {
+    background: #fff;
+    height: auto;
+    margin: 0;
+}
+.posting-content .contents__primary .post-label {
+    background: #f8cecc;
+    border: 1px solid #333;
+    display: inline-block;
+    margin-right: 30px;
+    padding: 5px 40px;
+}
+.posting-content .contents__primary .post-label.expired {
+    background: #d4e1f5;
+}
+.posting-content .contents__primary .post-header__title {
+    font-size: 1.5rem;
+    margin: 10px 0 10px 0;
+}
+.posting-content .contents__primary .post-action .button {
+    width: 40%;
+}
