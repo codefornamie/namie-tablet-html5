@@ -11,7 +11,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-            
+            app.ga.trackPageView("News/Help","新聞アプリ/ヘルプページ");
         },
 
         initialize : function() {

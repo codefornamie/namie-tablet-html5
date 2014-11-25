@@ -91,6 +91,7 @@ define(function(require, exports, module) {
          *  @param {Event} ev
          */
         onClickDrawerOpener: function (ev) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー","");
             ev.preventDefault();
             this.snapper.open('left');
         },
@@ -111,7 +112,7 @@ define(function(require, exports, module) {
 
             var $target = $(ev.currentTarget);
             var size = parseInt($target.attr('data-font-size'), 10);
-
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "文字サイズ選択", parseInt(size));
             $('html, body').css('font-size', size + 'px');
 
             $(document).trigger('didChangeFontSize');
