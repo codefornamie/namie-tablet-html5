@@ -47,8 +47,8 @@ define(function(require, exports, module) {
             var self = this;
             var animationDeley = 0;
             this.collection.each($.proxy(function(model) {
-                var itemView = self.feedListItemViewClass;
-                this.insertView("#feedList", new itemView({
+                var ItemView = self.feedListItemViewClass;
+                this.insertView("#feedList", new ItemView({
                     model : model,
                     animationDeley : animationDeley
                 }));
