@@ -48,8 +48,17 @@ define(function(require, exports, module) {
             
             var imgs = $("#articleImageArea img");
             var imgIndex = 0;
+<<<<<<< Upstream, based on develop
             _.each(this.model.get("images"), function(image){
                 $(imgs[imgIndex++]).attr("src", image.src);
+=======
+            var previewUrlArr = [];
+            _.each($("img#previewFile"),function(elem) {
+                previewUrlArr.push($(elem).attr("src"));
+            });
+            _.each(previewUrlArr, function(url){
+                $(imgs[imgIndex++]).attr("src", url);
+>>>>>>> 97b483b NAM-261
             });
         },
 

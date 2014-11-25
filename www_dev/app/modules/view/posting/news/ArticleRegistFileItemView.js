@@ -42,6 +42,10 @@ define(function(require, exports, module) {
                     var url = FileAPIUtil.createObjectURL(blob);
                     var imgElement = self.$el.find("#previewFile");
                     imgElement.load(function() {
+<<<<<<< Upstream, based on develop
+=======
+//                        window.URL.revokeObjectURL(imgElement.attr("src"));
+>>>>>>> 97b483b NAM-261
                     });
                     imgElement.attr("src", url);
                     self.$el.find("#previewFile").show();
