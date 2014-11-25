@@ -19,9 +19,14 @@ define(function(require, exports, module) {
         },
 
         events : {
-            'click a': 'onClickAnchor'
+            'click a': 'onClickAnchor',
+            "click #top" : "onClickTop",
+            "click #favorite" : "onClickFavorite",
+            "click #help" : "onClickHelp",
+            "click #backno" : "onClickBackno",
+            "click #setting" : "onClickSetting"
         },
-        
+
         /**
          * aタグをクリックした際の挙動を
          * ブラウザデフォルトではなく
@@ -31,7 +36,7 @@ define(function(require, exports, module) {
             var $target = $(evt.currentTarget);
             var href = { prop: $target.prop("href"), attr: $target.attr("href") };
             var root = location.protocol + "//" + location.host + app.root;
-            
+
             if (href.prop && href.prop.slice(0, root.length) === root) {
                 evt.preventDefault();
                 app.router.navigate(href.attr, {
@@ -40,6 +45,21 @@ define(function(require, exports, module) {
                 });
             }
             $('#snap-content').data("snap").close();
+        },
+        onClickTop : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「TOP」","");
+        },
+        onClickFavorite : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「切り抜き」","");
+        },
+        onClickHelp : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「ヘルプ」","");
+        },
+        onClickBackno : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「バックナンバー」","");
+        },
+        onClickSetting : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「設定」","");
         }
     });
 

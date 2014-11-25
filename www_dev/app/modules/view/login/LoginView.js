@@ -85,7 +85,7 @@ define(function(require, exports, module) {
          * ビュー初期化
          */
         initialize : function() {
-            app.ga.trackPageView("/LoginView", "ログイン");
+            app.ga.trackPageView("Login", "ログイン");
             this.model = new LoginModel();
         },
 
