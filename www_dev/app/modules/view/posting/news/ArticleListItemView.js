@@ -27,7 +27,12 @@ define(function(require, exports, module) {
          * このViewのイベントを定義する。
          */
         events : {
-            "click a" : "onClickAnchorTag"
+            "click a" : "onClickAnchorTag",
+            "click #articleEditButton" : "onClickArticleEditButton"
+        },
+        
+        onClickArticleEditButton : function(e){
+            app.router.go("articleRegist");
         }
     });
     module.exports = ArticleListItemView;

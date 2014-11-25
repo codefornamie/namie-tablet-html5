@@ -24,6 +24,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
             var self = this;
 
             if (!this.imageUrl) {
@@ -57,9 +58,7 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
-
         },
-
         events : {
             "change #articleFile" : "onChangeFileData",
             "click #fileInputButton" : "onClickFileInputButton",
@@ -69,8 +68,12 @@ define(function(require, exports, module) {
             $(this.el).find("#articleFile")[0].click();
         },
         onChangeFileData : function(event) {
-            var files = event.target.files;// FileList object
-            var file = files[0];
+            console.log("onChangeFileData");
+            var inputFile = event.target;
+            var file = (event.target.files ? event.target.files[0] : event.target.file);
+            console.log("onChangeFileData: file: " + file);
+            console.log("onChangeFileData: file.type: " + file.type);
+            console.log("onChangeFileData: file.name: " + file.name);
 
             if (!file) {
                 $(this.el).find('#previewFile').hide();
@@ -82,10 +85,25 @@ define(function(require, exports, module) {
             if (!file.type.match('image.*')) {
                 return;
             }
-
-            $(this.el).find('#previewFile').attr("src", FileAPIUtil.createObjectURL(file));
-            $(this.el).find('#previewFile').show();
-            $(this.el).find("#fileDeleteButton").show();
+          console.log("onChangeFileData");
+          var previewImg = $(this.el).find('#previewFile');
+          previewImg.prop("file", file);
+            var reader = new FileReader();
+            reader.onload = (function(img) {
+                return function(e) {
+                    img.attr("src", e.target.result);
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        inputFile.data = e.target.result;
+                    };
+                    reader.readAsArrayBuffer(file);
+                };
+            })(previewImg);
+            reader.readAsDataURL(file);
+          
+          
+          $(this.el).find('#previewFile').show();
+          $(this.el).find("#fileDeleteButton").show();
         },
         onClickFileDeleteButton : function() {
             $(this.el).find("#articleFile").val("");
@@ -95,31 +113,6 @@ define(function(require, exports, module) {
         },
         setInputValue : function() {
         },
-        /**
-         * 添付された画像をdavへ登録する
-         */
-        saveArticlePicture : function() {
-            var reader = new FileReader();
-            var contentType = "";
-            reader.onload = $.proxy(function(fileEvent) {
-                var options = {
-                    body : fileEvent.currentTarget.result,
-                    headers : {
-                        "Content-Type" : contentType,
-                        "If-Match" : "*"
-                    }
-                };
-                app.box.col("dav").put(this.fileName, options);
-            }, this);
-            // Read in the image file as a data URL.
-            var file = $("#articleFile").prop("files")[0];
-            contentType = file.type;
-            var preName = file.name.substr(0, file.name.lastIndexOf("."));
-            var suffName = file.name.substr(file.name.lastIndexOf("."));
-            this.fileName = preName + "_" + String(new Date().getTime()) + suffName;
-            reader.readAsArrayBuffer(file);
-        },
-
     });
     module.exports = ArticleRegistFileItemView;
 });

@@ -49,7 +49,7 @@ define(function(require, exports, module) {
             var imgs = $("#articleImageArea img");
             var imgIndex = 0;
             _.each(this.model.get("images"), function(image){
-                $(imgs[imgIndex++]).attr("src", image.blob);
+                $(imgs[imgIndex++]).attr("src", image.src);
             });
         },
 

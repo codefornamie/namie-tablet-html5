@@ -122,7 +122,7 @@ define(function(require, exports, module) {
         /**
          * モデルにデータをセットする関数
          */
-        setInputValue : function(callback) {
+        setInputValue : function() {
             if(this.model === null){
                 this.model = new ArticleModel(); 
             }
@@ -148,47 +148,20 @@ define(function(require, exports, module) {
             this.model.set("createUserId", app.user.get("__id"));
             
             var imageCount = this.$el.find("#fileArea").children().size();
-            if(imageCount === 0){
-                callback();
-                return;
-            }
-            this.showLoading();
             var images = [];
             var self = this;
             _.each(this.$el.find("#fileArea").children(), function(fileItem){
-                var file = $(fileItem).find("#articleFile").prop("files")[0];
-                if(!file){
-                    imageCount--;
-                    if(imageCount <= 0){
-                        self.hideLoading();
-                        callback();
-                    }
-                    return;
-                }
+                var previewImg = $(fileItem).find("#previewFile");
+                var file = previewImg.prop("file");
                 var image = {};
                 var preName = file.name.substr(0, file.name.lastIndexOf("."));
                 var suffName = file.name.substr(file.name.lastIndexOf("."));
                 image.fileName = preName + "_" + String(new Date().getTime()) + suffName;
                 image.contentType = file.type;
+                image.src = previewImg.attr("src");
+                image.data = $(fileItem).find("#articleFile").prop("data");
 
-                var reader = new FileReader();
-                reader.onload = function(fileEvent){
-                    image.data = fileEvent.currentTarget.result;
-                    imageCount--;
-                    if(imageCount <= 0){
-                        self.hideLoading();
-                        callback();
-                    }
-                };
-                reader.onerror = function(){
-                    self.hideLoading();
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert("ファイルの読み込みに失敗しました。");
-                };
-                reader.readAsArrayBuffer(file);
-                
                 image.comment = $(fileItem).find("#articleFileComent").val();
-                image.blob = $(fileItem).find("#previewFile").attr("src");
                 images.push(image);
             });
             this.model.set("images", images);
@@ -203,11 +176,10 @@ define(function(require, exports, module) {
          */
         onSubmit : function() {
             // 登録処理を開始する
-            this.setInputValue($.proxy(function(){
-                $("#articleRegistPage").hide();
-                this.setView("#articleRegistConfirmWrapperPage", new ArticleRegistConfirmView({model: this.model})).render();
-                $("#snap-content").scrollTop(0);
-            }, this));
+            this.setInputValue();
+            $("#articleRegistPage").hide();
+            this.setView("#articleRegistConfirmWrapperPage", new ArticleRegistConfirmView({model: this.model})).render();
+            $("#snap-content").scrollTop(0);
         },
 
     });
