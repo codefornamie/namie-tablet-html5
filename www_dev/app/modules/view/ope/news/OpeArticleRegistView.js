@@ -34,26 +34,26 @@ define(function(require, exports, module) {
             $("#articleRangeDate1").val(this.model.get("publishedAt"));
             $("#articleRangeDate2").val(this.model.get("depublishedAt"));
             if (this.model.get("type") !== "2") {
-                var imgArray = [];
+                this.imgArray = [];
                 if (this.model.get("imageUrl")) {
-                    imgArray.push({
-                        imageUrl:this.model.get("imageUrl"),
+                    this.imgArray.push({
+                        fileName:this.model.get("imageUrl"),
                         imageComment:this.model.get("imageComment")
                     });
                 }
                 if (this.model.get("imageUrl2")) {
-                    imgArray.push({
-                        imageUrl: this.model.get("imageUrl2"),
+                    this.imgArray.push({
+                        fileName: this.model.get("imageUrl2"),
                         imageComment: this.model.get("imageComment2")
                     });
                 }
                 if (this.model.get("imageUrl3")) {
-                    imgArray.push({
-                        imageUrl: this.model.get("imageUrl3"),
+                    this.imgArray.push({
+                        fileName: this.model.get("imageUrl3"),
                         imageComment: this.model.get("imageComment3")
                     });
                 }
-                this.imgArrayLength = imgArray.length;
+                this.imgArrayLength = this.imgArray.length;
                 if (this.imgArrayLength === 0) {
                     this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
                     this.hideLoading();
@@ -61,9 +61,9 @@ define(function(require, exports, module) {
                     $("#addFileForm").hide();
                 }
                 var index = 0;
-                _.each(imgArray,$.proxy(function(img) {
+                _.each(this.imgArray,$.proxy(function(img) {
                     var view = new ArticleRegistFileItemView();
-                    view.imageUrl = img.imageUrl;
+                    view.imageUrl = img.fileName;
                     view.imageComment = img.imageComment;
                     this.insertView("#fileArea", view).render();
                     // 全ての画像の読み込み処理が完了したタイミングでローディングマスクを解除したいため
