@@ -46,6 +46,7 @@ define(function(require, exports, module) {
                     imgElement.attr("src", url);
                     self.$el.find("#previewFile").show();
                     self.$el.find("#fileDeleteButton").show();
+                    self.$el.find("#previewFile").trigger("change");
                     self.$el.find("#articleFileComent").val(this.imageComment ? this.imageComment : "");
                 },this),
                 error: $.proxy(function () {

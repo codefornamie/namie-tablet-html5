@@ -1,0 +1,35 @@
+<article class='post' id="<%= model.get('__id') %>"
+    style="border-bottom: solid 1px;">
+    <section class='post__body'>
+        <div class="confirmAttention">
+        入力した項目の確認です。
+        入力内容が正しければ「登録する」を押してください。
+        </div>
+        <div>
+        	<h3><%= model.get("title") %></h3>
+       	</div>
+        <div class="column_title">日時</div>
+        <div id="articleDateTime"></div>
+        <div class="column_title">場所</div>
+        <div id="articlePlace"><%= model.get("place") %></div>
+        <div class="column_title">内容</div>
+        <div id="articleDescription"></div>
+        <div class="column_title">画像</div>
+        <div id="articleImageArea" class="row">
+        	<div class="large-4 columns"><img id="articleImage1"></img></div>
+        	<div class="large-4 columns"><img id="articleImage2"></img></div>
+        	<div class="large-4 columns"><img id="articleImage3"></img></div>
+        </div>
+        <div class="column_title">主催者連絡先</div>
+        <div id="articleContactInfo"></div>
+        <div id="articlePublishRange" class="column_title"></div>
+        <div class="column_title">おすすめ配信</div>
+        <label id="articleRecommend"></label>
+        <div class="post-action">
+            <button id="articleRegistButton" type="button" class="small button">登録する</button>
+        </div>
+        <div class="post-action">
+            <button id="articleBackButton" type="button" class="small button">戻る</button>
+        </div>
+    </section>
+</article>

@@ -1,0 +1,41 @@
+<article class='post' id="<%= model.get('__id') %>">
+    <section class='post__body'>
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="post-header">
+                    <div class="post-header__site">
+                        <div class="post-label">
+                            <div class="post-label__site left">
+                                <%= model.get("dispSite") %></div>
+                        </div>
+                        <div class="tagListArea"></div>
+                    </div>
+                    <div class="post-header__title"><%=
+                        model.get("title") %></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="large-12 columns nehandiv">
+                <div id="articleDetailImageArea" height="390"
+                    width="390">
+                    <!-- <img class="articleDetailImage" class="nehan-float-start"></img> -->
+                    <div id='youtubePlayer'></div>
+                </div>
+                <%= model.get("description") %>
+            </div>
+        </div>
+        <div class="column_title">おすすめ配信</div>
+        <label id="articleRecommend"></label>
+    </section>
+    <div class="post-action">
+        <button id="articleRegistButton" type="button"
+            class="small button">登録する</button>
+    </div>
+    <div class="post-action">
+        <button id="articleBackButton" type="button"
+            class="small button">戻る</button>
+    </div>
+
+</article>
