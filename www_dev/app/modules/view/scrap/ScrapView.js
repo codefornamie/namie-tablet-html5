@@ -20,7 +20,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-            app.ga.trackPageView("Favorite","新聞アプリ/切り抜き一覧ページ");
+            app.ga.trackPageView("News/Favorite","新聞アプリ/切り抜き一覧ページ");
         },
 
         initialize : function() {

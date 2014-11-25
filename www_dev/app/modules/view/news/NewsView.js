@@ -47,10 +47,8 @@ define(function(require, exports, module) {
          * 記事の検索処理を開始する。
          */
         searchArticles: function() {
-            app.ga.trackPageView("/NewsView", "ニュース");
-
             this.showLoading();
-            
+
             // 現在保持しているデータをクリア
             this.articleCollection.reset();
             this.recommendCollection.reset();
