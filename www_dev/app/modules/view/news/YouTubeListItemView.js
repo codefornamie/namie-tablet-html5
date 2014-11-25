@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 
     /**
      * 新聞アプリの福島TVのニュースを表示するためのViewを作成する。
-     * 
+     *
      * @class 新聞アプリの福島TVのニュースを表示するためのView
      * @exports YouTubeListItemView
      * @constructor
@@ -51,7 +51,6 @@ define(function(require, exports, module) {
          */
         onSetYouTubePlayer : function() {
             this.player.removeEventListener("onReady");
-            gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
             gapi.client.load('youtube', 'v3', $.proxy(this.onLoadYoutubePlayer, this));
         },
         /**

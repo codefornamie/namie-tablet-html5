@@ -3,7 +3,6 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var YouTubeView = require("modules/view/top/YouTubeView");
 
     var TopView = AbstractView.extend({
         template : require("ldsh!templates/{mode}/top/top"),

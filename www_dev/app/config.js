@@ -16,7 +16,6 @@ require.config({
         "blockui" : "../lib/blockUI/jquery.blockUI",
         "panzoom" : "../bower_components/jquery.panzoom/dist/jquery.panzoom",
         "snap" : "../bower_components/Snap.js/snap.min",
-        "iscroll-zoom": "../bower_components/iscroll/build/iscroll-zoom",
         "async": "../bower_components/async/lib/async",
         "vex" : "../bower_components/vex/js/vex",
         "vexDialog" : "../bower_components/vex/js/vex.dialog",

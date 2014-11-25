@@ -47,8 +47,8 @@ define(function(require, exports, module) {
             var self = this;
             var animationDeley = 0;
             this.collection.each($.proxy(function(model) {
-                var itemView = self.feedListItemViewClass;
-                this.insertView("#feedList", new itemView({
+                var ItemView = self.feedListItemViewClass;
+                this.insertView("#feedList", new ItemView({
                     model : model,
                     animationDeley : animationDeley
                 }));
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
             app.ga.trackEvent("ニュース", "記事参照", articleId);
 
 
-            app.trigger('scrollToArticle', {
+            $(document).trigger('scrollToArticle', {
                 articleId: articleId
             });
         },
