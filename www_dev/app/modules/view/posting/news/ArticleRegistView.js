@@ -200,7 +200,7 @@ define(function(require, exports, module) {
                 this.model.set("parent", this.parentModel.get("__id"));
             }
             this.model.set("type", $("#articleCategory").val());
-            this.model.set("site", $("#articleCategory").text());
+            this.model.set("site", $("#articleCategory option:selected").text());
             this.model.set("title", $("#articleTitle").val());
             
             this.model.set("startDate", $("#articleDate1").val());
