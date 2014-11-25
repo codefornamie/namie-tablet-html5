@@ -29,6 +29,8 @@ define(function(require, exports, module) {
             response.dispSite = CommonUtil.sanitizing(response.site);
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.dispPlace = CommonUtil.sanitizing(response.place);
+            response.dispDescription = CommonUtil.sanitizing(response.description);
+            response.dispContactInfo = CommonUtil.sanitizing(response.contactInfo);
             if (response.startDate) {
                 if (response.startDate.length > 10) {
                     response.dispStartDate = DateUtil.formatDate(new Date(response.startDate),"yyyy年MM月dd日 HH時mm分");

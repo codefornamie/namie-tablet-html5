@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var ArticleListItemView = require("modules/view/news/ArticleListItemView");
+    var EventListItemView = require("modules/view/news/EventListItemView");
     var YouTubeListItemView = require("modules/view/news/YouTubeListItemView");
 
     /**
@@ -90,12 +91,17 @@ define(function(require, exports, module) {
                     template = require("ldsh!templates/{mode}/news/youTubeListItem");
                     ListItemView = YouTubeListItemView;
                     break;
+                case "3":
+                    template = require("ldsh!templates/{mode}/news/eventsDetail");
+                    ListItemView = EventListItemView;
+                    break;
+                case "4":
+                    template = require("ldsh!templates/{mode}/news/eventsDetail");
+                    ListItemView = EventListItemView;
+                    break;
                 default:
                     template = require("ldsh!templates/{mode}/news/articleListItem");
                     ListItemView = ArticleListItemView;
-                    if (model.get("modelType") === "event") {
-                        template = require("ldsh!templates/{mode}/news/eventsListItem");
-                    }
                     if (model.get("rawHTML")) {
                         template = require("ldsh!templates/{mode}/news/articleListItemForHtml");
                     } else if (model.get("modelType") === "youtube") {
