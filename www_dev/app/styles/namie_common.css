@@ -1293,3 +1293,7 @@ div.nehan-block.nehan-body:last-child {
 .settings-dialog__body {
     text-align: center;
 }
+
+select#articleCategory {
+    height: 46px;
+}

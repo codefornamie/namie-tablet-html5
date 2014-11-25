@@ -37,19 +37,37 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            if (this.model) {
+                // 編集時
+                this.setData();
+            } else {
+                var tomorrow = DateUtil.addDay(new Date(),1);
+                $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
+                this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
+            }
             this.chageMultiDateCheckbox();
-            var tomorrow = DateUtil.addDay(new Date(),1);
-            $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
         },
 
         initialize : function() {
-            this.insertView("#fileArea", new ArticleRegistFileItemView());
         },
 
         events : {
             "click #addFileForm" : "onAddFileForm",
-            "click #articleRegistButton" : "onClickArticleRegistButton",
+            "click #articleConfirmButton" : "onClickArticleConfirmButton",
+            "click #articleCancelButton" : "onClickArticleCancelButton",
             "change #articleMultiDate" : "chageMultiDateCheckbox"
+        },
+        /**
+         * 編集時にデータを各フォームにセットする
+         */
+        setData: function () {
+            
+        },
+        /**
+         * キャンセルボタン押下時のコールバック関数
+         */
+        onClickArticleCancelButton: function () {
+            app.router.back();
         },
         /**
          * 複数日チェックボックスのチェック有無でフォームを切り替える関数
@@ -73,7 +91,7 @@ define(function(require, exports, module) {
         /**
          * 確認画面へボタンを押された際のコールバック関数
          */
-        onClickArticleRegistButton : function() {
+        onClickArticleConfirmButton : function() {
             if ($(this.formId).validate().form()) {
                 var errmsg = this.validate();
                 if (errmsg) {
@@ -109,6 +127,7 @@ define(function(require, exports, module) {
                 this.model = new ArticleModel(); 
             }
             this.model.set("type", $("#articleCategory").val());
+            this.model.set("site", $("#articleCategory").text());
             this.model.set("title", $("#articleTitle").val());
             
             this.model.set("startDate", $("#articleDate1").val());
