@@ -200,7 +200,7 @@ define(function(require, exports, module) {
                 this.model.set("parent", this.parentModel.get("__id"));
             }
             this.model.set("type", $("#articleCategory").val());
-            this.model.set("site", $("#articleCategory").text());
+            this.model.set("site", $("#articleCategory option:selected").text());
             this.model.set("title", $("#articleTitle").val());
             
             this.model.set("startDate", $("#articleDate1").val());
@@ -234,7 +234,7 @@ define(function(require, exports, module) {
                         image = {};
                         var preName = file.name.substr(0, file.name.lastIndexOf("."));
                         var suffName = file.name.substr(file.name.lastIndexOf("."));
-                        image.fileName = preName + "_" + String(new Date().getTime()) + suffName;
+                        image.fileName = preName + "_" + String(new Date().getTime()) + _.uniqueId("") + suffName;
                         image.contentType = file.type;
                         image.data = $(fileArea).find("#articleFile").prop("data");
                     }else{

@@ -22,8 +22,8 @@ define(function(require, exports, module) {
         afterRendered : function() {
 //            this.showImage();
             if(this.model.get("parent")){
-                $("#articleEditButton").text("レポート詳細");
-                $("#articleReportButton").hide();
+                this.$el.find("#articleEditButton").text("レポート詳細");
+                this.$el.find("#articleReportButton").hide();
             }
         },
 
