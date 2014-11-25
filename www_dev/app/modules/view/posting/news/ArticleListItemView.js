@@ -27,7 +27,22 @@ define(function(require, exports, module) {
          * このViewのイベントを定義する。
          */
         events : {
-            "click a" : "onClickAnchorTag"
+            "click a" : "onClickAnchorTag",
+            "click [data-goto-detail]" : "onClickGotoDetail",
+            "click [data-goto-report]" : "onClickGotoReport"
+        },
+
+        /**
+         * イベント詳細ボタンをクリックされたときのコールバック関数
+         *
+         *  @param {Event} ev
+         */
+        onClickGotoDetail : function(ev) {
+            var model = this.model;
+
+            app.router.articleDetail({
+                model: model
+            });
         }
     });
     module.exports = ArticleListItemView;

@@ -22,7 +22,13 @@ define(function(require, exports, module) {
         afterRendered : function() {
         },
 
+        /**
+         *  Viewを初期化する
+         */
         initialize : function() {
+            console.assert(this.model, 'model is not defined');
+
+            console.log('[ArticleDetailView]', this.model);
         },
 
         events : {

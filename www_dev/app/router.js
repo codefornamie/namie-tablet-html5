@@ -93,10 +93,6 @@ define(function(require, exports, module) {
             'backnumber/:date' : 'backnumberDate',
             'settings' : 'settings',
             'posting-top' : 'postingTop',
-            'articleDetail(#:id)' : 'articleDetail',
-            'articleRegist' : 'articleRegist',
-            'opeArticleRegist' : 'opeArticleRegist',
-            'opeYouTubeRegist' : 'opeYouTubeRegist',
             'ope-top' : 'opeTop'
         },
 
@@ -154,21 +150,43 @@ define(function(require, exports, module) {
             this.layout.showView(new SettingsView());
             this.commonView();
         },
-        articleDetail : function(id) {
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        articleDetail : function(options) {
             console.log('[route] articleDetail');
-            this.layout.showView(new ArticleDetailView());
+            this.layout.showView(new ArticleDetailView({
+                model: options.model
+            }));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
+            this.navigate("articleDetail");
         },
-        articleRegist : function() {
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        articleRegist : function(options) {
             console.log('[route] articleRegist');
-            this.layout.showView(new ArticleRegistView());
+            this.layout.showView(new ArticleRegistView({
+                model: options.model
+            }));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
+            this.navigate("articleRegist");
         },
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
         opeArticleRegist : function(options) {
             console.log('[route] opeArticleRegist');
             this.layout.setView("#contents__primary", new OpeArticleRegistView(options)).render();
             this.navigate("opeArticleRegist");
         },
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
         opeYouTubeRegist : function(options) {
             console.log('[route] opeYouTubeRegist');
             this.layout.setView("#contents__primary", new OpeYouTubeRegistView(options)).render();
