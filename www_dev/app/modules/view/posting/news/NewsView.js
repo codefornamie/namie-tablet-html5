@@ -85,7 +85,7 @@ define(function(require, exports, module) {
          *  レポート投稿ボタン押下時に呼び出されるコールバック関数
          */
         onClickReportRegisterButton: function () {
-            app.router.go("articleReport");
+            app.router.articleReport();
         },
 
     });
