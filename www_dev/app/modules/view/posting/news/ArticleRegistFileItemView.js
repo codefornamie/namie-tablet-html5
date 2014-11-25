@@ -32,6 +32,7 @@ define(function(require, exports, module) {
             }
             app.box.col("dav").getBinary(this.imageUrl, {
                 success : $.proxy(function(binary) {
+                    console.log("getBinary()");
                     var arrayBufferView = new Uint8Array(binary);
                     var blob = new Blob([
                         arrayBufferView
@@ -41,12 +42,10 @@ define(function(require, exports, module) {
                     var url = FileAPIUtil.createObjectURL(blob);
                     var imgElement = self.$el.find("#previewFile");
                     imgElement.load(function() {
-                        window.URL.revokeObjectURL(imgElement.attr("src"));
                     });
                     imgElement.attr("src", url);
                     self.$el.find("#previewFile").show();
-                    // 画像の読み込み反映処理の完了タイミングをchangeイベント発火で教える
-                    self.$el.find("#previewFile").trigger("change");
+                    self.$el.find("#fileDeleteButton").show();
                     self.$el.find("#articleFileComent").val(this.imageComment ? this.imageComment : "");
                 },this),
                 error: $.proxy(function () {
@@ -64,9 +63,15 @@ define(function(require, exports, module) {
             "click #fileInputButton" : "onClickFileInputButton",
             "click #fileDeleteButton" : "onClickFileDeleteButton"
         },
+        /**
+         * 画像選択ボタン押下時のハンドラ
+         */
         onClickFileInputButton : function() {
             $(this.el).find("#articleFile")[0].click();
         },
+        /**
+         * ファイル選択時のハンドラ
+         */
         onChangeFileData : function(event) {
             console.log("onChangeFileData");
             var inputFile = event.target;
@@ -81,13 +86,13 @@ define(function(require, exports, module) {
                 return;
             }
 
-            // Only process image files.
             if (!file.type.match('image.*')) {
                 return;
             }
           console.log("onChangeFileData");
           var previewImg = $(this.el).find('#previewFile');
           previewImg.prop("file", file);
+          // ファイルの読み込み
             var reader = new FileReader();
             reader.onload = (function(img) {
                 return function(e) {
@@ -105,11 +110,15 @@ define(function(require, exports, module) {
           $(this.el).find('#previewFile').show();
           $(this.el).find("#fileDeleteButton").show();
         },
-        onClickFileDeleteButton : function() {
+        /**
+         * 削除ボタン押下時のハンドラ
+         */
+        onClickFileDeleteButton : function(e) {
             $(this.el).find("#articleFile").val("");
             $(this.el).find("#previewFile").attr("src", "");
             $(this.el).find("#previewFile").hide();
             $(this.el).find("#fileDeleteButton").hide();
+            $(this.el).find("#articleFileComent").val("");
         },
         setInputValue : function() {
         },

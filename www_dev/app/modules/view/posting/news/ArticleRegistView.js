@@ -31,6 +31,10 @@ define(function(require, exports, module) {
          * 画像名
          */
         fileName : '',
+        /**
+         * 読み込み時のイメージ配列
+         */
+        imgArray : null,
 
         beforeRendered : function() {
 
@@ -77,48 +81,37 @@ define(function(require, exports, module) {
             $("#articleRangeDate1").val(this.model.get("publishedAt"));
             $("#articleRangeDate2").val(this.model.get("depublishedAt"));
             if (this.model.get("type") !== "2") {
-                var imgArray = [];
+                this.imgArray = [];
                 if (this.model.get("imageUrl")) {
-                    imgArray.push({
-                        imageUrl:this.model.get("imageUrl"),
-                        imageComment:this.model.get("imageComment")
+                    this.imgArray.push({
+                        fileName:this.model.get("imageUrl"),
+                        comment:this.model.get("imageComment")
                     });
                 }
                 if (this.model.get("imageUrl2")) {
-                    imgArray.push({
-                        imageUrl: this.model.get("imageUrl2"),
-                        imageComment: this.model.get("imageComment2")
+                    this.imgArray.push({
+                        fileName: this.model.get("imageUrl2"),
+                        comment: this.model.get("imageComment2")
                     });
                 }
                 if (this.model.get("imageUrl3")) {
-                    imgArray.push({
-                        imageUrl: this.model.get("imageUrl3"),
-                        imageComment: this.model.get("imageComment3")
+                    this.imgArray.push({
+                        fileName: this.model.get("imageUrl3"),
+                        comment: this.model.get("imageComment3")
                     });
                 }
-                this.imgArrayLength = imgArray.length;
-                if (this.imgArrayLength === 0) {
+                if (this.imgArray.length === 0) {
                     this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
                     this.hideLoading();
-                } else if (this.imgArrayLength >= 3) {
+                } else if (this.imgArray.length >= 3) {
                     $("#addFileForm").hide();
                 }
                 var index = 0;
-                _.each(imgArray,$.proxy(function(img) {
+                _.each(this.imgArray, $.proxy(function(img) {
                     var view = new ArticleRegistFileItemView();
-                    view.imageUrl = img.imageUrl;
-                    view.imageComment = img.imageComment;
+                    view.imageUrl = img.fileName;
+                    view.imageComment = img.comment;
                     this.insertView("#fileArea", view).render();
-                    // 全ての画像の読み込み処理が完了したタイミングでローディングマスクを解除したいため
-                    // 子要素で画像読み込み完了時に発火したchangeイベントを拾って最後の画像読み込み完了時にhideLoadingする
-                    view.$el.find("#previewFile").on("change",$.proxy(function() {
-                        index++;
-                        if (index >= this.imgArrayLength) {
-                            this.hideLoading();
-                            // 全ての画像読み込み完了した場合は、もうchageイベントは拾わない
-                            $("img#previewFile").off("change");
-                        }
-                    },this));
                 },this));
             }
         },
@@ -209,27 +202,34 @@ define(function(require, exports, module) {
             var imageCount = this.$el.find("#fileArea").children().size();
             var images = [];
             var self = this;
-            _.each(this.$el.find("#fileArea").children(), function(fileItem){
-                var previewImg = $(fileItem).find("#previewFile");
+            var fileAreas = this.$el.find("#fileArea").children();
+            for(var i = 0; i < fileAreas.length; i++){
+                var fileArea = fileAreas[i];
+                var previewImg = $(fileArea).find("#previewFile");
                 var file = previewImg.prop("file");
-                if(file){
-                    var image = {};
-                    var preName = file.name.substr(0, file.name.lastIndexOf("."));
-                    var suffName = file.name.substr(file.name.lastIndexOf("."));
-                    image.fileName = preName + "_" + String(new Date().getTime()) + suffName;
-                    image.contentType = file.type;
+                if(previewImg.attr("src") !== ""){
+                    var image = null;
+                    if(file){
+                        image = {};
+                        var preName = file.name.substr(0, file.name.lastIndexOf("."));
+                        var suffName = file.name.substr(file.name.lastIndexOf("."));
+                        image.fileName = preName + "_" + String(new Date().getTime()) + suffName;
+                        image.contentType = file.type;
+                        image.data = $(fileArea).find("#articleFile").prop("data");
+                    }else{
+                        // 変更なし
+                        image = this.imgArray[i];
+                    }
+                    image.comment = $(fileArea).find("#articleFileComent").val();
                     image.src = previewImg.attr("src");
-                    image.data = $(fileItem).find("#articleFile").prop("data");
-
-                    image.comment = $(fileItem).find("#articleFileComent").val();
                     images.push(image);
                 }
-            });
+            }
             this.model.set("images", images);
-            for(var i = 0; i < images.length; i++){
-                var surfix = (i === 0) ? "" : "" + (i + 1);
-                this.model.set("imageUrl" + surfix, images[i].fileName);
-                this.model.set("imageComment" + surfix, images[i].comment);
+            for(var imageIndex = 0; imageIndex < 3; imageIndex++){
+                var surfix = (imageIndex === 0) ? "" : "" + (imageIndex + 1);
+                this.model.set("imageUrl" + surfix, imageIndex < images.length ? images[imageIndex].fileName : null);
+                this.model.set("imageComment" + surfix, imageIndex < images.length ? images[imageIndex].comment : null);
             }
         },
         /**
