@@ -194,13 +194,9 @@ define(function(require, exports, module) {
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
 
-        articleRegist : function(options) {
-            console.log('[route] articleRegist');
-            this.layout.showView(new ArticleRegistView(options));
-            this.navigate("articleRegist");
-            this.layout.setGlobalNav(new postingCommon.GlobalNavView());
-        },
-
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
         articleReport : function() {
             console.log('[route] articleReport');
             this.layout.showView(new ArticleRegistView({articleCategory: "4"}));
