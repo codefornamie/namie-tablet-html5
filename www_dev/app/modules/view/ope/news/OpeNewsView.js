@@ -17,6 +17,9 @@ define(function(require, exports, module) {
          * 記事一覧を表示する要素のセレクタ
          */
         feedListElement : '#article_list',
+        events : {
+            "click [data-article-register-button]" : "onClickArticleRegisterButton"
+        },
         /**
          * 左ペインの記事一覧メニューを表示する。
          */
@@ -42,7 +45,12 @@ define(function(require, exports, module) {
             this.notFoundMessage = $('<div data-alert class="alert-box info radius">指定された日付には記事がありません。</div>').insertBefore(
                     $(this.el).find("#feedList").parent());
         },
-
+        /**
+         *  新規記事投稿ボタン押下時に呼び出されるコールバック関数
+         */
+        onClickArticleRegisterButton: function () {
+            app.router.opeArticleRegist();
+        },
     });
 
     module.exports = OpeNewsView;
