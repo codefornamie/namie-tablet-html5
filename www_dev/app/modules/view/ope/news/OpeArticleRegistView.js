@@ -17,6 +17,7 @@ define(function(require, exports, module) {
          * 編集時にデータを各フォームにセットする
          */
         setData: function () {
+            $("#articleRegistTitle").text("記事編集");
             $("#articleCategory").val(this.model.get("type"));
             $("#articleTitle").val(this.model.get("title"));
             $("#articleDate1").val(this.model.get("startDate"));
