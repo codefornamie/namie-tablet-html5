@@ -57,10 +57,11 @@ define(function(require, exports, module) {
         scrollToArticle: function (ev, param) {
             var articleId = param.articleId;
             var immediate = !!param.immediate;
-            var heightHeader = $('.header').height();
-            var heightGlobalNav = $('.global-nav').height();
+            var heightHeader = $('.header').height() || 0;
+            var heightGlobalNav = $('.global-nav').height() || 0;
+            var heightBacknumberNav = $('.backnumber-nav').height() || 0;
             var heightMargin = 10;
-            var position = $("#" + articleId).offset().top - heightHeader - heightGlobalNav - heightMargin;
+            var position = $("#" + articleId).offset().top - heightHeader - heightGlobalNav - heightBacknumberNav - heightMargin;
 
             // 現在の記事詳細のスクロール位置と相対位置を加算した箇所までスクロールする
             $(".contents__primary").animate({
