@@ -54,6 +54,7 @@ define(function(require, exports, module) {
         events : {
             "click #addFileForm" : "onAddFileForm",
             "click #articleConfirmButton" : "onClickArticleConfirmButton",
+            "click #articleCancelButton" : "onClickArticleCancelButton",
             "change #articleMultiDate" : "chageMultiDateCheckbox"
         },
         /**
@@ -61,6 +62,12 @@ define(function(require, exports, module) {
          */
         setData: function () {
             
+        },
+        /**
+         * キャンセルボタン押下時のコールバック関数
+         */
+        onClickArticleCancelButton: function () {
+            app.router.back();
         },
         /**
          * 複数日チェックボックスのチェック有無でフォームを切り替える関数
