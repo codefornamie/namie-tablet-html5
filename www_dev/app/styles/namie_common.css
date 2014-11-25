@@ -1297,3 +1297,8 @@ div.nehan-block.nehan-body:last-child {
 .posting-content .file-action {
     margin-bottom: 20px;
 }
+
+
+select#articleCategory {
+    height: 46px;
+}

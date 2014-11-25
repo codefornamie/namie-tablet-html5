@@ -21,6 +21,8 @@ define(function(require, exports, module) {
     var ArticleDetailView = require("modules/view/posting/news/ArticleDetailView");
     var ArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
     var TopView = require("modules/view/ope/top/TopView");
+    var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
+    var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
 
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -93,6 +95,8 @@ define(function(require, exports, module) {
             'posting-top' : 'postingTop',
             'articleDetail(#:id)' : 'articleDetail',
             'articleRegist' : 'articleRegist',
+            'opeArticleRegist' : 'opeArticleRegist',
+            'opeYouTubeRegist' : 'opeYouTubeRegist',
             'ope-top' : 'opeTop'
         },
 
@@ -159,6 +163,16 @@ define(function(require, exports, module) {
             console.log('[route] articleRegist');
             this.layout.showView(new ArticleRegistView());
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
+        },
+        opeArticleRegist : function(options) {
+            console.log('[route] opeArticleRegist');
+            this.layout.setView("#contents__primary", new OpeArticleRegistView(options)).render();
+            this.navigate("opeArticleRegist");
+        },
+        opeYouTubeRegist : function(options) {
+            console.log('[route] opeYouTubeRegist');
+            this.layout.setView("#contents__primary", new OpeYouTubeRegistView(options)).render();
+            this.navigate("opeYouTubeRegist");
         },
 
         /*

@@ -1,13 +1,13 @@
 
 <div id="articleRegistPage" class="large-12 columns" role="content">
     <article>
-
+<h3 id="articleRegistTitle">新規記事投稿</h3>
         <form id="articleRegistForm">
             <div class="row">
-                <div class="large-2 text-right columns">
+                <div class="large-3 columns">
                     <label class="eventColumnsTitle">記事カテゴリ</label>
                 </div>
-                <div class="large-10 columns end">
+                <div class="large-9 columns end">
                     <select id="articleCategory" name="articleCategory">
                         <option value="3">イベント</option>
                         <option value="4">レポート</option>
@@ -15,118 +15,140 @@
                 </div>
             </div>
             <div class="row">
-                <div class="large-2 text-right columns">
+                <div class="large-3 columns">
                     <label class="eventColumnsTitle">タイトル</label>
                 </div>
-                <div class="large-10 columns end">
-                    <input id="articleTitle" name="articleTitle"
-                        type="text" class="required" />
+                <div class="large-9 columns end">
+                    <input id="articleTitle" name="articleTitle" type="text" class="required" />
                 </div>
             </div>
             <div class="row">
-                <div class="large-2 text-right columns">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">タグ</label>
+                </div>
+                <div class="large-9 columns end">
+                    <input id="articleTags" name="articleTags" type="text"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-3 columns">
                     <label class="eventColumnsTitle">日時</label>
                 </div>
-                <div class="large-10 columns">
+                <div class="large-9 columns">
 	                <div class="row">
-                        <div class="large-1 columns">
+                        <div class="large-2 columns">
                             <label class="eventColumnsTitle">日付</label>
                         </div>
-                        <div class="large-11 columns">
-	                        <label><input id="articleMultiDate" type="checkbox" />日程が複数の日に渡る</label>
+                        <div class="large-10 columns">
+	                        <input id="articleMultiDate" type="checkbox" /><label for="articleMultiDate">日程が複数の日に渡る</label>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="large-push-1 large-3 columns">
+                        <div class="large-push-2 large-4 columns">
                             <input id="articleDate1" name="articleDate1" type="date" />
                         </div>
-                        <div class="large-push-1 large-1 text-center columns">
+                        <div class="large-push-2 large-1 columns">
                             <label class="eventColumnsTitle articleDateTo">～</label>
                         </div>
-                        <div class="large-push-1 large-3 columns end">
+                        <div class="large-push-2 large-4 columns end">
 	                        <input id="articleDate2" class="articleDateTo" name="articleDate2" type="date" />
                         </div>
                     </div>
                     <div class="row">
-                        <div class="large-1 columns">
+                        <div class="large-2 columns">
                             <label class="eventColumnsTitle">時間</label>
                         </div>
                         <div class="large-2 columns">
 							<input id="articleTime1" name="articleTime1" type="time" />
                         </div>
-                        <div class="large-1 text-center columns">
+                        <div class="large-1 columns">
                             <label class="eventColumnsTitle event">～</label>
                         </div>
                         <div class="large-2 columns">
 							<input id="articleTime2" name="articleTime2" type="time" />
                         </div>
                         <div class="large-5 columns end">
-	                        <label><input id="articleAllDay" type="checkbox" />終日</label>
+	                        <input id="articleAllDay" type="checkbox" /><label for="articleAllDay">終日</label>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="large-2 text-right columns">
+                <div class="large-3 columns">
                     <label class="eventColumnsTitle">場所</label>
                 </div>
-                <div class="large-10 columns end">
+                <div class="large-9 columns end">
                     <input id="articlePlace" name="articlePlace" type="text"/>
                 </div>
             </div>
             <div class="row">
-                <div class="large-2 text-right columns">
+                <div class="large-3 columns">
                     <label class="eventColumnsTitle">内容</label>
                 </div>
-                <div class="large-10 columns end">
+                <div class="large-9 columns end">
                     <textArea id="articleDetail" rows="5"></textArea>
                 </div>
             </div>
             <div id="fileArea">
             </div>
-            <div class="row file-action">
-                <div class="large-10 columns right">
+            <div class="row">
+                <div class="large-9 columns right">
                         <a href="javascript:void(0);" id="addFileForm">＋画像を追加</a>
                 </div>
             </div>
             <div class="row">
-                <div class="large-2 text-right columns">
+                <div class="large-3 columns">
                     <label class="eventColumnsTitle">主催者連絡先</label>
                 </div>
-                <div class="large-10 columns end">
+                <div class="large-9 columns end">
                     <textArea id="articleContact" name="articleContact"
                         rows="5"></textArea>
                 </div>
             </div>
             <div class="row">
-                <div class="large-2 text-right columns">
+                <div class="large-3 columns">
                     <label class="eventColumnsTitle">掲載期間</label>
                 </div>
-                <div class="large-10 columns end">
-                    <div class="row">
-                        <div class="large-3 columns">
-                            <input id="articleRangeDate1" name="articleRangeDate1" type="date" class="required" />
-                        </div>
-                        <div class="large-1 text-center columns">
-                            <label class="eventColumnsTitle">～</label>
-                        </div>
-                        <div class="large-3 columns end">
-                            <input id="articleRangeDate2" name="articleRangeDate2" type="date" />
-                        </div>
+                <div class="large-9 columns end">
+                    <div class="large-4 columns">
+                        <input id="articleRangeDate1" name="articleRangeDate1" type="date" class="required" />
                     </div>
+                    <div class="large-1 columns">
+                        <label class="eventColumnsTitle">～</label>
+                    </div>
+                    <div class="large-4 columns end">
+                        <input id="articleRangeDate2" name="articleRangeDate2" type="date" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-3 columns">
+                    <label class="eventColumnsTitle">おすすめ記事</label>
+                </div>
+                <div class="large-9 columns end">
+                    <input id="articleRecommendCheck" type="checkbox" /><label for="articleRecommendCheck">おすすめ記事として配信する</label>
                 </div>
             </div>
         </form>
         <div class="row">
-            <div class="large-12 text-center columns">
-                <button id="articleConfirmButton" class="ladda-button"
-                    data-style="contract-overlay">
+        <!-- 
+            <div class=" large-3 columns">
+                <button id="articleRegistButton" class="ladda-button" data-style="contract-overlay">
+                    <span class="ladda-label">保存する</span>
+                </button>
+            </div>
+            -->
+            <div class="large-push-4 large-4 columns">
+                <button id="articleConfirmButton" class="ladda-button" data-style="contract-overlay">
                     <span class="ladda-label">確認画面へ</span>
                 </button>
-                <!--       <button id="eventRegistButton">登録</button> -->
+            </div>
+            <div class="large-4 columns">
+                <button id="articleCancelButton" class="ladda-button" data-style="contract-overlay">
+                    <span class="ladda-label">キャンセル</span>
+                </button>
             </div>
         </div>
     </article>
-    <hr />
 </div>
 <div id="articleRegistConfirmWrapperPage"></div>

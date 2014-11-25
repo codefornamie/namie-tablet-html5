@@ -7,6 +7,7 @@ define(function(require) {
 
     describe("AbstractODataModel", function() {
         it("TEST-01 LoginModel#login", function(done) {
+            this.timeout(15000);
             var loginModel = new LoginModel();
             loginModel.baseUrl = "https://fj.baas.jp.fujitsu.com/";
             loginModel.cellId = "kizunatest01";
