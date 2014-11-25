@@ -4,7 +4,7 @@ module.exports = ->
   @config "server",
     options:
       host: "0.0.0.0"
-      port: 8000
+      port: process.env.PORT || 8000
 
     development: {}
 
