@@ -29,6 +29,7 @@ define(function(require, exports, module) {
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          */
         afterRendered : function() {
+            app.ga.trackPageView("News/BackNoDate","新聞アプリ/バックナンバー日付選択ページ");
         },
 
         /**
