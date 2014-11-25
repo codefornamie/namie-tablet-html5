@@ -19,7 +19,7 @@
 
                         <div class="row">
                             <div class="large-12 columns event__updated">
-                                YYYY年MM月dd日(W) 更新
+                                <%= model.getUpdatedString() %> 更新
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                     <div class="eventColumnsHeader">日時</div>
                 </div>
                 <div class="large-11 large-centered columns">
-                    YYYY年MM月dd日 hh時mm分 〜 hh時mm分
+                    <%= model.getDateString() %>
                 </div>
 
                 <div class="large-12 columns">
