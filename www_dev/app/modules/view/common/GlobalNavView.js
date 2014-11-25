@@ -92,7 +92,6 @@ define(function(require, exports, module) {
             var $target = $(ev.currentTarget);
             var size = parseInt($target.attr('data-font-size'), 10);
             app.ga.trackEvent("新聞アプリ/全ページ共通", "文字サイズ選択", parseInt(size));
-
             $('html, body').css('font-size', size + 'px');
 
             app.trigger('didChangeFontSize');
