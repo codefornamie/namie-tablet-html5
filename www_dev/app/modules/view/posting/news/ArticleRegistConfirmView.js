@@ -60,6 +60,7 @@ define(function(require, exports, module) {
                 $(imgs[imgIndex++]).attr("src", url);
 >>>>>>> 97b483b NAM-261
             });
+            $("#articleRecommend").text($("#articleRecommendCheck").is(":checked") ? "する":"しない");
         },
 
         initialize : function() {
@@ -127,6 +128,10 @@ define(function(require, exports, module) {
         saveModel : function(){
             this.model.save(null, {
                 success : $.proxy(function() {
+                    if (Backbone.history.fragment == 'opeArticleRegist') {
+                        app.router.go("ope-top");
+                        return;
+                    }
                     app.router.go("posting-top");
                 }, this),
                 error: function(e){
