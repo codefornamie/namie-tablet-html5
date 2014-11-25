@@ -1227,10 +1227,9 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .eventColumnsHeader {
-    border: 1px solid #000;
-    border-radius: 2px;
-    margin: 20px 0;
-    padding: 5px 20px;
+    margin: 35px 0;
+    font-size: 1.2rem;
+    color: #777;
 }
 
 .event__status {
@@ -1264,13 +1263,25 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .eventTitle {
-    font-size: 32px;
+    font-size: 2.5rem;
 }
 .eventFile {
     margin-bottom: 20px;
 }
 .eventFileImage {
     margin-bottom: 5px;
+}
+
+/**
+ *  確認画面
+ */
+.event-confirm__attention {
+    text-align: center;
+}
+
+.event-confirm__table {
+    width: 80%;
+    margin: 16px auto;
 }
 
 .posting-content {
