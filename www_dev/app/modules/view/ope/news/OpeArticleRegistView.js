@@ -4,11 +4,12 @@ define(function(require, exports, module) {
     var app = require("app");
     var PostingArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
+    var vexDialog = require("vexDialog");
 
     /**
-     * 記事新規登録画面のViewクラス
+     * 記事新規登録・編集画面のViewクラス
      * 
-     * @class 記事新規登録画面のViewクラス
+     * @class 記事新規登録・編集画面のViewクラス
      * @exports ArticleRegistView
      * @constructor
      */
@@ -78,6 +79,17 @@ define(function(require, exports, module) {
                 },this));
             }
         },
+        saveModel : function(){
+            this.model.save(null, {
+                success : $.proxy(function() {
+                    app.router.go("ope-top");
+                }, this),
+                error: function(e){
+                    this.hideLoading();
+                    vexDialog.alert("保存に失敗しました。");
+                }
+            });
+        }
 
     });
     module.exports = OpeArticleRegistView;
