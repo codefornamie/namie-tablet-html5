@@ -43,17 +43,17 @@ define(function(require, exports, module) {
             } else {
                 var tomorrow = DateUtil.addDay(new Date(),1);
                 $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
+                this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
             }
             this.chageMultiDateCheckbox();
         },
 
         initialize : function() {
-            this.insertView("#fileArea", new ArticleRegistFileItemView());
         },
 
         events : {
             "click #addFileForm" : "onAddFileForm",
-            "click #articleRegistButton" : "onClickArticleRegistButton",
+            "click #articleConfirmButton" : "onClickArticleConfirmButton",
             "change #articleMultiDate" : "chageMultiDateCheckbox"
         },
         /**
@@ -84,7 +84,7 @@ define(function(require, exports, module) {
         /**
          * 確認画面へボタンを押された際のコールバック関数
          */
-        onClickArticleRegistButton : function() {
+        onClickArticleConfirmButton : function() {
             if ($(this.formId).validate().form()) {
                 var errmsg = this.validate();
                 if (errmsg) {
@@ -120,6 +120,7 @@ define(function(require, exports, module) {
                 this.model = new ArticleModel(); 
             }
             this.model.set("type", $("#articleCategory").val());
+            this.model.set("site", $("#articleCategory").text());
             this.model.set("title", $("#articleTitle").val());
             
             this.model.set("startDate", $("#articleDate1").val());
