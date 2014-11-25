@@ -60,6 +60,7 @@ define(function(require, exports, module) {
          * </p>
          */
         makeSaveData : function(saveData) {
+            saveData.parent = this.get("parent");
             saveData.site = this.get("site");
             saveData.url = this.get("url");
             saveData.link = this.get("link");

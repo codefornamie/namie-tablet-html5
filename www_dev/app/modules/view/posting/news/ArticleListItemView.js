@@ -21,13 +21,32 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
 //            this.showImage();
+            if(this.model.get("parent")){
+                this.$el.find("#articleEditButton").text("レポート詳細");
+                this.$el.find("#articleReportButton").hide();
+            }
         },
 
         /**
          * このViewのイベントを定義する。
          */
         events : {
-            "click a" : "onClickAnchorTag"
+            "click a" : "onClickAnchorTag",
+            "click #articleEditButton" : "onClickArticleEditButton",
+            "click #articleReportButton" : "onClickArticleReportButton"
+        },
+        
+        /**
+         * イベント詳細ボタンを押下された際のハンドラ
+         */
+        onClickArticleEditButton : function(e){
+            app.router.articleRegist({model:this.model});
+        },
+        /**
+         * レポートを書くボタンを押下された際のハンドラ
+         */
+        onClickArticleReportButton : function(e){
+            app.router.articleRegist({parentModel: this.model, articleCategory: "4"});
         }
     });
     module.exports = ArticleListItemView;

@@ -31,6 +31,10 @@ define(function(require, exports, module) {
          * 画像名
          */
         fileName : '',
+        /**
+         * 読み込み時のイメージ配列
+         */
+        imgArray : null,
 
         beforeRendered : function() {
 
@@ -44,6 +48,24 @@ define(function(require, exports, module) {
                 var tomorrow = DateUtil.addDay(new Date(),1);
                 $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
                 this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
+
+                // 記事カテゴリ
+                if(this.articleCategory){
+                    $("#articleCategory").val(this.articleCategory);
+                }
+                // レポートを書く場合
+                if(this.parentModel){
+                    $("#articleTitle").val(this.parentModel.get("title") + "の報告");
+                    $("#articleDate1").val(this.parentModel.get("startDate"));
+                    if (this.parentModel.get("endDate")) {
+                        $("#articleMultiDate").attr("checked","checked");
+                        $("#articleDate2").val(this.parentModel.get("endDate"));
+                    }
+                    $("#articleTime1").val(this.parentModel.get("startTime"));
+                    $("#articleTime2").val(this.parentModel.get("endTime"));
+                    $("#articlePlace").val(this.parentModel.get("place"));
+                    $("#articleContact").val(this.parentModel.get("contactInfo"));
+                }
             }
             this.chageMultiDateCheckbox();
         },
@@ -61,7 +83,55 @@ define(function(require, exports, module) {
          * 編集時にデータを各フォームにセットする
          */
         setData: function () {
-            
+            $("#articleRegistTitle").text("記事編集");
+            $("#articleCategory").val(this.model.get("type"));
+            $("#articleTitle").val(this.model.get("title"));
+            $("#articleDate1").val(this.model.get("startDate"));
+            if (this.model.get("endDate")) {
+                $("#articleMultiDate").attr("checked","checked");
+                $("#articleDate2").val(this.model.get("endDate"));
+            }
+            $("#articleTime1").val(this.model.get("startTime"));
+            $("#articleTime2").val(this.model.get("endTime"));
+            $("#articlePlace").val(this.model.get("place"));
+            $("#articleDetail").val(this.model.get("description"));
+            $("#articleContact").val(this.model.get("contactInfo"));
+            $("#articleRangeDate1").val(this.model.get("publishedAt"));
+            $("#articleRangeDate2").val(this.model.get("depublishedAt"));
+            if (this.model.get("type") !== "2") {
+                this.imgArray = [];
+                if (this.model.get("imageUrl")) {
+                    this.imgArray.push({
+                        fileName:this.model.get("imageUrl"),
+                        comment:this.model.get("imageComment")
+                    });
+                }
+                if (this.model.get("imageUrl2")) {
+                    this.imgArray.push({
+                        fileName: this.model.get("imageUrl2"),
+                        comment: this.model.get("imageComment2")
+                    });
+                }
+                if (this.model.get("imageUrl3")) {
+                    this.imgArray.push({
+                        fileName: this.model.get("imageUrl3"),
+                        comment: this.model.get("imageComment3")
+                    });
+                }
+                if (this.imgArray.length === 0) {
+                    this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
+                    this.hideLoading();
+                } else if (this.imgArray.length >= 3) {
+                    $("#addFileForm").hide();
+                }
+                var index = 0;
+                _.each(this.imgArray, $.proxy(function(img) {
+                    var view = new ArticleRegistFileItemView();
+                    view.imageUrl = img.fileName;
+                    view.imageComment = img.comment;
+                    this.insertView("#fileArea", view).render();
+                },this));
+            }
         },
         /**
          * キャンセルボタン押下時のコールバック関数
@@ -122,12 +192,15 @@ define(function(require, exports, module) {
         /**
          * モデルにデータをセットする関数
          */
-        setInputValue : function(callback) {
+        setInputValue : function() {
             if(this.model === null){
                 this.model = new ArticleModel(); 
             }
+            if(this.parentModel){
+                this.model.set("parent", this.parentModel.get("__id"));
+            }
             this.model.set("type", $("#articleCategory").val());
-            this.model.set("site", $("#articleCategory").text());
+            this.model.set("site", $("#articleCategory option:selected").text());
             this.model.set("title", $("#articleTitle").val());
             
             this.model.set("startDate", $("#articleDate1").val());
@@ -148,54 +221,36 @@ define(function(require, exports, module) {
             this.model.set("createUserId", app.user.get("__id"));
             
             var imageCount = this.$el.find("#fileArea").children().size();
-            if(imageCount === 0){
-                callback();
-                return;
-            }
-            this.showLoading();
             var images = [];
             var self = this;
-            _.each(this.$el.find("#fileArea").children(), function(fileItem){
-                var file = $(fileItem).find("#articleFile").prop("files")[0];
-                if(!file){
-                    imageCount--;
-                    if(imageCount <= 0){
-                        self.hideLoading();
-                        callback();
+            var fileAreas = this.$el.find("#fileArea").children();
+            for(var i = 0; i < fileAreas.length; i++){
+                var fileArea = fileAreas[i];
+                var previewImg = $(fileArea).find("#previewFile");
+                var file = previewImg.prop("file");
+                if(previewImg.attr("src")){
+                    var image = null;
+                    if(file){
+                        image = {};
+                        var preName = file.name.substr(0, file.name.lastIndexOf("."));
+                        var suffName = file.name.substr(file.name.lastIndexOf("."));
+                        image.fileName = preName + "_" + String(new Date().getTime()) + _.uniqueId("") + suffName;
+                        image.contentType = file.type;
+                        image.data = $(fileArea).find("#articleFile").prop("data");
+                    }else{
+                        // 変更なし
+                        image = this.imgArray[i];
                     }
-                    return;
+                    image.comment = $(fileArea).find("#articleFileComent").val();
+                    image.src = previewImg.attr("src");
+                    images.push(image);
                 }
-                var image = {};
-                var preName = file.name.substr(0, file.name.lastIndexOf("."));
-                var suffName = file.name.substr(file.name.lastIndexOf("."));
-                image.fileName = preName + "_" + String(new Date().getTime()) + suffName;
-                image.contentType = file.type;
-
-                var reader = new FileReader();
-                reader.onload = function(fileEvent){
-                    image.data = fileEvent.currentTarget.result;
-                    imageCount--;
-                    if(imageCount <= 0){
-                        self.hideLoading();
-                        callback();
-                    }
-                };
-                reader.onerror = function(){
-                    self.hideLoading();
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert("ファイルの読み込みに失敗しました。");
-                };
-                reader.readAsArrayBuffer(file);
-                
-                image.comment = $(fileItem).find("#articleFileComent").val();
-                image.blob = $(fileItem).find("#previewFile").attr("src");
-                images.push(image);
-            });
+            }
             this.model.set("images", images);
-            for(var i = 0; i < images.length; i++){
-                var surfix = (i === 0) ? "" : "" + (i + 1);
-                this.model.set("imageUrl" + surfix, images[i].fileName);
-                this.model.set("imageComment" + surfix, images[i].comment);
+            for(var imageIndex = 0; imageIndex < 3; imageIndex++){
+                var surfix = (imageIndex === 0) ? "" : "" + (imageIndex + 1);
+                this.model.set("imageUrl" + surfix, imageIndex < images.length ? images[imageIndex].fileName : null);
+                this.model.set("imageComment" + surfix, imageIndex < images.length ? images[imageIndex].comment : null);
             }
         },
         /**
@@ -203,11 +258,10 @@ define(function(require, exports, module) {
          */
         onSubmit : function() {
             // 登録処理を開始する
-            this.setInputValue($.proxy(function(){
-                $("#articleRegistPage").hide();
-                this.setView("#articleRegistConfirmWrapperPage", new ArticleRegistConfirmView({model: this.model})).render();
-                $("#snap-content").scrollTop(0);
-            }, this));
+            this.setInputValue();
+            $("#articleRegistPage").hide();
+            this.setView("#articleRegistConfirmWrapperPage", new ArticleRegistConfirmView({model: this.model})).render();
+            $("#snap-content").scrollTop(0);
         },
 
     });
