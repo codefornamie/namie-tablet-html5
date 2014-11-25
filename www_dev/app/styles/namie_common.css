@@ -432,6 +432,18 @@ main {
     font-size: 36px;
 }
 
+/* date and weekday */
+.date-area__date-weekday {
+    display: block;
+    white-space: nowrap;
+}
+
+/* others */
+.date-area__span {
+    display: inline-block;
+    font-size: 30px;
+}
+
 /**
  *  global-nav__font
  *  フォントサイズ指定
@@ -593,7 +605,7 @@ main {
     content: '';
     display: block;
     background-image: url(../../app/img/img-side-menu-top.png);
-    background-size: 307px;
+    background-size: 312px;
     height: 3px;
     background-position: -1px 0;
 }
@@ -1087,30 +1099,61 @@ div.nehan-block.nehan-body:last-child {
  *  Backnumber
  */
 .backnumber-nav {
-    height: 40px;
+    position: relative;
+    z-index: 50;
+    height: 70px;
+    text-align: center;
+    border-top: 2px solid #ebeade;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-.backnumber-news {
-    padding-top: 40px;
+.backnumber-nav__item {
+    display: inline-block;
+}
+
+.backnumber-nav__month {
+    color: #485a5d;
+    margin: 0 20px;
+}
+
+.backnumber-nav__month .date-area {
+    line-height: 1;
+    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
+}
+
+.backnumber-nav__prev,
+.backnumber-nav__next {
+    color: #ec8c2c;
+}
+
+.backnumber-main {
+    padding-top: 70px;
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
 }
-    .backnumber-news > div {
+    .backnumber-main > div {
         height: 100%;
     }
 
+.backnumber-list-container {
+    height: 100%;
+    overflow: auto;
+}
+
 .backnumber-list {
     list-style: none;
+    margin: 0;
 }
 
 .backnumber-li {
     margin: 15px;
     background-color: #f7f6ef;
-    box-shadow: 0 1px 0 0 #d0cdb3;
-    border-radius: 10px;
+    box-shadow: 0 1px 2px 0 #d0cdb3;
+    border-radius: 15px;
     overflow: hidden;
     padding: 5px;
 }
@@ -1125,18 +1168,55 @@ div.nehan-block.nehan-body:last-child {
     color: inherit;
 }
 
+.backnumber-item.row {
+    display: table;
+}
+
+.backnumber-item.row .columns {
+    display: table-cell;
+    float: none;
+    vertical-align: middle;
+}
+
 .backnumber-item__date {
 }
 
+.backnumber-item__date::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 10%;
+    right: 0;
+    height: 80%;
+    width: 15px;
+    background-image: url(../../app/img/img-backnumber-item-border.png);
+}
+
 .backnumber-item__date .date-area {
+    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
     line-height: 1;
 }
 
 .backnumber-item__body {
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .backnumber-item__body ul {
     list-style: none;
+    margin-left: 0;
+}
+
+.backnumber-item__body ul > li {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 650px;
+    text-overflow: ellipsis;
+}
+
+.backnumber-item__thumbnail {
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 /*
@@ -1324,6 +1404,73 @@ div.nehan-block.nehan-body:last-child {
     margin-bottom: 20px;
 }
 
+/**
+ *  Settings
+ */
+.settings {
+}
+
+.settings-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 100;
+    opacity: 0;
+    transition: .3s ease opacity;
+}
+
+.settings-bg.is-ready {
+    opacity: 1;
+}
+
+.settings-dialog {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 60%;
+    height: 60%;
+    margin: auto;
+    background: white;
+    z-index: 110;
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.32);
+    opacity: 0;
+    transition: .3s ease opacity;
+}
+
+.settings-dialog.is-ready {
+    opacity: 1;
+}
+
+.settings-dialog__cross-button {
+    position: absolute;
+    top: -25px;
+    right: -25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    font-size: 28px;
+}
+
+.settings-dialog__header {
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
+}
+
+.settings-dialog__header h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 36px;
+}
+
+.settings-dialog__body {
+    text-align: center;
+}
 
 select#articleCategory {
     height: 46px;
