@@ -432,6 +432,12 @@ main {
     font-size: 36px;
 }
 
+/* date and weekday */
+.date-area__date-weekday {
+    display: block;
+    white-space: nowrap;
+}
+
 /* others */
 .date-area__span {
     display: inline-block;
@@ -1097,6 +1103,8 @@ div.nehan-block.nehan-body:last-child {
     z-index: 50;
     height: 60px;
     text-align: center;
+    border-top: 2px solid #ebeade;
+    padding-top: 10px;
 }
 
 .backnumber-nav__item {
@@ -1105,6 +1113,7 @@ div.nehan-block.nehan-body:last-child {
 
 .backnumber-nav__month {
     color: #485a5d;
+    margin: 0 20px;
 }
 
 .backnumber-nav__month .date-area {
@@ -1169,6 +1178,17 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .backnumber-item__date {
+}
+
+.backnumber-item__date::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 10%;
+    right: 0;
+    height: 80%;
+    width: 15px;
+    background-image: url(../../app/img/img-backnumber-item-border.png);
 }
 
 .backnumber-item__date .date-area {
