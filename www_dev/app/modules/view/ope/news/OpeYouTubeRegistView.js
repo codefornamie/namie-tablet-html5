@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var YouTubeListItemView = require("modules/view/news/YouTubeListItemView");
+    var OpeYouTubeRegistConfirmView = require("modules/view/ope/news/OpeYouTubeRegistConfirmView");
 
     /**
      * YouTube編集画面のViewクラス
@@ -22,7 +23,35 @@ define(function(require, exports, module) {
         afterRendered : function() {
             // TODO データ読み込み終わったら以下を実行
             this.showImage();
+            $("#articleTitle").val(this.model.get("title"));
+            $("#articleDetail").val(this.model.get("description"));
+            this.hideLoading();
         },
+        events : {
+            "click #articleConfirmButton" : "onArticleConfirmButton",
+            "click #articleCancelButton" : "onClickArticleCancelButton"
+        },
+        /**
+         * 確認画面へボタンが押下された際のコールバック関数
+         */
+        onArticleConfirmButton : function() {
+            this.setInputValue();
+            $("#youtubeRegistPage").hide();
+            this.setView("#articleRegistConfirmWrapperPage", new OpeYouTubeRegistConfirmView({
+                model : this.model
+            })).render();
+            $("#snap-content").scrollTop(0);
+        },
+        /**
+         * キャンセルボタン押下時のコールバック関数
+         */
+        onClickArticleCancelButton: function () {
+            app.router.back();
+        },
+        setInputValue : function() {
+            this.model.set("title", $("#articleTitle").val());
+            this.model.set("description", $("#articleDetail").val());
+        }
 
     });
     module.exports = OpeYouTubeRegistView;

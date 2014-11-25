@@ -39,7 +39,7 @@ define(function(require, exports, module) {
             // 掲載期間
             var pubDateString = DateUtil.formatDate(new Date(this.model.get("publishedAt")),"yyyy年MM月dd日(ddd)");
             if(this.model.get("depublishedAt")){
-                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.model.get("endDate")) ,"yyyy年MM月dd日(ddd)");
+                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.model.get("depublishedAt")) ,"yyyy年MM月dd日(ddd)");
             }
             $("#articlePublishRange").text("掲載期間： " + pubDateString);
             
@@ -118,7 +118,6 @@ define(function(require, exports, module) {
         saveModel : function(){
             this.model.save(null, {
                 success : $.proxy(function() {
-                    this.hideLoading();
                     app.router.go("posting-top");
                 }, this),
                 error: function(e){
