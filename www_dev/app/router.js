@@ -8,7 +8,6 @@ define(function(require, exports, module) {
 
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
-    var YouTubeView = require("modules/view/top/YouTubeView");
     var NewsView = require("modules/view/news/NewsView");
 
     var ScrapView = require("modules/view/scrap/ScrapView");
