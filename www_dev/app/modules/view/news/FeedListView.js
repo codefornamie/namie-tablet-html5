@@ -63,8 +63,12 @@ define(function(require, exports, module) {
         onClickFeedListItem : function(ev) {
             // クリックされたフィードに対応する記事のスクロール位置取得
             var articleId = $(ev.currentTarget).attr("data-article-id");
-
-            app.ga.trackEvent("ニュース", "記事参照", articleId);
+            var targetArticle = this.collection.find(function(model) {
+                return model.get("__id") === articleId;
+            });
+            if (targetArticle) {
+                app.ga.trackEvent("ニュース", "記事参照", targetArticle.get("title"));
+            }
 
 
             $(document).trigger('scrollToArticle', {
