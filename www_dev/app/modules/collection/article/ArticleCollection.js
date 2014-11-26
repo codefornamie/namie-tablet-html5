@@ -13,7 +13,7 @@ define(function(require, exports, module) {
         model : ArticleModel,
         entity : "article",
         condition : {
-            top : 3,
+            top : 100,
             orderby : "createdAt desc"
         },
         parseOData: function (response, options) {

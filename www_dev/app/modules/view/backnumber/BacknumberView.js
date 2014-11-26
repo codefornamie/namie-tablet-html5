@@ -29,6 +29,7 @@ define(function(require, exports, module) {
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          */
         afterRendered : function() {
+            app.ga.trackPageView("News/BackNoDate","新聞アプリ/バックナンバー日付選択ページ");
         },
 
         /**
@@ -37,13 +38,33 @@ define(function(require, exports, module) {
         initialize : function() {
             var backnumberListView = new BacknumberListView();
 
+            this.backnumberListView = backnumberListView;
             backnumberListView.collection = new BacknumberCollection();
             this.setView('#backnumber', backnumberListView);
         },
 
         events : {
-        }
+            'click [data-backnumber-month-prev]': 'onClickMonthPrev',
+            'click [data-backnumber-month-next]': 'onClickMonthNext'
+        },
 
+        /**
+         *  前の月へ戻るボタンを押したら呼ばれる
+         *
+         *  @param {Event} evt
+         */
+        onClickMonthPrev: function (evt) {
+            // [TODO] 選択された月に従ってthis.backnumberListViewの内容を更新する
+        },
+
+        /**
+         *  次の月へ進むボタンを押したら呼ばれる
+         *
+         *  @param {Event} evt
+         */
+        onClickMonthNext: function (evt) {
+            // [TODO] 選択された月に従ってthis.backnumberListViewの内容を更新する
+        }
     });
     module.exports = BacknumberView;
 });

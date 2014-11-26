@@ -39,7 +39,7 @@ define(function(require, exports, module) {
             // 掲載期間
             var pubDateString = DateUtil.formatDate(new Date(this.model.get("publishedAt")),"yyyy年MM月dd日(ddd)");
             if(this.model.get("depublishedAt")){
-                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.model.get("endDate")) ,"yyyy年MM月dd日(ddd)");
+                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.model.get("depublishedAt")) ,"yyyy年MM月dd日(ddd)");
             }
             $("#articlePublishRange").text("掲載期間： " + pubDateString);
             
@@ -49,8 +49,9 @@ define(function(require, exports, module) {
             var imgs = $("#articleImageArea img");
             var imgIndex = 0;
             _.each(this.model.get("images"), function(image){
-                $(imgs[imgIndex++]).attr("src", image.blob);
+                $(imgs[imgIndex++]).attr("src", image.src);
             });
+            $("#articleRecommend").text($("#articleRecommendCheck").is(":checked") ? "する":"しない");
         },
 
         initialize : function() {
@@ -60,10 +61,10 @@ define(function(require, exports, module) {
         events : {
             "click #articleBackButton" : "onClickArticleBackButton",
             "click #articleRegistButton" : "onClickArticleRegistButton"
-//            "click #addFileForm" : "onAddFileForm",
-//            "click #articleRegistButton" : "onClickArticleRegistButton",
-//            "change #articleMultiDate" : "chageMultiDateCheckbox"
         },
+        /**
+         * 戻るボタンを押下された際に呼び出されるコールバック関数。
+         */
         onClickArticleBackButton : function(){
             this.$el.remove();
             $("#articleRegistPage").show();
@@ -87,29 +88,41 @@ define(function(require, exports, module) {
                 return;
             }
             _.each(this.model.get("images"), $.proxy(function(image){
-                app.box.col("dav").put(image.fileName, {
-                    body : image.data,
-                    headers : {
-                        "Content-Type" : image.contentType,
-                        "If-Match" : "*"
-                    },
-                    success : $.proxy(function(e){
-                        if(--imageCount <= 0){
-                            this.saveModel();
-                        }
-                    }, this),
-                    error: $.proxy(function(e){
-                        this.hideLoading();
-                        vexDialog.defaultOptions.className = 'vex-theme-default';
-                        vexDialog.alert("保存に失敗しました。");
-                    }, this)
-                });
+                if(image.data){
+                    app.box.col("dav").put(image.fileName, {
+                        body : image.data,
+                        headers : {
+                            "Content-Type" : image.contentType,
+                            "If-Match" : "*"
+                        },
+                        success : $.proxy(function(e){
+                            if(--imageCount <= 0){
+                                this.saveModel();
+                            }
+                        }, this),
+                        error: $.proxy(function(e){
+                            this.hideLoading();
+                            vexDialog.defaultOptions.className = 'vex-theme-default';
+                            vexDialog.alert("保存に失敗しました。");
+                        }, this)
+                    });
+                }else{
+                    if(--imageCount <= 0){
+                        this.saveModel();
+                    }
+                }
             }, this));
         },
+        /**
+         * Modelの保存
+         */
         saveModel : function(){
             this.model.save(null, {
                 success : $.proxy(function() {
-                    this.hideLoading();
+                    if (Backbone.history.fragment == 'opeArticleRegist') {
+                        app.router.go("ope-top");
+                        return;
+                    }
                     app.router.go("posting-top");
                 }, this),
                 error: function(e){

@@ -15,14 +15,14 @@ define(function(require, exports, module) {
      */
     var ArticleListView = TabletArticleListView.extend({
         template : require("ldsh!templates/{mode}/news/articleList"),
-        
+
         /**
          * 取得した記事一覧を描画する
          */
         setArticleList : function() {
             var currentPage = app.get('currentPage');
             var model = this.collection.at(currentPage);
-            
+
             this.collection.each(function (model) {
                 this.insertView("#articleList", new ArticleListItemView({
                     model : model,
@@ -30,7 +30,7 @@ define(function(require, exports, module) {
                 }));
             }.bind(this));
 
-        },
+        }
     });
 
     module.exports = ArticleListView;

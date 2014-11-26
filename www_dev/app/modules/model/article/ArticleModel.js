@@ -29,6 +29,8 @@ define(function(require, exports, module) {
             response.dispSite = CommonUtil.sanitizing(response.site);
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.dispPlace = CommonUtil.sanitizing(response.place);
+            response.dispDescription = CommonUtil.sanitizing(response.description);
+            response.dispContactInfo = CommonUtil.sanitizing(response.contactInfo);
             if (response.startDate) {
                 if (response.startDate.length > 10) {
                     response.dispStartDate = DateUtil.formatDate(new Date(response.startDate),"yyyy年MM月dd日 HH時mm分");
@@ -60,6 +62,7 @@ define(function(require, exports, module) {
          * </p>
          */
         makeSaveData : function(saveData) {
+            saveData.parent = this.get("parent");
             saveData.site = this.get("site");
             saveData.url = this.get("url");
             saveData.link = this.get("link");
@@ -100,8 +103,68 @@ define(function(require, exports, module) {
                 });
             }
             saveData.tags = tags;
-        }
+        },
 
+        /**
+         *  「掲載中」などのイベントのステータス文字列を返す
+         *
+         *  @return {String}
+         */
+        getStatusString: function () {
+            var status = this.get('status');
+            var str = [
+                '掲載中'
+            ][status];
+
+            return str || status;
+        },
+
+        /**
+         *  掲載期間の文字列を返す
+         *
+         *  @return {String}
+         */
+        getPubDateString: function () {
+            var pubDateString = DateUtil.formatDate(new Date(this.get("publishedAt")),"yyyy年MM月dd日(ddd)");
+
+            if(this.get("depublishedAt")){
+                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")) ,"yyyy年MM月dd日(ddd)");
+            }
+
+            return pubDateString;
+        },
+
+        /**
+         *  更新日の文字列を返す
+         *
+         *  @return {String}
+         */
+        getUpdatedString: function () {
+            var updatedString = DateUtil.formatDate(new Date(this.get("updatedAt")),"yyyy年MM月dd日(ddd)");
+
+            return updatedString;
+        },
+
+        /**
+         *  日付文字列を返す
+         *
+         *  @return {String}
+         */
+        getDateString: function () {
+            // 日時
+            var dateString = DateUtil.formatDate(new Date(this.get("startDate")),"yyyy年MM月dd日(ddd)");
+            if(this.get("endDate")){
+                dateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")),"yyyy年MM月dd日(ddd)");
+            }
+            var st = this.get("startTime");
+            st = st ? st : "";
+            var et = this.get("endTime");
+            et = et ? et : "";
+            if(st || et){
+                dateString += "\n" + st + " ～ " + et;
+            }
+            return CommonUtil.sanitizing(dateString);
+        }
     });
 
     module.exports = ArticleModel;

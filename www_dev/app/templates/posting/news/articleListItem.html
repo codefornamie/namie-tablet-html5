@@ -1,44 +1,55 @@
-<article class='post' id="<%= model.get('__id') %>"
-    style="border-bottom: solid 1px;">
+<article class='post' id="<%= model.get('__id') %>">
     <section class='post__body'>
         <div class="row">
             <div class="large-12 columns">
-                <div class="post-header">
-                    <div class="post-header__site">
-                        <div class="post-label">掲載中</div>
-                        <%= model.get("dispUpdatedAt") %>更新
-                        <div class="tagListArea"></div>
+                <div class="row post-header">
+                    <div class="large-12 columns">
+                        <div class="post-header__site">
+                            <div class="post-label">掲載中</div>
+                            <%= model.get("dispUpdatedAt") %>更新
+                            <div class="tagListArea"></div>
+                        </div>
                     </div>
 
-                    <div class="post-header__title"><%= model.get("dispTitle") %>
+                    <div class="large-12 columns">
+                        <div class="post-header__title"><%= model.get("dispTitle") %>
+                        </div>
                     </div>
                     <div class="large-12 columns">
                         <div class="row">
-                            <div class="large-3 columns">
-                                <span style="font-weight: bold;">日時：</span>
+                            <div class="large-2 columns">
+                                <span">日時：</span>
                             </div>
-                            <div class="large-9 columns">
+                            <div class="large-10 columns">
                                 <%= model.get("dispStartDate") %>
                             </div>
                         </div>
                     </div>
                     <div class="large-12 columns">
                         <div class="row">
-                            <div class="large-3 columns">
-                                <span style="font-weight: bold;">場所：</span>
+                            <div class="large-2 columns">
+                                <span">場所：</span>
                             </div>
-                            <div class="large-9 columns">
+                            <div class="large-10 columns">
                                 <%= model.get("dispPlace") %>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="post-action">
-                <button type="button" class="small button">イベント詳細</button>
+            <div class="large-12 columns">
+                <div class="post-action">
+                    <button type="button" class="small button" data-goto-detail>
+                        イベント詳細
+                    </button>
+                </div>
             </div>
-            <div class="post-action">
-                <button type="button" class="small button">レポートを書く</button>
+            <div class="large-12 columns">
+                <div class="post-action">
+                    <button type="button" class="small button" data-goto-report>
+                        レポートを書く
+                    </button>
+                </div>
             </div>
         </div>
     </section>

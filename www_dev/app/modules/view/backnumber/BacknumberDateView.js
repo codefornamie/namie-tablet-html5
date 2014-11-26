@@ -29,6 +29,7 @@ define(function(require, exports, module) {
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          */
         afterRendered : function() {
+            app.ga.trackPageView("BackNoList","新聞アプリ/バックナンバー記事一覧ページ");
         },
 
         /**
@@ -36,6 +37,8 @@ define(function(require, exports, module) {
          */
         initialize : function(param) {
             console.assert(param && param.date, 'Please pass the date value');
+
+            // [TODO] param.dateに日付が渡ってくるのでうまく利用する
         },
 
         events : {

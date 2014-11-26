@@ -68,7 +68,7 @@ define(function(require, exports, module) {
                 $(".eventGlobal-nav").hide();
                 $(".contents-wrapper").css("padding-top","55px");
             } else if(Backbone.history.fragment == 'articleRegist'){
-                if(!$("#articleRegistConfirmWrapperPage").children().size()){
+                if(!$("#articleRegistConfirmPage").children().size()){
                     $(".eventGlobal-nav").show();
                     $("#headerTitle").text("記事入力");
                     $(".contents-wrapper").css("padding-top","144px");

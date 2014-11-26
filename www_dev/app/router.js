@@ -8,19 +8,19 @@ define(function(require, exports, module) {
 
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
-    var YouTubeView = require("modules/view/top/YouTubeView");
     var NewsView = require("modules/view/news/NewsView");
 
     var ScrapView = require("modules/view/scrap/ScrapView");
     var TutorialView = require("modules/view/tutorial/TutorialView");
     var BacknumberView = require("modules/view/backnumber/BacknumberView");
     var BacknumberDateView = require("modules/view/backnumber/BacknumberDateView");
-    var SettingsView = require("modules/view/settings/SettingsView");
 
     var EventNewsView = require("modules/view/posting/news/NewsView");
     var ArticleDetailView = require("modules/view/posting/news/ArticleDetailView");
     var ArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
     var TopView = require("modules/view/ope/top/TopView");
+    var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
+    var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
 
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -67,8 +67,24 @@ define(function(require, exports, module) {
                 setMenu : function(menuView) {
                     this.setView("#menu", menuView).render();
                 },
+                setSettings : function(settingsView) {
+                    this.setView("#settings", settingsView).render();
+                },
                 showView : function(view) {
                     this.setView("#contents", view).render();
+                },
+
+                /**
+                 *  セレクタで指定したviewをremoveする
+                 *
+                 *  @param {String} viewName
+                 */
+                removeViewByName : function (viewName) {
+                    var view = this.getView(viewName);
+
+                    if (view) {
+                        view.remove();
+                    }
                 }
             });
 
@@ -91,8 +107,6 @@ define(function(require, exports, module) {
             'backnumber/:date' : 'backnumberDate',
             'settings' : 'settings',
             'posting-top' : 'postingTop',
-            'articleDetail(#:id)' : 'articleDetail',
-            'articleRegist' : 'articleRegist',
             'ope-top' : 'opeTop'
         },
 
@@ -136,8 +150,6 @@ define(function(require, exports, module) {
         },
 
         backnumberDate : function (date) {
-            if (this.forceJumpToTop()) return;
-
             console.log('[route] backnumber/%s', date);
             this.layout.showView(new BacknumberDateView({
                 date: date
@@ -147,18 +159,67 @@ define(function(require, exports, module) {
 
         settings : function() {
             console.log('[route] settings');
-            this.layout.showView(new SettingsView());
-            this.commonView();
+            this.layout.setSettings(new common.SettingsView());
         },
-        articleDetail : function(id) {
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        articleDetail : function(options) {
             console.log('[route] articleDetail');
-            this.layout.showView(new ArticleDetailView());
+
+            this.navigate("articleDetail");
+            this.layout.showView(new ArticleDetailView({
+                model: options.model
+            }));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
-        articleRegist : function() {
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        articleRegist : function(options) {
             console.log('[route] articleRegist');
-            this.layout.showView(new ArticleRegistView());
+
+            var param = {};
+
+            options = options || {};
+
+            if (options.model) {
+                param.model = options.model;
+            }
+
+            this.navigate("articleRegist");
+            this.layout.showView(new ArticleRegistView(param));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
+        },
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        articleReport : function() {
+            console.log('[route] articleReport');
+            this.layout.showView(new ArticleRegistView({articleCategory: "4"}));
+            this.navigate("articleReport");
+            this.layout.setGlobalNav(new postingCommon.GlobalNavView());
+        },
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        opeArticleRegist : function(options) {
+            console.log('[route] opeArticleRegist');
+            this.layout.setView("#contents__primary", new OpeArticleRegistView(options)).render();
+            this.navigate("opeArticleRegist");
+        },
+
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        opeYouTubeRegist : function(options) {
+            console.log('[route] opeYouTubeRegist');
+            this.layout.setView("#contents__primary", new OpeYouTubeRegistView(options)).render();
+            this.navigate("opeYouTubeRegist");
         },
 
         /*
@@ -179,6 +240,7 @@ define(function(require, exports, module) {
         commonView : function() {
             this.layout.setGlobalNav(new common.GlobalNavView());
             this.layout.setView("#menu", new common.MenuView()).render();
+            this.layout.removeViewByName('#settings');
         },
         /**
          * 前の画面に戻る
