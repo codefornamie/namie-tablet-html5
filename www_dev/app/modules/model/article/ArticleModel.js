@@ -79,6 +79,8 @@ define(function(require, exports, module) {
             saveData.endTime = this.get("endTime");
             saveData.publishedAt = this.get("publishedAt");
             saveData.depublishedAt = this.get("depublishedAt");
+            saveData.isDepublish = this.get("isDepublish");
+            saveData.isRecomend = this.get("isRecomend");
             saveData.place = this.get("place");
             saveData.contactInfo = this.get("contactInfo");
             saveData.status = this.get("status");
@@ -91,6 +93,9 @@ define(function(require, exports, module) {
             saveData.imageComment = this.get("imageComment");
             saveData.imageComment2 = this.get("imageComment2");
             saveData.imageComment3 = this.get("imageComment3");
+
+            saveData.isRecommend = this.get("isRecommend");
+            saveData.isDepublish = this.get("isDepublish");
             // タグ文字列の生成
             var tags ="";
             if (this.get("tagsArray") && this.get("tagsArray").length) {

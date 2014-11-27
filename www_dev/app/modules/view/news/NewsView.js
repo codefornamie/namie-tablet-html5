@@ -13,6 +13,7 @@ define(function(require, exports, module) {
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
     var EventsCollection = require("modules/collection/events/EventsCollection");
     var Equal = require("modules/util/filter/Equal");
+    var IsNull = require("modules/util/filter/IsNull");
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラスを作成する。
@@ -68,7 +69,10 @@ define(function(require, exports, module) {
         setArticleSearchCondition : function(condition) {
             var targetDate = condition.targetDate;
             var dateString = DateUtil.formatDate(targetDate,"yyyy-MM-dd");
-            this.articleCollection.condition.filters = new Equal("publishedAt", dateString);
+            this.articleCollection.condition.filters = [
+                                                        new Equal("publishedAt", dateString),
+                                                        new IsNull("isDepublish")
+                                                                ];
             this.recommendCollection.condition.filters = new Equal("publishedAt", dateString);
             this.eventsCollection.condition.filters = new Equal("publishedAt", dateString);
         },
