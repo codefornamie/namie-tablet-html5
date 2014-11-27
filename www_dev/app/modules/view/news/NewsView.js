@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var ArticleListView = require("modules/view/news/ArticleListView");
     var FeedListView = require("modules/view/news/FeedListView");
+    var RecommendArticleView = require("modules/view/news/RecommendArticleView");
     var DateUtil = require("modules/util/DateUtil");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
@@ -68,7 +69,7 @@ define(function(require, exports, module) {
          */
         setArticleSearchCondition : function(condition) {
             var targetDate = condition.targetDate;
-            var dateString = DateUtil.formatDate(targetDate,"yyyy-MM-dd");
+            var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
             this.articleCollection.condition.filters = [
                                                         new Equal("publishedAt", dateString),
                                                         new IsNull("isDepublish")
@@ -231,6 +232,18 @@ define(function(require, exports, module) {
 
             }, this));
 
+            // おすすめ記事を検索し、表示する
+            var recommendArticle = this.newsCollection.find($.proxy(function(article) {
+                return article.get("isRecommend") === "true";
+            }, this));
+
+            if (recommendArticle) {
+                // おすすめ記事を表示する
+                var articleView = new RecommendArticleView({
+                    model : recommendArticle
+                });
+                this.setView("#recommendArticle", articleView).render();
+            }
             // FeedListView初期化
             this.showFeedListView();
 

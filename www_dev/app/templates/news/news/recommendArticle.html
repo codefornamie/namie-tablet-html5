@@ -1,0 +1,15 @@
+<div data-article-id="<%= model.get('__id') %>" class="feedListItem">
+    <div class="side-action__header">
+        <h5><%= model.get("dispTitle") %></h5>
+    </div>
+
+    <div class="side-action__body">
+        <div class="side-action__image">
+            <img class="articleImage" style="width: 80%; height: 80%;">
+        </div>
+
+        <div class="side-action__description">
+            <p><%= model.get("dispDescriptionSummary") %></p>
+        </div>
+    </div>
+</div>
