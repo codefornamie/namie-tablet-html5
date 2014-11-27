@@ -59,6 +59,7 @@ define(function(require, exports, module) {
         },
         /**
          * 保存の終了
+         * @param {Boolean} 保存に成功したかどうか
          */
         saveEnd : function(success){
             if(success){
@@ -72,6 +73,7 @@ define(function(require, exports, module) {
         },
         /**
          * 配信有無チェックボックスが変更された際のハンドラ
+         * @param {Event} イベント
          */
         onChangeIsPublishCheckBox : function(e){
             this.save();
@@ -79,7 +81,7 @@ define(function(require, exports, module) {
         /**
          * 画面項目からモデルへの設定。
          */
-        setInputValue : function(e){
+        setInputValue : function(){
             this.model.set("isDepublish", this.$el.find(".isPublishCheckBox").prop('checked') ? null : "true");
         },
         /**
