@@ -37,9 +37,50 @@ define(function(require, exports, module) {
                 this.$el.find("[data-article-edit-button]").hide();
             }
             this.tagListView.render();
+            this.setData();
         },
         events : {
-            "click [data-article-edit-button]" : "onClickArticleEditButton"
+            "click [data-article-edit-button]" : "onClickArticleEditButton",
+            "change .isPublishCheckBox" : "onChangeIsPublishCheckBox"
+        },
+        /**
+         * モデルから画面項目への設定。
+         */
+        setData : function(){
+            this.lastModel = this.model;
+            this.$el.find(".isPublishCheckBox").prop("checked", !this.model.get("isDepublish"));
+        },
+        /**
+         * 保存の開始
+         */
+        saveStart : function(){
+            this.$el.find(".isPublishCheckBox").prop("disabled", true);
+            this.$el.find("[data-article-edit-button]").prop("disabled", true);
+        },
+        /**
+         * 保存の終了
+         */
+        saveEnd : function(success){
+            if(success){
+                this.lastModel = this.model;
+            }else{
+                this.model = this.lastModel;
+            }
+            this.setData();
+            this.$el.find(".isPublishCheckBox").prop("disabled", false);
+            this.$el.find("[data-article-edit-button]").prop("disabled", false);
+        },
+        /**
+         * 配信有無チェックボックスが変更された際のハンドラ
+         */
+        onChangeIsPublishCheckBox : function(e){
+            this.save();
+        },
+        /**
+         * 画面項目からモデルへの設定。
+         */
+        setInputValue : function(e){
+            this.model.set("isDepublish", this.$el.find(".isPublishCheckBox").prop('checked') ? null : "true");
         },
         /**
          *  編集ボタン押下時に呼び出されるコールバック関数
@@ -53,7 +94,28 @@ define(function(require, exports, module) {
             }
             $("#contents__primary").scrollTop(0);
         },
-
+        /**
+         * 画面データ保存
+         */
+        save : function(){
+            this.setInputValue();
+            this.saveStart();
+            this.model.save(null, {
+                success : $.proxy(function(){
+                    this.model.fetch({
+                        success : $.proxy(function(){
+                            this.saveEnd(true);
+                        }, this),
+                        error : $.proxy(function(){
+                            this.saveEnd();
+                        }, this)
+                    });
+                }, this),
+                error : $.proxy(function(){
+                    this.saveEnd();
+                }, this)
+            });
+        },
     });
 
     module.exports = OpeFeedListItemView;

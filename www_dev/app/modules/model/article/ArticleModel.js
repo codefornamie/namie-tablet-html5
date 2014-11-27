@@ -79,6 +79,8 @@ define(function(require, exports, module) {
             saveData.endTime = this.get("endTime");
             saveData.publishedAt = this.get("publishedAt");
             saveData.depublishedAt = this.get("depublishedAt");
+            saveData.isDepublish = this.get("isDepublish");
+            saveData.isRecomend = this.get("isRecomend");
             saveData.place = this.get("place");
             saveData.contactInfo = this.get("contactInfo");
             saveData.status = this.get("status");
