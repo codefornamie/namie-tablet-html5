@@ -50,7 +50,8 @@ define(function(require, exports, module) {
                 var ItemView = self.feedListItemViewClass;
                 this.insertView("#feedList", new ItemView({
                     model : model,
-                    animationDeley : animationDeley
+                    animationDeley : animationDeley,
+                    parentView: this
                 }));
                 animationDeley += 0.2;
             }, this));

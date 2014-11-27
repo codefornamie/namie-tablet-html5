@@ -52,9 +52,15 @@ define(function(require, exports, module) {
         onClickArticleEditButton: function () {
             this.showLoading();
             if (this.model.get("type") === "2") {
-                app.router.opeYouTubeRegist({model:this.model});
+                app.router.opeYouTubeRegist({
+                    model : this.model,
+                    recommendArticle : this.parentView.recommendArticle
+                });
             } else if (this.model.get("type") === "3" || this.model.get("type") === "4") {
-                app.router.opeArticleRegist({model:this.model});
+                app.router.opeArticleRegist({
+                    model : this.model,
+                    recommendArticle : this.parentView.recommendArticle
+                });
             }
             $("#contents__primary").scrollTop(0);
         },
