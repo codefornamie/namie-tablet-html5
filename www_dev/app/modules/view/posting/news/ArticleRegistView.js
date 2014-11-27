@@ -193,66 +193,101 @@ define(function(require, exports, module) {
          * モデルにデータをセットする関数
          */
         setInputValue : function() {
-            if(this.model === null){
+            if (this.model === null) {
                 this.model = new ArticleModel(); 
             }
-            if(this.parentModel){
+
+            if (this.parentModel) {
                 this.model.set("parent", this.parentModel.get("__id"));
             }
+
             this.model.set("type", $("#articleCategory").val());
             this.model.set("site", $("#articleCategory option:selected").text());
             this.model.set("title", $("#articleTitle").val());
-            
+
             this.model.set("startDate", $("#articleDate1").val());
+
             if ($("#articleMultiDate").is(":checked")) {
                 this.model.set("endDate", $("#articleDate2").val());
             }
+
             this.model.set("startTime", $("#articleTime1").val());
             this.model.set("endTime", $("#articleTime2").val());
 
             this.model.set("place", $("#articlePlace").val());
             this.model.set("description", $("#articleDetail").val());
             this.model.set("contactInfo", $("#articleContact").val());
-            
+
             this.model.set("publishedAt", $("#articleRangeDate1").val());
             this.model.set("depublishedAt", $("#articleRangeDate2").val());
-            
+
             this.model.set("status", "0");
             this.model.set("createUserId", app.user.get("__id"));
-            
+
             var imageCount = this.$el.find("#fileArea").children().size();
             var images = [];
             var self = this;
-            var fileAreas = this.$el.find("#fileArea").children();
-            for(var i = 0; i < fileAreas.length; i++){
-                var fileArea = fileAreas[i];
-                var previewImg = $(fileArea).find("#previewFile");
-                var file = previewImg.prop("file");
-                if(previewImg.attr("src")){
-                    var image = null;
-                    if(file){
-                        image = {};
-                        var preName = file.name.substr(0, file.name.lastIndexOf("."));
-                        var suffName = file.name.substr(file.name.lastIndexOf("."));
-                        image.fileName = preName + "_" + String(new Date().getTime()) + _.uniqueId("") + suffName;
-                        image.contentType = file.type;
-                        image.data = $(fileArea).find("#articleFile").prop("data");
-                    }else{
-                        // 変更なし
-                        image = this.imgArray[i];
-                    }
-                    image.comment = $(fileArea).find("#articleFileComent").val();
-                    image.src = previewImg.attr("src");
-                    images.push(image);
+            var $fileAreas = this.$el.find("#fileArea").children();
+
+            /**
+             *  ファイル名を元に、ユニークなID付きのファイル名を生成する
+             *
+             *  @param {String} fileName
+             *  @return {String}
+             */
+            var generateFileName = function (fileName) {
+                var preName = fileName.substr(0, fileName.lastIndexOf("."));
+                var suffName = fileName.substr(fileName.lastIndexOf("."));
+
+                return preName + "_" + new Date().getTime() + _.uniqueId("") + suffName;
+            };
+
+            // 画像に変更があるかチェックする
+            for (var i = 0; i < $fileAreas.length; i++) {
+                var $fileArea = $fileAreas.eq(i);
+                var $previewImg = $fileArea.find("[data-preview-file]");
+                var file = $previewImg.prop("file");
+                var src = $previewImg.attr("src");
+                var comment = $fileArea.find("#articleFileComent").val();
+                var image;
+
+                if (!src) {
+                    continue;
                 }
+
+                // 画像に変更があれば情報を更新する
+                if (file) {
+                    image = {};
+
+                    image.fileName = generateFileName(file.name);
+                    image.contentType = file.type;
+                    image.data = $fileArea.find("#articleFile").prop("data");
+                } else {
+                    image = this.imgArray[i];
+                }
+
+                // 画像の情報を更新する
+                if (image) {
+                    image.comment = comment;
+                    image.src = src;
+                }
+
+                images.push(image);
             }
-            this.model.set("images", images);
+
+            // imagesを元に、imageUrlとimageCommentを更新する
             for(var imageIndex = 0; imageIndex < 3; imageIndex++){
+                // { "", 2, 3, ... }
                 var surfix = (imageIndex === 0) ? "" : "" + (imageIndex + 1);
-                this.model.set("imageUrl" + surfix, imageIndex < images.length ? images[imageIndex].fileName : null);
-                this.model.set("imageComment" + surfix, imageIndex < images.length ? images[imageIndex].comment : null);
+                var img = images[imageIndex] || {};
+
+                this.model.set("imageUrl" + surfix, img.fileName);
+                this.model.set("imageComment" + surfix, img.comment);
             }
+
+            this.model.set("images", images);
         },
+
         /**
          * バリデーションチェックがOKとなり、登録処理が開始された際に呼び出されるコールバック関数。
          */

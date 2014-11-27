@@ -1219,13 +1219,17 @@ div.nehan-block.nehan-body:last-child {
  * Posting
  */
 .eventDetailHeader {
-    border-bottom: 2px solid #333;
+    margin: 0 -20px;
 }
 
 .eventColumnsHeader {
-    margin: 35px 0;
-    font-size: 1.2rem;
+    margin: 35px 0 15px 0;
+    font-size: 1rem;
     color: #777;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 4px;
+    line-height: 1.4;
 }
 
 .event__status {
@@ -1244,7 +1248,7 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .event__publication {
-    padding: 15px 0 10px;
+    padding: 15px 0 0;
 }
 
 .event__updated {
@@ -1267,6 +1271,10 @@ div.nehan-block.nehan-body:last-child {
 }
 .eventFileImage {
     margin-bottom: 5px;
+}
+.eventFileImage img:not([src]),
+.eventFileImage img[src=""] {
+    display: none;
 }
 
 /**
@@ -1303,6 +1311,10 @@ div.nehan-block.nehan-body:last-child {
     margin: 0;
 }
 
+.posting-content .top-bar-section ul li {
+    margin: 0 5px;
+}
+
 .posting-content .eventHeader nav {
     height: 55px;
     padding-right: 15px;
@@ -1318,12 +1330,14 @@ div.nehan-block.nehan-body:last-child {
     padding: 0;
 }
 
-.posting-content .contents__secondary::before,
-.posting-content .contents__secondary::after {
-    display: none;
+.posting-content .eventContents {
+    padding: 0 20px 20px;
+}
+
+.posting-content .contents__secondary {
+    padding: 20px 0;
 }
 .posting-content .contents__secondary > div {
-    background: #fff;
     padding: 40px 20px;
 }
 .posting-content .contents__secondary .button {
@@ -1332,13 +1346,9 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .posting-content .contents__primary {
-    border-left: 1px solid #333;
     padding: 40px;
 }
 .posting-content .contents__primary .post {
-    border: 1px solid #333;
-    margin: 0 0 20px 0;
-    padding: 20px 30px;
 }
 .posting-content .contents__primary .post__body {
     font-size: 1rem;
@@ -1347,21 +1357,23 @@ div.nehan-block.nehan-body:last-child {
 .posting-content .contents__primary .post-header {
     margin-bottom: 20px;
 }
-.posting-content .contents__primary .post-header__site::before,
-.posting-content .contents__primary .post-header__site::after {
-    display: none;
-}
 .posting-content .contents__primary .post-header__site {
-    background: #fff;
-    height: auto;
-    margin: 0;
+    font-size: 1rem;
+    margin: 0 5px 0 0;
+    background-image: url(../../app/img/img-contents-head01-middle.png);
+    background-size: auto 100%;
+    position: relative;
+    height: 48px;
 }
 .posting-content .contents__primary .post-label {
-    background: #f8cecc;
-    border: 1px solid #333;
+    background: white;
     display: inline-block;
-    margin-right: 30px;
-    padding: 5px 40px;
+    margin: 5px 20px 5px 1px;
+    padding: 0 40px;
+    height: 36px;
+    line-height: 35px;
+    border-radius: 4px;
+    font-size: 0.9rem;
 }
 .posting-content .contents__primary .post-label.expired {
     background: #d4e1f5;
@@ -1404,7 +1416,7 @@ div.nehan-block.nehan-body:last-child {
 }
 
 #articleRegistConfirmPage > article {
-    border-top: 1px solid #333;
+    border-top: 1px solid #ccc;
 }
 #articleRegistConfirmPage #articleDateTime,
 #articleRegistConfirmPage #articlePlace,
@@ -1416,28 +1428,28 @@ div.nehan-block.nehan-body:last-child {
     padding-bottom: 30px;
 }
 #articleRegistConfirmPage .eventDetailFooter  {
-    border-top: 1px solid #333;
+    border-top: 1px solid #ccc;
     clear: both;
 }
 #articleRegistConfirmPage .eventDetailFooter #articlePublishRange {
-    border: 1px solid #333;
+    border: 1px solid #ccc;
     margin: 2rem auto;
     padding: 10px;
     width: 60%;
 }
-#articleRegistConfirmPage .contents__secondary .dummy-pickup {
-    background: #ccc;
-    border-bottom: 1px solid #333;
-    height: 200px;
+
+.file-area {
 }
-#articleRegistConfirmPage .contents__secondary .dummy-article {
-    border-bottom: 1px solid #333;
-    padding: 15px 15px 15px 70px;
+
+.file-area__item {
+    border: 1px solid #ccc;
+    padding: 30px 15px 15px;
+    border-radius: 4px;
+    margin: 5px 0;
 }
-#articleRegistConfirmPage .contents__secondary .dummy-article-inner {
-    line-height: 1.4rem;
-    height: 2.8rem;
-    overflow: hidden;
+
+.file-adder {
+    margin: 30px 0;
 }
 
 /**

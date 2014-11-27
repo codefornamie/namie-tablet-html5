@@ -71,7 +71,7 @@ define(function(require, exports, module) {
                 if(!$("#articleRegistConfirmPage").children().size()){
                     $(".eventGlobal-nav").show();
                     $("#headerTitle").text("記事入力");
-                    $(".contents-wrapper").css("padding-top","114px");
+                    $(".contents-wrapper").css("padding-top","144px");
                 } else {
                     $(".eventGlobal-nav").show();
                     $("#headerTitle").text("記事確認");
