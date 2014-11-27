@@ -20,8 +20,8 @@ define(function(require, exports, module) {
         saveModel : function(){
             this.model.save(null, {
                 success : $.proxy(function() {
-                    if (this.model.get("isRecommend") && this.recommendArticle
-                            && this.recommendArticle.get("__id") !== this.model.get("__id")) {
+                    if (this.model.get("isRecommend") && this.recommendArticle &&
+                            this.recommendArticle.get("__id") !== this.model.get("__id")) {
                         this.recommendArticle.set("isRecommend",null);
                         this.recommendArticle.save(null, {
                             success:$.proxy(function() {

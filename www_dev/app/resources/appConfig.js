@@ -1,11 +1,11 @@
 define(function(require, exports, module) {
     module.exports = {
         "basic" : {
-            "baseUrl" : "https://fj.baas.jp.fujitsu.com/",
+            "baseUrl" : "https://test.namie-tablet.org/",
             "cellId" : "kizuna01",
             "boxName" : "data",
             "odataName" : "odata",
-            "pcsVersion" : "1.3.18",
+            "pcsVersion" : "1.3.20",
             // view category (ex. news, posting, ope ..).
             "mode" : "news"
         },
