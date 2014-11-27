@@ -137,7 +137,7 @@ do
 		else
 			mode=b
 		fi
-		RES=`putfile "$davpath" "$file" $mode`
+		RES=`putfile $davpath "$file" $mode`
 	fi
 	printf "%4s %s %s\n" $RES $mode $davpath
 	if echo $RES | grep -e '^[45]'; then
