@@ -36,12 +36,17 @@ define(function(require, exports, module) {
                 // RSS収集記事は編集ボタンを非表示にする
                 this.$el.find("[data-article-edit-button]").hide();
             }
+            if (this.model.get("isRecommend")) {
+                // 今日のおすすめ記事フラグがある場合はラジオボタンを選択状態にする
+                this.$el.find("input[type='radio']").attr("checked","checked");
+            }
             this.tagListView.render();
             this.setData();
         },
         events : {
             "click [data-article-edit-button]" : "onClickArticleEditButton",
-            "change .isPublishCheckBox" : "onChangeIsPublishCheckBox"
+            "change .isPublishCheckBox" : "onChangeIsPublishCheckBox",
+            "change .today-recommend-radio" : "onChangeTodayRecommendRadio"
         },
         /**
          * モデルから画面項目への設定。
@@ -118,6 +123,35 @@ define(function(require, exports, module) {
                 }, this)
             });
         },
+        /**
+         *  おすすめ記事のラジオボタンが変更された際のコールバック関数
+         */
+        onChangeTodayRecommendRadio: function () {
+            this.showLoading();
+            this.model.set("isRecommend","true");
+            this.model.save(null,{
+                success:$.proxy(this.onRecommendSave,this),
+                error:$.proxy(function() {
+                    alert("おすすめ記事情報の保存に失敗しました");
+                    this.hideLoading();
+                },this)
+            });
+        },
+        /**
+         * おすすめ記事情報保存後のコールバック関数
+         */
+        onRecommendSave: function() {
+            this.model.fetch({
+                success: $.proxy(function() {
+                    $(this.el).find("input[type='radio']").trigger("onRecommendFetch",[this.model]);
+                },this),
+                error:$.proxy(function() {
+                    alert("おすすめ記事情報の保存に失敗しました");
+                    this.hideLoading();
+                },this)
+            });
+        }
+
     });
 
     module.exports = OpeFeedListItemView;
