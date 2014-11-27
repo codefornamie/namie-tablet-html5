@@ -71,16 +71,16 @@ define(function(require, exports, module) {
                 if(!$("#articleRegistConfirmPage").children().size()){
                     $(".eventGlobal-nav").show();
                     $("#headerTitle").text("記事入力");
-                    $(".contents-wrapper").css("padding-top","144px");
+                    $(".contents-wrapper").css("padding-top","114px");
                 } else {
                     $(".eventGlobal-nav").show();
                     $("#headerTitle").text("記事確認");
-                    $(".contents-wrapper").css("padding-top","144px");
+                    $(".contents-wrapper").css("padding-top","114px");
                 }
             } else {
                 $(".eventGlobal-nav").show();
                 $("#headerTitle").text(this.headerTitle[Backbone.history.fragment]);
-                $(".contents-wrapper").css("padding-top","144px");
+                $(".contents-wrapper").css("padding-top","114px");
             }
         },
     });

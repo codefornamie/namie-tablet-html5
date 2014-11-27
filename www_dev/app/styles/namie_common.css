@@ -347,8 +347,6 @@ main {
 
 .posting__global-nav__menu {
     width: 100%;
-    border-top: 2px solid #2c2c2c;
-    border-bottom: 2px solid #2c2c2c;
 }
 
 /**
@@ -357,8 +355,6 @@ main {
  */
 .global-nav__info {
     width: 16.0%;
-    border-top: 2px solid #2c2c2c;
-    border-bottom: 2px solid #2c2c2c;
 }
 
 /**
@@ -1248,11 +1244,12 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .event__publication {
-    padding: 10px 0;
+    padding: 15px 0 10px;
 }
 
 .event__updated {
     padding: 10px 0;
+    font-size: 0.8rem;
 }
 
 .event__actions {
@@ -1286,15 +1283,7 @@ div.nehan-block.nehan-body:last-child {
 
 .posting-content {
     color: #333;
-}
-.posting-content .button,
-.posting-content button {
-    background: #008cba;
-    border: none;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    box-shadow: none;
-    font-size: 1rem;
+    background-color: #fbfaf4;
 }
 .posting-content label {
     font-size: 1rem;
@@ -1322,7 +1311,6 @@ div.nehan-block.nehan-body:last-child {
     margin-top: 5px;
 }
 .posting-content #header .top-bar .button {
-    border: 1px solid #333;
     font-size: 1rem;
     padding: 2px 20px;
 }
@@ -1391,7 +1379,6 @@ div.nehan-block.nehan-body:last-child {
     margin: 0;
     height: auto;
     border-top: none;
-    background: #fff;
     top: 0;
 }
 .posting-content #global-nav nav {
@@ -1405,7 +1392,8 @@ div.nehan-block.nehan-body:last-child {
 }
 .posting-content .posting__global-nav__menu #headerTitle {
     margin: 10px 0;
-    font-size: 1.3rem;
+    font-size: 1.7rem;
+    color: rgb(72, 90, 93);
 }
 
 .posting-content .eventColumnsTitle {
