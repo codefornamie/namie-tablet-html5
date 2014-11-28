@@ -24,8 +24,8 @@ define(function(require, exports, module) {
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt),"yyyy年MM月dd日 HH時mm分");
-            response.dispUpdatedAt = DateUtil.formatDate(new Date(response.updatedAt),"yyyy年MM月dd日 HH時mm分");
+            response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt), "yyyy年MM月dd日 HH時mm分");
+            response.dispUpdatedAt = DateUtil.formatDate(new Date(response.updatedAt), "yyyy年MM月dd日 HH時mm分");
             response.dispSite = CommonUtil.sanitizing(response.site);
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.dispPlace = CommonUtil.sanitizing(response.place);
@@ -33,24 +33,31 @@ define(function(require, exports, module) {
             response.dispContactInfo = CommonUtil.sanitizing(response.contactInfo);
             if (response.startDate) {
                 if (response.startDate.length > 10) {
-                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate),"yyyy年MM月dd日 HH時mm分");
+                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate), "yyyy年MM月dd日 HH時mm分");
                 } else {
-                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate),"yyyy年MM月dd日");
+                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate), "yyyy年MM月dd日");
                 }
             }
             response.tagsArray = [];
             response.tagsLabel = "";
             // TODO 記事情報にpublishedAtが登録されるようになったら、このif文ごと削除すること｛
             if (!response.publishedAt) {
-                response.publishedAt = DateUtil.formatDate(new Date(),"yyyy-MM-dd");
+                response.publishedAt = DateUtil.formatDate(new Date(), "yyyy-MM-dd");
             }
             // ｝
-            
+
             if (response.tags) {
                 var arr = response.tags.split(",");
-                _.each(arr,function (tag) {
+                _.each(arr, function(tag) {
                     response.tagsArray.push(decodeURIComponent(tag));
                 });
+            }
+
+            if (response.dispDescription && response.dispDescription.length > 50) {
+                // 記事が100文字以上の場合、50文字に切り取り
+                response.dispDescriptionSummary = response.dispDescription.substring(0, 50) + " ...";
+            } else {
+                response.dispDescriptionSummary = response.dispDescription;
             }
 
             return response;
@@ -85,11 +92,11 @@ define(function(require, exports, module) {
             saveData.contactInfo = this.get("contactInfo");
             saveData.status = this.get("status");
             saveData.createUserId = this.get("createUserId");
-            
+
             saveData.imageUrl = this.get("imageUrl");
             saveData.imageUrl2 = this.get("imageUrl2");
             saveData.imageUrl3 = this.get("imageUrl3");
-            
+
             saveData.imageComment = this.get("imageComment");
             saveData.imageComment2 = this.get("imageComment2");
             saveData.imageComment3 = this.get("imageComment3");
@@ -97,9 +104,9 @@ define(function(require, exports, module) {
             saveData.isRecommend = this.get("isRecommend");
             saveData.isDepublish = this.get("isDepublish");
             // タグ文字列の生成
-            var tags ="";
+            var tags = "";
             if (this.get("tagsArray") && this.get("tagsArray").length) {
-                _.each(this.get("tagsArray"),function (tag) {
+                _.each(this.get("tagsArray"), function(tag) {
                     if (!tags) {
                         tags = encodeURIComponent(tag);
                     } else {
@@ -111,11 +118,11 @@ define(function(require, exports, module) {
         },
 
         /**
-         *  「掲載中」などのイベントのステータス文字列を返す
-         *
-         *  @return {String}
+         * 「掲載中」などのイベントのステータス文字列を返す
+         * 
+         * @return {String}
          */
-        getStatusString: function () {
+        getStatusString : function() {
             var status = this.get('status');
             var str = [
                 '掲載中'
@@ -125,47 +132,47 @@ define(function(require, exports, module) {
         },
 
         /**
-         *  掲載期間の文字列を返す
-         *
-         *  @return {String}
+         * 掲載期間の文字列を返す
+         * 
+         * @return {String}
          */
-        getPubDateString: function () {
-            var pubDateString = DateUtil.formatDate(new Date(this.get("publishedAt")),"yyyy年MM月dd日(ddd)");
+        getPubDateString : function() {
+            var pubDateString = DateUtil.formatDate(new Date(this.get("publishedAt")), "yyyy年MM月dd日(ddd)");
 
-            if(this.get("depublishedAt")){
-                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")) ,"yyyy年MM月dd日(ddd)");
+            if (this.get("depublishedAt")) {
+                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")), "yyyy年MM月dd日(ddd)");
             }
 
             return pubDateString;
         },
 
         /**
-         *  更新日の文字列を返す
-         *
-         *  @return {String}
+         * 更新日の文字列を返す
+         * 
+         * @return {String}
          */
-        getUpdatedString: function () {
-            var updatedString = DateUtil.formatDate(new Date(this.get("updatedAt")),"yyyy年MM月dd日(ddd)");
+        getUpdatedString : function() {
+            var updatedString = DateUtil.formatDate(new Date(this.get("updatedAt")), "yyyy年MM月dd日(ddd)");
 
             return updatedString;
         },
 
         /**
-         *  日付文字列を返す
-         *
-         *  @return {String}
+         * 日付文字列を返す
+         * 
+         * @return {String}
          */
-        getDateString: function () {
+        getDateString : function() {
             // 日時
-            var dateString = DateUtil.formatDate(new Date(this.get("startDate")),"yyyy年MM月dd日(ddd)");
-            if(this.get("endDate")){
-                dateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")),"yyyy年MM月dd日(ddd)");
+            var dateString = DateUtil.formatDate(new Date(this.get("startDate")), "yyyy年MM月dd日(ddd)");
+            if (this.get("endDate")) {
+                dateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")), "yyyy年MM月dd日(ddd)");
             }
             var st = this.get("startTime");
             st = st ? st : "";
             var et = this.get("endTime");
             et = et ? et : "";
-            if(st || et){
+            if (st || et) {
                 dateString += "\n" + st + " ～ " + et;
             }
             return CommonUtil.sanitizing(dateString);

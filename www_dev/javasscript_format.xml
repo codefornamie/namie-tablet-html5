@@ -32,7 +32,7 @@
 <setting id="org.eclipse.wst.jsdt.core.formatter.insert_space_before_comma_in_for_increments" value="do not insert"/>
 <setting id="org.eclipse.wst.jsdt.core.formatter.insert_space_before_opening_brace_in_annotation_type_declaration" value="insert"/>
 <setting id="org.eclipse.wst.jsdt.core.formatter.insert_space_between_empty_parens_in_constructor_declaration" value="do not insert"/>
-<setting id="org.eclipse.wst.jsdt.core.formatter.wrap_before_binary_operator" value="true"/>
+<setting id="org.eclipse.wst.jsdt.core.formatter.wrap_before_binary_operator" value="false"/>
 <setting id="org.eclipse.wst.jsdt.core.formatter.insert_space_before_closing_paren_in_method_declaration" value="do not insert"/>
 <setting id="org.eclipse.wst.jsdt.core.formatter.put_empty_statement_on_new_line" value="true"/>
 <setting id="org.eclipse.wst.jsdt.core.formatter.alignment_for_throws_clause_in_constructor_declaration" value="16"/>
