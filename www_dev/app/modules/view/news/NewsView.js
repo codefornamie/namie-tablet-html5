@@ -243,6 +243,8 @@ define(function(require, exports, module) {
                     model : recommendArticle
                 });
                 this.setView("#recommendArticle", articleView).render();
+            } else {
+                this.$(".recommendArticleContainer").hide();
             }
             // FeedListView初期化
             this.showFeedListView();
