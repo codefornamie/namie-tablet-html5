@@ -53,8 +53,11 @@ define(function(require, exports, module) {
                 });
             }
 
-            if (response.dispDescription) {
-                response.dispDescriptionSummary = response.dispDescription.substring(0, 100) + "・・・";
+            if (response.dispDescription && response.dispDescription.length > 50) {
+                // 記事が100文字以上の場合、50文字に切り取り
+                response.dispDescriptionSummary = response.dispDescription.substring(0, 50) + " ...";
+            } else {
+                response.dispDescriptionSummary = response.dispDescription;
             }
 
             return response;
