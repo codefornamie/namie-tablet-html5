@@ -43,11 +43,11 @@ define(function(require, exports, module) {
                             target.dispatchEvent(evt);
                             console.log("end");
                         }, function(e){
-                            alert("エラー");
+                            console.log("FileAPIUtil.bindFileInputImpl: camera.getPicture(): error");
                         });
                     });
                 }, function(e){
-                    alert("エラー");
+                    console.log("FileAPIUtil.bindFileInputImpl: getPicture(): error");
                 },{
                     quality : 50,
                     destinationType : Camera.DestinationType.FILE_URI,
