@@ -1,3 +1,5 @@
+/* global LocalFileSystem */
+
 define(function(require, exports, module) {
     "use strict";
 
