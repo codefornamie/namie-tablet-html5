@@ -55,7 +55,7 @@ define(function(require, exports, module) {
          * 記事の検索処理を開始する。
          */
         searchArticles : function() {
-            app.ga.trackPageView("/NewsView", "ニュース");
+            this.trackPageView();
 
             this.showLoading();
 
@@ -300,8 +300,14 @@ define(function(require, exports, module) {
             this.removeView("#article-list");
             this.setView("#article-list", articleListView);
             articleListView.render();
-        }
+        },
 
+        /**
+         * Google Analyticsでページビューを記録する
+        */
+        trackPageView : function() {
+            app.ga.trackPageView("/NewsView", "ニュース");
+        }
     });
 
     module.exports = NewsView;
