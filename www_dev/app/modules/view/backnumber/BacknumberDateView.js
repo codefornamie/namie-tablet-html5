@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var NewsView = require("modules/view/news/NewsView");
+    var BacknumberDateNewsView = require("modules/view/backnumber/BacknumberDateNewsView");
 
     /**
      *  バックナンバーページで見る各日付の記事のView
@@ -17,12 +17,13 @@ define(function(require, exports, module) {
          *  テンプレートファイル
          */
         template : require("ldsh!templates/{mode}/backnumber/backnumberDate"),
+        date : null,
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
          */
         beforeRendered : function() {
-            this.setView('#backnumber-news', new NewsView());
+            this.showNewsView();
         },
 
         /**
@@ -38,12 +39,19 @@ define(function(require, exports, module) {
         initialize : function(param) {
             console.assert(param && param.date, 'Please pass the date value');
 
-            // [TODO] param.dateに日付が渡ってくるのでうまく利用する
+            this.date = param.date;
         },
 
         events : {
-        }
+        },
 
+        showNewsView : function() {
+            console.assert(this.date, 'date shoud be specified');
+
+            this.setView('#backnumber-news', new BacknumberDateNewsView({
+                date: this.date
+            }));
+        }
     });
     module.exports = BacknumberDateView;
 });
