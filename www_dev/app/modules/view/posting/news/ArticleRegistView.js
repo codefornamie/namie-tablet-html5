@@ -124,12 +124,21 @@ define(function(require, exports, module) {
                 } else if (this.imgArray.length >= 3) {
                     $("#addFileForm").hide();
                 }
-                var index = 0;
+                var index = this.imgArray.length;
                 _.each(this.imgArray, $.proxy(function(img) {
                     var view = new ArticleRegistFileItemView();
                     view.imageUrl = img.fileName;
                     view.imageComment = img.comment;
                     this.insertView("#fileArea", view).render();
+                    // 全ての画像の読み込み処理が完了したタイミングでローディングマスクを解除したいため
+                    // 子要素で画像読み込み完了時に発火したchangeイベントを拾って最後の画像読み込み完了時にhideLoadingする
+                    view.$el.find("#previewFile").on("change",$.proxy(function() {
+                        if (--index <= 0) {
+                            this.hideLoading();
+                            // 全ての画像読み込み完了した場合は、もうchageイベントは拾わない
+                            $("img#previewFile").off("change");
+                        }
+                    },this));
                 },this));
             }
         },

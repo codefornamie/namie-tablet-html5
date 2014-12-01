@@ -97,6 +97,7 @@ define(function(require, exports, module) {
          *  編集ボタンをクリックしたら呼ばれる
          */
         onClickGotoEdit: function () {
+            this.showLoading();
             app.router.articleRegist({
                 model: this.model
             });

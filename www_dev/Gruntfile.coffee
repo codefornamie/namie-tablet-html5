@@ -22,3 +22,16 @@ module.exports = ->
     "copy"
     "replace:mode"
   ]
+
+  @registerTask "server_news", [
+    "replace:devmode_news"
+    "server"
+  ]
+  @registerTask "server_posting", [
+    "replace:devmode_posting"
+    "server"
+  ]
+  @registerTask "server_ope", [
+    "replace:devmode_ope"
+    "server"
+  ]
