@@ -43,8 +43,20 @@ define(function(require, exports, module) {
             this.setArticleSearchCondition({
                 targetDate : new Date()
             });
+
             this.searchArticles();
         },
+        
+        /**
+         * 記事の検索条件を指定する。
+         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         */
+        setArticleSearchCondition : function(condition) {
+            this.articleCollection.setSearchCondition(condition);
+            this.recommendCollection.setSearchCondition(condition);
+            this.eventsCollection.setSearchCondition(condition);
+        },
+
         /**
          * 記事の検索処理を開始する。
          */
@@ -63,20 +75,7 @@ define(function(require, exports, module) {
                     this.loadEvents.bind(this)
             ], this.onFetchAll.bind(this));
         },
-        /**
-         * 記事の検索条件を指定する。
-         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
-         */
-        setArticleSearchCondition : function(condition) {
-            var targetDate = condition.targetDate;
-            var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
-            this.articleCollection.condition.filters = [
-                                                        new Equal("publishedAt", dateString),
-                                                        new IsNull("isDepublish")
-                                                                ];
-            this.recommendCollection.condition.filters = new Equal("publishedAt", dateString);
-            this.eventsCollection.condition.filters = new Equal("publishedAt", dateString);
-        },
+
         /**
          * youtubeライブラリを読み込む
          * @param {Function} callback
