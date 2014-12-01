@@ -10,7 +10,7 @@ define(function(require, exports, module) {
 
     /**
      * 記事登録確認画面のViewクラス
-     * 
+     *
      * @class 記事登録確認画面のViewクラス
      * @exports ArticleRegistConfirmView
      * @constructor
@@ -28,7 +28,7 @@ define(function(require, exports, module) {
 
             // 掲載期間
             var pubDateString = this.model.getPubDateString();
-            $("#articlePublishRange").text("掲載期間： " + pubDateString);
+            $("#articlePublishRange").text(pubDateString);
 
             // 内容
             $("#articleDescription").html(CommonUtil.sanitizing(this.model.get("description")));
