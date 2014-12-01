@@ -41,6 +41,7 @@ define(function(require, exports, module) {
 
         initialize : function(options) {
             options = options || {};
+            options.date = Date.parse(options.date);
 
             if (!options.date) {
                 options.date = new Date();
