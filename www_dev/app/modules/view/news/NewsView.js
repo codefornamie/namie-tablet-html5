@@ -39,9 +39,15 @@ define(function(require, exports, module) {
         afterRendered : function() {
         },
 
-        initialize : function() {
+        initialize : function(options) {
+            options = options || {};
+
+            if (!options.date) {
+                options.date = new Date();
+            }
+
             this.setArticleSearchCondition({
-                targetDate : new Date()
+                targetDate : options.date
             });
             this.searchArticles();
         },
