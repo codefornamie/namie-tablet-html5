@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var ArticleRegistConfirmView = require("modules/view/posting/news/ArticleRegistConfirmView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var DateUtil = require("modules/util/DateUtil");
+    var Code = require("modules/util/Code");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var vexDialog = require("vexDialog");
 
@@ -41,6 +42,16 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            // 記事カテゴリ選択肢
+            var categories = _.filter(Code.ARTICLE_CATEGORY_LIST, function(category){
+                return _.find(Code.ARTICLE_CATEGORY_LIST_BY_MODE[app.config.basic.mode], function(key){
+                    return category.key === key;
+                })
+            })
+            _.each(categories, function(category){
+                $("#articleCategory").append("<option value='" + category.key + "'>" + category.value + "</option>");
+            })
+            
             if (this.model) {
                 // 編集時
                 this.setData();
@@ -49,7 +60,7 @@ define(function(require, exports, module) {
                 $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
                 this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
 
-                // 記事カテゴリ
+                // 記事カテゴリ初期値
                 if(this.articleCategory){
                     $("#articleCategory").val(this.articleCategory);
                 }
