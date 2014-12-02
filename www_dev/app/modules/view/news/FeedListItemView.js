@@ -14,11 +14,6 @@ define(function(require, exports, module) {
      */
     var FeedListItemView = AbstractView.extend({
         /**
-         * このViewを表示する際に利用するアニメーション
-         */
-        animation : 'fadeIn',
-
-        /**
          * このViewのテンプレートファイパス
          */
         template : require("ldsh!templates/{mode}/news/feedListItem"),
