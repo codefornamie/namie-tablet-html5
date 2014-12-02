@@ -2,6 +2,8 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var FileAPIUtil = require("modules/util/FileAPIUtil");
+
     /**
      * 全てのViewの基底クラスを作成する。
      * 
@@ -32,9 +34,14 @@ define(function(require, exports, module) {
          * サブクラスは本メソッドをオーバライドして、
          * 描画前の独自の処理を実装できる。
          * </p>
+         * @memberof AbstractView#
          */
         beforeRendered : function() {
         },
+        /**
+         * 要素の描画処理が完了した際に呼び出される。
+         * @memberof AbstractView#
+         */
         afterRender : function() {
             this.afterRendered();
             if (this.formId) {
@@ -45,7 +52,7 @@ define(function(require, exports, module) {
                         return false;
                     },
                     invalidHandler : function() {
-//                        self.onValidateError();
+                        self.onValidateError();
                         return false;
                     },
                     onsubmit : false
@@ -53,22 +60,44 @@ define(function(require, exports, module) {
             }
         },
         /**
+         * バリデーションチェックがNGの場合。
+         * <p>
+         * submitせずに、エラーの位置にスクロールする。
+         * </p>
+         */
+        onValidateError : function() {
+            var that = this;
+            setTimeout(function() {
+                $("input.error").each(
+                    function() {
+                        if ($(this).css("display") == "none") {
+                            return true;
+                        }
+                        var scroller = $(this).closest(".scroller");
+                        var top = -10 - scroller.offset().top + scroller.scrollTop() + $(this).offset().top;
+                        scroller.animate({
+                            scrollTop : top
+                        }, 500, "swing");
+                        return false;
+                    }, this);
+            }, 0);
+        },
+        /**
          * 描画後の処理を実装する。
          * <p>
          * サブクラスは本メソッドをオーバライドして、
          * 描画後の独自の処理を実装できる。
          * </p>
+         * @memberof AbstractView#
          */
         afterRendered : function() {
             
         },
-        initialize : function() {
 
-        },
-
-        events : {
-
-        },
+        /**
+         * ローディングメッセージを表示する。
+         * @memberof AbstractView#
+         */
         showLoading : function () {
             $.blockUI({
                 message: "しばらくお待ちください",
@@ -83,8 +112,49 @@ define(function(require, exports, module) {
                 }
             }); 
         },
+        /**
+         * ローディングメッセージを閉じる
+         * @memberof AbstractView#
+         */
         hideLoading :function () {
             $.unblockUI();
+        },
+        /**
+         * 指定されたimg要素に、imgArrayパラメタで指定された画像のコンテンツを表示する。
+         * 
+         * @param {String} imgElementSelector 画像を表示する要素のセレクタ。<br/>
+         * このセレクタで取得される要素の数と、imgArrayの要素数は一致していなければならない。
+         * @param {Array} imgArray 画像情報を含むオブジェクトの配列。<br/>
+         * 以下のプロパティを含める。<br/>
+         * imageUrl: 画像のDAVのファイルパス<br/>
+         * imageIndex: 画像のインデックス<br/>
+         * @memberof AbstractView#
+         */
+        showPIOImages : function(imgElementSelector, imgArray) {
+            var onGetBinary = $.proxy(function(binary,item) {
+                var articleImage = $(this.el).find(imgElementSelector);
+                var arrayBufferView = new Uint8Array(binary);
+                var blob = new Blob([ arrayBufferView ], {
+                    type : "image/jpg"
+                });
+                var url = FileAPIUtil.createObjectURL(blob);
+                $(articleImage[item.imageIndex-1]).load(function() {
+                    window.URL.revokeObjectURL($(this).attr("src"));
+                });
+                $(articleImage[item.imageIndex-1]).attr("src", url);
+                $(articleImage[item.imageIndex-1]).data("blob", blob);
+            },this);
+            _.each(imgArray,$.proxy(function (item) {
+                try {
+                    app.box.col("dav").getBinary(item.imageUrl, {
+                        success : $.proxy(function(binary) {
+                            onGetBinary(binary,item);
+                        },this)
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            },this));
         }
     });
 

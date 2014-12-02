@@ -176,6 +176,20 @@ define(function(require, exports, module) {
                 dateString += "\n" + st + " ～ " + et;
             }
             return CommonUtil.sanitizing(dateString);
+        },
+        /**
+         * この記事の画像がpersonium.ioに保存されている画像かどうかを判定する。
+         * @return {Boolean} personium.ioに保存されている画像の場合、<code>true</code>を返す。
+         * @memberof ArticleModel#
+         */
+        isPIOImage: function() {
+            // 記事タイプが1 or 2 の場合、imageUrlの画像がインターネットの画像
+            // それ以外は、personium.io の画像
+            if (this.get("type") === "1" || this.get("type") === "2") {
+                return false;
+            } else {
+                return true;
+            }
         }
     });
 
