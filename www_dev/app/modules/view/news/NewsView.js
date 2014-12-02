@@ -3,20 +3,27 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var async = require("async");
+
+    // view
     var AbstractView = require("modules/view/AbstractView");
     var ArticleListView = require("modules/view/news/ArticleListView");
-    var FeedListView = require("modules/view/news/FeedListView");
+    var GridListView = require("modules/view/news/GridListView");
     var RecommendArticleView = require("modules/view/news/RecommendArticleView");
     var ArticleListItemView = require("modules/view/news/ArticleListItemView");
     var EventListItemView = require("modules/view/news/EventListItemView");
     var YouTubeListItemView = require("modules/view/news/YouTubeListItemView");
 
-    var DateUtil = require("modules/util/DateUtil");
+    // models
     var ArticleModel = require("modules/model/article/ArticleModel");
+
+    // collections
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var RecommendCollection = require("modules/collection/article/RecommendCollection");
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
     var EventsCollection = require("modules/collection/events/EventsCollection");
+
+    // util
+    var DateUtil = require("modules/util/DateUtil");
     var Equal = require("modules/util/filter/Equal");
     var IsNull = require("modules/util/filter/IsNull");
     var vexDialog = require("vexDialog");
@@ -38,7 +45,7 @@ define(function(require, exports, module) {
         eventsCollection : new EventsCollection(),
         newsCollection : new Backbone.Collection(),
         events : {
-            "click [data-article-id]" : "onClickFeedItem"
+            "click [data-article-id]" : "onClickGridItem"
         },
         beforeRendered : function() {
         },
@@ -251,8 +258,8 @@ define(function(require, exports, module) {
             } else {
                 this.$(".recommendArticleContainer").hide();
             }
-            // FeedListView初期化
-            this.showFeedListView();
+            // GridListView初期化
+            this.showGridListView();
 
             // ArticleListView初期化
             this.showArticleListView();
@@ -263,13 +270,14 @@ define(function(require, exports, module) {
         /**
          * 左ペインの記事一覧メニューを表示する。
          */
-        showFeedListView : function() {
-            var feedListView = this.createFeedListView();
+        showGridListView : function() {
+            var feedListView = this.createGridListView();
             feedListView.collection = this.newsCollection;
 
             this.removeView(this.feedListElement);
-            this.setView(this.feedListElement, feedListView);
+            this.setView("", feedListView);
             feedListView.render();
+
             if (this.newsCollection.size() === 0) {
                 this.showFeetNotFoundMessage();
             }
@@ -279,20 +287,15 @@ define(function(require, exports, module) {
          * 記事が見つからなかった場合のメッセージを画面に表示する。
          */
         showFeetNotFoundMessage : function() {
-            $(this.el).find("#feedList").text("記事情報がありません");
+            this.$el.text("記事情報がありません");
         },
 
         /**
-         * 記事一覧を表示する要素のセレクタ
-         */
-        feedListElement : '#sidebar__list',
-
-        /**
          * 右ペインの記事一覧を表示するViewのインスタンスを作成して返す。
-         * @return {FeedListView} 生成したFeedListViewのインスタンス
+         * @return {GridListView} 生成したGridListViewのインスタンス
          */
-        createFeedListView : function() {
-            return new FeedListView();
+        createGridListView : function() {
+            return new GridListView();
         },
 
         /**
@@ -312,7 +315,7 @@ define(function(require, exports, module) {
          * @param {jQuery.Event} ev
          * @param {Object} param
          */
-        onClickFeedItem : function(ev, param) {
+        onClickGridItem : function(ev, param) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
             // var articleModel = this.articleCollection.find(function(model) {
             // return model.get("__id") === articleId;
