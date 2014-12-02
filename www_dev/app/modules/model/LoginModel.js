@@ -269,6 +269,10 @@ define(function(require, exports, module) {
                     this.onLogin("ユーザ情報の取得に失敗しました。再度ログインしてください。");
                 },this)
             });
+            
+            // TODO 新聞の発行時刻 最終的にはDBから読み込む。
+            app.news = {};
+            app.news.publishTime = "17:00";
         },
 
         setAccessToken : function(token) {

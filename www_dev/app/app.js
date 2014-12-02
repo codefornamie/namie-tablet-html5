@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var Layout = require("layoutmanager");
     var dc1 = require("dc1-client");
     var jqueryvalidation = require("jqueryvalidation");
+    var messageja = require("messageja");
     var nehan = require("jquerynehan");
     var blockui = require("blockui");
     var panzoom = require("panzoom");

@@ -2,6 +2,7 @@
  * Translated default messages for the jQuery validation plugin. Locale: JA
  * (Japanese; 日本語)
  */
+setTimeout(function(){
 jQuery.extend(jQuery.validator.messages, {
     required : "このフィールドは必須です。",
     remote : "このフィールドを修正してください。",
@@ -287,3 +288,4 @@ jQuery.validator.addMethod("dateNoToday", function(value, element) {
     var date = parseDate(value);
     return (date && date.getTime() != today().getTime());
 }, "今日の日付は入力できません。");
+}, 500);
