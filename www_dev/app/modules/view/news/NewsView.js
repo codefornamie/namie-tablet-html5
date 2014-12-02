@@ -41,14 +41,18 @@ define(function(require, exports, module) {
 
         initialize : function(options) {
             options = options || {};
-            options.date = Date.parse(options.date);
 
-            if (!options.date) {
-                options.date = new Date();
+            var date = options.date;
+
+            if (!(date instanceof Date)) {
+                date = Date.parse(date);
+            }
+            if (!date) {
+                date = new Date();
             }
 
             this.setArticleSearchCondition({
-                targetDate : options.date
+                targetDate : date
             });
             this.searchArticles();
         },
@@ -206,6 +210,8 @@ define(function(require, exports, module) {
                 console.error(err);
                 return;
             }
+
+            $(".contents__primary").scrollTop(0);
 
             // this.newsCollection.add(this.youtubeCollection.models);
             this.newsCollection.reset();
