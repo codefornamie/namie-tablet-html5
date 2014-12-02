@@ -35,8 +35,6 @@ define(function(require, exports, module) {
         accountManager : null,
         /** package name */
         packageName : "jp.fukushima.namie.town.Pcs",
-        /** Access Token */
-        accessToken : "",
 
         /**
          * モデルの初期化処理を行う。
@@ -56,18 +54,33 @@ define(function(require, exports, module) {
          * @memberOf LoginModel
          * @param {Function} callback トークン取得成功時のコールバック
          */
-        isExistAccountInAccountManager : function(callback) {
+        getAuthToken : function(callback) {
             if (window.plugins) {
                 this.accountManager = window.plugins.accountmanager;
             }
+            console.log("▲ 1");
             if (!this.accountManager) {
+                console.log("▲ 2");
                 console.log("account maanger undefined (not android)");
                 callback("showLoginView", "");
                 return;
             }
-            //alert("アカウントマネージャ認証開始");
+            console.log("▲ 3");
+            if ((app.accessToken) && (app.expirationDate)) {
+                console.log("▲ 4");
+                var margin = 300 * 1000;
+                var now = (new Date()).getTime();
+                if (now < (parseInt(app.expirationDate) - margin)) {
+                    alert("ExpiresIn 切れ : now(" + now + ")/expire(" + app.expirationDate + ")");
+                    callback("token");
+                    return;
+                }
+            }
+            // alert("アカウントマネージャ認証開始");
+            console.log("▲ 5");
             this.accountManager.getAccountsByType(this.packageName, $.proxy(function(error, accounts) {
-                //alert("アカウントマネージャチェック終了 : " + accounts.length + "件");
+                console.log("▲ 6");
+                // alert("アカウントマネージャチェック終了 : " + accounts.length + "件");
                 console.log("account manager getAccountsByType method responsed ");
                 if (error) {
                     console.log("account manager error : " + error);
@@ -79,29 +92,37 @@ define(function(require, exports, module) {
                     return;
                 }
                 var account = accounts[0];
+                // AccuntManagerからログインIDを取得
                 this.set("loginId", account.name);
-                /*
-                this.accountManager.getPassword(account, $.proxy(function(error, password) {
-                    if (!error) {
-                        this.set("encryptionPassword", password);
-                        alert(password);
-                        callback("skipLoginView", "");
-                    } else {
-                        callback("showLoginView", "");
-                    }
-                }, this));
-                */
 
-                this.accountManager.getAuthToken(0, "oauth", function(error, token) {
-                    //alert("トークン取得成功 : " + token);
+                // 認証トークンを取得する
+                this.accountManager.getAuthToken(0, "oauth", $.proxy(function(error, token) {
+                    alert("トークン取得成功 : " + token);
                     console.log("account manager getAuthToken responsed : " + token);
                     if (error) {
                         callback("error", error);
-                    } else {
-                        callback("token", token);
+                        return;
                     }
-                });
-
+                    // トークンの有効期限(expires-in)を取得する
+                    this.accountManager.getUserData(account, "ExpiresIn", $.proxy(function(error, data) {
+                        if (error) {
+                            alert("Error getUserData " + error);
+                            callback("error", error);
+                            return;
+                        }
+                        app.expirationDate = data;
+                        app.accessToken = token;
+                        alert(app.expirationDate);
+                        alert(app.accessToken);
+                        // 次回はキャッシュされたトークンが取得されないように、キャッシュをクリアする
+                        this.accountManager.invalidateAuthToken(this.packageName, app.accessToken, function(error) {
+                            if (error) {
+                                console.log("error invalidateAuthToken for AccountManager");
+                            }
+                        });
+                        callback("token", "");
+                    }, this));
+                }, this));
             }, this));
         },
 
@@ -142,17 +163,20 @@ define(function(require, exports, module) {
          * @param {String} token アクセストークン
          */
         certificationWithToken : function() {
-            //alert("トークン認証(?)開始");
-            console.log("set access token : " + this.accessToken);
+            // alert("トークン認証(?)開始");
+            console.log("set access token : " + app.accessToken);
             var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
             dcContext.setAsync(true);
             try {
-                var cellobj = dcContext.withToken(this.accessToken).cell(this.cellId);
+                console.log("■□ 1");
+                var cellobj = dcContext.withToken(app.accessToken).cell(this.cellId);
+                console.log("■□ 2");
                 var targetBox = cellobj.box("data");
+                console.log("■□ 3");
                 app.accessor = cellobj.accessor;
                 app.box = targetBox;
             } catch (e) {
-                //alert("トークン認証でエラー : " + e);
+                // alert("トークン認証でエラー : " + e);
                 console.log("certificate failure : " + e);
             }
         },
@@ -167,22 +191,21 @@ define(function(require, exports, module) {
                 this.accountManager = window.plugins.accountmanager;
             }
             if (this.accountManager) {
-                //alert("アカウントマネージャ登録開始");
+                // alert("アカウントマネージャ登録開始");
                 var param = {
                     baseUrl : this.baseUrl,
                     cellName : this.cellId,
                     schema : "",
                     boxName : this.box
                 };
-                this.accountManager.addAccountExplicitly(this.packageName, id, pw, param,
-                        function(error, account) {
-                            console.log("account manager addAccountExplicitly responsed");
-                            if (error) {
-                                this.onLogin("login failure : " + error);
-                                return;
-                            }
-                            //alert("アカウントマネージャ登録成功");
-                        });
+                this.accountManager.addAccountExplicitly(this.packageName, id, pw, param, function(error, account) {
+                    console.log("account manager addAccountExplicitly responsed");
+                    if (error) {
+                        this.onLogin("login failure : " + error);
+                        return;
+                    }
+                    // alert("アカウントマネージャ登録成功");
+                });
             } else {
                 console.log("account manager undefined (not android)");
             }
@@ -205,7 +228,7 @@ define(function(require, exports, module) {
             console.log("login method in LoginModel start");
             this.onLogin = onLogin;
             try {
-                if (this.accessToken) {
+                if (app.accessToken) {
                     this.certificationWithToken();
                 } else {
                     var id = this.get("loginId");
@@ -220,8 +243,11 @@ define(function(require, exports, module) {
 
                     this.certificationWithAccount(id, pw);
                     this.registAccountManager(id, pw);
+                    console.log("★☆ f");
+
                 }
             } catch (e) {
+                alert(e);
                 var message = "";
                 if (e.name === "NetworkError") {
                     message = "ネットワーク接続エラーが発生しました。";
@@ -232,8 +258,9 @@ define(function(require, exports, module) {
                 this.onLogin(message);
                 return;
             }
-            //alert("パ情作成開始");
-            //alert(this.get("loginId"));
+            // alert("パ情作成開始");
+            // alert(this.get("loginId"));
+            console.log("★☆ a");
             var collection = new PersonalCollection();
             collection.condition.filters = [
                 new And([
@@ -242,6 +269,7 @@ define(function(require, exports, module) {
             ];
             collection.fetch({
                 success : $.proxy(function() {
+                    console.log("★☆ d");
                     if (collection.size() !== 0) {
                         // 既にパーソナル情報が登録されている場合
                         app.user = collection.models[0];
@@ -249,32 +277,28 @@ define(function(require, exports, module) {
                     } else {
                         // パーソナル情報が登録されていない場合
                         var personalModel = new PersonalModel();
-                        personalModel.set("loginId",this.get("loginId"));
-                        personalModel.set("fontSize","middle");
-                        personalModel.save(null,{
+                        personalModel.set("loginId", this.get("loginId"));
+                        personalModel.set("fontSize", "middle");
+                        personalModel.save(null, {
                             success : $.proxy(function() {
                                 // パーソナル情報新規登録成功
                                 app.user = personalModel;
                                 this.onLogin();
                             }, this),
-                            error: $.proxy(function() {
+                            error : $.proxy(function() {
                                 // パーソナル情報新規登録に失敗
                                 this.onLogin("ユーザ情報の登録に失敗しました。再度ログインしてください。");
-                            },this)
+                            }, this)
                         });
                     }
                 }, this),
-                error: $.proxy(function() {
+                error : $.proxy(function() {
+                    console.log("★☆ e");
                     // パーソナル情報検索に失敗
                     this.onLogin("ユーザ情報の取得に失敗しました。再度ログインしてください。");
-                },this)
+                }, this)
             });
         },
-
-        setAccessToken : function(token) {
-            console.log("set access token : " + token);
-            this.accessToken = token;
-        }
     });
     module.exports = LoginModel;
 });

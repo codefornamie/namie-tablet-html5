@@ -30,7 +30,7 @@ define(function(require, exports, module) {
          * 表示のタイミングをずらすタイマーのハンドラ
          */
         onTimeout : function() {
-            this.model.isExistAccountInAccountManager($.proxy(this.onAuthSuccess, this));
+            this.model.getAuthToken($.proxy(this.onAuthSuccess, this));
         },
 
         /**
@@ -38,6 +38,8 @@ define(function(require, exports, module) {
          * @param {String} res アカウントマネージャからレスポンス
          */
         onAuthSuccess : function(type, res) {
+            alert("onAuthSuccess");
+            alert(type);
             if (type === "showLoginView") {
                 //
                 // ログイン画面を表示する必要がある場合
@@ -70,7 +72,6 @@ define(function(require, exports, module) {
                 //
                 // AccountManagerからトークンが取得できた場合
                 //
-                this.model.setAccessToken(res);
                 this.model.login($.proxy(this.onLogin, this));
                 return;
             } else {
@@ -108,6 +109,7 @@ define(function(require, exports, module) {
                 vexDialog.defaultOptions.className = 'vex-theme-default';
                 return vexDialog.alert(errmsg);
             }
+            console.log("★☆ c");
             this.model.login($.proxy(this.onLogin, this));
         },
         /**
@@ -117,6 +119,7 @@ define(function(require, exports, module) {
          * @param {string} msg 認証失敗時のメッセージ
          */
         onLogin : function(msg) {
+            console.log("★☆ b");
             if (!msg) {
                 this.goNextView();
             } else {

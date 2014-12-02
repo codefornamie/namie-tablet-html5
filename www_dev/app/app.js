@@ -10,6 +10,14 @@ define(function(require, exports, module) {
     var panzoom = require("panzoom");
     var config = require("resources/appConfig");
     var galocalstorage = require("galocalstorage");
+    var CustomHttpClient = require("modules/CustomHttpClient");
+
+    /**
+     * HttpClient を 独自クラスに差し替え.
+     */
+    dcc.http.RestAdapter.prototype.createHttpClient = function() {
+        return new CustomHttpClient();
+    };
 
     // グローバルに利用できるModel
     var app = module.exports = new Backbone.Model();
@@ -22,4 +30,6 @@ define(function(require, exports, module) {
     // Google Analyticsの初期化
     app.ga = require("modules/util/AnalyticsUtil");
     app.ga.initialize(app);
+
+    app.accountManager = require("modules/PcsManager");
 });

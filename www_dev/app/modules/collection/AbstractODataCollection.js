@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractCollection = require("modules/collection/AbstractCollection");
     var Filter = require("modules/util/filter/Filter");
+    var LoginModel = require("modules/model/LoginModel");
 
     /**
      * PCS ODataの検索操作を行うモデルの基底クラスを作成する。

@@ -79,12 +79,17 @@ define(function(require, exports, module) {
             }
             _.each(imgArray,$.proxy(function (item) {
                 try {
+                    console.log("!!!!!!!!!!!!!!!!!");
+                    console.log(app.box.col("dav"));
                     app.box.col("dav").getBinary(item.imageUrl, {
                         success : $.proxy(function(binary) {
+                            console.log("///////////////");
+                            console.log(onGetBinary);
                             onGetBinary(binary,item);
                         },this)
                     });
                 } catch (e) {
+                    console.log("errrroror");
                     console.error(e);
                 }
             },this));
