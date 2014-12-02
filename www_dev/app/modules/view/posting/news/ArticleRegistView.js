@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var ArticleRegistConfirmView = require("modules/view/posting/news/ArticleRegistConfirmView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var DateUtil = require("modules/util/DateUtil");
+    var BusinessUtil = require("modules/util/BusinessUtil");
     var Code = require("modules/util/Code");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var vexDialog = require("vexDialog");
@@ -221,6 +222,9 @@ define(function(require, exports, module) {
             if ($("#articleRangeDate1").val() && $("#articleRangeDate2").val() &&
                     $("#articleRangeDate1").val() > $("#articleRangeDate2").val()) {
                 return "掲載期間の日付が開始と終了で逆になっています。";
+            }
+            if ($("#articleRangeDate1").val() <= DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd")) {
+                return "掲載開始日に指定した日付は、すでに新聞が発行済みです。";
             }
             return null;
         },
