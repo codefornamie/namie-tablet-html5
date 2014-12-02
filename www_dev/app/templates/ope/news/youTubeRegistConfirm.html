@@ -1,41 +1,61 @@
 <article class='post' id="<%= model.get('__id') %>">
-    <section class='post__body'>
-        <div class="row">
-            <div class="large-12 columns">
-                <div class="post-header">
-                    <div class="post-header__site">
-                        <div class="post-label">
-                            <div class="post-label__site left">
-                                <%= model.get("dispSite") %></div>
-                        </div>
-                        <div class="tagListArea"></div>
-                    </div>
-                    <div class="post-header__title"><%=
-                        model.get("title") %></div>
-                </div>
-            </div>
-        </div>
+	<section class='post__body'>
+		<div class="confirmAttention alert-box info radius">入力した項目の確認です。
+			入力内容が正しければ「登録する」を押してください。</div>
+		<div class="large-12 columns">
+			<div class="eventTitle"><%= model.get("title") %></div>
+		</div>
 
-        <div class="row">
-            <div class="large-12 columns nehandiv">
-                <div id="articleDetailImageArea" height="390"
-                    width="390">
-                    <!-- <img class="articleDetailImage" class="nehan-float-start"></img> -->
-                    <div id='youtubePlayer'></div>
-                </div>
-                <%= model.get("description") %>
-            </div>
-        </div>
-        <div class="column_title">おすすめ配信</div>
-        <label id="articleRecommend"></label>
-    </section>
-    <div class="post-action">
-        <button id="articleRegistButton" type="button"
-            class="small button">登録する</button>
-    </div>
-    <div class="post-action">
-        <button id="articleBackButton" type="button"
-            class="small button">戻る</button>
-    </div>
+		<!--  配信元 -->
+		<div class="large-12 columns">
+			<div class="eventColumnsHeader">配信元</div>
+		</div>
+		<div class="large-11 large-centered columns"><%=
+			model.get("dispSite") %></div>
+
+		<!--  動画 -->
+		<div class="large-12 columns">
+			<div class="eventColumnsHeader">動画</div>
+		</div>
+		<div class="large-11 large-centered columns">
+			<div class="row">
+				<div class="large-12 columns nehandiv">
+					<div id="articleDetailImageArea" height="390" width="390">
+						<!-- <img class="articleDetailImage" class="nehan-float-start"></img> -->
+						<div id='youtubePlayer'></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!--  説明 -->
+		<div class="large-12 columns">
+			<div class="eventColumnsHeader">説明</div>
+		</div>
+		<div class="large-11 large-centered columns"><%=
+			model.get("description") %></div>
+
+		<!--  タグ -->
+		<!-- 		<div class="large-12 columns">
+			<div class="eventColumnsHeader">タグ</div>
+		</div>
+		<div class="large-11 large-centered columns">
+			<%=model.get("tags")%></div>
+ -->
+
+		<!-- おすすめ -->
+		<div class="large-12 columns">
+			<div class="eventColumnsHeader">おすすめ配信</div>
+		</div>
+		<div class="large-11 large-centered columns">
+			<label id="articleRecommend"></label>
+		</div>
+
+	</section>
+	<div class="post-action">
+		<button id="articleRegistButton" type="button" class="small button">登録する</button>
+		<button id="articleBackButton" type="button" class="small button">戻る</button>
+	</div>
 
 </article>
