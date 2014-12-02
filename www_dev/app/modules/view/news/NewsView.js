@@ -41,7 +41,7 @@ define(function(require, exports, module) {
 
         initialize : function() {
             this.setArticleSearchCondition({
-                targetDate : new Date()
+                targetDate : new Date("2014/11/28")
             });
             this.searchArticles();
         },
