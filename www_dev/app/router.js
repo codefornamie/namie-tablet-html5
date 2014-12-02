@@ -97,6 +97,7 @@ define(function(require, exports, module) {
         routes : {
             "" : "index",
             "top" : "top",
+            "article/:id": "showArticle",
             // "events": "events",
             // "eventsRegisted": "eventsRegisted",
             // "showEvents": "showEvents",
@@ -120,6 +121,10 @@ define(function(require, exports, module) {
             this.layout.setGlobalNav(new common.GlobalNavView());
             this.layout.setFooter(new common.FooterView());
             this.commonView();
+        },
+        showArticle: function(articleId) {
+            this.layout.setGlobalNav(new common.GlobalNavView());
+            app.newsView.showArticle(articleId);
         },
         postingTop : function() {
             this.layout.showView(new EventNewsView());

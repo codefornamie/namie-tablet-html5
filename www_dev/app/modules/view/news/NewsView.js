@@ -7,6 +7,10 @@ define(function(require, exports, module) {
     var ArticleListView = require("modules/view/news/ArticleListView");
     var FeedListView = require("modules/view/news/FeedListView");
     var RecommendArticleView = require("modules/view/news/RecommendArticleView");
+    var ArticleListItemView = require("modules/view/news/ArticleListItemView");
+    var EventListItemView = require("modules/view/news/EventListItemView");
+    var YouTubeListItemView = require("modules/view/news/YouTubeListItemView");
+
     var DateUtil = require("modules/util/DateUtil");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
@@ -15,6 +19,7 @@ define(function(require, exports, module) {
     var EventsCollection = require("modules/collection/events/EventsCollection");
     var Equal = require("modules/util/filter/Equal");
     var IsNull = require("modules/util/filter/IsNull");
+    var vexDialog = require("vexDialog");
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラスを作成する。
@@ -32,7 +37,9 @@ define(function(require, exports, module) {
         favoriteCollection : new FavoriteCollection(),
         eventsCollection : new EventsCollection(),
         newsCollection : new Backbone.Collection(),
-
+        events : {
+            "click [data-article-id]" : "onClickFeedItem"
+        },
         beforeRendered : function() {
         },
 
@@ -71,9 +78,8 @@ define(function(require, exports, module) {
             var targetDate = condition.targetDate;
             var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
             this.articleCollection.condition.filters = [
-                                                        new Equal("publishedAt", dateString),
-                                                        new IsNull("isDepublish")
-                                                                ];
+                    new Equal("publishedAt", dateString), new IsNull("isDepublish")
+            ];
             this.recommendCollection.condition.filters = new Equal("publishedAt", dateString);
             this.eventsCollection.condition.filters = new Equal("publishedAt", dateString);
         },
@@ -110,8 +116,7 @@ define(function(require, exports, module) {
                 });
             };
             async.series([
-               onLoadGAPI,
-               loadScript("https://www.youtube.com/iframe_api")
+                    onLoadGAPI, loadScript("https://www.youtube.com/iframe_api")
             ], function(err) {
                 if (!err) {
                     app.gapiLoaded = true;
@@ -250,7 +255,7 @@ define(function(require, exports, module) {
             this.showFeedListView();
 
             // ArticleListView初期化
-            this.showArticleListView();
+            // this.showArticleListView();
 
             this.hideLoading();
         },
@@ -294,8 +299,67 @@ define(function(require, exports, module) {
             this.removeView("#article-list");
             this.setView("#article-list", articleListView);
             articleListView.render();
-        }
+        },
+        /**
+         * 指定されたarticleIdの記事までスクロール
+         * 
+         * @param {jQuery.Event} ev
+         * @param {Object} param
+         */
+        onClickFeedItem : function(ev, param) {
+            var articleId = $(ev.currentTarget).attr("data-article-id");
+            // var articleModel = this.articleCollection.find(function(model) {
+            // return model.get("__id") === articleId;
+            // });
+            // if (articleModel) {
+            // this.showArticle(articleModel);
+            // }
+            app.newsView = this;
+            app.router.go("article", articleId);
+        },
+        /**
+         * 指定された記事IDの記事を表示する。
+         * @param articleId {String} 記事ID
+         */
+        showArticle : function(articleId) {
+            var model = this.articleCollection.find(function(article) {
+                return article.get("__id") === articleId;
+            });
+            if (!model) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("指定された記事は存在しません。");
+                return ;
+            }
+            var template = require("ldsh!templates/{mode}/news/articleListItem");
+            // 記事一覧に追加するViewクラス。
+            // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
+            var ListItemView;
 
+            switch (model.get("type")) {
+            case "1": // RSS
+                template = require("ldsh!templates/{mode}/news/articleListItem");
+                ListItemView = ArticleListItemView;
+                if (model.get("rawHTML")) {
+                    template = require("ldsh!templates/{mode}/news/articleListItemForHtml");
+                }
+                break;
+            case "2": // YouTube
+                template = require("ldsh!templates/{mode}/news/youTubeListItem");
+                ListItemView = YouTubeListItemView;
+                break;
+            default:
+                template = require("ldsh!templates/{mode}/news/eventsDetail");
+                ListItemView = EventListItemView;
+                break;
+            }
+
+            this.insertView("#article-list", new ListItemView({
+                model : model,
+                template : template
+            })).render();
+            $("#contents__secondary").hide();
+            $("#contents__primary").show();
+        }
     });
 
     module.exports = NewsView;
