@@ -1104,6 +1104,28 @@ div.nehan-block.nehan-body:last-child {
     padding-top: 10px;
     padding-bottom: 10px;
 }
+.backnumber-nav__section {
+    float: left;
+}
+.backnumber-nav__backtolist {
+    width: 20%;
+    text-align: left;
+}
+.backnumber-nav__date {
+    width: 60%;
+}
+.backnumber-nav__empty {
+    width: 20%;
+    text-align: right;
+}
+
+.backnumber-nav__backtolist .button {
+    font-size: 20px;
+    padding: 0 15px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0;
+}
 
 .backnumber-nav__item {
     display: inline-block;

@@ -58,8 +58,19 @@ define(function(require, exports, module) {
         },
 
         events : {
+            'click [data-backnumber-list]': 'onClickBackToList',
             'click [data-backnumber-day-prev]': 'onClickDayPrev',
             'click [data-backnumber-day-next]': 'onClickDayNext'
+        },
+
+        /**
+         *  一覧から探すボタンを押したら呼ばれる
+         *
+         *  @param {Event} evt
+         */
+        onClickBackToList : function(evt) {
+            app.router.go("backnumber");
+            evt.preventDefault();
         },
 
         /**
@@ -67,9 +78,12 @@ define(function(require, exports, module) {
          *
          *  @param {Event} evt
          */
-        onClickDayPrev: function (evt) {
-            this.changeDate( DateUtil.addDay(this.date, -1) );
-            this.updateDateLabel();
+        onClickDayPrev : function(evt) {
+            var dateParam = DateUtil.formatDate( DateUtil.addDay(this.date, -1), "yyyy-MM-dd");
+            app.router.navigate("backnumber/" + dateParam, {
+                trigger: true,
+                replace: false
+            });
         },
 
         /**
@@ -77,9 +91,12 @@ define(function(require, exports, module) {
          *
          *  @param {Event} evt
          */
-        onClickDayNext: function (evt) {
-            this.changeDate( DateUtil.addDay(this.date, 1) );
-            this.updateDateLabel();
+        onClickDayNext : function(evt) {
+            var dateParam = DateUtil.formatDate( DateUtil.addDay(this.date, 1), "yyyy-MM-dd");
+            app.router.navigate("backnumber/" + dateParam, {
+                trigger: true,
+                replace: false
+            });
         },
 
         /**
