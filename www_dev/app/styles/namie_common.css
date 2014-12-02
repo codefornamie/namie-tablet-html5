@@ -706,11 +706,11 @@ main {
 
 .feed-item {
     display: table;
-    margin: 0px;
+    margin: 15px 0px;
     padding: 5px;
     background: white;
     border-radius: 4px;
-    /* width: 100%; */
+    width: 100%;
 }
 
 .feed-item:active {

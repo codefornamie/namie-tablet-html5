@@ -17,6 +17,7 @@ define(function(require, exports, module) {
          * このViewを表示する際に利用するアニメーション
          */
         animation : 'fadeIn',
+
         /**
          * このViewのテンプレートファイパス
          */

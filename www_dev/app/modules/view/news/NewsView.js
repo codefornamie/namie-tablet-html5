@@ -255,10 +255,11 @@ define(function(require, exports, module) {
             this.showFeedListView();
 
             // ArticleListView初期化
-            // this.showArticleListView();
+            this.showArticleListView();
 
             this.hideLoading();
         },
+
         /**
          * 左ペインの記事一覧メニューを表示する。
          */
@@ -273,16 +274,19 @@ define(function(require, exports, module) {
                 this.showFeetNotFoundMessage();
             }
         },
+
         /**
          * 記事が見つからなかった場合のメッセージを画面に表示する。
          */
         showFeetNotFoundMessage : function() {
             $(this.el).find("#feedList").text("記事情報がありません");
         },
+
         /**
          * 記事一覧を表示する要素のセレクタ
          */
         feedListElement : '#sidebar__list',
+
         /**
          * 右ペインの記事一覧を表示するViewのインスタンスを作成して返す。
          * @return {FeedListView} 生成したFeedListViewのインスタンス
@@ -290,6 +294,7 @@ define(function(require, exports, module) {
         createFeedListView : function() {
             return new FeedListView();
         },
+
         /**
          * 右ペインの記事一覧を表示する。
          */
@@ -300,6 +305,7 @@ define(function(require, exports, module) {
             this.setView("#article-list", articleListView);
             articleListView.render();
         },
+
         /**
          * 指定されたarticleIdの記事までスクロール
          * 
@@ -317,6 +323,7 @@ define(function(require, exports, module) {
             app.newsView = this;
             app.router.go("article", articleId);
         },
+
         /**
          * 指定された記事IDの記事を表示する。
          * @param articleId {String} 記事ID
