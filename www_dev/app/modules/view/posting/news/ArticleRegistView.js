@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var ArticleRegistConfirmView = require("modules/view/posting/news/ArticleRegistConfirmView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var DateUtil = require("modules/util/DateUtil");
+    var Code = require("modules/util/Code");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var vexDialog = require("vexDialog");
 
@@ -22,7 +23,7 @@ define(function(require, exports, module) {
         /**
          * このビューのModel
          */
-        model: null,
+        model : null,
         /**
          * フォーム要素のID
          */
@@ -41,24 +42,34 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            // 記事カテゴリ選択肢
+            var categories = _.filter(Code.ARTICLE_CATEGORY_LIST, function(category) {
+                return _.find(Code.ARTICLE_CATEGORY_LIST_BY_MODE[app.config.basic.mode], function(key) {
+                    return category.key === key;
+                });
+            });
+            _.each(categories, function(category) {
+                $("#articleCategory").append("<option value='" + category.key + "'>" + category.value + "</option>");
+            });
+
             if (this.model) {
                 // 編集時
                 this.setData();
             } else {
-                var tomorrow = DateUtil.addDay(new Date(),1);
-                $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow,"yyyy-MM-dd"));
+                var tomorrow = DateUtil.addDay(new Date(), 1);
+                $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow, "yyyy-MM-dd"));
                 this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
 
-                // 記事カテゴリ
-                if(this.articleCategory){
+                // 記事カテゴリ初期値
+                if (this.articleCategory) {
                     $("#articleCategory").val(this.articleCategory);
                 }
                 // レポートを書く場合
-                if(this.parentModel){
+                if (this.parentModel) {
                     $("#articleTitle").val(this.parentModel.get("title") + "の報告");
                     $("#articleDate1").val(this.parentModel.get("startDate"));
                     if (this.parentModel.get("endDate")) {
-                        $("#articleMultiDate").attr("checked","checked");
+                        $("#articleMultiDate").attr("checked", "checked");
                         $("#articleDate2").val(this.parentModel.get("endDate"));
                     }
                     $("#articleTime1").val(this.parentModel.get("startTime"));
@@ -82,13 +93,13 @@ define(function(require, exports, module) {
         /**
          * 編集時にデータを各フォームにセットする
          */
-        setData: function () {
+        setData : function() {
             $("#articleRegistTitle").text("記事編集");
             $("#articleCategory").val(this.model.get("type"));
             $("#articleTitle").val(this.model.get("title"));
             $("#articleDate1").val(this.model.get("startDate"));
             if (this.model.get("endDate")) {
-                $("#articleMultiDate").attr("checked","checked");
+                $("#articleMultiDate").attr("checked", "checked");
                 $("#articleDate2").val(this.model.get("endDate"));
             }
             $("#articleTime1").val(this.model.get("startTime"));
@@ -102,20 +113,20 @@ define(function(require, exports, module) {
                 this.imgArray = [];
                 if (this.model.get("imageUrl")) {
                     this.imgArray.push({
-                        fileName:this.model.get("imageUrl"),
-                        comment:this.model.get("imageComment")
+                        fileName : this.model.get("imageUrl"),
+                        comment : this.model.get("imageComment")
                     });
                 }
                 if (this.model.get("imageUrl2")) {
                     this.imgArray.push({
-                        fileName: this.model.get("imageUrl2"),
-                        comment: this.model.get("imageComment2")
+                        fileName : this.model.get("imageUrl2"),
+                        comment : this.model.get("imageComment2")
                     });
                 }
                 if (this.model.get("imageUrl3")) {
                     this.imgArray.push({
-                        fileName: this.model.get("imageUrl3"),
-                        comment: this.model.get("imageComment3")
+                        fileName : this.model.get("imageUrl3"),
+                        comment : this.model.get("imageComment3")
                     });
                 }
                 if (this.imgArray.length === 0) {
@@ -124,19 +135,28 @@ define(function(require, exports, module) {
                 } else if (this.imgArray.length >= 3) {
                     $("#addFileForm").hide();
                 }
-                var index = 0;
+                var index = this.imgArray.length;
                 _.each(this.imgArray, $.proxy(function(img) {
                     var view = new ArticleRegistFileItemView();
                     view.imageUrl = img.fileName;
                     view.imageComment = img.comment;
                     this.insertView("#fileArea", view).render();
-                },this));
+                    // 全ての画像の読み込み処理が完了したタイミングでローディングマスクを解除したいため
+                    // 子要素で画像読み込み完了時に発火したchangeイベントを拾って最後の画像読み込み完了時にhideLoadingする
+                    view.$el.find("#previewFile").on("change", $.proxy(function() {
+                        if (--index <= 0) {
+                            this.hideLoading();
+                            // 全ての画像読み込み完了した場合は、もうchageイベントは拾わない
+                            $("img#previewFile").off("change");
+                        }
+                    }, this));
+                }, this));
             }
         },
         /**
          * キャンセルボタン押下時のコールバック関数
          */
-        onClickArticleCancelButton: function () {
+        onClickArticleCancelButton : function() {
             app.router.back();
         },
         /**
@@ -175,16 +195,18 @@ define(function(require, exports, module) {
         /**
          * バリデーションチェック
          */
-        validate : function(){
-            if($("#articleMultiDate").is(":checked")){
-                if($("#articleDate1").val() > $("#articleDate2").val()){
+        validate : function() {
+            if ($("#articleMultiDate").is(":checked")) {
+                if ($("#articleDate1").val() > $("#articleDate2").val()) {
                     return "日時の日付が開始と終了で逆になっています。";
                 }
             }
-            if ($("#articleTime1").val() && $("#articleTime2").val() && $("#articleTime1").val() > $("#articleTime2").val()) {
+            if ($("#articleTime1").val() && $("#articleTime2").val() &&
+                    $("#articleTime1").val() > $("#articleTime2").val()) {
                 return "日時の時間が開始と終了で逆になっています。";
             }
-            if ($("#articleRangeDate1").val() && $("#articleRangeDate2").val() && $("#articleRangeDate1").val() > $("#articleRangeDate2").val()) {
+            if ($("#articleRangeDate1").val() && $("#articleRangeDate2").val() &&
+                    $("#articleRangeDate1").val() > $("#articleRangeDate2").val()) {
                 return "掲載期間の日付が開始と終了で逆になっています。";
             }
             return null;
@@ -194,7 +216,7 @@ define(function(require, exports, module) {
          */
         setInputValue : function() {
             if (this.model === null) {
-                this.model = new ArticleModel(); 
+                this.model = new ArticleModel();
             }
 
             if (this.parentModel) {
@@ -230,12 +252,12 @@ define(function(require, exports, module) {
             var $fileAreas = this.$el.find("#fileArea").children();
 
             /**
-             *  ファイル名を元に、ユニークなID付きのファイル名を生成する
-             *
-             *  @param {String} fileName
-             *  @return {String}
+             * ファイル名を元に、ユニークなID付きのファイル名を生成する
+             * 
+             * @param {String} fileName
+             * @return {String}
              */
-            var generateFileName = function (fileName) {
+            var generateFileName = function(fileName) {
                 var preName = fileName.substr(0, fileName.lastIndexOf("."));
                 var suffName = fileName.substr(fileName.lastIndexOf("."));
 
@@ -276,7 +298,7 @@ define(function(require, exports, module) {
             }
 
             // imagesを元に、imageUrlとimageCommentを更新する
-            for(var imageIndex = 0; imageIndex < 3; imageIndex++){
+            for (var imageIndex = 0; imageIndex < 3; imageIndex++) {
                 // { "", 2, 3, ... }
                 var surfix = (imageIndex === 0) ? "" : "" + (imageIndex + 1);
                 var img = images[imageIndex] || {};
@@ -295,7 +317,9 @@ define(function(require, exports, module) {
             // 登録処理を開始する
             this.setInputValue();
             $("#articleRegistPage").hide();
-            this.setView("#articleRegistConfirmWrapperPage", new ArticleRegistConfirmView({model: this.model})).render();
+            this.setView("#articleRegistConfirmWrapperPage", new ArticleRegistConfirmView({
+                model : this.model
+            })).render();
             $("#snap-content").scrollTop(0);
         },
 

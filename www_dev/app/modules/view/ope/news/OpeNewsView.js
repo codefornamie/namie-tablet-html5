@@ -2,9 +2,11 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var DateUtil = require("modules/util/DateUtil");
     var NewsView = require("modules/view/news/NewsView");
     var OpeFeedListView = require("modules/view/ope/news/OpeFeedListView");
     var OpeFeedListItemView = require("modules/view/ope/news/OpeFeedListItemView");
+    var Equal = require("modules/util/filter/Equal");
     /**
      * 運用管理アプリの記事一覧画面を表示するためのViewクラスを作成する。
      * 
@@ -19,6 +21,17 @@ define(function(require, exports, module) {
         feedListElement : '#article_list',
         events : {
             "click [data-article-register-button]" : "onClickArticleRegisterButton"
+        },
+        /**
+         * 記事の検索条件を指定する。
+         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         */
+        setArticleSearchCondition : function(condition) {
+            var targetDate = condition.targetDate;
+            var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
+            this.articleCollection.condition.filters = [
+                                                        new Equal("publishedAt", dateString)
+                                                                ];
         },
         /**
          * 左ペインの記事一覧メニューを表示する。

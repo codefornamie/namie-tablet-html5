@@ -8,7 +8,7 @@ define(function(require, exports, module) {
 
     /**
      * 記事情報のモデルクラスを作成する。
-     * 
+     *
      * @class 記事情報のモデルクラス
      * @exports EventsModel
      * @constructor
@@ -20,7 +20,7 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスは、本メソッドをオーバライドして、取得した情報のparse処理を実装する。
          * </p>
-         * 
+         *
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
@@ -119,7 +119,7 @@ define(function(require, exports, module) {
 
         /**
          * 「掲載中」などのイベントのステータス文字列を返す
-         * 
+         *
          * @return {String}
          */
         getStatusString : function() {
@@ -133,14 +133,14 @@ define(function(require, exports, module) {
 
         /**
          * 掲載期間の文字列を返す
-         * 
+         *
          * @return {String}
          */
         getPubDateString : function() {
             var pubDateString = DateUtil.formatDate(new Date(this.get("publishedAt")), "yyyy年MM月dd日(ddd)");
 
             if (this.get("depublishedAt")) {
-                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")), "yyyy年MM月dd日(ddd)");
+                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.get("depublishedAt")), "yyyy年MM月dd日(ddd)");
             }
 
             return pubDateString;
@@ -148,7 +148,7 @@ define(function(require, exports, module) {
 
         /**
          * 更新日の文字列を返す
-         * 
+         *
          * @return {String}
          */
         getUpdatedString : function() {
@@ -159,7 +159,7 @@ define(function(require, exports, module) {
 
         /**
          * 日付文字列を返す
-         * 
+         *
          * @return {String}
          */
         getDateString : function() {
