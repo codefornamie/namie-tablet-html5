@@ -24,12 +24,14 @@ define(function(require, exports, module) {
 
         afterRendered : function() {
         },
+
         /**
          * 初期化処理
          */
         initialize : function() {
             this.setFeedListItemViewClass(FeedListItemView);
         },
+
         /**
          * FeedListItemViewのクラスを設定する。
          * <p>

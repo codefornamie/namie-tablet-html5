@@ -1,19 +1,20 @@
-<li data-article-id="<%= model.get('__id') %>" class="feedListItem feed-item">
+<li
+    data-article-id="<%= model.get('__id') %>"
+    class="feedListItem feed-item"
+>
     <div class="feed-cell feed-cell--label">
         <div class="feed-label feed-label--pink">
             <div class='img'>
-                <span class='feed-label__text'>
-                    <%= model.get("dispSite") %>
-                </span>
+                <span class='feed-label__text'> <%=
+                    model.get("dispSite") %> </span>
             </div>
         </div>
     </div>
 
     <div class="feed-cell feed-cell--body">
         <div class="feed-item__body">
-            <p class="articleTitle article-title">
-                <%= model.get("dispTitle") %>
-            </p>
+            <p class="articleTitle article-title"><%=
+                model.get("dispTitle") %></p>
         </div>
     </div>
 </li>

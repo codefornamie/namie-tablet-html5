@@ -271,12 +271,12 @@ define(function(require, exports, module) {
          * 左ペインの記事一覧メニューを表示する。
          */
         showGridListView : function() {
-            var feedListView = this.createGridListView();
-            feedListView.collection = this.newsCollection;
+            var gridListView = this.createGridListView();
+            gridListView.collection = this.newsCollection;
 
-            this.removeView(this.feedListElement);
-            this.setView("", feedListView);
-            feedListView.render();
+            this.removeView(this.gridListElement);
+            this.setView("#contents__top", gridListView);
+            gridListView.render();
 
             if (this.newsCollection.size() === 0) {
                 this.showFeetNotFoundMessage();
