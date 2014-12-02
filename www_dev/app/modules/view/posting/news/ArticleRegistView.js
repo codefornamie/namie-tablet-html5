@@ -79,6 +79,18 @@ define(function(require, exports, module) {
                 }
             }
             this.chageMultiDateCheckbox();
+            this.setValidator();
+        },
+
+        setValidator : function() {
+            var articleCategory = $("#articleCategory").val();
+            if(_.find(Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING], function(category){
+                return category === articleCategory;
+            })){
+                $("#articleDate1").addClass("required");
+            } else {
+                $("#articleDate1").removeClass("required");
+            }
         },
 
         initialize : function() {
@@ -88,7 +100,8 @@ define(function(require, exports, module) {
             "click #addFileForm" : "onAddFileForm",
             "click #articleConfirmButton" : "onClickArticleConfirmButton",
             "click #articleCancelButton" : "onClickArticleCancelButton",
-            "change #articleMultiDate" : "chageMultiDateCheckbox"
+            "change #articleMultiDate" : "chageMultiDateCheckbox",
+            "change #articleCategory" : "setValidator"
         },
         /**
          * 編集時にデータを各フォームにセットする

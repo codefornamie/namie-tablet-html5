@@ -45,12 +45,35 @@ define(function(require, exports, module) {
                         return false;
                     },
                     invalidHandler : function() {
-//                        self.onValidateError();
+                        self.onValidateError();
                         return false;
                     },
                     onsubmit : false
                 });
             }
+        },
+        /**
+         * バリデーションチェックがNGの場合。
+         * <p>
+         * submitせずに、エラーの位置にスクロールする。
+         * </p>
+         */
+        onValidateError : function() {
+            var that = this;
+            setTimeout(function() {
+                $("input.error").each(
+                    function() {
+                        if ($(this).css("display") == "none") {
+                            return true;
+                        }
+                        var scroller = $(this).closest(".scroller");
+                        var top = -10 - scroller.offset().top + scroller.scrollTop() + $(this).offset().top;
+                        scroller.animate({
+                            scrollTop : top
+                        }, 500, "swing");
+                        return false;
+                    }, this);
+            }, 0);
         },
         /**
          * 描画後の処理を実装する。
