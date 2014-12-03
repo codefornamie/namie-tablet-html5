@@ -75,11 +75,11 @@ define(function(require, exports, module) {
                 },
 
                 /**
-                 *  セレクタで指定したviewをremoveする
-                 *
-                 *  @param {String} viewName
+                 * セレクタで指定したviewをremoveする
+                 * 
+                 * @param {String} viewName
                  */
-                removeViewByName : function (viewName) {
+                removeViewByName : function(viewName) {
                     var view = this.getView(viewName);
 
                     if (view) {
@@ -97,6 +97,7 @@ define(function(require, exports, module) {
         routes : {
             "" : "index",
             "top" : "top",
+            "article/:id" : "showArticle",
             // "events": "events",
             // "eventsRegisted": "eventsRegisted",
             // "showEvents": "showEvents",
@@ -121,6 +122,22 @@ define(function(require, exports, module) {
             this.layout.setFooter(new common.FooterView());
             this.commonView();
         },
+
+        /**
+         * 記事詳細を表示する
+         * 
+         * <p>
+         * `this.layout.showView`を使うと記事一覧のViewをリセットしてしまうため、
+         * 記事詳細は記事一覧の上にかぶせる形で表示する。
+         * </p>
+         * 
+         * @param {String} articleId
+         */
+        showArticle : function(articleId) {
+            this.layout.setGlobalNav(new common.GlobalNavView());
+            app.newsView.showArticle(articleId);
+        },
+
         postingTop : function() {
             this.layout.showView(new EventNewsView());
             this.layout.setHeader(new postingCommon.HeaderView());
@@ -149,10 +166,10 @@ define(function(require, exports, module) {
             this.commonView();
         },
 
-        backnumberDate : function (date) {
+        backnumberDate : function(date) {
             console.log('[route] backnumber/%s', date);
             this.layout.showView(new BacknumberDateView({
-                date: date
+                date : date
             }));
             this.commonView();
         },
@@ -163,20 +180,20 @@ define(function(require, exports, module) {
         },
 
         /**
-         *  このメソッドは手動で呼ばれる
+         * このメソッドは手動で呼ばれる
          */
         articleDetail : function(options) {
             console.log('[route] articleDetail');
 
             this.navigate("articleDetail");
             this.layout.showView(new ArticleDetailView({
-                model: options.model
+                model : options.model
             }));
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
 
         /**
-         *  このメソッドは手動で呼ばれる
+         * このメソッドは手動で呼ばれる
          */
         articleRegist : function(options) {
             console.log('[route] articleRegist');
@@ -189,17 +206,19 @@ define(function(require, exports, module) {
         },
 
         /**
-         *  このメソッドは手動で呼ばれる
+         * このメソッドは手動で呼ばれる
          */
         articleReport : function() {
             console.log('[route] articleReport');
-            this.layout.showView(new ArticleRegistView({articleCategory: "4"}));
+            this.layout.showView(new ArticleRegistView({
+                articleCategory : "4"
+            }));
             this.navigate("articleReport");
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
         },
 
         /**
-         *  このメソッドは手動で呼ばれる
+         * このメソッドは手動で呼ばれる
          */
         opeArticleRegist : function(options) {
             console.log('[route] opeArticleRegist');
@@ -208,7 +227,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         *  このメソッドは手動で呼ばれる
+         * このメソッドは手動で呼ばれる
          */
         opeYouTubeRegist : function(options) {
             console.log('[route] opeYouTubeRegist');
@@ -217,14 +236,12 @@ define(function(require, exports, module) {
         },
 
         /*
-         * events : function() { console.log("It's a events page.");
-         * this.layout.showView(new EventsView()); this.commonView(); },
-         * eventsRegisted : function() { console.log("It's a eventsRegisted
-         * page."); this.layout.showView(new EventsRegistedView());
-         * this.commonView(); }, showEvents : function() { console.log("It's a
-         * show events page."); this.layout.showView(new ShowEventsView());
-         * this.commonView(); }, news : function() { console.log("It's a news
-         * page."); this.layout.showView(new NewsView()); this.commonView(); },
+         * events : function() { console.log("It's a events page."); this.layout.showView(new EventsView());
+         * this.commonView(); }, eventsRegisted : function() { console.log("It's a eventsRegisted page.");
+         * this.layout.showView(new EventsRegistedView()); this.commonView(); }, showEvents : function() {
+         * console.log("It's a show events page."); this.layout.showView(new ShowEventsView()); this.commonView(); },
+         * news : function() { console.log("It's a news page."); this.layout.showView(new NewsView());
+         * this.commonView(); },
          */
 
         // Shortcut for building a url.
@@ -237,8 +254,7 @@ define(function(require, exports, module) {
             this.layout.removeViewByName('#settings');
         },
         /**
-         * 前の画面に戻る
-         * http://stackoverflow.com/questions/14860461/selective-history-back-using-backbone-js
+         * 前の画面に戻る http://stackoverflow.com/questions/14860461/selective-history-back-using-backbone-js
          */
         back : function() {
             window.history.back();
