@@ -24,9 +24,14 @@ define(function(require, exports, module) {
 
     // util
     var DateUtil = require("modules/util/DateUtil");
-    var Equal = require("modules/util/filter/Equal");
-    var IsNull = require("modules/util/filter/IsNull");
+    var BusinessUtil = require("modules/util/BusinessUtil");
     var vexDialog = require("vexDialog");
+    var IsNull = require("modules/util/filter/IsNull");
+    var Equal = require("modules/util/filter/Equal");
+    var And = require("modules/util/filter/And");
+    var Or = require("modules/util/filter/Or");
+    var Le = require("modules/util/filter/Le");
+    var Ge = require("modules/util/filter/Ge");
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラスを作成する。
@@ -54,8 +59,10 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
+            this.targetDate = this.targetDate ||
+                    DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd");
             this.setArticleSearchCondition({
-                targetDate : new Date("2014/11/28")
+                targetDate : new Date(this.targetDate)
             });
             this.searchArticles();
             this.initEvents();
@@ -95,9 +102,21 @@ define(function(require, exports, module) {
             var targetDate = condition.targetDate;
             var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
             this.articleCollection.condition.filters = [
-                    new Equal("publishedAt", dateString), new IsNull("isDepublish")
+                    new Or([
+                            new Equal("publishedAt", dateString), new And([
+                                    new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
+                            ])
+                    ]), new IsNull("isDepublish")
             ];
-            this.recommendCollection.condition.filters = new Equal("publishedAt", dateString);
+
+            this.recommendCollection.condition.filters = [
+                new Or([
+                        new Equal("publishedAt", dateString), new And([
+                                new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
+                        ])
+                ])
+            ];
+
             this.eventsCollection.condition.filters = new Equal("publishedAt", dateString);
         },
         /**
@@ -229,6 +248,9 @@ define(function(require, exports, module) {
 
             // articleCollectionに切抜き、おすすめ状態を反映する
             this.newsCollection.each($.proxy(function(article) {
+                if (article.get("title", "おすすめイベント")) {
+                    console.log("aaa");
+                }
                 this.favoriteCollection.each(function(favorite) {
                     if (article.get("__id") === favorite.get("source")) {
                         article.set("isFavorite", !favorite.get("deletedAt"));
@@ -247,7 +269,7 @@ define(function(require, exports, module) {
                 // 自身のおすすめ情報を記事に付加
                 _.each(recommends, $.proxy(function(recommend) {
                     if (recommend.get("isMine")) {
-                        article.set("isRecommend", !recommend.get("deletedAt"));
+                        article.set("isMyRecommend", !recommend.get("deletedAt"));
                         article.recommend = recommend;
                     }
                 }, this));
@@ -256,7 +278,7 @@ define(function(require, exports, module) {
 
             // おすすめ記事を検索し、表示する
             var recommendArticle = this.newsCollection.find($.proxy(function(article) {
-                return article.get("isRecommend") === "true";
+                return article.get("isRecommend") === "true" && article.get("publishedAt") === this.targetDate;
             }, this));
 
             if (recommendArticle) {
