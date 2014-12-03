@@ -57,7 +57,7 @@ define(function(require, exports, module) {
 
             this.date = date;
 
-            // 最終配信日以前の日付を指定された場合は、最終配信日に移動する
+            // 最終配信日より後の日付を指定された場合は、最終配信日に移動する
             var currentPublishDate = BusinessUtil.getCurrentPublishDate();
             if (DateUtil.formatDate(this.date, "yyyy-MM-dd") > DateUtil.formatDate(currentPublishDate, "yyyy-MM-dd")) {
                 this.date = currentPublishDate;
