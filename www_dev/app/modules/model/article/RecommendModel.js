@@ -3,6 +3,8 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var ArticleModel = require("modules/model/article/ArticleModel");
+
     /**
      * おすすめ情報のモデルクラスを作成する。
      * 
@@ -10,7 +12,7 @@ define(function(require, exports, module) {
      * @exports RecommendModel
      * @constructor
      */
-    var RecommendModel = AbstractODataModel.extend({
+    var RecommendModel = ArticleModel.extend({
         entity : "recommend",
         /**
          * 取得したOData情報のparse処理を行う。
