@@ -1546,3 +1546,7 @@ div.nehan-block.nehan-body:last-child {
 select#articleCategory {
     height: 46px;
 }
+
+.OpeArticleDetailPage {
+	margin-right: 20px;
+}
