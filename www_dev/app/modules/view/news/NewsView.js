@@ -58,7 +58,6 @@ define(function(require, exports, module) {
         afterRendered : function() {
         },
 
-        initialize : function() {
         initialize : function(options) {
             options = options || {};
 
