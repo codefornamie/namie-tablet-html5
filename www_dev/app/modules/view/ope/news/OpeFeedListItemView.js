@@ -26,6 +26,7 @@ define(function(require, exports, module) {
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * @memberof OpeFeedListItemView#
+         * 
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
@@ -134,7 +135,10 @@ define(function(require, exports, module) {
                 })
                 break;
             case "2":
-                this.hideLoading();
+                app.router.opeYouTubeDetail({
+                    model : this.model,
+                    recommendArticle : this.parentView.recommendArticle
+                });
                 break;
             case "3":
             case "4":
@@ -145,6 +149,10 @@ define(function(require, exports, module) {
                 });
                 break;
             default:
+                app.router.opeEventDetail({
+                    model : this.model,
+                    recommendArticle : this.parentView.recommendArticle
+                });
                 break;
             }
             $("#contents__primary").scrollTop(0);

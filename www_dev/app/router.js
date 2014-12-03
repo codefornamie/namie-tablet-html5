@@ -23,7 +23,7 @@ define(function(require, exports, module) {
     var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
     var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
-//    var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
+    var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
 
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -238,16 +238,16 @@ define(function(require, exports, module) {
             this.navigate("opeArticleDetail");
             $("#contents__primary").scrollTop(0);
         },
-//        /**
-//         *  このメソッドは手動で呼ばれる
-//         */
-//        opeYouTubeDetail : function(options) {
-//            console.log('[route] opeYouTubeDetail');
-//            this.layout.setView("#contents__primary", new OpeYouTubeDetailView(options)).render();
-//            this.navigate("opeYouTubeDetail");
-//            $("#contents__primary").scrollTop(0);
-//        },
-//
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        opeYouTubeDetail : function(options) {
+            console.log('[route] opeYouTubeDetail');
+            this.layout.setView("#contents__primary", new OpeYouTubeDetailView(options)).render();
+            this.navigate("opeYouTubeDetail");
+            $("#contents__primary").scrollTop(0);
+        },
+
         /*
          * events : function() { console.log("It's a events page.");
          * this.layout.showView(new EventsView()); this.commonView(); },
