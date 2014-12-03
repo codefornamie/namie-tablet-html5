@@ -15,46 +15,46 @@ define(function(require, exports, module) {
      * @constructor
      */
     var GridListView = FeedListView.extend({
+        /**
+         * 記事リストの要素を選択するためのセレクタ
+         * @memberof GridListView#
+         */
+        listElementSelector : "#grid-list",
+        /**
+         * このViewのテンプレートファイルパス
+         * @memberof GridListView#
+         */
         template : require("ldsh!templates/{mode}/news/gridList"),
-
+        /**
+         * このViewのイベント
+         * @memberof GridListView#
+         */
         events : {
             "click [data-grid-list-item]" : "onClickFeedListItem"
         },
-
+        /**
+         * Viewの描画処理の前に呼び出されるコールバック関数
+         * <p>
+         * 記事一覧を表示する処理を行う。
+         * </p>
+         * @memberof GridListView#
+         */
         beforeRendered : function() {
             this.setFeedList();
         },
 
-        afterRendered : function() {
-        },
-
         /**
          * 初期化処理
+         * @memberof GridListView#
          */
         initialize : function() {
             Super.prototype.setFeedListItemViewClass.call(this, GridListItemView);
         },
-
-        /**
-         * 取得した動画一覧を描画する
-         */
-        setFeedList : function() {
-            var self = this;
-
-            this.collection.each(function(model) {
-                var ItemView = self.feedListItemViewClass;
-
-                self.insertView("#grid-list", new ItemView({
-                    model : model,
-                    parentView : self
-                }));
-            });
-        },
-
         /**
          * 記事リストアイテムをクリックされたときのコールバック関数
          * 
          * @param {Event} ev
+         * @memberof GridListView#
          */
         onClickFeedListItem : function(ev) {
         }

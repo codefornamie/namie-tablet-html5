@@ -70,6 +70,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
+         * @memberof NewsView#
          */
         initEvents : function() {
             app.router.on("route", this.onRoute.bind(this));
@@ -77,6 +78,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事の検索処理を開始する。
+         * @memberof NewsView#
          */
         searchArticles : function() {
             app.ga.trackPageView("/NewsView", "ニュース");
@@ -97,6 +99,7 @@ define(function(require, exports, module) {
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @memberof NewsView#
          */
         setArticleSearchCondition : function(condition) {
             var targetDate = condition.targetDate;
@@ -122,6 +125,7 @@ define(function(require, exports, module) {
         /**
          * youtubeライブラリを読み込む
          * @param {Function} callback
+         * @memberof NewsView#
          */
         loadYouTubeLibrary : function(callback) {
             if (app.gapiLoaded) {
@@ -164,6 +168,7 @@ define(function(require, exports, module) {
         /**
          * articleを読み込む
          * @param {Function} callback
+         * @memberof NewsView#
          */
         loadArticle : function(callback) {
             var self = this;
@@ -202,6 +207,7 @@ define(function(require, exports, module) {
         /**
          * eventsを読み込む
          * @param {Function} callback
+         * @memberof NewsView#
          */
         loadEvents : function(callback) {
             this.eventsCollection.reset();
@@ -218,6 +224,7 @@ define(function(require, exports, module) {
         /**
          * Recommendを読み込む
          * @param {Function} callback
+         * @memberof NewsView#
          */
         loadRecommend : function(callback) {
             this.recommendCollection.fetch({
@@ -234,6 +241,7 @@ define(function(require, exports, module) {
         /**
          * 全ての情報検索完了後のコールバック関数
          * @param {Error|Undefined} err
+         * @memberof NewsView#
          */
         onFetchAll : function(err) {
             if (err) {
@@ -298,16 +306,22 @@ define(function(require, exports, module) {
 
             this.hideLoading();
         },
-
+        /**
+         * 記事一覧Viewを表示する要素のセレクタ
+         * @memberof NewsView#
+         */
+        feedListElement: "#contents__top",
         /**
          * 左ペインの記事一覧メニューを表示する。
+         * @memberof NewsView#
          */
         showGridListView : function() {
             var gridListView = this.createGridListView();
             gridListView.collection = this.newsCollection;
 
             this.removeView(this.gridListElement);
-            this.setView("#contents__top", gridListView);
+            
+            this.setView(this.feedListElement, gridListView);
             gridListView.render();
 
             if (this.newsCollection.size() === 0) {
@@ -317,6 +331,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事が見つからなかった場合のメッセージを画面に表示する。
+         * @memberof NewsView#
          */
         showFeetNotFoundMessage : function() {
             this.$el.text("記事情報がありません");
@@ -325,6 +340,7 @@ define(function(require, exports, module) {
         /**
          * 右ペインの記事一覧を表示するViewのインスタンスを作成して返す。
          * @return {GridListView} 生成したGridListViewのインスタンス
+         * @memberof NewsView#
          */
         createGridListView : function() {
             return new GridListView();
@@ -332,6 +348,7 @@ define(function(require, exports, module) {
 
         /**
          * 右ペインの記事一覧を表示する。
+         * @memberof NewsView#
          */
         showArticleListView : function() {
             var articleListView = new ArticleListView();
@@ -346,15 +363,10 @@ define(function(require, exports, module) {
          * 
          * @param {jQuery.Event} ev
          * @param {Object} param
+         * @memberof NewsView#
          */
         onClickGridItem : function(ev, param) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
-            // var articleModel = this.articleCollection.find(function(model) {
-            // return model.get("__id") === articleId;
-            // });
-            // if (articleModel) {
-            // this.showArticle(articleModel);
-            // }
             app.newsView = this;
             app.router.go("article", articleId);
         },
@@ -362,6 +374,7 @@ define(function(require, exports, module) {
         /**
          * 指定された記事IDの記事を表示する。
          * @param articleId {String} 記事ID
+         * @memberof NewsView#
          */
         showArticle : function(articleId) {
             var model = this.articleCollection.find(function(article) {
@@ -405,6 +418,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事詳細ページ以外では、記事詳細の要素を隠す
+         * @memberof NewsView#
          */
         onRoute : function(route) {
             if (route === "showArticle") {
@@ -416,6 +430,7 @@ define(function(require, exports, module) {
     }, {
         /**
          * 記事詳細を挿入する先のセレクタ
+         * @memberof NewsView#
          */
         SELECTOR_ARTICLE_DESTINATION : "[data-news-detail]"
     });
