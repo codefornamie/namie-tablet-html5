@@ -3,19 +3,31 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var async = require("async");
+
+    // view
     var AbstractView = require("modules/view/AbstractView");
     var ArticleListView = require("modules/view/news/ArticleListView");
-    var FeedListView = require("modules/view/news/FeedListView");
+    var GridListView = require("modules/view/news/GridListView");
     var RecommendArticleView = require("modules/view/news/RecommendArticleView");
-    var DateUtil = require("modules/util/DateUtil");
-    var BusinessUtil = require("modules/util/BusinessUtil");
+    var ArticleListItemView = require("modules/view/news/ArticleListItemView");
+    var EventListItemView = require("modules/view/news/EventListItemView");
+    var YouTubeListItemView = require("modules/view/news/YouTubeListItemView");
+
+    // models
     var ArticleModel = require("modules/model/article/ArticleModel");
+
+    // collections
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var RecommendCollection = require("modules/collection/article/RecommendCollection");
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
     var EventsCollection = require("modules/collection/events/EventsCollection");
-    var Equal = require("modules/util/filter/Equal");
+
+    // util
+    var DateUtil = require("modules/util/DateUtil");
+    var BusinessUtil = require("modules/util/BusinessUtil");
+    var vexDialog = require("vexDialog");
     var IsNull = require("modules/util/filter/IsNull");
+    var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
     var Or = require("modules/util/filter/Or");
     var Le = require("modules/util/filter/Le");
@@ -37,7 +49,9 @@ define(function(require, exports, module) {
         favoriteCollection : new FavoriteCollection(),
         eventsCollection : new EventsCollection(),
         newsCollection : new Backbone.Collection(),
-
+        events : {
+            "click [data-article-id]" : "onClickGridItem"
+        },
         beforeRendered : function() {
         },
 
@@ -55,6 +69,7 @@ define(function(require, exports, module) {
             });
 
             this.searchArticles();
+            this.initEvents();
         },
         
         /**
@@ -68,7 +83,16 @@ define(function(require, exports, module) {
         },
 
         /**
+         * イベントを初期化する
+         * @memberof NewsView#
+         */
+        initEvents : function() {
+            app.router.on("route", this.onRoute.bind(this));
+        },
+
+        /**
          * 記事の検索処理を開始する。
+         * @memberof NewsView#
          */
         searchArticles : function() {
             this.trackPageView();
@@ -89,6 +113,7 @@ define(function(require, exports, module) {
         /**
          * youtubeライブラリを読み込む
          * @param {Function} callback
+         * @memberof NewsView#
          */
         loadYouTubeLibrary : function(callback) {
             if (app.gapiLoaded) {
@@ -131,6 +156,7 @@ define(function(require, exports, module) {
         /**
          * articleを読み込む
          * @param {Function} callback
+         * @memberof NewsView#
          */
         loadArticle : function(callback) {
             var self = this;
@@ -169,6 +195,7 @@ define(function(require, exports, module) {
         /**
          * eventsを読み込む
          * @param {Function} callback
+         * @memberof NewsView#
          */
         loadEvents : function(callback) {
             this.eventsCollection.reset();
@@ -185,6 +212,7 @@ define(function(require, exports, module) {
         /**
          * Recommendを読み込む
          * @param {Function} callback
+         * @memberof NewsView#
          */
         loadRecommend : function(callback) {
             this.recommendCollection.fetch({
@@ -201,6 +229,7 @@ define(function(require, exports, module) {
         /**
          * 全ての情報検索完了後のコールバック関数
          * @param {Error|Undefined} err
+         * @memberof NewsView#
          */
         onFetchAll : function(err) {
             if (err) {
@@ -259,8 +288,8 @@ define(function(require, exports, module) {
             } else {
                 this.$(".recommendArticleContainer").hide();
             }
-            // FeedListView初期化
-            this.showFeedListView();
+            // GridListView初期化
+            this.showGridListView();
 
             // ArticleListView初期化
             this.showArticleListView();
@@ -268,38 +297,48 @@ define(function(require, exports, module) {
             this.hideLoading();
         },
         /**
-         * 左ペインの記事一覧メニューを表示する。
+         * 記事一覧Viewを表示する要素のセレクタ
+         * @memberof NewsView#
          */
-        showFeedListView : function() {
-            var feedListView = this.createFeedListView();
-            feedListView.collection = this.newsCollection;
+        feedListElement: "#contents__top",
+        /**
+         * 左ペインの記事一覧メニューを表示する。
+         * @memberof NewsView#
+         */
+        showGridListView : function() {
+            var gridListView = this.createGridListView();
+            gridListView.collection = this.newsCollection;
 
-            this.removeView(this.feedListElement);
-            this.setView(this.feedListElement, feedListView);
-            feedListView.render();
+            this.removeView(this.gridListElement);
+            
+            this.setView(this.feedListElement, gridListView);
+            gridListView.render();
+
             if (this.newsCollection.size() === 0) {
                 this.showFeetNotFoundMessage();
             }
         },
+
         /**
          * 記事が見つからなかった場合のメッセージを画面に表示する。
+         * @memberof NewsView#
          */
         showFeetNotFoundMessage : function() {
-            $(this.el).find("#feedList").text("記事情報がありません");
+            this.$el.text("記事情報がありません");
         },
-        /**
-         * 記事一覧を表示する要素のセレクタ
-         */
-        feedListElement : '#sidebar__list',
+
         /**
          * 右ペインの記事一覧を表示するViewのインスタンスを作成して返す。
-         * @return {FeedListView} 生成したFeedListViewのインスタンス
+         * @return {GridListView} 生成したGridListViewのインスタンス
+         * @memberof NewsView#
          */
-        createFeedListView : function() {
-            return new FeedListView();
+        createGridListView : function() {
+            return new GridListView();
         },
+
         /**
          * 右ペインの記事一覧を表示する。
+         * @memberof NewsView#
          */
         showArticleListView : function() {
             var articleListView = new ArticleListView();
@@ -310,11 +349,87 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 指定されたarticleIdの記事までスクロール
+         * 
+         * @param {jQuery.Event} ev
+         * @param {Object} param
+         * @memberof NewsView#
+         */
+        onClickGridItem : function(ev, param) {
+            var articleId = $(ev.currentTarget).attr("data-article-id");
+            app.newsView = this;
+            app.router.go("article", articleId);
+        },
+
+        /**
+         * 指定された記事IDの記事を表示する。
+         * @param articleId {String} 記事ID
+         * @memberof NewsView#
+         */
+        showArticle : function(articleId) {
+            var model = this.articleCollection.find(function(article) {
+                return article.get("__id") === articleId;
+            });
+            if (!model) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("指定された記事は存在しません。");
+                return;
+            }
+            var template = require("ldsh!templates/{mode}/news/articleListItem");
+            // 記事一覧に追加するViewクラス。
+            // 以下の分岐処理で、対象のデータを表示するViewのクラスが設定される。
+            var ListItemView;
+
+            switch (model.get("type")) {
+            case "1": // RSS
+                template = require("ldsh!templates/{mode}/news/articleListItem");
+                ListItemView = ArticleListItemView;
+                if (model.get("rawHTML")) {
+                    template = require("ldsh!templates/{mode}/news/articleListItemForHtml");
+                }
+                break;
+            case "2": // YouTube
+                template = require("ldsh!templates/{mode}/news/youTubeListItem");
+                ListItemView = YouTubeListItemView;
+                break;
+            default:
+                template = require("ldsh!templates/{mode}/news/eventsDetail");
+                ListItemView = EventListItemView;
+                break;
+            }
+
+            this.insertView(NewsView.SELECTOR_ARTICLE_DESTINATION, new ListItemView({
+                model : model,
+                template : template
+            })).render();
+            $("#contents__secondary").hide();
+            $("#contents__primary").show();
+        },
+
+        /**
+         * 記事詳細ページ以外では、記事詳細の要素を隠す
+         * @memberof NewsView#
+         */
+        onRoute : function(route) {
+            if (route === "showArticle") {
+                $(NewsView.SELECTOR_ARTICLE_DESTINATION).show();
+            } else {
+                $(NewsView.SELECTOR_ARTICLE_DESTINATION).hide();
+            }
+        },
+
+        /**
          * Google Analyticsでページビューを記録する
-        */
+         */
         trackPageView : function() {
             app.ga.trackPageView("/NewsView", "ニュース");
         }
+    }, {
+        /**
+         * 記事詳細を挿入する先のセレクタ
+         * @memberof NewsView#
+         */
+        SELECTOR_ARTICLE_DESTINATION : "[data-news-detail]"
     });
 
     module.exports = NewsView;
