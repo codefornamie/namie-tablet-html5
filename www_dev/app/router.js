@@ -21,6 +21,9 @@ define(function(require, exports, module) {
     var TopView = require("modules/view/ope/top/TopView");
     var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
     var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
+    var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
+    var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
+//    var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
 
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -224,6 +227,7 @@ define(function(require, exports, module) {
             console.log('[route] opeArticleRegist');
             this.layout.setView("#contents__primary", new OpeArticleRegistView(options)).render();
             this.navigate("opeArticleRegist");
+            $("#contents__primary").scrollTop(0);
         },
 
         /**
@@ -233,8 +237,36 @@ define(function(require, exports, module) {
             console.log('[route] opeYouTubeRegist');
             this.layout.setView("#contents__primary", new OpeYouTubeRegistView(options)).render();
             this.navigate("opeYouTubeRegist");
+            $("#contents__primary").scrollTop(0);
         },
-
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        opeEventDetail : function(options) {
+            console.log('[route] opeEventDetail');
+            this.layout.setView("#contents__primary", new OpeEventDetailView(options)).render();
+            this.navigate("opeEventDetail");
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        opeArticleDetail : function(options) {
+            console.log('[route] opeArticleDetail');
+            this.layout.setView("#contents__primary", new OpeArticleDetailView(options)).render();
+            this.navigate("opeArticleDetail");
+            $("#contents__primary").scrollTop(0);
+        },
+//        /**
+//         *  このメソッドは手動で呼ばれる
+//         */
+//        opeYouTubeDetail : function(options) {
+//            console.log('[route] opeYouTubeDetail');
+//            this.layout.setView("#contents__primary", new OpeYouTubeDetailView(options)).render();
+//            this.navigate("opeYouTubeDetail");
+//            $("#contents__primary").scrollTop(0);
+//        },
+//
         /*
          * events : function() { console.log("It's a events page."); this.layout.showView(new EventsView());
          * this.commonView(); }, eventsRegisted : function() { console.log("It's a eventsRegisted page.");
