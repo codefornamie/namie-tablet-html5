@@ -51,19 +51,15 @@ define(function(require, exports, module) {
      * @returns {String} クエリ文字列
      */
     Filter.queryString = function(filters) {
-        Log.info("1");
         if (!_.isArray(filters)) {
             filters = [filters];
         }
-        Log.info("2");
         var queryValue = "";
         _.each(filters, function(filter) {
-            Log.info("3");
             var query = Filter.makeQueryString(filter);
             if (queryValue) {
                 queryValue += " and ";
             }
-            Log.info("4");
             queryValue += query;
         });
         return queryValue;
@@ -87,13 +83,10 @@ define(function(require, exports, module) {
      * @returns 変換された検索条件
      */
     Filter.searchCondition = function(condition) {
-        Log.info("5");
         if (!condition.top) {
             condition.top = 50;
         }
-        Log.info("6");
         if (condition.filters) {
-            Log.info("7");
             condition.filter = Filter.queryString(condition.filters);
         }
         return condition;
@@ -110,23 +103,17 @@ define(function(require, exports, module) {
      * @returns 生成したクエリ
      */
     Filter.makeQueryString = function(filter) {
-        Log.info("8");
         if (filter.expression) {
-            Log.info("9");
             Log.info(filter.expression);
             return filter.expression();
         } else if (_.isArray(filter)) {
-            Log.info("10");
             var query = "";
             _.each(filter, function(targetFilter) {
-                Log.info("11");
                 if (query) {
                     query += " and ";
                 }
                 query += Filter.makeQueryString(targetFilter);
-                Log.info("12");
             });
-            Log.info("13");
             return "( " + query + " )";
         }
     };
@@ -136,7 +123,6 @@ define(function(require, exports, module) {
      * @returns シングルクォートがエスケープされた文字列
      */
     Filter.prototype.escapeSingleQuote = function(value) {
-        Log.info("14");
         var res = value.replace("'", "''");
         return res;
     };

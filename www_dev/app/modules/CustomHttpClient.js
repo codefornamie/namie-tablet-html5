@@ -1,7 +1,6 @@
 define(function(require, exports, module) {
     "use strict";
 
-    var app = require("app");
     var Log = require("modules/util/logger");
 
     /**
@@ -9,7 +8,8 @@ define(function(require, exports, module) {
      * @class This class is the abstraction Layer of HTTP Client.
      * @param {Boolean} async true value represents asynchronous mode
      */
-    var CustomHttpClient = function(async) {
+    var CustomHttpClient = function(async, app) {
+        this.app = app;
         this.super = new dcc.http.DcHttpClient();
     };
 
@@ -102,22 +102,7 @@ define(function(require, exports, module) {
      */
     CustomHttpClient.prototype._execute = function(method, requestUrl, requestBody, callback) {
         Log.info("HtppClient.execute called");
-        app.pcsManager.ready($.proxy(function() {
-            if (app.pcsManager.accessToken) {
-                Log.info("Token found.");
-                var authHeader = {};
-                authHeader["Authorization"] = "Bearer " + app.pcsManager.accessToken;
-                for ( var index in this.super.requestHeaders) {
-                    var header = this.super.requestHeaders[index];
-                    for ( var key in header) {
-                        if (key === "Authorization") {
-                            Log.info("Override Authorization request header");
-                            this.super.requestHeaders[index] = authHeader;
-                            continue;
-                        }
-                    }
-                }
-            }
+        this.updateAuthrizationRequestHeader($.proxy(function() {
             return this.super._execute(method, requestUrl, requestBody, callback);
         }, this));
     };
@@ -133,7 +118,34 @@ define(function(require, exports, module) {
      */
     CustomHttpClient.prototype._execute2 = function(method, requestUrl, options, accessor) {
         Log.info("HtppClient.execute2 called");
-        return this.super._execute2(method, requestUrl, options, accessor);
+        this.updateAuthrizationRequestHeader($.proxy(function() {
+            return this.super._execute2(method, requestUrl, options, accessor);
+        }, this));
+    };
+
+    /**
+     * トークンの更新があった場合、トークンを差し替える。
+     * @param {Function} callback
+     */
+    CustomHttpClient.prototype.updateAuthrizationRequestHeader = function(callback) {
+        this.app.pcsManager.ready($.proxy(function() {
+            if (this.app.pcsManager.accessToken) {
+                Log.info("Token found.");
+                var authHeader = {};
+                authHeader["Authorization"] = "Bearer " + this.app.pcsManager.accessToken;
+                for ( var index in this.super.requestHeaders) {
+                    var header = this.super.requestHeaders[index];
+                    for ( var key in header) {
+                        if (key === "Authorization") {
+                            Log.info("Override Authorization request header");
+                            this.super.requestHeaders[index] = authHeader;
+                            continue;
+                        }
+                    }
+                }
+            }
+            callback();
+        }, this));
     };
 
     /**

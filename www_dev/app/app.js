@@ -14,13 +14,6 @@ define(function(require, exports, module) {
     var CustomHttpClient = require("modules/CustomHttpClient");
     var PcsManager = require("modules/PcsManager");
 
-    /**
-     * HttpClient を 独自クラスに差し替え.
-     */
-    dcc.http.RestAdapter.prototype.createHttpClient = function() {
-        return new CustomHttpClient();
-    };
-
     // グローバルに利用できるModel
     var app = module.exports = new Backbone.Model();
 
@@ -34,4 +27,11 @@ define(function(require, exports, module) {
     app.ga.initialize(app);
 
     app.pcsManager = new PcsManager(app);
+
+    /**
+     * HttpClient を 独自クラスに差し替え.
+     */
+    dcc.http.RestAdapter.prototype.createHttpClient = function() {
+        return new CustomHttpClient(null, app);
+    };
 });

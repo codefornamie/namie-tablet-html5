@@ -27,10 +27,17 @@ define(function(require, exports, module) {
         this.loginId = "";
         /** Expireチェックのマージン時間 */
         this.expireMargin = 300 * 1000; // 5分
+        /** ExpiresInチェック : トークンなし */
         this.NOT_HAVE_TOKEN = 0;
+        /** ExpiresInチェック : 期限内 */
         this.UNEXPIRE_ACCESS_TOKEN = 1;
+        /** ExpiresInチェック : 期限切れ/リフレッシュ可能 */
         this.EXPIRE_ACCESS_TOKEN = 2;
+        /** ExpiresInチェック : リフレッシュ期限切れ */
         this.EXPIRE_REFRESH_TOKEN = 3;
+        /** personium lib */
+        this.pcs = new dcc.DcContext(this.app.config.basic.baseUrl, this.app.config.basic.cellId);
+        this.pcs.setAsync(true);
     };
 
     /**
@@ -56,13 +63,13 @@ define(function(require, exports, module) {
         if (this.accessToken) {
             var now = (new Date()).getTime();
             if (this.expirationRefreshDate) {
-                if (now > (parseInt(this.expirationRefreshDate) - tiis.expireMargin)) {
+                if (now > (parseInt(this.expirationRefreshDate) - this.expireMargin)) {
                     Log.info("Expired refresh token : " + this.expirationRefreshDate);
                     return this.EXPIRE_REFRESH_TOKEN; // リフレッシュトークの期限切れ
                 }
             }
             if (this.expirationDate) {
-                if (now > (parseInt(this.expirationDate) - tiis.expireMargin)) {
+                if (now > (parseInt(this.expirationDate) - this.expireMargin)) {
                     Log.info("Expired access token : " + this.expirationDate);
                     return this.EXPIRE_ACCESS_TOKEN; // 期限切れ、リフレッシュ可能期間内
                 } else {
@@ -75,6 +82,10 @@ define(function(require, exports, module) {
         return this.NOT_HAVE_TOKEN; // トークンが存在しない
     };
 
+    /**
+     * Personiumアクセス時にトークのチェックを行い、アクセス可能な状態にする。
+     * @param {Function} callback 処理完了後に呼び出されるコールバック
+     */
     PcsManager.prototype.ready = function(callback) {
         // 現在の環境がAndroidデバイス上か？
         var androidDevice = this.isAndroidDevice();
@@ -101,22 +112,42 @@ define(function(require, exports, module) {
                 }
             });
         } else {
+            var cellName = this.app.config.basic.cellId;
             if (tokenStatus === this.EXPIRE_ACCESS_TOKEN) {
                 // 期限切れ、リフレッシュ可能期間内
                 // リフレッシュ認証を行う
+                var as = this.pcs.getAccessorWithRefreshToken(cellName, this.assessToken);
+                var cell = as.cell();
+                this.setTokenAndExpiresInValue(cell);
+                callback();
             }
-            if (tokenStatus === this.EXPIRE_REFRESH_TOKEN) {
+            if ((tokenStatus === this.EXPIRE_REFRESH_TOKEN) ||
+                    (tokenStatus === this.NOT_HAVE_TOKEN)) {
                 // ログイン画面へ
-            }
-            if (tokenStatus === this.NOT_HAVE_TOKEN) {
-                // パスワード認証を行う
+                this.assessToken = "";
+                this.expirationDate = "";
+                this.expirationRefreshDate = "";
+                this.refreshToken = "";
+                callback();
             }
         }
     };
 
     /**
-     *
-     * @param param
+     * トークン、Expires-In などのアクセス情報をセット。
+     * @param {Object} cell Cellオブジェクト
+     */
+    PcsManager.prototype.setTokenAndExpiresInValue = function(cell) {
+        var now = (new Date()).getTime();
+        this.assessToken = cell.getAccessToken();
+        this.expirationDate = now + cell.getExpiresIn();
+        this.expirationRefreshDate = now + cell.getRefreshExpiresIn();
+        this.refreshToken = cell.getRefreshToken();
+    };
+
+    /**
+     *　AndroidのAccountManagerからトークンを取得する。
+     * @param {Object} param 引数
      */
     PcsManager.prototype.getAuthTokenFromDeviceAccountManager = function(param) {
         Log.info("call getAccountsByType of AccountManager");
@@ -171,9 +202,11 @@ define(function(require, exports, module) {
      * AccountManagerにアカウントを登録する。
      * @param {String} id ユーザーID
      * @param {String} pw パスワード
+     * @param {Function} onSuccess 成功時のコールバック
+     * @param {Function} onError エラー時のコールバック
      */
     PcsManager.prototype.registAccountManager = function(id, pw, onSuccess, onError) {
-        console.log("stadrt registAccountManager");
+        Log.info("stadrt registAccountManager");
         if (window.plugins) {
             this.androidAccountManager = window.plugins.accountmanager;
         }
@@ -184,7 +217,7 @@ define(function(require, exports, module) {
                 schema : this.app.config.basic.schema,
                 boxName : this.app.config.basic.boxName
             };
-            console.log("regist start to AccountManager param : " + JSON.stringify(param));
+            Log.info("regist start to AccountManager param : " + JSON.stringify(param));
             this.androidAccountManager.addAccountExplicitly(this.packageName, id, pw, param, function(error, account) {
                 Log.info("regist account to AccountManager responsed");
                 if (error) {
