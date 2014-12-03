@@ -58,7 +58,16 @@ define(function(require, exports, module) {
                 targetDate : new Date("2014/11/28")
             });
             this.searchArticles();
+            this.initEvents();
         },
+
+        /**
+         * イベントを初期化する
+         */
+        initEvents : function() {
+            app.router.on("route", this.onRoute.bind(this));
+        },
+
         /**
          * 記事の検索処理を開始する。
          */
@@ -77,6 +86,7 @@ define(function(require, exports, module) {
                     this.loadEvents.bind(this)
             ], this.onFetchAll.bind(this));
         },
+
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
@@ -338,7 +348,7 @@ define(function(require, exports, module) {
             if (!model) {
                 vexDialog.defaultOptions.className = 'vex-theme-default';
                 vexDialog.alert("指定された記事は存在しません。");
-                return ;
+                return;
             }
             var template = require("ldsh!templates/{mode}/news/articleListItem");
             // 記事一覧に追加するViewクラス。
@@ -363,13 +373,29 @@ define(function(require, exports, module) {
                 break;
             }
 
-            this.insertView("#article-list", new ListItemView({
+            this.insertView(NewsView.SELECTOR_ARTICLE_DESTINATION, new ListItemView({
                 model : model,
                 template : template
             })).render();
             $("#contents__secondary").hide();
             $("#contents__primary").show();
+        },
+
+        /**
+         * 記事詳細ページ以外では、記事詳細の要素を隠す
+         */
+        onRoute : function(route) {
+            if (route === "showArticle") {
+                $(NewsView.SELECTOR_ARTICLE_DESTINATION).show();
+            } else {
+                $(NewsView.SELECTOR_ARTICLE_DESTINATION).hide();
+            }
         }
+    }, {
+        /**
+         * 記事詳細を挿入する先のセレクタ
+         */
+        SELECTOR_ARTICLE_DESTINATION : "[data-news-detail]"
     });
 
     module.exports = NewsView;
