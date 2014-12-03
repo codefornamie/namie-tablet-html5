@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var BacknumberDateNewsView = require("modules/view/backnumber/BacknumberDateNewsView");
+    var BusinessUtil = require("modules/util/BusinessUtil");
     var DateUtil = require("modules/util/DateUtil");
 
     /**
@@ -55,6 +56,16 @@ define(function(require, exports, module) {
             }
 
             this.date = date;
+
+            // 最終配信日以前の日付を指定された場合は、最終配信日に移動する
+            var currentPublishDate = BusinessUtil.getCurrentPublishDate();
+            if (DateUtil.formatDate(this.date, "yyyy-MM-dd") > DateUtil.formatDate(currentPublishDate, "yyyy-MM-dd")) {
+                this.date = currentPublishDate;
+                app.router.navigate("backnumber/" + DateUtil.formatDate(this.date, "yyyy-MM-dd"), {
+                    trigger: true,
+                    replace: false
+                });
+            }
         },
 
         events : {
@@ -79,7 +90,7 @@ define(function(require, exports, module) {
          *  @param {Event} evt
          */
         onClickDayPrev : function(evt) {
-            var dateParam = DateUtil.formatDate( DateUtil.addDay(this.date, -1), "yyyy-MM-dd");
+            var dateParam = DateUtil.formatDate(DateUtil.addDay(this.date, -1), "yyyy-MM-dd");
             app.router.navigate("backnumber/" + dateParam, {
                 trigger: true,
                 replace: false
@@ -92,7 +103,7 @@ define(function(require, exports, module) {
          *  @param {Event} evt
          */
         onClickDayNext : function(evt) {
-            var dateParam = DateUtil.formatDate( DateUtil.addDay(this.date, 1), "yyyy-MM-dd");
+            var dateParam = DateUtil.formatDate(DateUtil.addDay(this.date, 1), "yyyy-MM-dd");
             app.router.navigate("backnumber/" + dateParam, {
                 trigger: true,
                 replace: false
@@ -112,20 +123,6 @@ define(function(require, exports, module) {
         },
 
         /**
-         *  記事一覧の表示対象日を変更する
-         *
-         *  @param {Date} date - 表示対象日
-         */
-        changeDate : function(date) {
-            this.date = date;
-
-            this.newsView.setArticleSearchCondition({
-                targetDate: this.date
-            });
-            this.newsView.searchArticles();
-        },
-
-        /**
          *  日付の表示を更新する
          */
         updateDateLabel : function() {
@@ -133,6 +130,11 @@ define(function(require, exports, module) {
             $(".backnumber-nav__month .date--month").html(DateUtil.formatDate(this.date, "MM"));
             $(".backnumber-nav__month .date--day").html(DateUtil.formatDate(this.date, "dd"));
             $(".backnumber-nav__month .date--weekday").html(DateUtil.formatDate(this.date, "ddd"));
+
+            // 最新配信日の場合は「次の日」を非表示にする
+            if (DateUtil.formatDate(this.date, "yyyy-MM-dd") == DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd")) {
+                $("[data-backnumber-day-next]").css("visibility", "hidden");
+            }
         }
     });
     module.exports = BacknumberDateView;
