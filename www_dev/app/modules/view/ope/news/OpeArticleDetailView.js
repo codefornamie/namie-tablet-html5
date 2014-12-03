@@ -8,7 +8,7 @@ define(function(require, exports, module) {
 
     /**
      * 記事一覧アイテムのViewを作成する。
-     *
+     * 
      * @class 記事一覧アイテムのView
      * @exports OpeArticleDetailView
      * @constructor
@@ -22,6 +22,7 @@ define(function(require, exports, module) {
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * @memberof OpeArticleDetailView#
+         * 
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
@@ -37,13 +38,13 @@ define(function(require, exports, module) {
          * @memberof OpeArticleDetailView#
          */
         events : {
-            'click [data-goto-cancel]': 'onClickGotoCancel'
+            'click [data-goto-cancel]' : 'onClickGotoCancel'
         },
         /**
-         *  キャンセルボタンをクリックしたら呼ばれる
+         * キャンセルボタンをクリックしたら呼ばれる
          * @memberof OpeArticleDetailView#
          */
-        onClickGotoCancel: function () {
+        onClickGotoCancel : function() {
             app.router.go("ope-top");
         }
 

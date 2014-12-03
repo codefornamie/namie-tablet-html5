@@ -13,12 +13,12 @@ define(function(require, exports, module) {
      */
     var OpeEventDetailView = ArticleDetailView.extend({
         /**
-         *  テンプレートファイル
+         * テンプレートファイル
          * @memberof OpeEventDetailView#
          */
         template : require("ldsh!templates/{mode}/news/eventDetail"),
         /**
-         *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * @memberof OpeEventDetailView#
          */
         afterRendered : function() {
@@ -26,27 +26,27 @@ define(function(require, exports, module) {
             this.hideLoading();
         },
         /**
-         *  編集ボタンをクリックしたら呼ばれる
+         * 編集ボタンをクリックしたら呼ばれる
          * @memberof OpeEventDetailView#
          */
-        onClickGotoEdit: function () {
+        onClickGotoEdit : function() {
             this.showLoading();
             app.router.opeArticleRegist({
-                model: this.model,
+                model : this.model,
                 recommendArticle : this.recommendArticle,
                 backFunction : $.proxy(function() {
                     app.router.opeEventDetail({
-                    model : this.model,
-                    recommendArticle : this.recommendArticle
-                })
-                },this)
+                        model : this.model,
+                        recommendArticle : this.recommendArticle
+                    })
+                }, this)
             });
         },
         /**
-         *  キャンセルボタンをクリックしたら呼ばれる
+         * キャンセルボタンをクリックしたら呼ばれる
          * @memberof OpeEventDetailView#
          */
-        onClickGotoCancel: function () {
+        onClickGotoCancel : function() {
             app.router.go("ope-top");
         }
     });
