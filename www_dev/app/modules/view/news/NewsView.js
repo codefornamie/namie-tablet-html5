@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var FeedListView = require("modules/view/news/FeedListView");
     var RecommendArticleView = require("modules/view/news/RecommendArticleView");
     var DateUtil = require("modules/util/DateUtil");
+    var BusinessUtil = require("modules/util/BusinessUtil");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var RecommendCollection = require("modules/collection/article/RecommendCollection");
@@ -15,6 +16,10 @@ define(function(require, exports, module) {
     var EventsCollection = require("modules/collection/events/EventsCollection");
     var Equal = require("modules/util/filter/Equal");
     var IsNull = require("modules/util/filter/IsNull");
+    var And = require("modules/util/filter/And");
+    var Or = require("modules/util/filter/Or");
+    var Le = require("modules/util/filter/Le");
+    var Ge = require("modules/util/filter/Ge");
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラスを作成する。
@@ -39,9 +44,14 @@ define(function(require, exports, module) {
         afterRendered : function() {
         },
 
-        initialize : function() {
+        initialize : function(options) {
+            options = options || {};
+
+            this.targetDate = this.targetDate || options.date ||
+                    DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd");
+
             this.setArticleSearchCondition({
-                targetDate : new Date()
+                targetDate : new Date(this.targetDate)
             });
 
             this.searchArticles();
@@ -61,7 +71,7 @@ define(function(require, exports, module) {
          * 記事の検索処理を開始する。
          */
         searchArticles : function() {
-            app.ga.trackPageView("/NewsView", "ニュース");
+            this.trackPageView();
 
             this.showLoading();
 
@@ -109,8 +119,7 @@ define(function(require, exports, module) {
                 });
             };
             async.series([
-               onLoadGAPI,
-               loadScript("https://www.youtube.com/iframe_api")
+                    onLoadGAPI, loadScript("https://www.youtube.com/iframe_api")
             ], function(err) {
                 if (!err) {
                     app.gapiLoaded = true;
@@ -199,6 +208,8 @@ define(function(require, exports, module) {
                 return;
             }
 
+            $(".contents__primary").scrollTop(0);
+
             // this.newsCollection.add(this.youtubeCollection.models);
             this.newsCollection.reset();
             this.newsCollection.add(this.articleCollection.models);
@@ -206,6 +217,9 @@ define(function(require, exports, module) {
 
             // articleCollectionに切抜き、おすすめ状態を反映する
             this.newsCollection.each($.proxy(function(article) {
+                if (article.get("title", "おすすめイベント")) {
+                    console.log("aaa");
+                }
                 this.favoriteCollection.each(function(favorite) {
                     if (article.get("__id") === favorite.get("source")) {
                         article.set("isFavorite", !favorite.get("deletedAt"));
@@ -224,7 +238,7 @@ define(function(require, exports, module) {
                 // 自身のおすすめ情報を記事に付加
                 _.each(recommends, $.proxy(function(recommend) {
                     if (recommend.get("isMine")) {
-                        article.set("isRecommend", !recommend.get("deletedAt"));
+                        article.set("isMyRecommend", !recommend.get("deletedAt"));
                         article.recommend = recommend;
                     }
                 }, this));
@@ -233,7 +247,7 @@ define(function(require, exports, module) {
 
             // おすすめ記事を検索し、表示する
             var recommendArticle = this.newsCollection.find($.proxy(function(article) {
-                return article.get("isRecommend") === "true";
+                return article.get("isRecommend") === "true" && article.get("publishedAt") === this.targetDate;
             }, this));
 
             if (recommendArticle) {
@@ -293,8 +307,14 @@ define(function(require, exports, module) {
             this.removeView("#article-list");
             this.setView("#article-list", articleListView);
             articleListView.render();
-        }
+        },
 
+        /**
+         * Google Analyticsでページビューを記録する
+        */
+        trackPageView : function() {
+            app.ga.trackPageView("/NewsView", "ニュース");
+        }
     });
 
     module.exports = NewsView;

@@ -6,7 +6,6 @@ define(function(require, exports, module) {
     var EventsModel = require("modules/model/events/EventsModel");
     var DateUtil = require("modules/util/DateUtil");
     var Equal = require("modules/util/filter/Equal");
-    var IsNull = require("modules/util/filter/IsNull");
 
     var EventsCollection = AbstractODataCollection.extend({
         model : EventsModel,
@@ -23,10 +22,7 @@ define(function(require, exports, module) {
             var targetDate = condition.targetDate;
             var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
 
-            this.condition.filters = [
-                new Equal("publishedAt", dateString),
-                new IsNull("isDepublish")
-            ];
+            this.condition.filters = new Equal("publishedAt", dateString);
         }
     });
 
