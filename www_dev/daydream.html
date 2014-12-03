@@ -20,8 +20,8 @@
     var images = [
             "app/img/slideshow/ukedon_2_1.png", "app/img/slideshow/ukedon_2_2.png"
     ];
-    var index = 0;
-    var interval = 0;
+    var index = 1;
+    var interval = 2000;
     function showImages() {
         if (index >= images.length) {
             index = 0;
@@ -34,7 +34,6 @@
             var imgElement = '<img id="slideImage" src="' + images[index++] +
                     '" style="width: 30%; height: 30%;" class="animated fadeIn" />';
             $("#container").append(imgElement);
-            interval = 2000;
         }, interval);
 
     }
@@ -45,6 +44,8 @@
     });
 </script>
 <body>
-    <div id="container"></div>
+    <div id="container">
+        <img id="slideImage" src="app/img/slideshow/ukedon_2_1.png" style="width: 30%; height: 30%;" class="animated fadeIn" />
+    </div>
 </body>
 </html>
