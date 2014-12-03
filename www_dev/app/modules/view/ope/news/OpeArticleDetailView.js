@@ -38,7 +38,8 @@ define(function(require, exports, module) {
          * @memberof OpeArticleDetailView#
          */
         events : {
-            'click [data-goto-cancel]' : 'onClickGotoCancel'
+            'click [data-goto-cancel]' : 'onClickGotoCancel',
+            "click a" : "onClickAnchorTag"
         },
         /**
          * キャンセルボタンをクリックしたら呼ばれる

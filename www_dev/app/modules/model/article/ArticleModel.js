@@ -135,12 +135,6 @@ define(function(require, exports, module) {
             } else {
                 return Code.ARTICLE_STATUS_BEFORE_PUBLISH;
             }
-//            var status = this.get('status');
-//            var str = [
-//                '掲載中'
-//            ][status];
-//
-//            return str || status;
         },
 
         /**
