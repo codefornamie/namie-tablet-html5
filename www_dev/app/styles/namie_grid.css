@@ -1,0 +1,36 @@
+/**
+ *  グリッド表示
+ */
+.contents__top {
+    height: 100%;
+    overflow: auto;
+    float: none;
+}
+
+.news-detail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fbfaf4;
+}
+
+.grid-list {
+    list-style: none;
+}
+
+.grid-list>div {
+    display: inline-block;
+    width: 50%;
+    box-sizing: border-box;
+    padding: 15px;
+}
+
+.grid-list__item {
+    border: 3px solid #e8e8d0;
+    background: white;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px;
+}
