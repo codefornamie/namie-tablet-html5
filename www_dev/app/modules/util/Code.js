@@ -39,5 +39,10 @@ define(function(require, exports, module) {
             "3", "4", "5"
     ];
 
+    // ArticleModelの画像タイプ
+    Code.IMAGE_TYPE_PIO = 2;
+    Code.IMAGE_TYPE_URL = 1;
+    Code.IMAGE_TYPE_NONE = 0;
+
     module.exports = Code;
 });
