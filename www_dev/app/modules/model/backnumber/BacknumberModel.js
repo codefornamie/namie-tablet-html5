@@ -24,7 +24,7 @@ define(function(require, exports, module) {
             // ダミーデータを入れているので
             // 正式なデータ取得処理に置き換えるべき
             return {
-                createdAt: new Date(2014, 11, 10)
+                createdAt: new Date(2014, 10, 28)
             };
         },
 

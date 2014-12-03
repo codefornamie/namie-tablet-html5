@@ -28,6 +28,7 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             this.updateBackHomeButton();
+            this.updateDateLabel();
             var $target = $("[value='" + app.user.get("fontSize") + "']");
             var size = parseInt($target.attr('data-font-size'), 10);
             $('html, body').css('font-size', size + 'px');
@@ -82,10 +83,13 @@ define(function(require, exports, module) {
          */
         setDate : function(date) {
             if (date) {
+                $("#naviPublishDate").show();
                 $("#naviPublishDate").find(".date--year").text(date.getFullYear());
                 $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
                 $("#naviPublishDate").find(".date--day").text(date.getDate());
                 $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
+            } else {
+                $("#naviPublishDate").hide();
             }
         },
 
@@ -98,6 +102,16 @@ define(function(require, exports, module) {
                 $('[data-back-home]').hide();
             } else {
                 $('[data-back-home]').show();
+            }
+        },
+
+        /**
+         *  日付の表記を変更
+         */
+        updateDateLabel: function () {
+            var fragments = Backbone.history.fragment.split('/');
+            if (fragments[0] == 'backnumber') {
+                $('.global-nav__date .nav-content').html('バックナンバー');
             }
         },
 

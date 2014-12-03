@@ -59,6 +59,11 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
+        initialize : function(options) {
+            options = options || {};
+
+            this.targetDate = this.targetDate || options.date;
+
             this.setArticleSearchCondition({
                 targetDate : new Date(this.targetDate)
             });
@@ -79,7 +84,7 @@ define(function(require, exports, module) {
          * @memberof NewsView#
          */
         searchArticles : function() {
-            app.ga.trackPageView("/NewsView", "ニュース");
+            this.trackPageView();
 
             this.showLoading();
 
@@ -246,6 +251,8 @@ define(function(require, exports, module) {
                 console.error(err);
                 return;
             }
+
+            $(".contents__primary").scrollTop(0);
 
             // this.newsCollection.add(this.youtubeCollection.models);
             this.newsCollection.reset();
@@ -424,6 +431,13 @@ define(function(require, exports, module) {
             } else {
                 $(NewsView.SELECTOR_ARTICLE_DESTINATION).hide();
             }
+        },
+
+        /**
+         * Google Analyticsでページビューを記録する
+         */
+        trackPageView : function() {
+            app.ga.trackPageView("/NewsView", "ニュース");
         }
     }, {
         /**

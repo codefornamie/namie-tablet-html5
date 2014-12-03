@@ -90,6 +90,7 @@ define(function(require, exports, module) {
 
         events : {
             'click [data-goto-edit]': 'onClickGotoEdit',
+            'click [data-goto-cancel]': 'onClickGotoCancel',
             'click [data-goto-delete]': 'onClickGotoDelete'
         },
 
@@ -107,6 +108,11 @@ define(function(require, exports, module) {
          *  削除ボタンをクリックしたら呼ばれる
          */
         onClickGotoDelete: function () {
+        },
+        /**
+         *  キャンセルボタンをクリックしたら呼ばれる
+         */
+        onClickGotoCancel: function () {
         }
     });
     module.exports = ArticleDetailView;
