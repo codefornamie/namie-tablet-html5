@@ -130,8 +130,14 @@ define(function(require, exports, module) {
             this.showLoading();
             switch (this.model.get("type")) {
             case "1":
+                var template = require("ldsh!templates/{mode}/news/articleDetail");
+
+                if (this.model.get("rawHTML")) {
+                    template = require("ldsh!templates/{mode}/news/articleDetailForHtml");
+                }
                 app.router.opeArticleDetail({
-                    model : this.model
+                    model : this.model,
+                    template : template
                 })
                 break;
             case "2":
