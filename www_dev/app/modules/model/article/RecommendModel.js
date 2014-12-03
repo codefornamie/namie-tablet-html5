@@ -28,6 +28,7 @@ define(function(require, exports, module) {
             saveData.source = this.get("source");
             saveData.userId = this.get("userId");
             saveData.publishedAt = this.get("publishedAt");
+            saveData.depublishedAt = this.get("depublishedAt");
         }
 
     });

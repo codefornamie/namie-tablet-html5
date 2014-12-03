@@ -14,11 +14,6 @@ define(function(require, exports, module) {
      */
     var FeedListItemView = AbstractView.extend({
         /**
-         * このViewを表示する際に利用するアニメーション
-         * @memberof EventListItemView#
-         */
-        animation : 'fadeIn',
-        /**
          * このViewのテンプレートファイパス
          * @memberof EventListItemView#
          */

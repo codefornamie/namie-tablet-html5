@@ -17,14 +17,20 @@ define(function(require, exports, module) {
     var OpeNewsView = NewsView.extend({
         /**
          * 記事一覧を表示する要素のセレクタ
+         * @memberof OpeNewsView#
          */
         feedListElement : '#article_list',
+        /**
+         * このViewのイベント
+         * @memberof OpeNewsView#
+         */
         events : {
             "click [data-article-register-button]" : "onClickArticleRegisterButton"
         },
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @memberof OpeNewsView#
          */
         setArticleSearchCondition : function(condition) {
             var targetDate = condition.targetDate;
@@ -35,13 +41,27 @@ define(function(require, exports, module) {
         },
         /**
          * 左ペインの記事一覧メニューを表示する。
+         * @memberof OpeNewsView#
          */
         showArticleListView : function() {
             return;
         },
         /**
+         * 右ペインの記事一覧を表示するViewのインスタンスを作成して返す。
+         * <p>
+         * 運用管理ツール用の記事一覧表示処理を行うため、OpeFeedListViewの
+         * インスタンスを生成するようにオーバライドする。
+         * </p>
+         * @return {OpeFeedListView} 生成したOpeFeedListViewのインスタンス
+         * @memberof OpeNewsView#
+         */
+        createGridListView: function() {
+            return this.createFeedListView();
+        },
+        /**
          * 記事一覧を表示するViewのインスタンスを作成して返す。
          * @return {FeedListView} 生成したFeedListViewのインスタンス
+         * @memberof OpeNewsView#
          */
         createFeedListView : function() {
             if (this.notFoundMessage) {
@@ -53,6 +73,7 @@ define(function(require, exports, module) {
         },
         /**
          * 記事が見つからなかった場合のメッセージを画面に表示する。
+         * @memberof OpeNewsView#
          */
         showFeetNotFoundMessage : function() {
             this.notFoundMessage = $('<div data-alert class="alert-box info radius">指定された日付には記事がありません。</div>').insertBefore(
@@ -60,6 +81,7 @@ define(function(require, exports, module) {
         },
         /**
          *  新規記事投稿ボタン押下時に呼び出されるコールバック関数
+         *  @memberof OpeNewsView#
          */
         onClickArticleRegisterButton: function () {
             app.router.opeArticleRegist();
