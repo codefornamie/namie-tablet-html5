@@ -81,10 +81,12 @@ define(function(require, exports, module) {
          * @param {Date} date 設定する日付
          */
         setDate : function(date) {
-            $("#naviPublishDate").find(".date--year").text(date.getFullYear());
-            $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
-            $("#naviPublishDate").find(".date--day").text(date.getDate());
-            $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
+            if (date) {
+                $("#naviPublishDate").find(".date--year").text(date.getFullYear());
+                $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
+                $("#naviPublishDate").find(".date--day").text(date.getDate());
+                $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
+            }
         },
 
         /**
