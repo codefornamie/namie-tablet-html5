@@ -27,6 +27,7 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             this.updateBackHomeButton();
+            this.updateDateLabel();
             var $target = $("[value='" + app.user.get("fontSize") + "']");
             var size = parseInt($target.attr('data-font-size'), 10);
             $('html, body').css('font-size', size + 'px');
@@ -83,6 +84,16 @@ define(function(require, exports, module) {
                 $('[data-back-home]').hide();
             } else {
                 $('[data-back-home]').show();
+            }
+        },
+
+        /**
+         *  日付の表記を変更
+         */
+        updateDateLabel: function () {
+            var fragments = Backbone.history.fragment.split('/');
+            if (fragments[0] == 'backnumber') {
+                $('.global-nav__date .nav-content').html('バックナンバー');
             }
         },
 

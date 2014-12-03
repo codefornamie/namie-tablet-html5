@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
     var DateUtil = require("modules/util/DateUtil");
+    var BusinessUtil = require("modules/util/BusinessUtil");
     var CommonUtil = require("modules/util/CommonUtil");
     var Code = require("modules/util/Code");
 
@@ -124,12 +125,16 @@ define(function(require, exports, module) {
          * @return {String}
          */
         getStatusString : function() {
-            var status = this.get('status');
-            var str = [
-                '掲載中'
-            ][status];
-
-            return str || status;
+            if (this.get("isDepublish")) {
+                return Code.ARTICLE_STATUS_DEPUBLISHED;
+            }
+            
+            var currentPubDate = DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd");
+            if (currentPubDate > new Date(this.get("publishedAt"))) {
+                return Code.ARTICLE_STATUS_PUBLISHED;
+            } else {
+                return Code.ARTICLE_STATUS_BEFORE_PUBLISH;
+            }
         },
 
         /**
@@ -154,7 +159,9 @@ define(function(require, exports, module) {
          */
         getUpdatedString : function() {
             var updatedString = DateUtil.formatDate(new Date(this.get("updatedAt")), "yyyy年MM月dd日(ddd)");
-
+            if (!updatedString) {
+                updatedString = DateUtil.formatDate(new Date(this.get("createdAt")), "yyyy年MM月dd日(ddd)");
+            }
             return updatedString;
         },
 

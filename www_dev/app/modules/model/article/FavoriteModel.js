@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var ArticleModel = require("modules/model/article/ArticleModel");
     var CommonUtil = require("modules/util/CommonUtil");
     var ArticleModel = require("modules/model/article/ArticleModel");
 
@@ -37,6 +37,7 @@ define(function(require, exports, module) {
             }
             saveData.contents = contents;
             saveData.title = this.get("title");
+            saveData.type = this.get("type");
             saveData.site = this.get("site");
             saveData.imageUrl = this.get("imageUrl");
             saveData.publishedAt = this.get("publishedAt");
