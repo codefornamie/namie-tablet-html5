@@ -171,7 +171,11 @@ define(function(require, exports, module) {
          * キャンセルボタン押下時のコールバック関数
          */
         onClickArticleCancelButton : function() {
-            app.router.back();
+            if (this.backFunction) {
+                this.backFunction();
+            } else {
+                app.router.back();
+            }
         },
         /**
          * 複数日チェックボックスのチェック有無でフォームを切り替える関数

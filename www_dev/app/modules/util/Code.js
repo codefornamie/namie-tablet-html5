@@ -38,6 +38,11 @@ define(function(require, exports, module) {
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_OPE] = [
             "3", "4", "5"
     ];
+    // 記事ステータス
+    Code.ARTICLE_STATUS_PUBLISHED = "掲載中";
+    Code.ARTICLE_STATUS_BEFORE_PUBLISH = "未掲載";
+    Code.ARTICLE_STATUS_DEPUBLISHED = "配信停止中";
+
 
     module.exports = Code;
 });

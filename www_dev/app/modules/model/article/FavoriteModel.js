@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var ArticleModel = require("modules/model/article/ArticleModel");
     var CommonUtil = require("modules/util/CommonUtil");
     /**
      * お気に入り情報のモデルクラスを作成する。
@@ -11,7 +11,7 @@ define(function(require, exports, module) {
      * @exports FavoriteModel
      * @constructor
      */
-    var FavoriteModel = AbstractODataModel.extend({
+    var FavoriteModel = ArticleModel.extend({
         entity : "favorite",
         /**
          * 取得したOData情報のparse処理を行う。
@@ -35,6 +35,7 @@ define(function(require, exports, module) {
             }
             saveData.contents = contents;
             saveData.title = this.get("title");
+            saveData.type = this.get("type");
             saveData.site = this.get("site");
             saveData.imageUrl = this.get("imageUrl");
             saveData.publishedAt = this.get("publishedAt");

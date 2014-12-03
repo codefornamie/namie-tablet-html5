@@ -60,7 +60,7 @@ define(function(require, exports, module) {
             var immediate = !!param.immediate;
             var heightHeader = $('.header').height() || 0;
             var heightGlobalNav = $('.global-nav').height() || 0;
-            var heightBacknumberNav = $('.backnumber-nav').height() || 0;
+            var heightBacknumberNav = $('.backnumber-nav').outerHeight() || 0;
             var heightMargin = 10;
             var position = $("#" + articleId).offset().top - heightHeader - heightGlobalNav - heightBacknumberNav - heightMargin;
 
