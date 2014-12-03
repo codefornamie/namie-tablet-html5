@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
     "use strict";
-    var app = require("app");
+    var Log = require("modules/util/logger");
 
     /**
      * アクセスマネージャクラスを作成する。
@@ -8,7 +8,9 @@ define(function(require, exports, module) {
      * @exports AccountManager
      * @constructor
      */
-    var AccountManager = function() {
+    var PcsManager = function(app) {
+        /** appオブジェクト */
+        this.app = app;
         /** package name */
         this.packageName = "jp.fukushima.namie.town.Pcs";
         /** アクセストークン */
@@ -24,18 +26,18 @@ define(function(require, exports, module) {
         /** ログインID */
         this.loginId = "";
         /** Expireチェックのマージン時間 */
-        var expireMargin = 300 * 1000; // 5分
-        var NOT_HAVE_TOKEN = 0;
-        var UNEXPIRE_ACCESS_TOKEN = 1;
-        var EXPIRE_ACCESS_TOKEN = 2;
-        var EXPIRE_REFRESH_TOKEN = 3;
+        this.expireMargin = 300 * 1000; // 5分
+        this.NOT_HAVE_TOKEN = 0;
+        this.UNEXPIRE_ACCESS_TOKEN = 1;
+        this.EXPIRE_ACCESS_TOKEN = 2;
+        this.EXPIRE_REFRESH_TOKEN = 3;
     };
 
     /**
      * 現在の動作がデバイス上か非デバイスかを判別する。
      * @returns {Boolean} true:デバイス上、false:非デバイス
      */
-    AccountManager.isAndroidDevice = function() {
+    PcsManager.prototype.isAndroidDevice = function() {
         var ret = false;
         if (window.plugins) {
             this.androidAccountManager = window.plugins.accountmanager;
@@ -50,34 +52,36 @@ define(function(require, exports, module) {
      * 現在保持されているトークンが有効期限が切れているかどうかチェックする。
      * @returns {Number}
      */
-    AccountManager.isExpireCachedToken = function() {
+    PcsManager.prototype.isExpireCachedToken = function() {
         if (this.accessToken) {
             var now = (new Date()).getTime();
             if (this.expirationRefreshDate) {
                 if (now > (parseInt(this.expirationRefreshDate) - tiis.expireMargin)) {
-                    console.log("Expired refresh token : " + this.expirationRefreshDate);
+                    Log.info("Expired refresh token : " + this.expirationRefreshDate);
                     return this.EXPIRE_REFRESH_TOKEN; // リフレッシュトークの期限切れ
                 }
             }
             if (this.expirationDate) {
                 if (now > (parseInt(this.expirationDate) - tiis.expireMargin)) {
-                    console.log("Expired access token : " + this.expirationDate);
+                    Log.info("Expired access token : " + this.expirationDate);
                     return this.EXPIRE_ACCESS_TOKEN; // 期限切れ、リフレッシュ可能期間内
                 } else {
-                    console.log("Unexpired access token : " + this.expirationDate);
+                    Log.info("Unexpired access token : " + this.expirationDate);
                     return this.UNEXPIRE_ACCESS_TOKEN; // 期限内
                 }
             }
         }
-        console.log("Do not have token");
+        Log.info("Do not have token");
         return this.NOT_HAVE_TOKEN; // トークンが存在しない
     };
 
-    AccountManager.ready = function(callback) {
+    PcsManager.prototype.ready = function(callback) {
         // 現在の環境がAndroidデバイス上か？
         var androidDevice = this.isAndroidDevice();
         // 保持しているトークンの状態(期限チェック)
         var tokenStatus = this.isExpireCachedToken();
+        Log.info("isAndroidDevice? : " + androidDevice);
+        Log.info("Access Token status is : " + tokenStatus);
 
         // 保持しているトークンが利用できる場合は、何もせずに復帰
         if (tokenStatus === this.UNEXPIRE_ACCESS_TOKEN) {
@@ -110,15 +114,20 @@ define(function(require, exports, module) {
         }
     };
 
-    AccountManager.getAuthTokenFromDeviceAccountManager = function(param) {
+    /**
+     *
+     * @param param
+     */
+    PcsManager.prototype.getAuthTokenFromDeviceAccountManager = function(param) {
+        Log.info("call getAccountsByType of AccountManager");
         this.androidAccountManager.getAccountsByType(this.packageName, $.proxy(function(error, accounts) {
-            console.log("account manager getAccountsByType method responsed ");
+            Log.info("getAccountsByType of AccountManager method responsed ");
             if (error) {
                 param.error("account manager error : " + error);
                 return;
             }
             if (!accounts || !accounts.length) {
-                console.log("this device has no accounts");
+                Log.info("this device has no accounts");
                 this.expirationDate = "";
                 this.accessToken = "";
                 param.success();
@@ -127,26 +136,29 @@ define(function(require, exports, module) {
             var account = accounts[0];
             this.loginId = account.name;
 
+            Log.info("call getAuthToken of AccountManager");
             this.androidAccountManager.getAuthToken(0, this.packageName, $.proxy(function(error, token) {
-                console.log("account manager getAuthToken responsed : " + token);
+                Log.info("getAuthToken of AccountManager responsed : " + token);
                 if (error) {
-                    console.log("error getAuthToken from AccountManager error-message:" + error);
+                    Log.info("error getAuthToken from AccountManager error-message:" + error);
                     param.error(error);
                     return;
                 }
                 // トークンの有効期限(expires-in)を取得する
+                Log.info("call getUserData of AccountManager");
                 this.androidAccountManager.getUserData(account, "ExpiresIn", $.proxy(function(error, data) {
                     if (error) {
-                        console.log("error getUserData from AccountManager error-message:" + error);
+                        Log.info("error getUserData from AccountManager error-message:" + error);
                         param.error(error);
                         return;
                     }
                     this.expirationDate = data;
                     this.accessToken = token;
+                    Log.info("set expirationDate : " + data);
                     // 次回はキャッシュされたトークンが取得されないように、キャッシュをクリアする
                     this.androidAccountManager.invalidateAuthToken(this.packageName, this.accessToken, function(error) {
                         if (error) {
-                            console.log("error invalidateAuthToken from AccountManager error-message:" + error);
+                            Log.info("error invalidateAuthToken from AccountManager error-message:" + error);
                         }
                     });
                     param.success();
@@ -160,31 +172,30 @@ define(function(require, exports, module) {
      * @param {String} id ユーザーID
      * @param {String} pw パスワード
      */
-    AccountManager.registAccountManager = function(id, pw, onSuccess, onError) {
+    PcsManager.prototype.registAccountManager = function(id, pw, onSuccess, onError) {
+        console.log("stadrt registAccountManager");
         if (window.plugins) {
             this.androidAccountManager = window.plugins.accountmanager;
         }
         if (this.androidAccountManager) {
             var param = {
-                baseUrl : app.config.basic.baseUrl,
-                cellName : app.config.basic.cellId,
-                schema : app.config.basic.schema,
-                boxName : app.config.basic.boxName
+                baseUrl : this.app.config.basic.baseUrl,
+                cellName : this.app.config.basic.cellId,
+                schema : this.app.config.basic.schema,
+                boxName : this.app.config.basic.boxName
             };
+            console.log("regist start to AccountManager param : " + JSON.stringify(param));
             this.androidAccountManager.addAccountExplicitly(this.packageName, id, pw, param, function(error, account) {
-                console.log("regist account manager responsed");
+                Log.info("regist account to AccountManager responsed");
                 if (error) {
                     onError("error addAccountExplicitly from  AccountManager error-message:" + error);
                     return;
                 }
+                onSuccess();
             });
         } else {
-            console.log("account manager undefined (not android device)");
+            Log.info("account manager undefined (not android device)");
         }
     },
-
-
-
-
-    module.exports = AccountManager;
+    module.exports = PcsManager;
 });

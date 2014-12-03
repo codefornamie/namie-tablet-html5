@@ -1971,24 +1971,17 @@ dcc.http.RestAdapter.prototype.get = function(requestUrl, accept, etag, options)
  * @throws {dcc.ClientException} DAO exception
  */
 dcc.http.RestAdapter.prototype.getBinary = function(requestUrl, etag, callback) {
-    console.log("a");
   var builder = new dcc.http.DcRequestHeaderBuilder();
-  console.log("b");
   builder.token(this.accessor.accessToken);
-  console.log("c");
-builder.ifNoneMatch(etag);
-console.log("d");
-builder.defaultHeaders(this.accessor.getDefaultHeaders());
+  builder.ifNoneMatch(etag);
+  builder.defaultHeaders(this.accessor.getDefaultHeaders());
 
   var xhr = this.httpClient;
   // xhr.setOverrideMimeType("text/plain; charset=x-user-defined");
   // FSTが修正
   //xhr.httpClient.responseType = 'arraybuffer';
-  console.log("e");
   xhr.setResponseType('arraybuffer');
-  console.log("f");
   this.request(xhr, "GET", requestUrl, "", builder, {}, callback);
-  console.log("g");
 
   if (callback === undefined) {
     return this.httpClient;

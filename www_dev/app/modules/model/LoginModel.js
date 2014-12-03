@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
     var IsNull = require("modules/util/filter/IsNull");
+    var Log = require("modules/util/logger");
 
     /**
      * ログイン画面のモデルクラスを作成する。
@@ -50,83 +51,6 @@ define(function(require, exports, module) {
         },
 
         /**
-         * AccountManagerにアカウントが登録されていればトークンの取得を行う。
-         * @memberOf LoginModel
-         * @param {Function} callback トークン取得成功時のコールバック
-         */
-        getAuthToken : function(callback) {
-            if (window.plugins) {
-                this.accountManager = window.plugins.accountmanager;
-            }
-            console.log("▲ 1");
-            if (!this.accountManager) {
-                console.log("▲ 2");
-                console.log("account maanger undefined (not android)");
-                callback("showLoginView", "");
-                return;
-            }
-            console.log("▲ 3");
-            if ((app.accessToken) && (app.expirationDate)) {
-                console.log("▲ 4");
-                var margin = 300 * 1000;
-                var now = (new Date()).getTime();
-                if (now < (parseInt(app.expirationDate) - margin)) {
-                    alert("ExpiresIn 切れ : now(" + now + ")/expire(" + app.expirationDate + ")");
-                    callback("token");
-                    return;
-                }
-            }
-            // alert("アカウントマネージャ認証開始");
-            console.log("▲ 5");
-            this.accountManager.getAccountsByType(this.packageName, $.proxy(function(error, accounts) {
-                console.log("▲ 6");
-                // alert("アカウントマネージャチェック終了 : " + accounts.length + "件");
-                console.log("account manager getAccountsByType method responsed ");
-                if (error) {
-                    console.log("account manager error : " + error);
-                    callback("showLoginView", "");
-                    return;
-                } else if (!accounts || !accounts.length) {
-                    console.log("this device has no accounts");
-                    callback("showLoginView", "");
-                    return;
-                }
-                var account = accounts[0];
-                // AccuntManagerからログインIDを取得
-                this.set("loginId", account.name);
-
-                // 認証トークンを取得する
-                this.accountManager.getAuthToken(0, "oauth", $.proxy(function(error, token) {
-                    alert("トークン取得成功 : " + token);
-                    console.log("account manager getAuthToken responsed : " + token);
-                    if (error) {
-                        callback("error", error);
-                        return;
-                    }
-                    // トークンの有効期限(expires-in)を取得する
-                    this.accountManager.getUserData(account, "ExpiresIn", $.proxy(function(error, data) {
-                        if (error) {
-                            alert("Error getUserData " + error);
-                            callback("error", error);
-                            return;
-                        }
-                        app.expirationDate = data;
-                        app.accessToken = token;
-                        alert(app.expirationDate);
-                        alert(app.accessToken);
-                        // 次回はキャッシュされたトークンが取得されないように、キャッシュをクリアする
-                        this.accountManager.invalidateAuthToken(this.packageName, app.accessToken, function(error) {
-                            if (error) {
-                                console.log("error invalidateAuthToken for AccountManager");
-                            }
-                        });
-                        callback("token", "");
-                    }, this));
-                }, this));
-            }, this));
-        },
-
-        /**
          * 入力された認証情報のバリデータ。
          * @memberOf LoginModel
          */
@@ -148,6 +72,7 @@ define(function(require, exports, module) {
          * @param {String} pw パスワード
          */
         certificationWithAccount : function(id, pw) {
+            Log.info("start certificationWithAccount");
             var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
             dcContext.setAsync(true);
             var accessor = dcContext.asAccount(this.cellId, id, pw);
@@ -155,6 +80,7 @@ define(function(require, exports, module) {
             var targetBox = cellobj.box("data");
             app.accessor = cellobj.accessor;
             app.box = targetBox;
+            Log.info("end certificationWithAccount");
         },
 
         /**
@@ -163,21 +89,17 @@ define(function(require, exports, module) {
          * @param {String} token アクセストークン
          */
         certificationWithToken : function() {
-            // alert("トークン認証(?)開始");
-            console.log("set access token : " + app.accessToken);
+            Log.info("set access token : " + app.pcsManager.accessToken);
             var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
             dcContext.setAsync(true);
             try {
-                console.log("■□ 1");
-                var cellobj = dcContext.withToken(app.accessToken).cell(this.cellId);
-                console.log("■□ 2");
+                var cellobj = dcContext.withToken(app.pcsManager.accessToken).cell(this.cellId);
                 var targetBox = cellobj.box("data");
-                console.log("■□ 3");
                 app.accessor = cellobj.accessor;
                 app.box = targetBox;
+                Log.info("personium certification success with token.");
             } catch (e) {
-                // alert("トークン認証でエラー : " + e);
-                console.log("certificate failure : " + e);
+                Log.info("certificate failure : " + e);
             }
         },
 
@@ -191,7 +113,7 @@ define(function(require, exports, module) {
                 this.accountManager = window.plugins.accountmanager;
             }
             if (this.accountManager) {
-                // alert("アカウントマネージャ登録開始");
+                Log.info("start regist account for AccountManager");
                 var param = {
                     baseUrl : this.baseUrl,
                     cellName : this.cellId,
@@ -199,15 +121,14 @@ define(function(require, exports, module) {
                     boxName : this.box
                 };
                 this.accountManager.addAccountExplicitly(this.packageName, id, pw, param, function(error, account) {
-                    console.log("account manager addAccountExplicitly responsed");
+                    Log.info("account manager addAccountExplicitly responsed");
                     if (error) {
                         this.onLogin("login failure : " + error);
                         return;
                     }
-                    // alert("アカウントマネージャ登録成功");
                 });
             } else {
-                console.log("account manager undefined (not android)");
+                Log.info("account manager undefined (not android)");
             }
         },
 
@@ -220,19 +141,20 @@ define(function(require, exports, module) {
          * <li>ログインID,パスワードに誤りがあった場合</li>
          * </ul>
          * </p>
-         *
          * @memberOf LoginModel
          * @param {Function} onLogin 認証完了後に呼び出されるコールバック関数。
          */
         login : function(onLogin) {
-            console.log("login method in LoginModel start");
+            Log.info("login method in LoginModel start");
             this.onLogin = onLogin;
             try {
-                if (app.accessToken) {
+                if (app.pcsManager.accessToken) {
+                    Log.info("app.pcsManager.accessToken is exist");
                     this.certificationWithToken();
                 } else {
                     var id = this.get("loginId");
                     var pw = this.get("encryptionPassword");
+                    Log.info("app.pcsManager.accessToken is null / loginId : " + id);
                     if (!pw) {
                         // パスワードを暗号化
                         var shaPassword = "";
@@ -240,52 +162,60 @@ define(function(require, exports, module) {
                         shaPassword = shaObj.getHash("SHA-256", "HEX");
                         pw = shaPassword.substr(0, 32);
                     }
-
                     this.certificationWithAccount(id, pw);
-                    this.registAccountManager(id, pw);
-                    console.log("★☆ f");
-
+                    //this.registAccountManager(id, pw);
+                    Log.info("token certification success. start regist AccountManager");
+                    app.pcsManager.registAccountManager(id, pw, function(){
+                        Log.info("regist account success");
+                    }, function(error){
+                        Log.info("error regist account : " + error);
+                    });
                 }
             } catch (e) {
-                alert(e);
+                Log.info("login failure msg : " + e);
                 var message = "";
                 if (e.name === "NetworkError") {
                     message = "ネットワーク接続エラーが発生しました。";
                 } else {
                     message = "ユーザーID、または、パスワードが正しくありません。";
                 }
-                console.log("login exception : " + message);
+                Log.info("login exception : " + message);
                 this.onLogin(message);
                 return;
             }
-            // alert("パ情作成開始");
-            // alert(this.get("loginId"));
-            console.log("★☆ a");
+            Log.info("Login process success. start personal info request");
             var collection = new PersonalCollection();
+            /*
             collection.condition.filters = [
                 new And([
                         new Equal("loginId", this.get("loginId")), new IsNull("deletedAt")
                 ])
             ];
+            */
+            Log.info("personal collection fetch start");
             collection.fetch({
                 success : $.proxy(function() {
-                    console.log("★☆ d");
+                    Log.info("petsonal collection fetch success. count : " + collection.size());
                     if (collection.size() !== 0) {
+                        Log.info("already exist personal info");
                         // 既にパーソナル情報が登録されている場合
                         app.user = collection.models[0];
                         this.onLogin();
                     } else {
+                        Log.info("Not found personal info.");
                         // パーソナル情報が登録されていない場合
                         var personalModel = new PersonalModel();
                         personalModel.set("loginId", this.get("loginId"));
                         personalModel.set("fontSize", "middle");
                         personalModel.save(null, {
                             success : $.proxy(function() {
+                                Log.info("personal info create success");
                                 // パーソナル情報新規登録成功
                                 app.user = personalModel;
                                 this.onLogin();
                             }, this),
                             error : $.proxy(function() {
+                                Log.info("personal info create faulure");
                                 // パーソナル情報新規登録に失敗
                                 this.onLogin("ユーザ情報の登録に失敗しました。再度ログインしてください。");
                             }, this)
@@ -293,15 +223,16 @@ define(function(require, exports, module) {
                     }
                 }, this),
                 error : $.proxy(function() {
-                    console.log("★☆ e");
+                    Log.info("peronal collection fetch failure.");
                     // パーソナル情報検索に失敗
                     this.onLogin("ユーザ情報の取得に失敗しました。再度ログインしてください。");
                 }, this)
             });
-            
+
             // TODO 新聞の発行時刻 最終的にはDBから読み込む。
             app.news = {};
             app.news.publishTime = "17:00";
+            Log.info("Login proress completed");
         },
     });
     module.exports = LoginModel;

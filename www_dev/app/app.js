@@ -12,6 +12,7 @@ define(function(require, exports, module) {
     var config = require("resources/appConfig");
     var galocalstorage = require("galocalstorage");
     var CustomHttpClient = require("modules/CustomHttpClient");
+    var PcsManager = require("modules/PcsManager");
 
     /**
      * HttpClient を 独自クラスに差し替え.
@@ -32,5 +33,5 @@ define(function(require, exports, module) {
     app.ga = require("modules/util/AnalyticsUtil");
     app.ga.initialize(app);
 
-    app.accountManager = require("modules/PcsManager");
+    app.pcsManager = new PcsManager(app);
 });

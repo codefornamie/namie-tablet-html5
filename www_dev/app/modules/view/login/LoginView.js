@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var LoginModel = require("modules/model/LoginModel");
     var vexDialog = require("vexDialog");
+    var Log = require("modules/util/logger");
 
     /**
      * ログイン画面を表示するためのViewクラスを作成する。
@@ -30,62 +31,41 @@ define(function(require, exports, module) {
          * 表示のタイミングをずらすタイマーのハンドラ
          */
         onTimeout : function() {
-            this.model.getAuthToken($.proxy(this.onAuthSuccess, this));
+            app.pcsManager.ready($.proxy(function(error) {
+                if (error) {
+                    Log.info("error pcsManager.ready failure msg : " + error);
+                    var ar = res.split(":");
+                    if (ar[0] === "msg") {
+                        if ((ar[1]) && (ar[1] === "401")) {
+                            alert("認証に失敗しました。正しいログインIDまたはパスワードを入力してください。");
+                            this.showMainView();
+                            return;
+                        }
+                    }
+                    alert("通信に失敗しました。電波状態を見直してください。(" + ar[1] + ")");
+                    return;
+                }
+                Log.info("pcsManager.ready success");
+                if (!app.pcsManager.accessToken) {
+                    Log.info("pcsManager.ready success unknown access token ");
+                    // ログイン画面を表示
+                    this.showMainView();
+                    return;
+                }
+                Log.info("pcsManager.ready success skip login view ");
+                this.model.login($.proxy(this.onLogin, this));
+            }, this));
         },
 
-        /**
-         * アカウントマネージャのチェック完了時のハンドラ。
-         * @param {String} res アカウントマネージャからレスポンス
-         */
-        onAuthSuccess : function(type, res) {
-            alert("onAuthSuccess");
-            alert(type);
-            if (type === "showLoginView") {
-                //
-                // ログイン画面を表示する必要がある場合
-                //
-                $("#main").css("display","block");
-                return;
-            } else if (type === "skipLoginView") {
-                //
-                // AccountManagerに登録されたID/PWで認証し、ログイン画面をスキップする場合
-                //
-                this.model.login($.proxy(this.onLogin, this));
-                return;
-            } else if (type === "error") {
-                //
-                // エラーが発生した場合
-                // 「msg:401」の場合、認証失敗、ログイン画面表示
-                //  上記以外はログイン画面を表示せずにエラーメッセージ表示のみ
-                //
-                var ar = res.split(":");
-                if (ar[0] === "msg") {
-                    if ((ar[1]) && (ar[1] === "401")) {
-                        alert("認証に失敗しました。正しいログインIDまたはパスワードを入力してください。");
-                        $("#main").css("display","block"); // ログイン画面を表示
-                        return;
-                    }
-                }
-                alert("通信に失敗しました。電波状態を見直してください。(" + ar[1] + ")");
-                return;
-            } else if (type === "token") {
-                //
-                // AccountManagerからトークンが取得できた場合
-                //
-                this.model.login($.proxy(this.onLogin, this));
-                return;
-            } else {
-                //
-                // 上記以外の場合
-                //
-                $("#main").css("display","block");
-            }
+        showMainView : function() {
+            $("#main").css("display","block");
         },
 
         /**
          * ビュー初期化
          */
         initialize : function() {
+            Log.info("LoginView initialize");
             app.ga.trackPageView("Login", "ログイン");
             this.model = new LoginModel();
         },
@@ -96,6 +76,7 @@ define(function(require, exports, module) {
          * @memberOf LoginView
          */
         onClickLoginButton : function() {
+            Log.info("onClickButton(Login button click handler) called ");
             app.ga.trackEvent("ニュース", "ログイン");
 
             var loginId = $("#loginId").val();
@@ -106,10 +87,10 @@ define(function(require, exports, module) {
 
             var errmsg = this.model.validate();
             if (errmsg) {
+                Log.info("validate error for Login form : " + errmsg);
                 vexDialog.defaultOptions.className = 'vex-theme-default';
                 return vexDialog.alert(errmsg);
             }
-            console.log("★☆ c");
             this.model.login($.proxy(this.onLogin, this));
         },
         /**
@@ -119,19 +100,18 @@ define(function(require, exports, module) {
          * @param {string} msg 認証失敗時のメッセージ
          */
         onLogin : function(msg) {
-            console.log("★☆ b");
+            Log.info("onLogin callback called");
             if (!msg) {
                 this.goNextView();
             } else {
                 vexDialog.defaultOptions.className = 'vex-theme-default';
                 vexDialog.alert(msg);
             }
-            $("#main").css("display","block");
+            this.showMainView();
         },
         goNextView : function() {
             app.router.go("top");
         }
-
     });
 
     module.exports = LoginView;
