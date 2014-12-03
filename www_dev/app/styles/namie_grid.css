@@ -38,3 +38,21 @@
     width: 100%;
     padding: 10px;
 }
+
+/**
+ *  グリッドのアイテム内部
+ */
+.grid-cell--image {
+}
+
+.grid-cell--body {
+}
+
+.grid-label {
+}
+
+.grid-description {
+}
+
+.grid-button {
+}
