@@ -59,8 +59,6 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
-            this.targetDate = this.targetDate ||
-                    DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd");
             this.setArticleSearchCondition({
                 targetDate : new Date(this.targetDate)
             });
