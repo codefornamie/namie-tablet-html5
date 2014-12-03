@@ -106,7 +106,7 @@ define(function(require, exports, module) {
             } else {
                 this.$el.find('[data-favorite-delete-button]').hide();
             }
-            if (this.model.get("isRecommend")) {
+            if (this.model.get("isMyRecommend")) {
                 this.$el.find('[data-recommend-register-button]').hide();
             } else {
                 this.$el.find('[data-recommend-delete-button]').hide();
@@ -219,6 +219,7 @@ define(function(require, exports, module) {
             this.recommendModel.set("source", source);
             this.recommendModel.set("userId", app.user.get("__id"));
             this.recommendModel.set("publishedAt", this.model.get("publishedAt"));
+            this.recommendModel.set("depublishedAt", this.model.get("depublishedAt"));
             this.recommendModel.set("isDelete", false);
             this.recommendModel.set("etag", "*");
             this.recommendModel.save(null, {
@@ -267,7 +268,7 @@ define(function(require, exports, module) {
             if (type === "favorite") {
                 this.model.set("isFavorite", !this.model.get("isFavorite"));
             } else {
-                this.model.set("isRecommend", !this.model.get("isRecommend"));
+                this.model.set("isMyRecommend", !this.model.get("isMyRecommend"));
             }
             // 対応するボタンの切り替え
             this.$el.find("[data-"+ type +"-register-button]").toggle();

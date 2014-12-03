@@ -76,7 +76,7 @@ define(function(require, exports, module) {
                     }).length;
             this.recommendCollection.each($.proxy(function(recommend){
                 if (recommend.get("isMine")) {
-                    this.articleModel.set("isRecommend", !recommend.get("deletedAt"));
+                    this.articleModel.set("isMyRecommend", !recommend.get("deletedAt"));
                     this.articleModel.recommend = recommend;
                     
                 }
