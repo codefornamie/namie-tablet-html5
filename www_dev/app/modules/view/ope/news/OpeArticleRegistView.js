@@ -101,7 +101,7 @@ define(function(require, exports, module) {
                 model : this.model,
                 recommendArticle : this.recommendArticle
             })).render();
-            $("#snap-content").scrollTop(0);
+            $("#contents__primary").scrollTop(0);
         }
     });
     module.exports = OpeArticleRegistView;
