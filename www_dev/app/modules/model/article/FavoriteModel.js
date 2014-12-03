@@ -3,7 +3,9 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var ImageTypeMixin = require("modules/util/ImageTypeMixin");
     var CommonUtil = require("modules/util/CommonUtil");
+
     /**
      * お気に入り情報のモデルクラスを作成する。
      * 
@@ -11,7 +13,7 @@ define(function(require, exports, module) {
      * @exports FavoriteModel
      * @constructor
      */
-    var FavoriteModel = AbstractODataModel.extend({
+    var FavoriteModel = AbstractODataModel.extend(_.extend({
         entity : "favorite",
         /**
          * 取得したOData情報のparse処理を行う。
@@ -41,7 +43,7 @@ define(function(require, exports, module) {
             saveData.createdAt = this.get("createdAt");
         }
 
-    });
+    }, ImageTypeMixin));
 
     module.exports = FavoriteModel;
 });

@@ -3,6 +3,8 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var ImageTypeMixin = require("modules/util/ImageTypeMixin");
+
     /**
      * おすすめ情報のモデルクラスを作成する。
      * 
@@ -10,7 +12,7 @@ define(function(require, exports, module) {
      * @exports RecommendModel
      * @constructor
      */
-    var RecommendModel = AbstractODataModel.extend({
+    var RecommendModel = AbstractODataModel.extend(_.extend({
         entity : "recommend",
         /**
          * 取得したOData情報のparse処理を行う。
@@ -30,8 +32,7 @@ define(function(require, exports, module) {
             saveData.publishedAt = this.get("publishedAt");
             saveData.depublishedAt = this.get("depublishedAt");
         }
-
-    });
+    }, ImageTypeMixin));
 
     module.exports = RecommendModel;
 });
