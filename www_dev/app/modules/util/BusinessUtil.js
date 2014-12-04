@@ -12,16 +12,16 @@ define(function(require, exports, module) {
 
     /**
      * 現在発行中の新聞の日付を返す。
-     *
+     * 
      * @return {Date} 現在発行中の新聞の日付(最後に新聞を発行した日時)
      */
     BusinessUtil.getCurrentPublishDate = function() {
         var publishDate = new Date();
         var nowTimeString = DateUtil.formatDate(publishDate, "HH:mm");
-        if(nowTimeString < app.news.publishTime){
+        if (nowTimeString < app.config.PUBLISH_TIME) {
             publishDate = DateUtil.addDay(publishDate, -1);
         }
-        return new Date(DateUtil.formatDate(publishDate, "yyyy-MM-dd") + "T" + app.news.publishTime + "+0900");
+        return new Date(DateUtil.formatDate(publishDate, "yyyy-MM-dd") + "T" + app.config.PUBLISH_TIME + "+0900");
     };
 
     module.exports = BusinessUtil;

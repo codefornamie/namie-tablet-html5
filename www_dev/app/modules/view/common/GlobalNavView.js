@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var DateUtil = require("modules/util/DateUtil");
     var AbstractView = require("modules/view/AbstractView");
     var PersonalModel = require("modules/model/personal/PersonalModel");
     var Snap = require("snap");
@@ -31,6 +32,7 @@ define(function(require, exports, module) {
             var $target = $("[value='" + app.user.get("fontSize") + "']");
             var size = parseInt($target.attr('data-font-size'), 10);
             $('html, body').css('font-size', size + 'px');
+            this.setDate(this.targetDate)
         },
 
         /**
@@ -73,6 +75,22 @@ define(function(require, exports, module) {
             'click [data-back-home]': 'onClickBackHome',
             'change #selectRadiation' : "onChangeRadiationStation",
             'click [data-font-size]': 'onClickFontSize'
+        },
+
+        /**
+         * 発行日を設定する。
+         * @param {Date} date 設定する日付
+         */
+        setDate : function(date) {
+            if (date) {
+                $("#naviPublishDate").show();
+                $("#naviPublishDate").find(".date--year").text(date.getFullYear());
+                $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
+                $("#naviPublishDate").find(".date--day").text(date.getDate());
+                $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
+            } else {
+                $("#naviPublishDate").hide();
+            }
         },
 
         /**

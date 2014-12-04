@@ -138,7 +138,7 @@ define(function(require, exports, module) {
                 app.router.opeArticleDetail({
                     model : this.model,
                     template : template
-                })
+                });
                 break;
             case "2":
                 app.router.opeYouTubeDetail({

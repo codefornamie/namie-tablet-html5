@@ -2,8 +2,10 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var async = require("async");
     var JsSha = require("jsSha");
     var PersonalCollection = require("modules/collection/personal/PersonalCollection");
+    var ConfigurationCollection = require("modules/collection/misc/ConfigurationCollection");
     var PersonalModel = require("modules/model/personal/PersonalModel");
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
@@ -183,7 +185,16 @@ define(function(require, exports, module) {
                 this.onLogin(message);
                 return;
             }
-            Log.info("Login process success. start personal info request");
+            async.parallel([
+                    this.loadPersonal.bind(this), 
+                    this.loadConfiguration.bind(this)
+            ], this.onLogin.bind(this));
+            
+        },
+
+        loadPersonal : function(callback){
+            //alert("パ情作成開始");
+            //alert(this.get("loginId"));
             var collection = new PersonalCollection();
             /*
             collection.condition.filters = [
@@ -200,7 +211,7 @@ define(function(require, exports, module) {
                         Log.info("already exist personal info");
                         // 既にパーソナル情報が登録されている場合
                         app.user = collection.models[0];
-                        this.onLogin();
+                        callback();
                     } else {
                         Log.info("Not found personal info.");
                         // パーソナル情報が登録されていない場合
@@ -212,28 +223,42 @@ define(function(require, exports, module) {
                                 Log.info("personal info create success");
                                 // パーソナル情報新規登録成功
                                 app.user = personalModel;
-                                this.onLogin();
+                                callback();
                             }, this),
                             error : $.proxy(function() {
                                 Log.info("personal info create faulure");
                                 // パーソナル情報新規登録に失敗
-                                this.onLogin("ユーザ情報の登録に失敗しました。再度ログインしてください。");
-                            }, this)
+                                callback("ユーザ情報の登録に失敗しました。再度ログインしてください。");
+                            },this)
                         });
                     }
                 }, this),
                 error : $.proxy(function() {
                     Log.info("peronal collection fetch failure.");
                     // パーソナル情報検索に失敗
-                    this.onLogin("ユーザ情報の取得に失敗しました。再度ログインしてください。");
-                }, this)
+                    callback("ユーザ情報の取得に失敗しました。再度ログインしてください。");
+                },this)
             });
-
-            // TODO 新聞の発行時刻 最終的にはDBから読み込む。
-            app.news = {};
-            app.news.publishTime = "17:00";
-            Log.info("Login proress completed");
         },
+        loadConfiguration : function(callback){
+            // 設定情報の読み込み
+            var confCol = new ConfigurationCollection();
+            confCol.fetch({
+                success : function(col, models) {
+                    app.config = _.extend(app.config, col.toMap());
+                    callback();
+                },
+                error: $.proxy(function() {
+                    // 取得に失敗
+                    callback("設定情報の取得に失敗しました。再度ログインしてください。");
+                },this)
+            });
+        },
+
+        setAccessToken : function(token) {
+            console.log("set access token : " + token);
+            this.accessToken = token;
+        }
     });
     module.exports = LoginModel;
 });
