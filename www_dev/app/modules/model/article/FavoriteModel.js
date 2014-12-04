@@ -4,7 +4,6 @@ define(function(require, exports, module) {
     var app = require("app");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var CommonUtil = require("modules/util/CommonUtil");
-    var ArticleModel = require("modules/model/article/ArticleModel");
 
     /**
      * お気に入り情報のモデルクラスを作成する。

@@ -2,7 +2,6 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractODataModel = require("modules/model/AbstractODataModel");
     var ArticleModel = require("modules/model/article/ArticleModel");
 
     /**
