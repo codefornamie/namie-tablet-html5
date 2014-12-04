@@ -27,15 +27,26 @@ define(function(require, exports, module) {
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          */
         afterRendered : function() {
-            console.log("BacknumberListItemView afterRendered");
-            console.log(this.model);
+            var self = this;
+            var articleImageElement = this.$el.find(".articleImage");
+            if (this.model.get("isPIOImage")) {
+                this.showPIOImages(".articleImage", [
+                    {
+                        imageUrl : this.model.get("imageUrl"),
+                        imageIndex : 1
+                    }
+
+                ]);
+            } else if (!_.isEmpty(this.model.get("imageUrl"))) {
+                articleImageElement.attr("src", this.model.get("imageUrl"));
+            }
         },
 
         /**
          *  初期化処理
          */
         initialize : function() {
-            console.assert(this.model, "model should be specified")
+            console.assert(this.model, "model should be specified");
 
             this.listenTo(this.model, "change", this.render);
         },

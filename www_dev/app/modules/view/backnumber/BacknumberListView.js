@@ -5,10 +5,6 @@ define(function(require, exports, module) {
     var moment = require("moment");
     var AbstractView = require("modules/view/AbstractView");
     var BacknumberListItemView = require("modules/view/backnumber/BacknumberListItemView");
-    var ArticleCollection = require("modules/collection/article/ArticleCollection");
-    var DateUtil = require("modules/util/DateUtil");
-    var Equal = require("modules/util/filter/Equal");
-    var IsNull = require("modules/util/filter/IsNull");
 
     /**
      * バックナンバーのリストのView
@@ -22,11 +18,6 @@ define(function(require, exports, module) {
          * テンプレートファイル
          */
         template : require("ldsh!templates/{mode}/backnumber/backnumberList"),
-
-        /**
-         * 日付選択画面に表示する情報のcollection
-         */
-        //articleCollection : new ArticleCollection(),
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
@@ -48,21 +39,9 @@ define(function(require, exports, module) {
             console.assert(this.collection, "Should have Collection");
 
             this.collection.setMonth(moment());
-
-            //this.setArticleSearchCondition({
-            //    targetDate: new Date()
-            //});
         },
 
         events : {},
-
-        /**
-         * 記事の検索条件を指定する。
-         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
-         */
-        //setArticleSearchCondition : function(condition) {
-        //    this.articleCollection.setSearchCondition(condition);
-        //},
 
         /**
          * バックナンバー一覧を描画する

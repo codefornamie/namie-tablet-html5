@@ -17,26 +17,6 @@ define(function(require, exports, module) {
      */
     var BacknumberModel = AbstractModel.extend({
         /**
-         * モデルの初期値を返す
-         *
-         * @return {Object}
-         */
-        defaults: function () {
-            // [TODO]
-            // ダミーデータを入れているので
-            // 正式なデータ取得処理に置き換えるべき
-            return {
-                createdAt: new Date(2014, 10, 28),
-                articleTitle: [
-                    "長いダミーテキストです。長いダミーテキストです。長いダミーテキストです。長いダミーテキストです。長いダミーテキストです。長いダミーテキストです。",
-                    "広野町「道の駅」整備へ 防災、復興の拠点に",
-                    "今日のレシピ 「豚の角煮」"
-                ],
-                thumbnail: "app/img/dummy-manga.png"
-            };
-        },
-
-        /**
          * 初期化処理
          */
         initialize: function (attr, param) {
@@ -70,17 +50,39 @@ define(function(require, exports, module) {
                     return console.error(err);
                 }
 
-                console.log(self.date);
-                console.log(res);
-                self.set({
-                    articleTitle: [
-                        res.models[0] ? res.models[0].get("dispTitle") : "",
-                        res.models[1] ? res.models[1].get("dispTitle") : "",
-                        res.models[2] ? res.models[2].get("dispTitle") : ""
-                    ],
-                    createdAt: self.date.toDate()
+                // おすすめ記事の分を先頭にした記事モデルの配列（先頭の3件を使用）
+                var articleModels = [];
+
+                // おすすめ記事を検索
+                var targetDate = self.date.format("YYYY-MM-DD");
+                var recommendArticle = res.find(function(article) {
+                    return article.get("isRecommend") === "true" && article.get("publishedAt") === targetDate;
                 });
-console.log(self.get("articleTitle"));
+
+                // おすすめ記事があれば先頭に追加
+                if (recommendArticle) {
+                    articleModels.push(recommendArticle);
+                }
+
+                // おすすめ記事以外の記事を追加
+                res.each(function(articleModel) {
+                    if (articleModel != recommendArticle) {
+                        articleModels.push(articleModel);
+                    }
+                });
+
+                // 結果を格納
+                self.set({
+                    createdAt: self.date.toDate(),
+                    articleTitle: [
+                        articleModels[0] ? (articleModels[0].get("isRecommend") ? "[おすすめ]" : "") + articleModels[0].get("dispTitle") : "",
+                        articleModels[1] ? articleModels[1].get("dispTitle") : "",
+                        articleModels[2] ? articleModels[2].get("dispTitle") : ""
+                    ],
+                    imageUrl: articleModels[0] ? articleModels[0].get("imageUrl") : null,
+                    isPIOImage: articleModels[0] ? articleModels[0].isPIOImage() : false
+                });
+
                 self.trigger("change");
             });
         },

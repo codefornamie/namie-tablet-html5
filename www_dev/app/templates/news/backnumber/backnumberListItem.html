@@ -1,7 +1,6 @@
 <li class='backnumber-li'>
     <a class='backnumber-item row' href="/backnumber/<%= model.generateDateString() %>">
         <div class="backnumber-item__date columns small-3">
-            <!--<%= model.get('createdAt') %>-->
             <div class="date-area">
                 <div class="date-area__year">
                     <span class="date--year"><%= model.generateDateElementString("year") %></span>
@@ -35,8 +34,12 @@
             <ul>
                 <% _.each(model.get('articleTitle'), function(title) { %>
                     <li>
-                        <i class="fa fa-caret-right"></i>
-                        <%= title %>
+                        <% if (!!title) { %>
+                            <i class="fa fa-caret-right"></i>
+                            <%= title %>
+                        <% } else { %>
+                            &nbsp;
+                        <% } %>
                     </li>
                 <% }); %>
 
@@ -49,7 +52,7 @@
         </div>
 
         <div class="backnumber-item__thumbnail columns small-3">
-            <img src="<%= model.get('thumbnail') %>" alt="">
+            <img class="articleImage" alt="">
         </div>
     </a>
 </li>
