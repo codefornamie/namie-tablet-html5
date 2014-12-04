@@ -25,7 +25,8 @@ require.config({
         "date-helpers": "../lib/foundation-calendar/helpers/date-helpers",
         "string-helpers": "../lib/foundation-calendar/helpers/string-helpers",
         "jquery-sortable": "../bower_components/html5sortable/jquery.sortable",
-        "galocalstorage" : "../bower_components/GALocalStorage/GALocalStorage"
+        "galocalstorage" : "../bower_components/GALocalStorage/GALocalStorage",
+        "moment" : "../bower_components/moment/min/moment.min"
     },
 
     deps : [ "main" ],
