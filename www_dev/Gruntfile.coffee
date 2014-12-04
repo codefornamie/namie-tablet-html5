@@ -35,3 +35,7 @@ module.exports = ->
     "replace:devmode_ope"
     "server"
   ]
+  @registerTask "server_dojo", [
+    "replace:devmode_dojo"
+    "server"
+  ]

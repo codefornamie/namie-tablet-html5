@@ -235,9 +235,9 @@ define(function(require, exports, module) {
                 return;
             }
             async.parallel([
-                    this.loadPersonal.bind(this), 
-                    this.loadConfiguration.bind(this)
-            ], this.onLogin.bind(this));
+                    $.proxy(this.loadPersonal, this), 
+                    $.proxy(this.loadConfiguration, this)
+            ], $.proxy(this.onLogin, this));
             
         },
 
