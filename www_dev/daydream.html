@@ -17,8 +17,26 @@
 }
 </style>
 <script>
+
     var images = [
-            "app/img/slideshow/ukedon_2_1.png", "app/img/slideshow/ukedon_2_2.png"
+"10411974_745593568858423_3338845195879494958_n.jpg",
+"10841998_745593565525090_3002790559317490279_o.jpg",
+"1499676_720510028037494_821496066096814829_n.jpg",
+"20141122002je.jpg",
+"20141202 (2).JPG",
+"20141202 (4).JPG",
+"slide11.JPG",
+"slide12.JPG",
+"slide13.JPG",
+"slide14.JPG",
+"slide29.JPG",
+"slide36.JPG",
+"slide45.JPG",
+"slide46.JPG",
+"slide6.JPG",
+"slide7.JPG",
+"slide8.JPG",
+"slide9.JPG"
     ];
     var index = 1;
     var interval = 2000;
@@ -31,8 +49,8 @@
         setTimeout(function() {
             $("#container").children().remove();
 
-            var imgElement = '<img id="slideImage" src="' + images[index++] +
-                    '" style="width: 30%; height: 30%;" class="animated fadeIn" />';
+            var imgElement = '<img id="slideImage" src="app/img/slideshow/' + images[index++] +
+                    '" style="width: 100%; height: 100%;" class="animated fadeIn" />';
             $("#container").append(imgElement);
         }, interval);
 
@@ -45,7 +63,7 @@
 </script>
 <body>
     <div id="container">
-        <img id="slideImage" src="app/img/slideshow/ukedon_2_1.png" style="width: 30%; height: 30%;" class="animated fadeIn" />
+        <img id="slideImage" src="app/img/slideshow/slide9.JPG" style="width: 100%; height: 100%;" class="animated fadeIn" />
     </div>
 </body>
 </html>
