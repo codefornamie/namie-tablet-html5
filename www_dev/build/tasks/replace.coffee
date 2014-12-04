@@ -37,3 +37,12 @@ module.exports = ->
       to: (matchedWord, index, fullText, regexMatches) ->
           '\"mode\" : \"posting\"'
     }]
+
+  devmode_dojo:
+    src: ['../www_dev/app/resources/appConfig.js'],
+    overwrite: true,
+    replacements: [{
+      from: /\"mode\" : \".*\"/g,
+      to: (matchedWord, index, fullText, regexMatches) ->
+          '\"mode\" : \"dojo\"'
+    }]
