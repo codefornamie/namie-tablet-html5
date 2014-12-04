@@ -74,6 +74,8 @@ define(function(require, exports, module) {
             this.views.forEach(function (view) {
                 self.insertView('#backnumber-list', view);
             });
+
+            this.renderViews();
         }
     });
     module.exports = BacknumberListView;
