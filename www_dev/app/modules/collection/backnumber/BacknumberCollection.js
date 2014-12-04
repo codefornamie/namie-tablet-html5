@@ -5,6 +5,8 @@ define(function(require, exports, module) {
     var moment = require("moment");
     var AbstractCollection = require("modules/collection/AbstractCollection");
     var BacknumberModel = require("modules/model/backnumber/BacknumberModel");
+    var DateUtil = require("modules/util/DateUtil");
+    var BusinessUtil = require("modules/util/BusinessUtil");
 
     /**
      * 記事情報のコレクションクラス
@@ -55,6 +57,11 @@ define(function(require, exports, module) {
 
             startDate.startOf("month");
             endDate.endOf("month");
+
+            var currentPublishDate = moment(BusinessUtil.getCurrentPublishDate());
+            if (DateUtil.formatDate(endDate.toDate(), "yyyy-MM-dd") > DateUtil.formatDate(currentPublishDate.toDate(), "yyyy-MM-dd")) {
+                endDate = currentPublishDate.clone();
+            }
 
             d = startDate.clone();
 
