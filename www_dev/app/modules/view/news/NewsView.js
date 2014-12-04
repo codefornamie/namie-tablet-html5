@@ -260,9 +260,6 @@ define(function(require, exports, module) {
 
             // articleCollectionに切抜き、おすすめ状態を反映する
             this.newsCollection.each($.proxy(function(article) {
-                if (article.get("title", "おすすめイベント")) {
-                    console.log("aaa");
-                }
                 this.favoriteCollection.each(function(favorite) {
                     if (article.get("__id") === favorite.get("source")) {
                         article.set("isFavorite", !favorite.get("deletedAt"));
