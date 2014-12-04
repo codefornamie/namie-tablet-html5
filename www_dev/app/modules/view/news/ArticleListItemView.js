@@ -148,6 +148,7 @@ define(function(require, exports, module) {
             this.favoriteModel.set("source", source);
             this.favoriteModel.set("userId", app.user.get("__id"));
             this.favoriteModel.set("contents", this.model.get("description"));
+            this.favoriteModel.set("type", this.model.get("type"));
             this.favoriteModel.set("title", this.model.get("title"));
             this.favoriteModel.set("site", this.model.get("site"));
             this.favoriteModel.set("imageUrl", this.model.get("imageUrl"));

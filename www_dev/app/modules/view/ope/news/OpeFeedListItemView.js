@@ -15,14 +15,18 @@ define(function(require, exports, module) {
     var OpeFeedListItemView = FeedListItemView.extend({
         /**
          * このViewの親要素
+         * @memberof OpeFeedListItemView#
          */
         tagName : "tr",
         /**
          * このViewを表示する際に利用するアニメーション
+         * @memberof OpeFeedListItemView#
          */
         animation : null,
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * @memberof OpeFeedListItemView#
+         * 
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
@@ -43,13 +47,19 @@ define(function(require, exports, module) {
             this.tagListView.render();
             this.setData();
         },
+        /**
+         * このViewのイベントを定義する。
+         * @memberof OpeFeedListItemView#
+         */
         events : {
             "click [data-article-edit-button]" : "onClickArticleEditButton",
             "change .isPublishCheckBox" : "onChangeIsPublishCheckBox",
-            "change .today-recommend-radio" : "onChangeTodayRecommendRadio"
+            "change .today-recommend-radio" : "onChangeTodayRecommendRadio",
+            "click .ope-title-anchor" : "onClickOpeTitleAnchor"
         },
         /**
          * モデルから画面項目への設定。
+         * @memberof OpeFeedListItemView#
          */
         setData : function(){
             this.lastModel = this.model;
@@ -57,6 +67,7 @@ define(function(require, exports, module) {
         },
         /**
          * 保存の開始
+         * @memberof OpeFeedListItemView#
          */
         saveStart : function(){
             this.$el.find(".isPublishCheckBox").prop("disabled", true);
@@ -64,6 +75,7 @@ define(function(require, exports, module) {
         },
         /**
          * 保存の終了
+         * @memberof OpeFeedListItemView#
          * @param {Boolean} 保存に成功したかどうか
          */
         saveEnd : function(success){
@@ -78,6 +90,7 @@ define(function(require, exports, module) {
         },
         /**
          * 配信有無チェックボックスが変更された際のハンドラ
+         * @memberof OpeFeedListItemView#
          * @param {Event} イベント
          */
         onChangeIsPublishCheckBox : function(e){
@@ -85,12 +98,14 @@ define(function(require, exports, module) {
         },
         /**
          * 画面項目からモデルへの設定。
+         * @memberof OpeFeedListItemView#
          */
         setInputValue : function(){
             this.model.set("isDepublish", this.$el.find(".isPublishCheckBox").prop('checked') ? null : "true");
         },
         /**
          *  編集ボタン押下時に呼び出されるコールバック関数
+         * @memberof OpeFeedListItemView#
          */
         onClickArticleEditButton: function () {
             this.showLoading();
@@ -108,7 +123,49 @@ define(function(require, exports, module) {
             $("#contents__primary").scrollTop(0);
         },
         /**
+         *  タイトル押下時に呼び出されるコールバック関数
+         * @memberof OpeFeedListItemView#
+         */
+        onClickOpeTitleAnchor: function () {
+            this.showLoading();
+            switch (this.model.get("type")) {
+            case "1":
+                var template = require("ldsh!templates/{mode}/news/articleDetail");
+
+                if (this.model.get("rawHTML")) {
+                    template = require("ldsh!templates/{mode}/news/articleDetailForHtml");
+                }
+                app.router.opeArticleDetail({
+                    model : this.model,
+                    template : template
+                });
+                break;
+            case "2":
+                app.router.opeYouTubeDetail({
+                    model : this.model,
+                    recommendArticle : this.parentView.recommendArticle
+                });
+                break;
+            case "3":
+            case "4":
+            case "5":
+                app.router.opeEventDetail({
+                    model : this.model,
+                    recommendArticle : this.parentView.recommendArticle
+                });
+                break;
+            default:
+                app.router.opeEventDetail({
+                    model : this.model,
+                    recommendArticle : this.parentView.recommendArticle
+                });
+                break;
+            }
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
          * 画面データ保存
+         * @memberof OpeFeedListItemView#
          */
         save : function(){
             this.setInputValue();
@@ -131,6 +188,7 @@ define(function(require, exports, module) {
         },
         /**
          *  おすすめ記事のラジオボタンが変更された際のコールバック関数
+         * @memberof OpeFeedListItemView#
          */
         onChangeTodayRecommendRadio: function () {
             this.showLoading();
@@ -145,6 +203,7 @@ define(function(require, exports, module) {
         },
         /**
          * おすすめ記事情報保存後のコールバック関数
+         * @memberof OpeFeedListItemView#
          */
         onRecommendSave: function() {
             this.model.fetch({

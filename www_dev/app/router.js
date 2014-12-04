@@ -6,6 +6,8 @@ define(function(require, exports, module) {
     login.posting = require("modules/view/posting/login/index");
     login.ope = require("modules/view/ope/login/index");
 
+    var BusinessUtil = require("modules/util/BusinessUtil");
+
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
     var NewsView = require("modules/view/news/NewsView");
@@ -21,6 +23,9 @@ define(function(require, exports, module) {
     var TopView = require("modules/view/ope/top/TopView");
     var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
     var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
+    var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
+    var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
+    var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
 
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -116,11 +121,16 @@ define(function(require, exports, module) {
         },
         top : function() {
             console.log("It's a top page.");
-            this.layout.showView(new NewsView());
-            this.layout.setHeader(new common.HeaderView());
-            this.layout.setGlobalNav(new common.GlobalNavView());
-            this.layout.setFooter(new common.FooterView());
-            this.commonView();
+            var targetDate = BusinessUtil.getCurrentPublishDate();
+            this.layout.showView(new NewsView({
+                "targetDate" : targetDate
+            }));
+            // this.layout.setHeader(new common.HeaderView());
+            // this.layout.setGlobalNav(new common.GlobalNavView());
+            // this.layout.setFooter(new common.FooterView());
+            this.commonView({
+                "targetDate" : targetDate
+            });
         },
 
         /**
@@ -224,6 +234,7 @@ define(function(require, exports, module) {
             console.log('[route] opeArticleRegist');
             this.layout.setView("#contents__primary", new OpeArticleRegistView(options)).render();
             this.navigate("opeArticleRegist");
+            $("#contents__primary").scrollTop(0);
         },
 
         /**
@@ -233,6 +244,34 @@ define(function(require, exports, module) {
             console.log('[route] opeYouTubeRegist');
             this.layout.setView("#contents__primary", new OpeYouTubeRegistView(options)).render();
             this.navigate("opeYouTubeRegist");
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        opeEventDetail : function(options) {
+            console.log('[route] opeEventDetail');
+            this.layout.setView("#contents__primary", new OpeEventDetailView(options)).render();
+            this.navigate("opeEventDetail");
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        opeArticleDetail : function(options) {
+            console.log('[route] opeArticleDetail');
+            this.layout.setView("#contents__primary", new OpeArticleDetailView(options)).render();
+            this.navigate("opeArticleDetail");
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         *  このメソッドは手動で呼ばれる
+         */
+        opeYouTubeDetail : function(options) {
+            console.log('[route] opeYouTubeDetail');
+            this.layout.setView("#contents__primary", new OpeYouTubeDetailView(options)).render();
+            this.navigate("opeYouTubeDetail");
+            $("#contents__primary").scrollTop(0);
         },
 
         /*
@@ -248,8 +287,8 @@ define(function(require, exports, module) {
         go : function() {
             return this.navigate(_.toArray(arguments).join("/"), true);
         },
-        commonView : function() {
-            this.layout.setGlobalNav(new common.GlobalNavView());
+        commonView : function(options) {
+            this.layout.setGlobalNav(new common.GlobalNavView(options));
             this.layout.setView("#menu", new common.MenuView()).render();
             this.layout.removeViewByName('#settings');
         },

@@ -61,8 +61,7 @@ define(function(require, exports, module) {
         initialize : function(options) {
             options = options || {};
 
-            this.targetDate = this.targetDate || options.date ||
-                    DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd");
+            this.targetDate = this.targetDate || options.date;
 
             this.setArticleSearchCondition({
                 targetDate : new Date(this.targetDate)
