@@ -32,15 +32,18 @@ define(function(require, exports, module) {
             calendar.bind('dateChange', function(evt, opts) {
                 console.info('dateChange triggered');
                 var targetDate = new Date(evt.target.value);
-                newsView.$el.find("#targetDate").text(DateUtil.formatDate(targetDate,"yyyy年MM月dd日"));
-                
-                newsView.setArticleSearchCondition({targetDate: targetDate});
+                newsView.$el.find("#targetDate").text(DateUtil.formatDate(targetDate, "yyyy年MM月dd日"));
+
+                newsView.setArticleSearchCondition({
+                    targetDate : targetDate
+                });
                 newsView.searchArticles();
             });
 
             // 記事一覧を表示
             this.setView("#opeNewsList", newsView).render();
-            newsView.$el.find("#targetDate").text(DateUtil.formatDate(new Date(),"yyyy年MM月dd日"));
+            newsView.$el.find("#targetDate").text(
+                    DateUtil.formatDate(new Date(), "yyyy年MM月dd日") + app.config.PUBLISH_TIME);
         },
     });
 
