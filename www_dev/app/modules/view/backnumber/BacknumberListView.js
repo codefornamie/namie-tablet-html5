@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var moment = require("moment");
     var AbstractView = require("modules/view/AbstractView");
     var BacknumberListItemView = require("modules/view/backnumber/BacknumberListItemView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
@@ -25,7 +26,7 @@ define(function(require, exports, module) {
         /**
          * 日付選択画面に表示する情報のcollection
          */
-        articleCollection : new ArticleCollection(),
+        //articleCollection : new ArticleCollection(),
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
@@ -44,9 +45,13 @@ define(function(require, exports, module) {
          * 初期化処理
          */
         initialize : function() {
-            this.setArticleSearchCondition({
-                targetDate: new Date()
-            });
+            console.assert(this.collection, "Should have Collection");
+
+            this.collection.setMonth(moment());
+
+            //this.setArticleSearchCondition({
+            //    targetDate: new Date()
+            //});
         },
 
         events : {},
@@ -55,9 +60,9 @@ define(function(require, exports, module) {
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
          */
-        setArticleSearchCondition : function(condition) {
-            this.articleCollection.setSearchCondition(condition);
-        },
+        //setArticleSearchCondition : function(condition) {
+        //    this.articleCollection.setSearchCondition(condition);
+        //},
 
         /**
          * バックナンバー一覧を描画する

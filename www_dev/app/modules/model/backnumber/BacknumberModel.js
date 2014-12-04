@@ -2,7 +2,9 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var moment = require("moment");
     var AbstractModel = require("modules/model/AbstractModel");
+    var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var DateUtil = require("modules/util/DateUtil");
     var CommonUtil = require("modules/util/CommonUtil");
 
@@ -34,6 +36,64 @@ define(function(require, exports, module) {
             };
         },
 
+        /**
+         * 初期化処理
+         */
+        initialize: function (attr, param) {
+            console.assert(param.date, "Should set param.date");
+            
+            this.setDate(moment(param.date));
+            this.updateArticle();
+        },
+        
+        /**
+         * 日付を設定する
+         * @param {moment} date
+         */
+        setDate: function (date) {
+            this.date = date;
+        },
+        
+        /**
+         * このmodelの情報を更新する
+         */
+        updateArticle: function () {
+            var self = this;
+            var col = new ArticleCollection();
+            
+            col.setSearchCondition({
+                targetDate: this.date.toDate()
+            });
+            
+            this.fetchArticleCollection(col, function (err, res) {
+                if (err) {
+                    return console.error(err);
+                }
+
+                console.log(self.date);
+                console.log(res);
+            });
+        },
+
+        /**
+         * articleを読み込む
+         * @param {Backbone.Collection} col
+         * @param {Function} callback
+         * @memberof BacknumberModel#
+         */
+        fetchArticleCollection : function(col, callback) {
+            col.fetch({
+                success : function(res) {
+                    callback(null, res);
+                },
+
+                error : function onErrorLoadArticle() {
+                    callback('err');
+                }
+            });
+        },
+
+        
         /**
          * createdAtをYYYY-MM-DDの文字列にして返す
          *

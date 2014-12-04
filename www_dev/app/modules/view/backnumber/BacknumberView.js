@@ -36,10 +36,10 @@ define(function(require, exports, module) {
          *  初期化処理
          */
         initialize : function() {
-            var backnumberListView = new BacknumberListView();
+            var backnumberListView = this.backnumberListView = new BacknumberListView({
+                collection: new BacknumberCollection()
+            });
 
-            this.backnumberListView = backnumberListView;
-            backnumberListView.collection = new BacknumberCollection();
             this.setView('#backnumber', backnumberListView);
         },
 
