@@ -66,8 +66,19 @@ define(function(require, exports, module) {
             this.setArticleSearchCondition({
                 targetDate : new Date(this.targetDate)
             });
+
             this.searchArticles();
             this.initEvents();
+        },
+        
+        /**
+         * 記事の検索条件を指定する。
+         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         */
+        setArticleSearchCondition : function(condition) {
+            this.articleCollection.setSearchCondition(condition);
+            this.recommendCollection.setSearchCondition(condition);
+            this.eventsCollection.setSearchCondition(condition);
         },
 
         /**
@@ -98,32 +109,6 @@ define(function(require, exports, module) {
             ], this.onFetchAll.bind(this));
         },
 
-        /**
-         * 記事の検索条件を指定する。
-         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
-         * @memberof NewsView#
-         */
-        setArticleSearchCondition : function(condition) {
-            var targetDate = condition.targetDate;
-            var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
-            this.articleCollection.condition.filters = [
-                    new Or([
-                            new Equal("publishedAt", dateString), new And([
-                                    new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
-                            ])
-                    ]), new IsNull("isDepublish")
-            ];
-
-            this.recommendCollection.condition.filters = [
-                new Or([
-                        new Equal("publishedAt", dateString), new And([
-                                new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
-                        ])
-                ])
-            ];
-
-            this.eventsCollection.condition.filters = new Equal("publishedAt", dateString);
-        },
         /**
          * youtubeライブラリを読み込む
          * @param {Function} callback
