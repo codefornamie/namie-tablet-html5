@@ -57,6 +57,7 @@ define(function(require, exports, module) {
                 var backnumberModel = new BacknumberModel(null, {
                     date : d.clone()
                 });
+                this.push(backnumberModel);
 
                 d.add(1, "day");
             } while (d.isBefore(endDate));

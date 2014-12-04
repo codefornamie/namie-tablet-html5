@@ -71,8 +71,6 @@ define(function(require, exports, module) {
             var self = this;
 
             this.collection.each(function(model) {
-                var backnumberListView = new BacknumberListView();
-
                 self.insertView('#backnumber-list', new BacknumberListItemView({
                     model : model
                 }));

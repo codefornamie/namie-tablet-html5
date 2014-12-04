@@ -72,6 +72,16 @@ define(function(require, exports, module) {
 
                 console.log(self.date);
                 console.log(res);
+                self.set({
+                    articleTitle: [
+                        res.models[0] ? res.models[0].get("dispTitle") : "",
+                        res.models[1] ? res.models[1].get("dispTitle") : "",
+                        res.models[2] ? res.models[2].get("dispTitle") : ""
+                    ],
+                    createdAt: self.date.toDate()
+                });
+console.log(self.get("articleTitle"));
+                self.trigger("change");
             });
         },
 
