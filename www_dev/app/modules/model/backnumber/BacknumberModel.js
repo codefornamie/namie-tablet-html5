@@ -17,6 +17,17 @@ define(function(require, exports, module) {
      */
     var BacknumberModel = AbstractModel.extend({
         /**
+         * モデルの初期値を返す
+         *
+         * @return {Object}
+         */
+        defaults: function () {
+            return {
+                articleTitle: ["", "", ""],
+            };
+        },
+
+        /**
          * 初期化処理
          */
         initialize: function (attr, param) {

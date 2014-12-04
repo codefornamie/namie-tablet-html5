@@ -32,22 +32,29 @@
 
         <div class="backnumber-item__body columns small-6">
             <ul>
-                <% _.each(model.get('articleTitle'), function(title) { %>
-                    <li>
-                        <% if (!!title) { %>
-                            <i class="fa fa-caret-right"></i>
-                            <%= title %>
-                        <% } else { %>
-                            &nbsp;
-                        <% } %>
-                    </li>
-                <% }); %>
+                <% if (!!model.get('articleTitle')[0]) { %>
+                    <% model.get('articleTitle').forEach(function(title, index) { %>
+                        <li>
+                            <% if (!!title) { %>
+                                <i class="fa fa-caret-right"></i>
+                                <%= title %>
+                            <% } else { %>
+                                &nbsp;
+                            <% } %>
+                        </li>
+                    <% }); %>
 
-                <li>
-                    <span class='right'>
-                        ほか
-                    </span>
-                </li>
+                    <li>
+                        <span class='right'>
+                            ほか
+                        </span>
+                    </li>
+                <% } else { %>
+                    <li>記事情報がありません</li>
+                    <li>&nbsp;</li>
+                    <li>&nbsp;</li>
+                    <li>&nbsp;</li>
+                <% } %>
             </ul>
         </div>
 
