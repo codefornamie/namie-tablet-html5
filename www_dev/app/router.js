@@ -6,6 +6,8 @@ define(function(require, exports, module) {
     login.posting = require("modules/view/posting/login/index");
     login.ope = require("modules/view/ope/login/index");
 
+    var BusinessUtil = require("modules/util/BusinessUtil");
+
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
     var NewsView = require("modules/view/news/NewsView");
@@ -119,11 +121,16 @@ define(function(require, exports, module) {
         },
         top : function() {
             console.log("It's a top page.");
-            this.layout.showView(new NewsView());
-            this.layout.setHeader(new common.HeaderView());
-            this.layout.setGlobalNav(new common.GlobalNavView());
-            this.layout.setFooter(new common.FooterView());
-            this.commonView();
+            var targetDate = BusinessUtil.getCurrentPublishDate();
+            this.layout.showView(new NewsView({
+                "targetDate" : targetDate
+            }));
+            // this.layout.setHeader(new common.HeaderView());
+            // this.layout.setGlobalNav(new common.GlobalNavView());
+            // this.layout.setFooter(new common.FooterView());
+            this.commonView({
+                "targetDate" : targetDate
+            });
         },
 
         /**
@@ -280,8 +287,8 @@ define(function(require, exports, module) {
         go : function() {
             return this.navigate(_.toArray(arguments).join("/"), true);
         },
-        commonView : function() {
-            this.layout.setGlobalNav(new common.GlobalNavView());
+        commonView : function(options) {
+            this.layout.setGlobalNav(new common.GlobalNavView(options));
             this.layout.setView("#menu", new common.MenuView()).render();
             this.layout.removeViewByName('#settings');
         },

@@ -44,7 +44,7 @@ define(function(require, exports, module) {
                     app.router.opeYouTubeDetail({
                         model : this.model,
                         recommendArticle : this.recommendArticle
-                    })
+                    });
                 }, this)
             });
         },
