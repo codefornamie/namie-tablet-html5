@@ -17,20 +17,89 @@
 }
 
 .grid-list {
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: stretch;
     list-style: none;
 }
 
 .grid-list>div {
-    display: inline-block;
-    width: 50%;
     box-sizing: border-box;
-    padding: 15px;
+    margin: 15px;
+    flex: 1 1 45%;
+    border: 3px solid #e8e8d0;
+    background: white;
+    position: relative;
 }
 
 .grid-list__item {
-    border: 3px solid #e8e8d0;
-    background: white;
     box-sizing: border-box;
     width: 100%;
     padding: 10px;
+}
+
+/**
+ *  グリッドのアイテム内部
+ */
+.grid-cell--image {
+    display: table-cell;
+    float: none !important;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0 10px;
+}
+
+.grid-cell--body {
+    display: table-cell;
+    float: none !important;
+    position: static;
+    padding: 0 10px;
+}
+
+.is-no-image .grid-cell--image {
+    display: none;
+}
+
+/**
+ *  グリッドのラベル
+ */
+.grid-label {
+}
+
+.grid-label--pink {
+    color: pink;
+}
+
+.grid-label__text {
+}
+
+/**
+ *  グリッドの説明文章
+ */
+.grid-description {
+    padding-bottom: 60px;
+}
+
+.grid-description__title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.grid-description__description {
+}
+
+/**
+ *  グリッドのボタン
+ */
+.grid-button {
+    text-align: right;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.grid-button .button {
+    margin-bottom: 0;
 }
