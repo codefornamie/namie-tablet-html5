@@ -6,7 +6,7 @@ define(function(require, exports, module) {
             "boxName" : "data",
             "odataName" : "odata",
             "pcsVersion" : "1.3.20",
-            // view category (ex. news, posting, ope ..).
+            // view category (ex. news, dojo, posting, ope ..).
             "mode" : "news"
         },
         "logger" : {

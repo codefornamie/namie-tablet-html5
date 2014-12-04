@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var login = require("modules/view/login/index");
     login.posting = require("modules/view/posting/login/index");
     login.ope = require("modules/view/ope/login/index");
+    login.dojo = require("modules/view/dojo/login/index");
 
     var BusinessUtil = require("modules/util/BusinessUtil");
 
@@ -27,6 +28,8 @@ define(function(require, exports, module) {
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
 
+    var DojoTopView = require("modules/view/dojo/top/TopView");
+
     // Defining the application router.
     var Router = Backbone.Router.extend({
         initialize : function() {
@@ -39,6 +42,11 @@ define(function(require, exports, module) {
                         "#menu" : new login.MenuView(),
                         "#contents" : new login.LoginView(),
                         "#footer" : new login.FooterView()
+                    };
+                } else if (app.config.basic.mode === "dojo") {
+                    return {
+                        "#header" : new login.HeaderView(),
+                        "#contents" : new login.dojo.LoginView(),
                     };
                 } else if (app.config.basic.mode === "posting") {
                     return {
@@ -113,7 +121,8 @@ define(function(require, exports, module) {
             'backnumber/:date' : 'backnumberDate',
             'settings' : 'settings',
             'posting-top' : 'postingTop',
-            'ope-top' : 'opeTop'
+            'ope-top' : 'opeTop',
+            'dojo-top' : 'dojoTop'
         },
 
         index : function() {
@@ -157,6 +166,9 @@ define(function(require, exports, module) {
             this.layout.showView(new TopView());
             this.layout.setHeader(new common.HeaderView());
             this.layout.setFooter(new common.FooterView());
+        },
+        dojoTop : function() {
+            this.layout.showView(new DojoTopView());
         },
         scrap : function() {
             console.log('[route] scrap');
