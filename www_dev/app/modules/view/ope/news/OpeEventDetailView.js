@@ -38,7 +38,7 @@ define(function(require, exports, module) {
                     app.router.opeEventDetail({
                         model : this.model,
                         recommendArticle : this.recommendArticle
-                    })
+                    });
                 }, this)
             });
         },
