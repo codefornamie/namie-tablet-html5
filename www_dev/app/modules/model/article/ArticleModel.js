@@ -198,6 +198,23 @@ define(function(require, exports, module) {
             } else {
                 return true;
             }
+        },
+
+        /**
+         * 画像タイプを判定する
+         * @return {Number} Code.IMAGE_TYPE_* を返す
+         * @memberof ArticleModel
+         */
+        getImageType: function () {
+            if (this.isPIOImage()) {
+                return Code.IMAGE_TYPE_PIO;
+            }
+
+            if (!_.isEmpty(this.get("imageUrl"))) {
+                return Code.IMAGE_TYPE_URL;
+            }
+
+            return Code.IMAGE_TYPE_NONE;
         }
     });
 

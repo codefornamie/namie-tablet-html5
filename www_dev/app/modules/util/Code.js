@@ -44,5 +44,10 @@ define(function(require, exports, module) {
     Code.ARTICLE_STATUS_DEPUBLISHED = "配信停止中";
 
 
+    // ArticleModelの画像タイプ
+    Code.IMAGE_TYPE_PIO = 2;
+    Code.IMAGE_TYPE_URL = 1;
+    Code.IMAGE_TYPE_NONE = 0;
+
     module.exports = Code;
 });
