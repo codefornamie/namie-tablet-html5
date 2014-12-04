@@ -32,7 +32,8 @@ define(function(require, exports, module) {
             calendar.bind('dateChange', function(evt, opts) {
                 console.info('dateChange triggered');
                 var targetDate = new Date(evt.target.value);
-                newsView.$el.find("#targetDate").text(DateUtil.formatDate(targetDate, "yyyy年MM月dd日"));
+                newsView.$el.find("#targetDate").text(
+                        DateUtil.formatDate(targetDate, "yyyy年MM月dd日") + app.config.PUBLISH_TIME);
 
                 newsView.setArticleSearchCondition({
                     targetDate : targetDate
