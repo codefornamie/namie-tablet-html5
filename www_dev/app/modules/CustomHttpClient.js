@@ -14,7 +14,7 @@ define(function(require, exports, module) {
     };
 
     CustomHttpClient.prototype.setResponseType = function(type) {
-        return this.super.httpClient.responseType = type;
+        this.super.httpClient.responseType = type;
     };
 
     /**
@@ -132,7 +132,7 @@ define(function(require, exports, module) {
             if (this.app.pcsManager.accessToken) {
                 Log.info("Token found.");
                 var authHeader = {};
-                authHeader["Authorization"] = "Bearer " + this.app.pcsManager.accessToken;
+                authHeader.Authorization = "Bearer " + this.app.pcsManager.accessToken;
                 for ( var index in this.super.requestHeaders) {
                     var header = this.super.requestHeaders[index];
                     for ( var key in header) {
@@ -143,6 +143,9 @@ define(function(require, exports, module) {
                         }
                     }
                 }
+            } else {
+                Log.info("Token not found.");
+                throw new Error();
             }
             callback();
         }, this));

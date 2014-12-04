@@ -46,7 +46,7 @@ define(function(require, exports, module) {
          * </p>
          */
         parseResponse : function(response, options) {
-            Log.info("AbstractODataCollection parseResponse");
+            //Log.info("AbstractODataCollection parseResponse");
             response = this.parseOData(response, options);
             return response;
         },
@@ -60,7 +60,7 @@ define(function(require, exports, module) {
          *
          */
         parseOData : function(response, options) {
-            Log.info("AbstractODataCollection parseOData");
+            //Log.info("AbstractODataCollection parseOData");
             return response;
         },
         /**
@@ -109,7 +109,13 @@ define(function(require, exports, module) {
                     options.complete(res, model, json);
                 }
             };
-            this.search(method, model, options, complete);
+            try {
+                this.search(method, model, options, complete);
+            } catch (e) {
+                Log.info("Personium Exception : " + e);
+                //app.router.go("login");
+                window.location.href = "/";
+            }
         },
         /**
          * PCS ODataの検索処理を行う。
@@ -129,7 +135,6 @@ define(function(require, exports, module) {
         search : function(method, model, options, complete) {
             Log.info("AbstractODataCollection search");
             this.condition = Filter.searchCondition(this.condition);
-            Log.info("AbstractODataCollection search condition set");
             this.entityset.query().filter(this.condition.filter).top(this.condition.top).orderby(this.condition.orderby).run({
                 complete : function(response) {
                     Log.info("AbstractODataCollection search complete");

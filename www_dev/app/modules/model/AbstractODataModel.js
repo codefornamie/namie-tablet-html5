@@ -81,19 +81,24 @@ define(function(require, exports, module) {
                 }
             };
             Log.info("Request personium. method : " + method);
-            switch (method) {
-            case 'create':
-                this.create(method, model, options, complete);
-                break;
-            case 'update':
-                this.update(method, model, options, complete);
-                break;
-            case 'delete':
-                this.del(method, model, options, complete);
-                break;
-            case 'read':
-                this.retrieve(method, model, options, complete);
-                break;
+            try {
+                switch (method) {
+                case 'create':
+                    this.create(method, model, options, complete);
+                    break;
+                case 'update':
+                    this.update(method, model, options, complete);
+                    break;
+                case 'delete':
+                    this.del(method, model, options, complete);
+                    break;
+                case 'read':
+                    this.retrieve(method, model, options, complete);
+                    break;
+                }
+            } catch (e) {
+                Log.info("Personium Exception : " + e);
+                app.router.go("login");
             }
         },
         /**
@@ -201,7 +206,7 @@ define(function(require, exports, module) {
          * @return {Object} パース後の情報
          */
         parseResponse : function(response, options) {
-            Log.info("AbstractODataModel parseResponse");
+            //Log.info("AbstractODataModel parseResponse");
             var res = this.parseOData(response, options);
             // 全ての情報で共通のパース処理を実施する
             if (response && response.__metadata) {
@@ -218,7 +223,7 @@ define(function(require, exports, module) {
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            Log.info("AbstractODataModel parseOData");
+            //Log.info("AbstractODataModel parseOData");
             return response;
         },
         /**

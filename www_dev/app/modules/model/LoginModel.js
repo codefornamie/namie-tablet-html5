@@ -82,6 +82,11 @@ define(function(require, exports, module) {
             var targetBox = cellobj.box("data");
             app.accessor = cellobj.accessor;
             app.box = targetBox;
+            var token = cellobj.getAccessToken();
+            Log.info("token = " + token);
+            //app.pcsManager.setAccessToken(token);
+            app.pcsManager.setTokenAndExpiresInValue(cellobj);
+            //app.pcsManager.accessToken = token;
             Log.info("end certificationWithAccount");
         },
 
@@ -165,7 +170,6 @@ define(function(require, exports, module) {
                         pw = shaPassword.substr(0, 32);
                     }
                     this.certificationWithAccount(id, pw);
-                    //this.registAccountManager(id, pw);
                     Log.info("token certification success. start regist AccountManager");
                     app.pcsManager.registAccountManager(id, pw, function(){
                         Log.info("regist account success");
@@ -186,10 +190,10 @@ define(function(require, exports, module) {
                 return;
             }
             async.parallel([
-                    this.loadPersonal.bind(this), 
+                    this.loadPersonal.bind(this),
                     this.loadConfiguration.bind(this)
             ], this.onLogin.bind(this));
-            
+
         },
 
         loadPersonal : function(callback){

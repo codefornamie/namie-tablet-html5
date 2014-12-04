@@ -41,6 +41,15 @@ define(function(require, exports, module) {
     };
 
     /**
+     * アクセストークンのセット。
+     * @param value トークン文字列
+     */
+    PcsManager.prototype.setAccessToken = function(value) {
+        Log.info("set access token : " + token);
+        this.accessToken = value;
+    };
+
+    /**
      * 現在の動作がデバイス上か非デバイスかを判別する。
      * @returns {Boolean} true:デバイス上、false:非デバイス
      */
@@ -116,7 +125,7 @@ define(function(require, exports, module) {
             if (tokenStatus === this.EXPIRE_ACCESS_TOKEN) {
                 // 期限切れ、リフレッシュ可能期間内
                 // リフレッシュ認証を行う
-                var as = this.pcs.getAccessorWithRefreshToken(cellName, this.assessToken);
+                var as = this.pcs.getAccessorWithRefreshToken(cellName, this.refreshToken);
                 var cell = as.cell();
                 this.setTokenAndExpiresInValue(cell);
                 callback();
@@ -124,7 +133,7 @@ define(function(require, exports, module) {
             if ((tokenStatus === this.EXPIRE_REFRESH_TOKEN) ||
                     (tokenStatus === this.NOT_HAVE_TOKEN)) {
                 // ログイン画面へ
-                this.assessToken = "";
+                this.accessToken = "";
                 this.expirationDate = "";
                 this.expirationRefreshDate = "";
                 this.refreshToken = "";
@@ -139,9 +148,14 @@ define(function(require, exports, module) {
      */
     PcsManager.prototype.setTokenAndExpiresInValue = function(cell) {
         var now = (new Date()).getTime();
-        this.assessToken = cell.getAccessToken();
-        this.expirationDate = now + cell.getExpiresIn();
-        this.expirationRefreshDate = now + cell.getRefreshExpiresIn();
+        this.accessToken = cell.getAccessToken();
+
+        var expiresIn = cell.getExpiresIn();
+        this.expirationDate = now + (expiresIn * 1000);
+
+        var expiresRefreshIn = cell.getRefreshExpiresIn();
+        this.expirationRefreshDate = now + (expiresRefreshIn * 1000);
+
         this.refreshToken = cell.getRefreshToken();
     };
 
@@ -184,7 +198,7 @@ define(function(require, exports, module) {
                         return;
                     }
                     this.expirationDate = data;
-                    this.accessToken = token;
+                    this.setAccessToken(token);
                     Log.info("set expirationDate : " + data);
                     // 次回はキャッシュされたトークンが取得されないように、キャッシュをクリアする
                     this.androidAccountManager.invalidateAuthToken(this.packageName, this.accessToken, function(error) {
@@ -229,6 +243,6 @@ define(function(require, exports, module) {
         } else {
             Log.info("account manager undefined (not android device)");
         }
-    },
+    };
     module.exports = PcsManager;
 });

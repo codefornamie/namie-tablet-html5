@@ -104,7 +104,6 @@ define(function(require, exports, module) {
      */
     Filter.makeQueryString = function(filter) {
         if (filter.expression) {
-            Log.info(filter.expression);
             return filter.expression();
         } else if (_.isArray(filter)) {
             var query = "";
