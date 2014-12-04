@@ -3,8 +3,8 @@ define(function(require) {
 
     var app = require("app");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
-    var Equal = require("modules/util/filter/Equal");
     var IsNull = require("modules/util/filter/IsNull");
+    var Or = require("modules/util/filter/Or");
 
     app.noRendering = true;
 
@@ -21,7 +21,7 @@ define(function(require) {
                 targetDate: dummyTargetDate
             });
 
-            assert.ok(col.condition.filters[0] instanceof Equal);
+            assert.ok(col.condition.filters[0] instanceof Or);
             assert.ok(col.condition.filters[1] instanceof IsNull);
 
             done();
