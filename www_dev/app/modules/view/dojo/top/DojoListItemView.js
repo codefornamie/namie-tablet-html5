@@ -3,17 +3,16 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var DojoListView = require("modules/view/dojo/top/DojoListView");
 
     /**
-     * 道場アプリのトップ画面を表示するためのViewクラスを作成する。
+     * 道場アプリのトップ画面にあるコンテンツを表示するためのViewクラスを作成する。
      * 
      * @class 道場アプリのトップ画面を表示するためのView
-     * @exports TopView
+     * @exports DojoListItemView
      * @constructor
      */
-    var TopView = AbstractView.extend({
-        template : require("ldsh!templates/{mode}/top/top"),
+    var DojoListItemView = AbstractView.extend({
+        template : require("ldsh!templates/{mode}/top/dojoList"),
 
         beforeRendered : function() {
 
@@ -27,11 +26,8 @@ define(function(require, exports, module) {
          * 初期化
          */
         initialize: function () {
-            this.dojoListView = new DojoListView();
-            
-            this.setView("#dojo-contents", this.dojoListView);
         }
     });
 
-    module.exports = TopView;
+    module.exports = DojoListItemView;
 });
