@@ -30,11 +30,16 @@ define(function(require, exports, module) {
 
         /**
          * 対象月を指定する。
-         * @param {Date} 対象月をDateオブジェクトで指定。（年月のみ使用）
+         * @param {Date|moment} 対象月をDateオブジェクトで指定。（年月のみ使用）
          */
         setMonth : function(targetMonth) {
-            this.targetMonth = targetMonth;
+            if (this.month && moment(this.month).isSame(moment(targetMonth))) {
+                return;
+            }
 
+            this.month = targetMonth;
+
+            this.reset();
             this.updateModels();
         },
 
@@ -43,7 +48,7 @@ define(function(require, exports, module) {
          */
         updateModels : function() {
             // TODO 過去の月は1~31日まで出すけど、今月は1日~今日まで出す
-            var month = moment(this.targetMonth);
+            var month = moment(this.month);
             var startDate = month.clone();
             var endDate = month.clone();
             var d;
@@ -57,10 +62,12 @@ define(function(require, exports, module) {
                 var backnumberModel = new BacknumberModel(null, {
                     date : d.clone()
                 });
-                this.push(backnumberModel);
+                this.push(backnumberModel).trigger("add", backnumberModel);
 
                 d.add(1, "day");
             } while (d.isBefore(endDate));
+
+            this.trigger("sync");
         }
     });
 

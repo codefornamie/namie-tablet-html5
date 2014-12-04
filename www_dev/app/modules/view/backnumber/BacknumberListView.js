@@ -23,7 +23,6 @@ define(function(require, exports, module) {
          * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
          */
         beforeRendered : function() {
-            this.setBacknumberList();
         },
 
         /**
@@ -38,21 +37,42 @@ define(function(require, exports, module) {
         initialize : function() {
             console.assert(this.collection, "Should have Collection");
 
+            this.views = [];
+            this.listenTo(this.collection, "add", this.onAddModel);
+            this.listenTo(this.collection, "sync", this.onSyncModel);
+            this.listenTo(this.collection, "reset", this.clear);
+
             this.collection.setMonth(moment());
         },
 
         events : {},
+        
+        /**
+         * 要素をクリアする
+         */
+        clear: function () {
+            this.views.length = 0;
+            this.$el.find("#backnumber-list").empty();
+        },
 
         /**
-         * バックナンバー一覧を描画する
+         * BacknumberModelが追加されたら呼ばれる
+         * @param {Backnumber.Model} model
          */
-        setBacknumberList : function() {
+        onAddModel: function (model) {
+            this.views.push(new BacknumberListItemView({
+                model: model
+            }));
+        },
+        
+        /**
+         * collectionが揃ったら呼ばれる
+         */
+        onSyncModel: function () {
             var self = this;
 
-            this.collection.each(function(model) {
-                self.insertView('#backnumber-list', new BacknumberListItemView({
-                    model : model
-                }));
+            this.views.forEach(function (view) {
+                self.insertView('#backnumber-list', view);
             });
         }
     });
