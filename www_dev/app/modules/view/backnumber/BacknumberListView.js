@@ -42,6 +42,10 @@ define(function(require, exports, module) {
             this.listenTo(this.collection, "sync", this.onSyncModel);
             this.listenTo(this.collection, "reset", this.clear);
 
+            // ローディング表示切り替え用のイベント
+            this.listenTo(this.collection, "startLoading", this.onStartLoading);
+            this.listenTo(this.collection, "finishLoading", this.onFinishLoading);
+
             this.collection.setMonth(moment());
         },
 
@@ -76,6 +80,22 @@ define(function(require, exports, module) {
             });
 
             this.renderViews();
+        },
+        
+        /**
+         * 読み込みが始まったら呼ばれる
+         */
+        onStartLoading: function () {
+            this.showLoading();
+        },
+
+        /**
+         * 読み込みが終わったら呼ばれる
+         */
+        onFinishLoading: function () {
+            $('#backnumber').scrollTop(0);
+
+            this.hideLoading();
         }
     });
     module.exports = BacknumberListView;

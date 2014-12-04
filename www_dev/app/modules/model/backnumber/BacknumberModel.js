@@ -95,6 +95,7 @@ define(function(require, exports, module) {
                 });
 
                 self.trigger("change");
+                self.trigger("fetched");
             });
         },
 

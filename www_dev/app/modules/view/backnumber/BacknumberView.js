@@ -82,7 +82,6 @@ define(function(require, exports, module) {
          *  @param {Event} evt
          */
         onClickMonthPrev: function (evt) {
-            // [TODO] 選択された月に従ってthis.backnumberListViewの内容を更新する
             var month = moment(this.backnumberListView.collection.month);
 
             month.add(-1, "month");
@@ -96,8 +95,8 @@ define(function(require, exports, module) {
          *  @param {Event} evt
          */
         onClickMonthNext: function (evt) {
-            // [TODO] 選択された月に従ってthis.backnumberListViewの内容を更新する
             var month = moment(this.backnumberListView.collection.month);
+
             month.add(1, "month");
             
             this.updateMonth(month);
