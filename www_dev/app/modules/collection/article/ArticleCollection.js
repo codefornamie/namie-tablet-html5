@@ -39,7 +39,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事の検索条件を指定する。
-         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @param {Object} condition 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
          */
         setSearchCondition : function(condition) {
             var targetDate = condition.targetDate;
