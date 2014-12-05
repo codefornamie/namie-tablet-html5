@@ -36,6 +36,7 @@
     border: 3px solid #e8e8d0;
     background: white;
     position: relative;
+    max-width: 45%;
 }
 
 .grid-list__item {
