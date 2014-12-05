@@ -10,7 +10,7 @@ define(function(require, exports, module) {
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
     var IsNull = require("modules/util/filter/IsNull");
-    var Log = require("modules/util/logger");
+    var Log = require("modules/util/Logger");
 
     /**
      * ログイン画面のモデルクラスを作成する。
@@ -190,10 +190,10 @@ define(function(require, exports, module) {
                 return;
             }
             async.parallel([
-                    $.proxy(this.loadPersonal, this), 
+                    $.proxy(this.loadPersonal, this),
                     $.proxy(this.loadConfiguration, this)
             ], $.proxy(this.onLogin, this));
-            
+
         },
 
         loadPersonal : function(callback){

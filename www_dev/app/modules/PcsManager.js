@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
     "use strict";
-    var Log = require("modules/util/logger");
+    var Log = require("modules/util/Logger");
 
     /**
      * アクセスマネージャクラスを作成する。
@@ -189,6 +189,7 @@ define(function(require, exports, module) {
                     param.error(error);
                     return;
                 }
+                this.accessToken = token;
                 // トークンの有効期限(expires-in)を取得する
                 Log.info("call getUserData of AccountManager");
                 this.androidAccountManager.getUserData(account, "ExpiresIn", $.proxy(function(error, data) {
@@ -198,7 +199,6 @@ define(function(require, exports, module) {
                         return;
                     }
                     this.expirationDate = data;
-                    this.setAccessToken(token);
                     Log.info("set expirationDate : " + data);
                     // 次回はキャッシュされたトークンが取得されないように、キャッシュをクリアする
                     this.androidAccountManager.invalidateAuthToken(this.packageName, this.accessToken, function(error) {
