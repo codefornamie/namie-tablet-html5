@@ -31,11 +31,10 @@ define(function(require, exports, module) {
             var models = this.collection.models;
             var model = models && models[0];
             var editions = [];
-            var currentEditionIndex = 0;
+            var currentEditionIndex = this.collection._currentEditionIndex;
 
             if (model) {
                 editions = model.get("models");
-                currentEditionIndex = model.get("_currentEditionIndex");
             }
 
             this.model = new Backbone.Model({

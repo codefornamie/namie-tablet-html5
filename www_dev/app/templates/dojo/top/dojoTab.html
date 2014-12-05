@@ -1,7 +1,7 @@
-<ul>
+<ul class="dojo-tab">
     <% _(model.get("editions")).each(function (edition, i) { %>
         <li
-            class="<%= (model.get("currentEditionIndex") == i) ? 'is-selected' : '' %>"
+            class="dojo-tab__item <%= (model.get('currentEditionIndex') == i) ? 'is-selected' : '' %>"
             data-select-edition="<%= i %>"
         >
             <%= edition.get("editionTitle") %>

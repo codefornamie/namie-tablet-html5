@@ -7,6 +7,23 @@
 }
 
 /**
+ *
+ */
+.dojo-tab {
+    display: table;
+    list-style: none;
+}
+
+.dojo-tab__item {
+    display: table-cell;
+    background: yellow;
+}
+
+.dojo-tab__item.is-selected {
+    background: orange;
+}
+
+/**
  *  全体の視聴状況
  */
 .dojo-watched-state {
