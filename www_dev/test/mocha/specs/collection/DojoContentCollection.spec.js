@@ -3,6 +3,7 @@ define(function(require) {
 
     var app = require("app");
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
+    var DojoEditionCollection = require("modules/collection/dojo/DojoEditionCollection");
 
     app.noRendering = true;
 
@@ -11,11 +12,11 @@ define(function(require) {
             this.timeout(15000);
         });
 
-        it("TEST-01 DojoContentCollection#groupByEdition", function(done) {
+        it("TEST-01 DojoContentCollection#groupByEditions", function(done) {
             var col = new DojoContentCollection();
-            var editions = col.groupByEdition();
+            var editions = col.groupByEditions();
 
-            assert.ok(Array.isArray(editions));
+            assert.ok(editions instanceof DojoEditionCollection);
 
             done();
         });
