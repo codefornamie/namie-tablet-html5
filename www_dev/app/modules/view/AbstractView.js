@@ -20,6 +20,13 @@ define(function(require, exports, module) {
             };
         },
         beforeRender : function() {
+            if (this.templateMap) {
+                var t = this.templateMap[app.config.basic.mode];
+                if (t) {
+                    this.template = t;
+                }
+            }
+
             this.beforeRendered();
             if (this.animation) {
                 this.$el.addClass('animated ' + this.animation);

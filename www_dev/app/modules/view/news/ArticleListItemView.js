@@ -23,9 +23,9 @@ define(function(require, exports, module) {
      */
     var ArticleListItemView = AbstractView.extend({
         /**
-         * このViewを表示する際に利用するアニメーション
+         * このViewを表示する際に利用するテンプレート
          */
-        template : require("ldsh!templates/{mode}/news/articleListItem"),
+        template : require("ldsh!templates/news/news/articleListItem"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * <p>
