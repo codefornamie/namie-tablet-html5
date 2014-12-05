@@ -32,7 +32,7 @@ define(function(require, exports, module) {
             }
             app.box.col("dav").getBinary(this.imageUrl, {
                 success : $.proxy(function(binary) {
-                    console.log("getBinary()");
+                    app.logger.debug("getBinary()");
                     var arrayBufferView = new Uint8Array(binary);
                     var blob = new Blob([
                         arrayBufferView
@@ -51,6 +51,7 @@ define(function(require, exports, module) {
                 },this),
                 error: $.proxy(function () {
                     alert("画像の取得に失敗しました");
+                    app.logger.error("画像の取得に失敗しました");
                     this.hideLoading();
                 },this)
             });
@@ -74,12 +75,12 @@ define(function(require, exports, module) {
          * ファイル選択時のハンドラ
          */
         onChangeFileData : function(event) {
-            console.log("onChangeFileData");
+            app.logger.debug("onChangeFileData");
             var inputFile = event.target;
             var file = (event.target.files ? event.target.files[0] : event.target.file);
-            console.log("onChangeFileData: file: " + file);
-            console.log("onChangeFileData: file.type: " + file.type);
-            console.log("onChangeFileData: file.name: " + file.name);
+            app.logger.debug("onChangeFileData: file: " + file);
+            app.logger.debug("onChangeFileData: file.type: " + file.type);
+            app.logger.debug("onChangeFileData: file.name: " + file.name);
 
             if (!file) {
                 $(this.el).find('#previewFile').hide();
@@ -90,7 +91,7 @@ define(function(require, exports, module) {
             if (!file.type.match('image.*')) {
                 return;
             }
-          console.log("onChangeFileData");
+          app.logger.debug("onChangeFileData");
           var previewImg = $(this.el).find('#previewFile');
           previewImg.prop("file", file);
           // ファイルの読み込み

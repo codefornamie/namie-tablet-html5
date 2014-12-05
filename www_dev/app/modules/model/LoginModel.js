@@ -63,20 +63,20 @@ define(function(require, exports, module) {
                 this.accountManager = window.plugins.accountmanager;
             }
             if (!this.accountManager) {
-                console.log("account maanger undefined (not android)");
+                app.logger.debug("account maanger undefined (not android)");
                 callback("showLoginView", "");
                 return;
             }
             //alert("アカウントマネージャ認証開始");
             this.accountManager.getAccountsByType(this.packageName, $.proxy(function(error, accounts) {
                 //alert("アカウントマネージャチェック終了 : " + accounts.length + "件");
-                console.log("account manager getAccountsByType method responsed ");
+                app.logger.debug("account manager getAccountsByType method responsed ");
                 if (error) {
-                    console.log("account manager error : " + error);
+                    app.logger.debug("account manager error : " + error);
                     callback("showLoginView", "");
                     return;
                 } else if (!accounts || !accounts.length) {
-                    console.log("this device has no accounts");
+                    app.logger.debug("this device has no accounts");
                     callback("showLoginView", "");
                     return;
                 }
@@ -96,7 +96,7 @@ define(function(require, exports, module) {
 
                 this.accountManager.getAuthToken(0, "oauth", function(error, token) {
                     //alert("トークン取得成功 : " + token);
-                    console.log("account manager getAuthToken responsed : " + token);
+                    app.logger.debug("account manager getAuthToken responsed : " + token);
                     if (error) {
                         callback("error", error);
                     } else {
@@ -145,7 +145,7 @@ define(function(require, exports, module) {
          */
         certificationWithToken : function() {
             //alert("トークン認証(?)開始");
-            console.log("set access token : " + this.accessToken);
+            app.logger.debug("set access token : " + this.accessToken);
             var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
             dcContext.setAsync(true);
             try {
@@ -155,7 +155,7 @@ define(function(require, exports, module) {
                 app.box = targetBox;
             } catch (e) {
                 //alert("トークン認証でエラー : " + e);
-                console.log("certificate failure : " + e);
+                app.logger.debug("certificate failure : " + e);
             }
         },
 
@@ -178,7 +178,7 @@ define(function(require, exports, module) {
                 };
                 this.accountManager.addAccountExplicitly(this.packageName, id, pw, param,
                         function(error, account) {
-                            console.log("account manager addAccountExplicitly responsed");
+                            app.logger.debug("account manager addAccountExplicitly responsed");
                             if (error) {
                                 this.onLogin("login failure : " + error);
                                 return;
@@ -186,7 +186,7 @@ define(function(require, exports, module) {
                             //alert("アカウントマネージャ登録成功");
                         });
             } else {
-                console.log("account manager undefined (not android)");
+                app.logger.debug("account manager undefined (not android)");
             }
         },
 
@@ -204,7 +204,7 @@ define(function(require, exports, module) {
          * @param {Function} onLogin 認証完了後に呼び出されるコールバック関数。
          */
         login : function(onLogin) {
-            console.log("login method in LoginModel start");
+            app.logger.debug("login method in LoginModel start");
             this.onLogin = onLogin;
             try {
                 if (this.accessToken) {
@@ -230,7 +230,7 @@ define(function(require, exports, module) {
                 } else {
                     message = "ユーザーID、または、パスワードが正しくありません。";
                 }
-                console.log("login exception : " + message);
+                app.logger.debug("login exception : " + message);
                 this.onLogin(message);
                 return;
             }
@@ -270,6 +270,7 @@ define(function(require, exports, module) {
                             error: $.proxy(function() {
                                 // パーソナル情報新規登録に失敗
                                 callback("ユーザ情報の登録に失敗しました。再度ログインしてください。");
+                                app.logger.error("ユーザ情報の登録に失敗しました。再度ログインしてください。");
                             },this)
                         });
                     }
@@ -277,6 +278,7 @@ define(function(require, exports, module) {
                 error: $.proxy(function() {
                     // パーソナル情報検索に失敗
                     callback("ユーザ情報の取得に失敗しました。再度ログインしてください。");
+                    app.logger.error("ユーザ情報の取得に失敗しました。再度ログインしてください。");
                 },this)
             });
         },
@@ -291,12 +293,13 @@ define(function(require, exports, module) {
                 error: $.proxy(function() {
                     // 取得に失敗
                     callback("設定情報の取得に失敗しました。再度ログインしてください。");
+                    app.logger.error("設定情報の取得に失敗しました。再度ログインしてください。");
                 },this)
             });
         },
 
         setAccessToken : function(token) {
-            console.log("set access token : " + token);
+            app.logger.debug("set access token : " + token);
             this.accessToken = token;
         }
     });
