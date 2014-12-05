@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="columns small-12">
+        <div class="dojo-watched-state right">
+            <p class="dojo-watched-state__description">
+                <span data-content-num>--</span>
+                本の動画があります
+            </p>
+
+            <div class="dojo-watched-state__progress">
+                <span data-watched-num>--</span>
+                /
+                <span data-content-num>--</span>
+            </div>
+        </div>
+
+        <h2><%= model.get("editionTitle") %>編</h2>
+    </div>
+</div>
+
+<div
+    id="dojo-list-container"
+    class="dojo-list-container"
+></div>

@@ -213,7 +213,7 @@ define(function(require, exports, module) {
          * @param {Event} ev
          */
         onRoute: function (ev) {
-            console.log(ev);
+            app.logger.debug(ev);
         }
     });
 

@@ -38,6 +38,7 @@ define(function(require, exports, module) {
                 error: function(e){
                     this.hideLoading();
                     vexDialog.alert("保存に失敗しました。");
+                    app.logger.error("保存に失敗しました。");
                 }
             });
         }

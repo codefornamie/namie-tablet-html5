@@ -104,7 +104,7 @@ define(function(require, exports, module) {
             try {
                 this.player.destroy();
             } catch (e) {
-                console.log(e);
+                app.logger.debug(e);
             }
         }
     });

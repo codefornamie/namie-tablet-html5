@@ -126,10 +126,10 @@ define(function(require, exports, module) {
         },
 
         index : function() {
-            console.log("Welcome to your / route.");
+            app.logger.debug("Welcome to your / route.");
         },
         top : function() {
-            console.log("It's a top page.");
+            app.logger.debug("It's a top page.");
             var targetDate = BusinessUtil.getCurrentPublishDate();
             this.layout.showView(new NewsView({
                 "targetDate" : targetDate
@@ -171,25 +171,25 @@ define(function(require, exports, module) {
             this.layout.showView(new DojoTopView());
         },
         scrap : function() {
-            console.log('[route] scrap');
+            app.logger.debug('[route] scrap');
             this.layout.showView(new ScrapView());
             this.commonView();
         },
 
         tutorial : function() {
-            console.log('[route] tutorial');
+            app.logger.debug('[route] tutorial');
             this.layout.showView(new TutorialView());
             this.commonView();
         },
 
         backnumber : function() {
-            console.log('[route] backnumber');
+            app.logger.debug('[route] backnumber');
             this.layout.showView(new BacknumberView());
             this.commonView();
         },
 
         backnumberDate : function(date) {
-            console.log('[route] backnumber/%s', date);
+            app.logger.debug('[route] backnumber/%s', date);
             this.layout.showView(new BacknumberDateView({
                 date : date
             }));
@@ -197,7 +197,7 @@ define(function(require, exports, module) {
         },
 
         settings : function() {
-            console.log('[route] settings');
+            app.logger.debug('[route] settings');
             this.layout.setSettings(new common.SettingsView());
         },
 
@@ -205,7 +205,7 @@ define(function(require, exports, module) {
          * このメソッドは手動で呼ばれる
          */
         articleDetail : function(options) {
-            console.log('[route] articleDetail');
+            app.logger.debug('[route] articleDetail');
 
             this.navigate("articleDetail");
             this.layout.showView(new ArticleDetailView({
@@ -218,7 +218,7 @@ define(function(require, exports, module) {
          * このメソッドは手動で呼ばれる
          */
         articleRegist : function(options) {
-            console.log('[route] articleRegist');
+            app.logger.debug('[route] articleRegist');
 
             options = options || {};
 
@@ -231,7 +231,7 @@ define(function(require, exports, module) {
          * このメソッドは手動で呼ばれる
          */
         articleReport : function() {
-            console.log('[route] articleReport');
+            app.logger.debug('[route] articleReport');
             this.layout.showView(new ArticleRegistView({
                 articleCategory : "4"
             }));
@@ -243,7 +243,7 @@ define(function(require, exports, module) {
          * このメソッドは手動で呼ばれる
          */
         opeArticleRegist : function(options) {
-            console.log('[route] opeArticleRegist');
+            app.logger.debug('[route] opeArticleRegist');
             this.layout.setView("#contents__primary", new OpeArticleRegistView(options)).render();
             this.navigate("opeArticleRegist");
             $("#contents__primary").scrollTop(0);
@@ -253,7 +253,7 @@ define(function(require, exports, module) {
          * このメソッドは手動で呼ばれる
          */
         opeYouTubeRegist : function(options) {
-            console.log('[route] opeYouTubeRegist');
+            app.logger.debug('[route] opeYouTubeRegist');
             this.layout.setView("#contents__primary", new OpeYouTubeRegistView(options)).render();
             this.navigate("opeYouTubeRegist");
             $("#contents__primary").scrollTop(0);
@@ -262,7 +262,7 @@ define(function(require, exports, module) {
          *  このメソッドは手動で呼ばれる
          */
         opeEventDetail : function(options) {
-            console.log('[route] opeEventDetail');
+            app.logger.debug('[route] opeEventDetail');
             this.layout.setView("#contents__primary", new OpeEventDetailView(options)).render();
             this.navigate("opeEventDetail");
             $("#contents__primary").scrollTop(0);
@@ -271,7 +271,7 @@ define(function(require, exports, module) {
          *  このメソッドは手動で呼ばれる
          */
         opeArticleDetail : function(options) {
-            console.log('[route] opeArticleDetail');
+            app.logger.debug('[route] opeArticleDetail');
             this.layout.setView("#contents__primary", new OpeArticleDetailView(options)).render();
             this.navigate("opeArticleDetail");
             $("#contents__primary").scrollTop(0);
@@ -280,18 +280,18 @@ define(function(require, exports, module) {
          *  このメソッドは手動で呼ばれる
          */
         opeYouTubeDetail : function(options) {
-            console.log('[route] opeYouTubeDetail');
+            app.logger.debug('[route] opeYouTubeDetail');
             this.layout.setView("#contents__primary", new OpeYouTubeDetailView(options)).render();
             this.navigate("opeYouTubeDetail");
             $("#contents__primary").scrollTop(0);
         },
 
         /*
-         * events : function() { console.log("It's a events page."); this.layout.showView(new EventsView());
-         * this.commonView(); }, eventsRegisted : function() { console.log("It's a eventsRegisted page.");
+         * events : function() { app.logger.debug("It's a events page."); this.layout.showView(new EventsView());
+         * this.commonView(); }, eventsRegisted : function() { app.logger.debug("It's a eventsRegisted page.");
          * this.layout.showView(new EventsRegistedView()); this.commonView(); }, showEvents : function() {
-         * console.log("It's a show events page."); this.layout.showView(new ShowEventsView()); this.commonView(); },
-         * news : function() { console.log("It's a news page."); this.layout.showView(new NewsView());
+         * app.logger.debug("It's a show events page."); this.layout.showView(new ShowEventsView()); this.commonView(); },
+         * news : function() { app.logger.debug("It's a news page."); this.layout.showView(new NewsView());
          * this.commonView(); },
          */
 
