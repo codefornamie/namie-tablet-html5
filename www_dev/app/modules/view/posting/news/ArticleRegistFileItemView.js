@@ -51,6 +51,7 @@ define(function(require, exports, module) {
                 },this),
                 error: $.proxy(function () {
                     alert("画像の取得に失敗しました");
+                    app.logger.error("画像の取得に失敗しました");
                     this.hideLoading();
                 },this)
             });

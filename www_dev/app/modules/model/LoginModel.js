@@ -270,6 +270,7 @@ define(function(require, exports, module) {
                             error: $.proxy(function() {
                                 // パーソナル情報新規登録に失敗
                                 callback("ユーザ情報の登録に失敗しました。再度ログインしてください。");
+                                app.logger.error("ユーザ情報の登録に失敗しました。再度ログインしてください。");
                             },this)
                         });
                     }
@@ -277,6 +278,7 @@ define(function(require, exports, module) {
                 error: $.proxy(function() {
                     // パーソナル情報検索に失敗
                     callback("ユーザ情報の取得に失敗しました。再度ログインしてください。");
+                    app.logger.error("ユーザ情報の取得に失敗しました。再度ログインしてください。");
                 },this)
             });
         },
@@ -291,6 +293,7 @@ define(function(require, exports, module) {
                 error: $.proxy(function() {
                     // 取得に失敗
                     callback("設定情報の取得に失敗しました。再度ログインしてください。");
+                    app.logger.error("設定情報の取得に失敗しました。再度ログインしてください。");
                 },this)
             });
         },

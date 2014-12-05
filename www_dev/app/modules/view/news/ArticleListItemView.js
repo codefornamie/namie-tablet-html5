@@ -305,7 +305,7 @@ define(function(require, exports, module) {
          *  非同期通信失敗後のコールバック関数
          */
         onFailure: function (err) {
-            app.logger.debug(err);
+            app.logger.error(err);
             this.hideLoading();
         },
 

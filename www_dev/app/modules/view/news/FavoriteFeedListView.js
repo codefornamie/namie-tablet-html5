@@ -135,7 +135,7 @@ define(function(require, exports, module) {
          *  article情報検索失敗後のコールバック関数
          */
         onFailure: function (err) {
-            app.logger.debug(err);
+            app.logger.error(err);
             this.hideLoading();
         },
 

@@ -73,7 +73,7 @@ define(function(require, exports, module) {
          *  切り抜き情報検索失敗後のコールバック関数
          */
         onFailure: function (err) {
-            app.logger.debug(err);
+            app.logger.error(err);
             this.hideLoading();
         },
 
