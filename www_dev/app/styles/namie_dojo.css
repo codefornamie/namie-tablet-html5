@@ -1,0 +1,117 @@
+/**
+ *  道場アプリCSS
+ */
+.dojo-contents {
+    overflow: auto;
+    height: 100%;
+}
+
+/**
+ *
+ */
+.dojo-tab {
+    display: table;
+    list-style: none;
+}
+
+.dojo-tab__item {
+    display: table-cell;
+    background: yellow;
+}
+
+.dojo-tab__item.is-selected {
+    background: orange;
+}
+
+/**
+ *  全体の視聴状況
+ */
+.dojo-watched-state {
+}
+
+.dojo-watched-state__description {
+}
+
+.dojo-watched-state__progress {
+}
+
+/**
+ *  動画コンテンツ一覧
+ */
+.dojo-list {
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: stretch;
+    list-style: none;
+}
+
+.dojo-list>div {
+    border: 1px solid #333;
+    box-sizing: border-box;
+    flex: 1 1 30%;
+    margin: 10px;
+    position: relative;
+    max-width: 30%;
+}
+
+.dojo-item {
+    box-sizing: border-box;
+    position: static;
+    width: 100%;
+}
+
+.dojo-item__thumbnail {
+}
+
+/**
+ *  習得済みスタンプ
+ */
+.dojo-item__stamp {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    background-color: white;
+    border: 5px solid #333;
+}
+
+.dojo-item.is-solved .dojo-item__stamp {
+    display: block;
+}
+
+.dojo-item.is-unsolved .dojo-item__stamp {
+    display: none;
+}
+
+.dojo-item__stamp--solved {
+}
+
+.dojo-item__title {
+    padding: 10px 100px 10px 10px;
+}
+
+.dojo-item__button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    margin-bottom: 0;
+}
+
+/**
+ *  視聴状態ラベル
+ */
+.dojo-item__watched-state {
+    color: red;
+}
+
+.dojo-item.is-watched .dojo-item__watched-state {
+    display: block;
+}
+
+.dojo-item.is-unwatched .dojo-item__watched-state {
+    display: none;
+}
