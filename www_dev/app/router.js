@@ -9,6 +9,8 @@ define(function(require, exports, module) {
 
     var BusinessUtil = require("modules/util/BusinessUtil");
 
+    var LoginModel = require("modules/model/LoginModel");
+
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
     var NewsView = require("modules/view/news/NewsView");
@@ -55,7 +57,6 @@ define(function(require, exports, module) {
                     };
                 } else if (app.config.basic.mode === "ope") {
                     return {
-                        "#header" : new login.HeaderView(),
                         "#contents" : new login.ope.LoginView(),
                         "#footer" : new login.FooterView()
                     };
@@ -65,7 +66,18 @@ define(function(require, exports, module) {
                 el : "main",
 
                 template : require("ldsh!templates/{mode}/main"),
-
+                templateMap : {
+                    news : require("ldsh!templates/news/main"),
+                    ope : require("ldsh!templates/ope/main"),
+                    posting : require("ldsh!templates/posting/main"),
+                },
+                /**
+                 * 描画目に実行する処理。
+                 * @memberof router#
+                 */
+                beforeRender : function() {
+                    this.template = this.templateMap[app.config.basic.mode];
+                },
                 views : getViews(),
 
                 setHeader : function(headerView) {
@@ -109,6 +121,8 @@ define(function(require, exports, module) {
         },
         routes : {
             "" : "index",
+            "redirect?*queryString" : "redirect",
+            "news?*queryString" : "top",
             "top" : "top",
             "article/:id" : "showArticle",
             // "events": "events",
@@ -128,11 +142,36 @@ define(function(require, exports, module) {
         index : function() {
             app.logger.debug("Welcome to your / route.");
         },
-        top : function() {
+        
+        /**
+         * 別アプリへの遷移処理。
+         * @memberof router#
+         * @param {String} queryString クエリ文字列。
+         */
+        redirect : function(queryString) {
+            var params = this.parseQueryString(queryString);
+            app.config.basic.mode = params.mode;
+            app.preview = params.preview;
+            var loginModel = new LoginModel();
+            loginModel.accessToken = params.accessToken;
+            loginModel.set("loginId", params.loginId);
+            loginModel.login($.proxy(function(){
+                this.go("news?preview=true&targetDate=" + params.targetDate);
+            }, this));
+        },
+        
+        /**
+         * Top画面の表示。
+         * @memberof router#
+         * @param {String} queryString クエリ文字列。
+         */
+        top : function(queryString) {
             app.logger.debug("It's a top page.");
-            var targetDate = BusinessUtil.getCurrentPublishDate();
+            var params = this.parseQueryString(queryString);
+            var targetDate = params.targetDate ? new Date(params.targetDate) : BusinessUtil.getCurrentPublishDate();
             this.layout.showView(new NewsView({
-                "targetDate" : targetDate
+                "targetDate" : targetDate,
+                "preview" : params.preview
             }));
             // this.layout.setHeader(new common.HeaderView());
             // this.layout.setGlobalNav(new common.GlobalNavView());
@@ -309,7 +348,31 @@ define(function(require, exports, module) {
          */
         back : function() {
             window.history.back();
-        }
+        },
+
+        /**
+         * URLのクエリ文字列をパースする。
+         * @param {String} queryString クエリ文字列
+         * @return {Object} queryStringをパースした結果のマップオブジェクト。
+         */
+        parseQueryString : function(queryString) {
+            var params = {};
+            if (queryString) {
+                _.each(_.map(decodeURI(queryString).split(/&/g), function(el, i) {
+                    var aux = el.split('='), o = {};
+                    if (aux.length >= 1) {
+                        var val;
+                        if (aux.length == 2)
+                            val = aux[1];
+                        o[aux[0]] = val;
+                    }
+                    return o;
+                }), function(o) {
+                    _.extend(params, o);
+                });
+            }
+            return params;
+        }        
     });
 
     module.exports = Router;

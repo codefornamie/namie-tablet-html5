@@ -42,6 +42,10 @@ define(function(require, exports, module) {
     var NewsView = AbstractView.extend({
 
         template : require("ldsh!templates/{mode}/news/news"),
+        templateMap : {
+            news : require("ldsh!templates/news/news/news"),
+            ope : require("ldsh!templates/ope/news/news")
+        },
         model : new ArticleModel(),
         fetchCounter : 0,
         articleCollection : new ArticleCollection(),
@@ -352,9 +356,11 @@ define(function(require, exports, module) {
          * @memberof NewsView#
          */
         onClickGridItem : function(ev, param) {
-            var articleId = $(ev.currentTarget).attr("data-article-id");
-            app.newsView = this;
-            app.router.go("article", articleId);
+            if (!this.preview) {
+                var articleId = $(ev.currentTarget).attr("data-article-id");
+                app.newsView = this;
+                app.router.go("article", articleId);
+            }
         },
 
         /**
