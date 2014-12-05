@@ -31,6 +31,7 @@ define(function(require, exports, module) {
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
 
     var DojoTopView = require("modules/view/dojo/top/TopView");
+    var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
 
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -207,6 +208,7 @@ define(function(require, exports, module) {
             this.layout.setFooter(new common.FooterView());
         },
         dojoTop : function() {
+            this.layout.setHeader(new DojoHeaderView());
             this.layout.showView(new DojoTopView());
         },
         scrap : function() {

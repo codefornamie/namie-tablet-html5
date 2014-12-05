@@ -39,7 +39,7 @@ define(function(require, exports, module) {
                 if (!editionModel) {
                     editionModel = new DojoEditionModel({
                         editionKey: editionKey,
-                        editionTitle: "ダミータイトル" + _.uniqueId() + "(DojoContentCollectionで指定しています)"
+                        editionTitle: "基本ダミー" + _.uniqueId() + "編"
                     });
                     editionModel.set("contentCollection", new DojoContentCollection());
                     editionCollection.push(editionModel);
