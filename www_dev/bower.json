@@ -25,6 +25,7 @@
     "jsSHA": "~1.5.0",
     "html5sortable": "*",
     "GALocalStorage": "https://github.com/ggendre/GALocalStorage.git",
-    "moment": "~2.8.4"
+    "moment": "~2.8.4",
+    "jquery-colorbox": "~1.5.14"
   }
 }
