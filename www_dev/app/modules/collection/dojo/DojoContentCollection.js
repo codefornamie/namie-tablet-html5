@@ -39,13 +39,15 @@ define(function(require, exports, module) {
                 if (!editionModel) {
                     editionModel = new DojoEditionModel({
                         editionKey: editionKey,
-                        editionTitle: "ダミーのeditionTitleです。DojoContentCollectionで指定しています。"
+                        editionTitle: "ダミータイトル" + _.uniqueId() + "(DojoContentCollectionで指定しています)"
                     });
-                    editionModel.contentCollection = new DojoContentCollection();
+                    editionModel.set("contentCollection", new DojoContentCollection());
                     editionCollection.push(editionModel);
                 }
 
-                editionModel.contentCollection.push(model);
+                var contentCollection = editionModel.get("contentCollection");
+                contentCollection.push(model);
+                editionModel.set("contentCollection", contentCollection);
             });
 
             return editionCollection;

@@ -77,6 +77,7 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(this.dojoContentCollection, "sync", this.onSyncDojoContent);
+            this.listenTo(this.dojoEditionCollection, "edition", this.onChangeEdition);
         },
 
         /**

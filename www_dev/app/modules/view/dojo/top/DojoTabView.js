@@ -57,6 +57,8 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             console.assert(this.collection, "DojoTabView should have a collection");
+            
+            this.initEvents();
         },
 
         /**
@@ -64,6 +66,18 @@ define(function(require, exports, module) {
          * @memberof DojoTabView#
          */
         initEvents : function() {
+            this.$el.on("click", "[data-select-edition]", this.onSelectEdition.bind(this));
+        },
+
+        /**
+         * 編のタブをクリックしたら呼ばれる
+         * @param {Event} ev
+         */
+        onSelectEdition: function (ev) {
+            var indexAttr = $(ev.currentTarget).attr("data-select-edition");
+            var index = parseInt(indexAttr, 10) || 0;
+
+            this.collection.setEditionIndex(index);
         }
     });
 

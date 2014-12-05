@@ -31,9 +31,20 @@ define(function(require, exports, module) {
          * @return {DojoEditionModel}
          */
         getCurrentEdition: function () {
-            var edition = this.at(this._currentEditionIndex);
+            var model = this.models[0];
+            var models = model && model.get("models");
+            var edition = models && models[this._currentEditionIndex];
 
             return edition;
+        },
+
+        /**
+         * 表示する edition のインデックスを変更する
+         * @param {Number} index
+         */
+        setEditionIndex: function (index) {
+            this._currentEditionIndex = index || 0;
+            this.trigger("edition");
         }
     });
 

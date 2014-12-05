@@ -28,13 +28,6 @@ define(function(require, exports, module) {
          * @memberof DojoEditionView#
          */
         beforeRendered : function() {
-            // TODO もっと直感的にアクセスできるようにしたい
-            var models = this.model.get("models");
-            var edition = models && models[0];
-
-            if (edition) {
-                this.model = edition;
-            }
         },
 
         /**
@@ -42,11 +35,11 @@ define(function(require, exports, module) {
          * @memberof DojoEditionView#
          */
         afterRendered : function() {
-            if (this.model && this.model.contentCollection) {
+            if (this.model && this.model.get("contentCollection")) {
                 this.updateNumberOfContent(this.model);
 
                 var dojoListView = new DojoListView({
-                    collection: this.model.contentCollection
+                    collection: this.model.get("contentCollection")
                 });
 
                 this.setView("#dojo-list-container", dojoListView).render();
@@ -67,7 +60,7 @@ define(function(require, exports, module) {
          * @memberof DojoEditionView#
          */
         updateNumberOfContent : function(edition) {
-            var collection = edition.contentCollection;
+            var collection = edition.get("contentCollection");
 
             this.$el.find("[data-content-num]").text(collection.length);
             this.$el.find("[data-watched-num]").text(edition.getWatchedModels().length);
