@@ -71,6 +71,7 @@ define(function(require, exports, module) {
                     news : require("ldsh!templates/news/main"),
                     ope : require("ldsh!templates/ope/main"),
                     posting : require("ldsh!templates/posting/main"),
+                    dojo : require("ldsh!templates/dojo/main"),
                 },
                 /**
                  * 描画目に実行する処理。
