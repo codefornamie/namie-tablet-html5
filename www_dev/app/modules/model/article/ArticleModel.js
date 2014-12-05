@@ -29,7 +29,6 @@ define(function(require, exports, module) {
             response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt), "yyyy年MM月dd日 HH時mm分");
             response.dispUpdatedAt = DateUtil.formatDate(new Date(response.updatedAt), "yyyy年MM月dd日 HH時mm分");
             response.dispSite = CommonUtil.sanitizing(response.site);
-console.log(response.dispSite);
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.dispPlace = CommonUtil.sanitizing(response.place);
             response.dispDescription = CommonUtil.sanitizing(response.description);
@@ -216,6 +215,27 @@ console.log(response.dispSite);
             }
 
             return Code.IMAGE_TYPE_NONE;
+        },
+
+        /**
+         * 情報源タイプを判定する
+         * @return {string} class文字列を返す
+         */
+        getSiteType: function() {
+            // TODO: dispSiteとclassの対応表の実装方法の検討
+            var articleSite = {
+                "福島テレビ": "localnews",
+                "福島民報": "localnews",
+                "浪江町役場新着情報": "townoffice",
+                "イベント": "event",
+                "浪江町復興支援員宮城県駐在ブログ": "blog"
+            };
+
+            if (articleSite[this.get("dispSite")]) {
+                return articleSite[this.get("dispSite")];
+            } else {
+                return "article";
+            }
         }
     });
 

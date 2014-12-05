@@ -70,19 +70,27 @@
  *  グリッドのラベル
  */
 .grid-label {
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: auto 1.5rem;
+    padding-left: 2.2rem;
 }
 
-.grid-label--pink {
+.grid-label--blog {
     color: #c96088;
+    background-image: url(../../app/img/img-grid-label-blog.png);
 }
-.grid-label--green {
+.grid-label--localnews {
     color: #61b152;
+    background-image: url(../../app/img/img-grid-label-localnews.png);
 }
-.grid-label--yellow {
+.grid-label--event {
     color: #d9bc08;
+    background-image: url(../../app/img/img-grid-label-event.png);
 }
-.grid-label--blue {
+.grid-label--townoffice {
     color: #27a8bd;
+    background-image: url(../../app/img/img-grid-label-townoffice.png);
 }
 
 .grid-label__text {
