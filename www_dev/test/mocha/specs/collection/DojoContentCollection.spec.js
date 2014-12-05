@@ -11,11 +11,11 @@ define(function(require) {
             this.timeout(15000);
         });
 
-        it("TEST-01 DojoContentCollection#getWatchedModels", function(done) {
+        it("TEST-01 DojoContentCollection#groupByEdition", function(done) {
             var col = new DojoContentCollection();
-            var models = col.getWatchedModels();
+            var editions = col.groupByEdition();
 
-            assert.ok(Array.isArray(models));
+            assert.ok(Array.isArray(editions));
 
             done();
         });

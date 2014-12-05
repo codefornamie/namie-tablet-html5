@@ -1,0 +1,7 @@
+<ul>
+    <% _(model.get("editions")).each(function (edition, i) { %>
+        <li class="<%= (model.get("currentEditionIndex") == i) ? 'is-selected' : '' %>">
+            <%= edition.get("editionTitle") %>
+        </li>
+    <% }) %>
+</ul>

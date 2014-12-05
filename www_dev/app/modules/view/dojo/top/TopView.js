@@ -3,8 +3,10 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var DojoListView = require("modules/view/dojo/top/DojoListView");
+    var DojoTabView = require("modules/view/dojo/top/DojoTabView");
+    var DojoEditionView = require("modules/view/dojo/top/DojoEditionView");
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
+    var DojoEditionCollection = require("modules/collection/dojo/DojoEditionCollection");
 
     /**
      * 道場アプリのトップ画面を表示するためのViewクラスを作成する。
@@ -44,19 +46,28 @@ define(function(require, exports, module) {
          * @memberof TopView#
          */
         initialize : function() {
-            var dojoContentCollection = this.dojoContentCollection = new DojoContentCollection();
+            // collectionを初期化する
+            this.dojoContentCollection = new DojoContentCollection();
+            this.dojoEditionCollection = new DojoEditionCollection();
 
-            this.dojoListView = new DojoListView({
-                collection : dojoContentCollection
+            // TopViewでDojoContentCollectionの変更を監視して
+            // 各子ビュー(DojoTabViewとDojoEditionView)を更新する
+            this.dojoTabView = new DojoTabView({
+                collection: this.dojoEditionCollection
             });
-            this.setView("#dojo-list-container", this.dojoListView).render();
+            this.dojoEditionView = new DojoEditionView();
 
+            // 各子ビューをレンダリングする
+            this.setView("#dojo-tab-container", this.dojoTabView).render();
+            this.setView("#dojo-edition-container", this.dojoEditionView).render();
+
+            // 道場コンテンツ(this.dojoContentCollection)を取得する
             this.setArticleSearchCondition({
                 // TODO 実際の検索条件を指定する
                 targetDate : new Date(2014, 10, 28)
             });
-
             this.searchArticles();
+
             this.initEvents();
         },
 
@@ -70,7 +81,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事の検索条件を指定する。
-         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @param {Object} condition 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
          * @memberof TopView#
          */
         setArticleSearchCondition : function(condition) {
@@ -93,7 +104,6 @@ define(function(require, exports, module) {
             // データを取得する
             this.dojoContentCollection.fetch({
                 success : function() {
-                    self.dojoListView.render();
                     self.hideLoading();
                 },
 
@@ -102,14 +112,41 @@ define(function(require, exports, module) {
                 }
             });
         },
+        
+        /**
+         * this.dojoEditionCollectionを元に各子ビューを更新する
+         */
+        updateChildViews: function () {
+            // 1. DojoTabViewの更新
+            // DojoTabView は thisdojoEditionCollection への参照を保持しているので
+            // 自動で更新されるようになっている
+            this.dojoTabView.render();
+
+            // 2. DojoEditionViewの更新
+            // DojoEditionViewに表示中のModelを更新する
+            var currentEditionModel = this.dojoEditionCollection.getCurrentEdition();
+            this.dojoEditionView.model.set(currentEditionModel.toJSON());
+            this.dojoEditionView.render();
+        },
 
         /**
          * 道場コンテンツが更新されたら呼ばれる
          * @memberof TopView#
          */
         onSyncDojoContent : function() {
-            this.$el.find("[data-content-num]").text(this.dojoContentCollection.length);
-            this.$el.find("[data-watched-num]").text(this.dojoContentCollection.getWatchedModels().length);
+            // DojoContentCollection から DojoEditionCollection を生成する
+            // DojoEditionCollectionはタブ表示用のcollection
+            var editionCollection = this.dojoContentCollection.groupByEditions();
+            this.dojoEditionCollection.set(editionCollection);
+
+            this.updateChildViews();
+        },
+
+        /**
+         * ◯◯編が変更されたら呼ばれる
+         */
+        onChangeEdition: function () {
+            this.updateChildViews();
         }
     });
 

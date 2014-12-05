@@ -26,7 +26,7 @@ define(function(require, exports, module) {
          * 記事一覧を表示する要素のセレクタ
          * @memberof DojoListView#
          */
-        listElementSelector: "#dojo-list",
+        listElementSelector : "#dojo-list",
 
         /**
          * Viewの描画処理の開始前に呼び出されるコールバック関数。
@@ -51,7 +51,7 @@ define(function(require, exports, module) {
          * 初期化
          * @memberof DojoListView#
          */
-        initialize: function () {
+        initialize : function() {
             console.assert(this.collection, "DojoListView should have a collection");
 
             Super.prototype.setFeedListItemViewClass.call(this, DojoListItemView);
