@@ -21,12 +21,13 @@ define(function(require, exports, module) {
     // アプリの設定情報を保持
     app.config = config;
 
-    // Google Analyticsの初期化
-    app.ga = require("modules/util/AnalyticsUtil");
-    app.ga.initialize(app);
-    
     // ロガーの設定
     app.sessionId = Logger.createSessionId(30);
     app.logger = new Logger(app);
     app.logger.debug("Logger initilized.");
+
+    // Google Analyticsの初期化
+    app.ga = require("modules/util/AnalyticsUtil");
+    app.ga.initialize(app);
+
 });

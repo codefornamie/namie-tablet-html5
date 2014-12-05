@@ -12,6 +12,7 @@ define(function(require, exports, module) {
     AnalyticsUtil.initialize = function(app) {
         this.ga = window.ga_storage;
         this.ga._setAccount(app.config.googleAnalytics.trackingId);
+        this.app = app;
     };
 
     /**
@@ -21,6 +22,10 @@ define(function(require, exports, module) {
      */
     AnalyticsUtil.trackPageView = function(path, title) {
         this.ga._trackPageview(path, title);
+        if (this.app.logger) {
+            // アプリログを記録する
+            this.app.logger.info("Page was opened. [path=" + path + ", title=" + title + "]");
+        }
     };
 
     /**
@@ -32,6 +37,11 @@ define(function(require, exports, module) {
      */
     AnalyticsUtil.trackEvent = function(category, action, label, value) {
         this.ga._trackEvent(category, action, label, value);
+        if (this.app.logger) {
+            // アプリログを記録する
+            this.app.logger.info("Event was occured. [category=" + category + ", action=" + action + ", label=" +
+                    label + ", value=" + value + "]");
+        }
     };
 
     module.exports = AnalyticsUtil;
