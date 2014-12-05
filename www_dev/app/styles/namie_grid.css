@@ -5,6 +5,7 @@
     height: 100%;
     overflow: auto;
     float: none;
+    padding: 20px 0 0 0;
 }
 
 .news-detail {
@@ -23,11 +24,12 @@
     justify-content: center;
     align-items: stretch;
     list-style: none;
+    margin-left: 0;
 }
 
 .grid-list>div {
     box-sizing: border-box;
-    margin: 15px;
+    margin: 20px;
     flex: 1 1 45%;
     border: 3px solid #e8e8d0;
     background: white;
@@ -69,7 +71,16 @@
 }
 
 .grid-label--pink {
-    color: pink;
+    color: #c96088;
+}
+.grid-label--green {
+    color: #61b152;
+}
+.grid-label--yellow {
+    color: #d9bc08;
+}
+.grid-label--blue {
+    color: #27a8bd;
 }
 
 .grid-label__text {
@@ -85,6 +96,7 @@
 .grid-description__title {
     font-size: 1.2rem;
     font-weight: bold;
+    margin-bottom: 0.5rem;
 }
 
 .grid-description__description {
@@ -96,7 +108,7 @@
 .grid-button {
     text-align: right;
     position: absolute;
-    bottom: 20px;
+    bottom: 15px;
     right: 20px;
 }
 
