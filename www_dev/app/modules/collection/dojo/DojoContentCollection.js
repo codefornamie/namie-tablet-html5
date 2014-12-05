@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractCollection = require("modules/collection/AbstractCollection");
+    var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var DojoContentModel = require("modules/model/dojo/DojoContentModel");
 
     /**
@@ -12,13 +13,19 @@ define(function(require, exports, module) {
      * @exports DojoContentCollection
      * @constructor
      */
-    var DojoContentCollection = AbstractCollection.extend({
+    // TODO ArticleCollectionと同じ処理をしているので、道場コンテンツの読み込みに修正する
+    var DojoContentCollection = ArticleCollection.extend({
         model : DojoContentModel,
 
         /**
-         * 初期化処理
+         * 視聴済みコンテンツのモデルを返す
+         * @return {Array}
          */
-        initialize : function() {
+        getWatchedModels : function() {
+            // TODO 実際の視聴済みコンテンツを返す
+            return this.filter(function (model) {
+                return true;
+            }) || [];
         }
     });
 

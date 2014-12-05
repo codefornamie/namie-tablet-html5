@@ -12,7 +12,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var DojoListItemView = AbstractView.extend({
-        template : require("ldsh!templates/{mode}/top/dojoList"),
+        template : require("ldsh!templates/{mode}/top/dojoListItem"),
 
         beforeRendered : function() {
 
