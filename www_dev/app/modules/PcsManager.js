@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
     "use strict";
-    var Log = require("modules/util/logger");
+    var Log = require("modules/util/Logger");
 
     /**
      * アクセスマネージャクラスを作成する。

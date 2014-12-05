@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var LoginModel = require("modules/model/LoginModel");
     var vexDialog = require("vexDialog");
-    var Log = require("modules/util/logger");
+    var Log = require("modules/util/Logger");
 
     /**
      * ログイン画面を表示するためのViewクラスを作成する。

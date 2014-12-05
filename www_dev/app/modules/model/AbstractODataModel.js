@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractModel = require("modules/model/AbstractModel");
-    var Log = require("modules/util/logger");
+    var Log = require("modules/util/Logger");
 
     /**
      * PCS ODataの操作を行うモデルの基底クラスを作成する。

@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var Class = require("modules/util/Class");
-    var Log = require("modules/util/logger");
+    var Log = require("modules/util/Logger");
 
     /**
      * PCS ODataの$filterのクエリ作成処理を行うためのユーティリティクラスを作成する。

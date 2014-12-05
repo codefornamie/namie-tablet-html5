@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     "use strict";
 
-    var Log = require("modules/util/logger");
+    var Log = require("modules/util/Logger");
 
     /**
      * It creates a new object CustomHttpClient.
