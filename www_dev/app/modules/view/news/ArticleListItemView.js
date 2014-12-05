@@ -25,11 +25,7 @@ define(function(require, exports, module) {
         /**
          * このViewを表示する際に利用するテンプレート
          */
-        template : require("ldsh!templates/{mode}/news/articleListItem"),
-        templateMap : {
-            news : require("ldsh!templates/news/news/articleListItem"),
-            ope : require("ldsh!templates/ope/news/articleListItem")
-        },
+        template : require("ldsh!templates/news/news/articleListItem"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * <p>
