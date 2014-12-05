@@ -190,10 +190,10 @@ define(function(require, exports, module) {
                 return;
             }
             async.parallel([
-                    $.proxy(this.loadPersonal, this), 
+                    $.proxy(this.loadPersonal, this),
                     $.proxy(this.loadConfiguration, this)
             ], $.proxy(this.onLogin, this));
-            
+
         },
 
         loadPersonal : function(callback){
