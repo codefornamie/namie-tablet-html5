@@ -23,6 +23,9 @@ module.exports = ->
     "replace:mode"
   ]
 
+  @registerTask "server", [
+    "connect:development"
+  ]
   @registerTask "server_news", [
     "replace:devmode_news"
     "server"
