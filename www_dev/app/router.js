@@ -31,6 +31,7 @@ define(function(require, exports, module) {
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
 
     var DojoTopView = require("modules/view/dojo/top/TopView");
+    var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
     var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
 
     // Defining the application router.
@@ -138,7 +139,8 @@ define(function(require, exports, module) {
             'settings' : 'settings',
             'posting-top' : 'postingTop',
             'ope-top' : 'opeTop',
-            'dojo-top' : 'dojoTop'
+            'dojo-top' : 'dojoTop',
+            "dojo/lessons/:id" : "dojoLesson"
         },
 
         index : function() {
@@ -207,10 +209,6 @@ define(function(require, exports, module) {
             this.layout.showView(new TopView());
             this.layout.setHeader(new common.HeaderView());
             this.layout.setFooter(new common.FooterView());
-        },
-        dojoTop : function() {
-            this.layout.setHeader(new DojoHeaderView());
-            this.layout.showView(new DojoTopView());
         },
         scrap : function() {
             app.logger.debug('[route] scrap');
@@ -328,19 +326,32 @@ define(function(require, exports, module) {
             $("#contents__primary").scrollTop(0);
         },
 
-        /*
-         * events : function() { app.logger.debug("It's a events page."); this.layout.showView(new EventsView());
-         * this.commonView(); }, eventsRegisted : function() { app.logger.debug("It's a eventsRegisted page.");
-         * this.layout.showView(new EventsRegistedView()); this.commonView(); }, showEvents : function() {
-         * app.logger.debug("It's a show events page."); this.layout.showView(new ShowEventsView()); this.commonView(); },
-         * news : function() { app.logger.debug("It's a news page."); this.layout.showView(new NewsView());
-         * this.commonView(); },
+        // 道場アプリのルーティング
+
+        /**
+         * 道場：トップページ
          */
+        dojoTop : function() {
+            // 実際の描画処理はdojo/TopViewに書かれている
+            // アプリのライフサイクルの中で、DojoTopViewの初期化は1度だけ行う
+            if (!app.dojoTopView) {
+                app.dojoTopView = new DojoTopView();
+                this.layout.showView(app.dojoTopView.layout);
+            }
+        },
+
+        /**
+         * 道場：個別ページ
+         */
+        dojoLesson: function () {
+            // 実際の描画処理はdojo/TopViewに書かれている
+        },
 
         // Shortcut for building a url.
         go : function() {
             return this.navigate(_.toArray(arguments).join("/"), true);
         },
+
         commonView : function(options) {
             this.layout.setGlobalNav(new common.GlobalNavView(options));
             this.layout.setView("#menu", new common.MenuView()).render();

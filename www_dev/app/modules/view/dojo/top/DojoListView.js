@@ -48,6 +48,13 @@ define(function(require, exports, module) {
         },
 
         /**
+         * イベント一覧
+         */
+        events: {
+            "click a": "onClickAnchor"
+        },
+
+        /**
          * 初期化
          * @memberof DojoListView#
          */
@@ -55,6 +62,25 @@ define(function(require, exports, module) {
             console.assert(this.collection, "DojoListView should have a collection");
 
             Super.prototype.setFeedListItemViewClass.call(this, DojoListItemView);
+        },
+
+        /**
+         * aタグをクリックした際の挙動を
+         * ブラウザデフォルトではなく
+         * pushStateに変更する
+         */
+        onClickAnchor: function (evt) {
+            var $target = $(evt.currentTarget);
+            var href = { prop: $target.prop("href"), attr: $target.attr("href") };
+            var root = location.protocol + "//" + location.host + app.root;
+
+            if (href.prop && href.prop.slice(0, root.length) === root) {
+                evt.preventDefault();
+                app.router.navigate(href.attr, {
+                    trigger: true,
+                    replace: false
+                });
+            }
         }
     });
 
