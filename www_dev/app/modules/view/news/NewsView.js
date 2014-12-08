@@ -62,10 +62,15 @@ define(function(require, exports, module) {
         afterRendered : function() {
         },
 
+        /**
+         * 初期化処理
+         * @memberof NewsView#
+         */
         initialize : function(options) {
             options = options || {};
 
             this.targetDate = this.targetDate || options.date;
+            this.initialScrollTop = options.scrollTop || 0;
 
             this.setArticleSearchCondition({
                 targetDate : new Date(this.targetDate)
@@ -90,7 +95,7 @@ define(function(require, exports, module) {
          * @memberof NewsView#
          */
         initEvents : function() {
-            app.router.on("route", this.onRoute.bind(this));
+            this.listenTo(app.router, "route", this.onRoute);
         },
 
         /**
@@ -346,6 +351,9 @@ define(function(require, exports, module) {
             this.removeView("#article-list");
             this.setView("#article-list", articleListView);
             articleListView.render();
+
+            // 初期スクロール位置が指定されている場合、スクロールする
+            this.initScrollTop();
         },
 
         /**
@@ -406,6 +414,36 @@ define(function(require, exports, module) {
             })).render();
             $("#contents__secondary").hide();
             $("#contents__primary").show();
+        },
+
+        /**
+         * 初期スクロール位置が指定されている場合、スクロールする
+         */
+        initScrollTop: function () {
+            if (this.initialScrollTop) {
+                this.setScrollTop(this.initialScrollTop);
+            }
+        },
+
+        /**
+         * 記事一覧の現在のスクロール位置を設定する
+         * @param {Number} scrollTop
+         */
+        setScrollTop: function (scrollTop) {
+            var $container = this.$el.find("#contents__top");
+
+            $container.scrollTop(scrollTop);
+        },
+
+        /**
+         * 記事一覧の現在のスクロール位置を取得する
+         * @return {Number}
+         */
+        getScrollTop: function () {
+            var $container = this.$el.find("#contents__top");
+            var scrollTop = $container.scrollTop();
+
+            return scrollTop;
         },
 
         /**
