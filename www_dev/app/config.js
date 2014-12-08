@@ -26,7 +26,9 @@ require.config({
         "string-helpers": "../lib/foundation-calendar/helpers/string-helpers",
         "jquery-sortable": "../bower_components/html5sortable/jquery.sortable",
         "galocalstorage" : "../bower_components/GALocalStorage/GALocalStorage",
-        "moment" : "../bower_components/moment/min/moment.min"
+        "moment" : "../bower_components/moment/min/moment.min",
+        "log4javascript": "../lib/log4javascript/log4javascript_uncompressed",
+        "colorbox" : "../bower_components/jquery-colorbox/jquery.colorbox",
     },
 
     deps : [ "main" ],
@@ -51,6 +53,7 @@ require.config({
         "vexDialog" : [ "vex" ],
         "date-helpers": [ "datejs"],
         "foundation-calendar": ["date-helpers", "string-helpers", "foundation"],
-        "jquery-sortable" : [ "jquery" ]
+        "jquery-sortable" : [ "jquery" ],
+        "colorbox" : [ "jquery" ],
     }
 });

@@ -112,6 +112,7 @@ define(function(require, exports, module) {
                             this.hideLoading();
                             vexDialog.defaultOptions.className = 'vex-theme-default';
                             vexDialog.alert("保存に失敗しました。");
+                            app.logger.error("保存に失敗しました。");
                         }, this)
                     });
                 }else{
@@ -136,6 +137,7 @@ define(function(require, exports, module) {
                 error: function(e){
                     this.hideLoading();
                     vexDialog.alert("保存に失敗しました。");
+                    app.logger.error("保存に失敗しました。");
                 }
             });
         }

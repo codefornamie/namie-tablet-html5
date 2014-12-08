@@ -18,7 +18,7 @@ define(function(require, exports, module) {
          * このViewを表示する際に利用するアニメーション
          * @memberof OpeArticleDetailView#
          */
-        template : require("ldsh!templates/{mode}/news/articleDetail"),
+        template : require("ldsh!templates/ope/news/articleDetail"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * @memberof OpeArticleDetailView#

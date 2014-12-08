@@ -102,6 +102,7 @@ define(function(require, exports, module) {
         onLogin : function(msg) {
             Log.info("onLogin callback called");
             if (!msg) {
+                app.logger.info("Success Login process.");
                 this.goNextView();
             } else {
                 vexDialog.defaultOptions.className = 'vex-theme-default';

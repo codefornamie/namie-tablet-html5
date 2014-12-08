@@ -200,13 +200,11 @@ define(function(require, exports, module) {
             //alert("パ情作成開始");
             //alert(this.get("loginId"));
             var collection = new PersonalCollection();
-            /*
             collection.condition.filters = [
                 new And([
                         new Equal("loginId", this.get("loginId")), new IsNull("deletedAt")
                 ])
             ];
-            */
             Log.info("personal collection fetch start");
             collection.fetch({
                 success : $.proxy(function() {
@@ -233,6 +231,7 @@ define(function(require, exports, module) {
                                 Log.info("personal info create faulure");
                                 // パーソナル情報新規登録に失敗
                                 callback("ユーザ情報の登録に失敗しました。再度ログインしてください。");
+                                app.logger.error("ユーザ情報の登録に失敗しました。再度ログインしてください。");
                             },this)
                         });
                     }
@@ -241,6 +240,7 @@ define(function(require, exports, module) {
                     Log.info("peronal collection fetch failure.");
                     // パーソナル情報検索に失敗
                     callback("ユーザ情報の取得に失敗しました。再度ログインしてください。");
+                    app.logger.error("ユーザ情報の取得に失敗しました。再度ログインしてください。");
                 },this)
             });
         },
@@ -255,12 +255,13 @@ define(function(require, exports, module) {
                 error: $.proxy(function() {
                     // 取得に失敗
                     callback("設定情報の取得に失敗しました。再度ログインしてください。");
+                    app.logger.error("設定情報の取得に失敗しました。再度ログインしてください。");
                 },this)
             });
         },
 
         setAccessToken : function(token) {
-            console.log("set access token : " + token);
+            app.logger.debug("set access token : " + token);
             this.accessToken = token;
         }
     });

@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var colorbox = require("colorbox");
     var DateUtil = require("modules/util/DateUtil");
     var NewsView = require("modules/view/news/NewsView");
     var OpeFeedListView = require("modules/view/ope/news/OpeFeedListView");
@@ -27,6 +28,42 @@ define(function(require, exports, module) {
         events : {
             "click [data-article-register-button]" : "onClickArticleRegisterButton"
         },
+        
+        /**
+         * ビューの初期化を行う。
+         * @memberof OpeNewsView#
+         * @param {Object} options ビューのオプション
+         */
+        initialize : function(options) {
+            options = options || {};
+
+            this.targetDate = this.targetDate || options.date;
+
+            this.setArticleSearchCondition({
+                targetDate : new Date(this.targetDate)
+            });
+
+            this.initEvents();
+        },
+
+        /**
+         * 表示する日付を設定する。
+         * @memberof OpeNewsView#
+         * @param {Date} targetDate 表示する日付。
+         */
+        setDate : function(targetDate) {
+            this.$el.find("#targetDate").text(
+                    DateUtil.formatDate(targetDate, "yyyy年MM月dd日") + app.config.PUBLISH_TIME);
+
+            this.setArticleSearchCondition({
+                targetDate : targetDate
+            });
+            this.searchArticles();
+            $("#articlePreview").colorbox({
+                "href" : "redirect?mode=news&loginId=namie01&preview=true&targetDate=" + DateUtil.formatDate(targetDate, "yyyy-MM-dd") + "&accessToken=" + app.accessor.accessToken, 
+                iframe : true, width : "80%", height : "90%"});
+        },
+
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。

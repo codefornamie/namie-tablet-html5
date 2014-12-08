@@ -17,7 +17,7 @@ define(function(require, exports, module) {
         /**
          * このViewのテンプレートファイパス
          */
-        template : require("ldsh!templates/{mode}/news/gridListItem"),
+        template : require("ldsh!templates/news/news/gridListItem"),
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。

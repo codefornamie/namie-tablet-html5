@@ -13,6 +13,7 @@ define(function(require, exports, module) {
     var galocalstorage = require("galocalstorage");
     var CustomHttpClient = require("modules/CustomHttpClient");
     var PcsManager = require("modules/PcsManager");
+    var Logger = require("modules/util/logging/Logger");
 
     // グローバルに利用できるModel
     var app = module.exports = new Backbone.Model();
@@ -21,6 +22,11 @@ define(function(require, exports, module) {
     app.root = "/";
     // アプリの設定情報を保持
     app.config = config;
+
+    // ロガーの設定
+    app.sessionId = Logger.createSessionId(30);
+    app.logger = new Logger(app);
+    app.logger.debug("Logger initilized.");
 
     // Google Analyticsの初期化
     app.ga = require("modules/util/AnalyticsUtil");

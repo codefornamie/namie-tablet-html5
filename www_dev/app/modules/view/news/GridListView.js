@@ -24,7 +24,7 @@ define(function(require, exports, module) {
          * このViewのテンプレートファイルパス
          * @memberof GridListView#
          */
-        template : require("ldsh!templates/{mode}/news/gridList"),
+        template : require("ldsh!templates/news/news/gridList"),
         /**
          * このViewのイベント
          * @memberof GridListView#
