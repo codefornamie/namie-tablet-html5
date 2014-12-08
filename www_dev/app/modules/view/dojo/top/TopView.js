@@ -254,7 +254,6 @@ define(function(require, exports, module) {
             this.youtubeCollection.fetch({
                 success : $.proxy(function() {
                     this.searchDojoInfo();
-                    this.initEvents();
                 }, this),
                 error : function error() {
                     console.log("error");
