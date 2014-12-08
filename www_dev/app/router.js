@@ -140,7 +140,8 @@ define(function(require, exports, module) {
             'posting-top' : 'postingTop',
             'ope-top' : 'opeTop',
             'dojo-top' : 'dojoTop',
-            "dojo/lessons/:id" : "dojoLesson"
+            "dojo/lessons/:id" : "dojoLesson",
+            "articleDetail" : "articleDetail"
         },
 
         index : function() {
@@ -246,6 +247,11 @@ define(function(require, exports, module) {
          */
         articleDetail : function(options) {
             app.logger.debug('[route] articleDetail');
+            if(options){
+                this.lastArticleDetailArgs = options;
+            } else {
+                options = this.lastArticleDetailArgs;
+            }
 
             this.navigate("articleDetail");
             this.layout.showView(new ArticleDetailView({
