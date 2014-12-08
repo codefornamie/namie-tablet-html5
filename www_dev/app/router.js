@@ -31,6 +31,7 @@ define(function(require, exports, module) {
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
 
     var DojoTopView = require("modules/view/dojo/top/TopView");
+    var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
 
     // Defining the application router.
     var Router = Backbone.Router.extend({
@@ -70,6 +71,7 @@ define(function(require, exports, module) {
                     news : require("ldsh!templates/news/main"),
                     ope : require("ldsh!templates/ope/main"),
                     posting : require("ldsh!templates/posting/main"),
+                    dojo : require("ldsh!templates/dojo/main"),
                 },
                 /**
                  * 描画目に実行する処理。
@@ -207,6 +209,7 @@ define(function(require, exports, module) {
             this.layout.setFooter(new common.FooterView());
         },
         dojoTop : function() {
+            this.layout.setHeader(new DojoHeaderView());
             this.layout.showView(new DojoTopView());
         },
         scrap : function() {
