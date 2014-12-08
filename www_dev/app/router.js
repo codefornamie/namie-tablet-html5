@@ -175,8 +175,9 @@ define(function(require, exports, module) {
             var params = this.parseQueryString(queryString);
             var targetDate = params.targetDate ? new Date(params.targetDate) : BusinessUtil.getCurrentPublishDate();
             this.layout.showView(new NewsView({
-                "targetDate" : targetDate,
-                "preview" : params.preview
+                targetDate : targetDate,
+                preview : params.preview,
+                scrollTop: app.scrollTop || 0
             }));
             // this.layout.setHeader(new common.HeaderView());
             // this.layout.setGlobalNav(new common.GlobalNavView());
@@ -197,6 +198,9 @@ define(function(require, exports, module) {
          * @param {String} articleId
          */
         showArticle : function(articleId) {
+            // TODO appに刺さずに別の場所で管理する
+            app.scrollTop = (app.newsView) ? app.newsView.getScrollTop() : 0;
+
             this.layout.setGlobalNav(new common.GlobalNavView());
             app.newsView.showArticle(articleId);
         },
