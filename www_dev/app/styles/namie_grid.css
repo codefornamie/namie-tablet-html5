@@ -63,6 +63,15 @@
     min-width: 100%;
 }
 
+.grid-cell--image .articleImage[src=""],
+.grid-cell--image .articleImage:not([src]) {
+    height: 200px;
+    width: 200px;
+    background: #e8e8d0;
+    outline: 1px solid #e8e8d0;
+    outline-offset: -1px;
+}
+
 .grid-cell--body {
     display: table-cell;
     float: none !important;
