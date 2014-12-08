@@ -832,6 +832,7 @@ main {
 
 .post__body {
     margin: 0 32px 16px;
+    line-height: 1.6;
 }
 
 .post__body > .row > .columns {
