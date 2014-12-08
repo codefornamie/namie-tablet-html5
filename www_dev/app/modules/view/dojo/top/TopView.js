@@ -2,13 +2,18 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var async = require("async");
     var AbstractView = require("modules/view/AbstractView");
     var DojoTabView = require("modules/view/dojo/top/DojoTabView");
     var DojoEditionView = require("modules/view/dojo/top/DojoEditionView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
+    var YouTubeCollection = require("modules/collection/dojo/YouTubeCollection");
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
     var DojoEditionCollection = require("modules/collection/dojo/DojoEditionCollection");
+    var AchievementCollection = require("modules/collection/misc/AchievementCollection");
+    var Equal = require("modules/util/filter/Equal");
+    var IsNull = require("modules/util/filter/IsNull");
     
     /**
      * 道場アプリのLayout
@@ -137,17 +142,19 @@ define(function(require, exports, module) {
          * @memberof TopView#
          */
         initialize : function() {
+            // ローディングを開始
+            this.showLoading();
+
             this.currentEditionModel = new DojoEditionModel();
             this.initCollection();
             this.initLayout();
             this.initEvents();
 
-            // 道場コンテンツ(this.dojoContentCollection)を取得する
-            this.setArticleSearchCondition({
-                // TODO 実際の検索条件を指定する
-                targetDate : new Date(2014, 10, 28)
-            });
-            this.searchArticles();
+            this.loadYouTubeLibrary($.proxy(function() {
+                // youtubeAPI読み込み
+                gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
+                gapi.client.load('youtube', 'v3', $.proxy(this.searchDojoMovieList, this));
+            }, this));
         },
 
         /**
@@ -192,39 +199,122 @@ define(function(require, exports, module) {
             this.listenTo(this.dojoEditionCollection, "edition", this.onChangeEdition);
             this.listenTo(app.router, "route", this.onRoute);
         },
-
         /**
-         * 記事の検索条件を指定する。
-         * @param {Object} condition 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * youtubeライブラリを読み込む
+         * 
+         * @memberof TopView#
+         * @param {Function} callback
+         */
+        loadYouTubeLibrary : function(callback) {
+            if (app.gapiLoaded) {
+                callback();
+                return;
+            }
+            var self = this;
+            var loadScript = function(url) {
+                return function(next) {
+                    $.getScript(url).done(function() {
+                        next(null);
+                    }).fail(function(jqXHR, settings, err) {
+                        next(err);
+                    });
+                };
+            };
+            var onLoadGAPI = function(next) {
+                window.onLoadGAPI = function() {
+                    delete window.onLoadGAPI;
+                    next(null);
+                };
+
+                loadScript("https://apis.google.com/js/client.js?onload=onLoadGAPI")(function(err) {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+                });
+            };
+            async.series([
+                    onLoadGAPI, loadScript("https://www.youtube.com/iframe_api")
+            ], function(err) {
+                if (!err) {
+                    app.gapiLoaded = true;
+                }
+                callback(err);
+            });
+        },
+        /**
+         * 道場動画の検索を実施
+         * 
          * @memberof TopView#
          */
-        setArticleSearchCondition : function(condition) {
-            this.dojoContentCollection.setSearchCondition(condition);
+        searchDojoMovieList : function() {
+            this.youtubeCollection = new YouTubeCollection();
+            // TODO 実際の道場動画チャンネルが作成されたら正しいチャンネルIDに変更する
+            this.youtubeCollection.channelId = "UC9_ZCtgOk8dPC6boqZMNqbw";
+            this.youtubeCollection.fetch({
+                success : $.proxy(function() {
+                    this.searchDojoInfo();
+                }, this),
+                error : function error() {
+                    console.log("error");
+                }
+            });
         },
 
         /**
-         * 記事の検索処理を開始する。
+         * 道場情報の検索処理を開始する。
+         * 
          * @memberof TopView#
          */
-        searchArticles : function() {
-            var self = this;
-
-            // ローディングを開始
-            this.showLoading();
-
+        searchDojoInfo : function() {
             // 現在保持しているデータをクリア
             this.dojoContentCollection.reset();
-
-            // データを取得する
+            this.dojoContentCollection.youtubeCollection = this.youtubeCollection;
             this.dojoContentCollection.fetch({
-                success : function() {
-                    self.hideLoading();
-                },
-
-                error : function onErrorLoadArticle(e) {
-                    console.error(e);
+                success : $.proxy(this.searchAchievement, this),
+                error : function() {
+                    app.logger.error("道場動画情報の検索に失敗しました。");
+                    this.hideLoading();
+                    return;
                 }
             });
+        },
+        /**
+         * 達成情報の検索処理を開始する。
+         * 
+         * @memberof TopView#
+         */
+        searchAchievement : function() {
+            // 達成情報を自身の情報のみに絞り込んで検索実施
+            this.achievementCollection = new AchievementCollection();
+            this.achievementCollection.condition.filters = [new Equal("userId", app.user.get("__id")), new IsNull(
+                    "deletedAt")];
+            this.achievementCollection.fetch({
+                success : $.proxy(this.onSearchAchievement, this),
+                error : function() {
+                    app.logger.error("達成情報の検索に失敗しました。");
+                    this.hideLoading();
+                    return;
+                }
+            });
+        },
+        /**
+         * 道場情報の検索処理が終了した場合に呼ばれるコールバック関数。
+         * 
+         * @memberof TopView#
+         */
+        onSearchAchievement : function() {
+            // 動画と達成情報の連結を行う
+            if (this.achievementCollection.size() !== 0) {
+                this.achievementCollection.each(function(achievement) {
+                    this.dojoContentCollection.each(function(dojoContent) {
+                        if (dojoContent.get("videoId") === achievement.get("action")) {
+                            dojoContent.achievement = achievement;
+                        }
+                    });
+                });
+            }
+            this.hideLoading();
         },
         
         /**

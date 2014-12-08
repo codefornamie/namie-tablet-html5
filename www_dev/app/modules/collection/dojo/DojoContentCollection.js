@@ -2,11 +2,12 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractCollection = require("modules/collection/AbstractCollection");
-    var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var DojoEditionCollection = require("modules/collection/dojo/DojoEditionCollection");
     var DojoContentModel = require("modules/model/dojo/DojoContentModel");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
+    var CommonUtil = require("modules/util/CommonUtil");
+    var Code = require("modules/util/Code");
 
     /**
      * 道場のコンテンツのコレクションクラス
@@ -15,21 +16,46 @@ define(function(require, exports, module) {
      * @exports DojoContentCollection
      * @constructor
      */
-    // TODO ArticleCollectionと同じ処理をしているので、道場コンテンツの読み込みに修正する
-    var DojoContentCollection = ArticleCollection.extend({
+    var DojoContentCollection = AbstractODataCollection.extend({
         model : DojoContentModel,
+        entity : "dojo_movie",
+        condition : {
+            top : 100,
+            orderby : "sequence desc"
+        },
+        youtubeCollection: null,
+        achievementCollection: null,
+        parseOData : function(response, options) {
+            if (!this.youtubeCollection) {
+                return response;
+            }
+            if (this.youtubeCollection) {
+                this.youtubeCollection.each(function(youtube) {
+                    _.each(response, function(res) {
+                        if (res.videoId === youtube.get("videoId")) {
+                            // タイトル、サムネイル画像、詳細は最新の情報を取得する
+                            res.title = youtube.get("dispTitle");
+                            res.thumbnail = youtube.get("thumbnail");
+                            res.description = youtube.get("description");
+                        }
+                    });
+                });
+            }
+            return response;
+        },
+
 
         /**
          * collectionが持つmodelを◯◯編ごとに分配し、それをDojoEditionCollectionとして返す
-         * @return {DojoEditionCollection}
+         * @memberof DojoContentCollection#
+         * @return {DojoEditionCollection} 編ごとの情報をもつ道場動画コレクション
          */
         groupByEditions: function () {
             var editionCollection = new DojoEditionCollection();
 
             this.each(function (model) {
                 // この model を入れる先の DojoEditionModel を決定する
-                // TODO 今は暫定で"type"という属性を利用している
-                var editionKey = model.get("type");
+                var editionKey = model.get("category");
                 var editionModel = editionCollection.findWhere({
                     editionKey: editionKey
                 });
@@ -39,7 +65,7 @@ define(function(require, exports, module) {
                 if (!editionModel) {
                     editionModel = new DojoEditionModel({
                         editionKey: editionKey,
-                        editionTitle: "基本ダミー" + _.uniqueId() + "編"
+                        editionTitle: CommonUtil.sanitizing(editionKey)
                     });
                     editionModel.set("contentCollection", new DojoContentCollection());
                     editionCollection.push(editionModel);
@@ -49,7 +75,22 @@ define(function(require, exports, module) {
                 contentCollection.push(model);
                 editionModel.set("contentCollection", contentCollection);
             });
-
+            // 並び順反映
+            editionCollection.each(function(edModel) {
+                var edContentCollection = edModel.get("contentCollection");
+                edContentCollection.models = _.sortBy(edContentCollection.models, function(content) {
+                    return parseInt(content.get("sequence"));
+                });
+            });
+            
+            editionCollection.models = _.sortBy(editionCollection.models,function(model) {
+                var editionKey = model.get("editionKey");
+                var category = _.find(Code.DOJO_CATEGORY_LIST,function(item) {
+                    return item.key === editionKey;
+                }); 
+                return category ? category.value : "";
+                
+            });
             return editionCollection;
         }
     });
