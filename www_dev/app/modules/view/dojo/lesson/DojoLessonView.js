@@ -23,7 +23,8 @@ define(function(require, exports, module) {
          */
         serialize : function() {
             return {
-                model : this.dojoContentModel
+                model : this.dojoContentModel,
+                editionModel : this.dojoEditionModel
             };
         },
 

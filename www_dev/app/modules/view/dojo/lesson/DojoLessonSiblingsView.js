@@ -22,6 +22,7 @@ define(function(require, exports, module) {
         serialize: function () {
             return _.extend({}, Super.prototype.serialize.call(this), {
                 model: this.dojoContentModel,
+                editionModel: this.dojoEditionModel,
                 prevContentModel: this.prevContentModel,
                 nextContentModel: this.nextContentModel
             });

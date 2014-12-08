@@ -45,6 +45,16 @@
                         </h4>
                     </div>
                 </a>
+            <% } else { %>
+                <div class="dojo-sibling">
+                    <p class="dojo-sibling__direction">
+                        この動画は<%= editionModel.get("editionTitle") %>の一番最後の動画だ
+                    </p>
+
+                    <a href="/dojo-top" class="button expand">
+                        動画一覧に戻る
+                    </a>
+                </div>
             <% } %>
         </div>
     </div>
