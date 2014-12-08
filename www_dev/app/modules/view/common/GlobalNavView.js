@@ -74,8 +74,14 @@ define(function(require, exports, module) {
             'click [data-drawer-opener]': 'onClickDrawerOpener',
             'click [data-back-home]': 'onClickBackHome',
             'change #selectRadiation' : "onChangeRadiationStation",
-            'click [data-font-size]': 'onClickFontSize'
+            'click [data-font-size]': 'onClickFontSize',
+
+            'click .global-nav__menubutton a': 'onClickMenuButton',
+            'click #help' : 'onClickHelp',
+            'click #backno' : 'onClickBackno',
+            'click #setting' : 'onClickSetting'
         },
+
 
         /**
          * 発行日を設定する。
@@ -100,8 +106,10 @@ define(function(require, exports, module) {
         updateBackHomeButton: function () {
             if (Backbone.history.fragment == 'top') {
                 $('[data-back-home]').hide();
+                $('.global-nav__menu').css('background-position', 'center');
             } else {
                 $('[data-back-home]').show();
+                $('.global-nav__menu').css('background-position', 'right');
             }
         },
 
@@ -168,6 +176,35 @@ define(function(require, exports, module) {
             // 文字サイズのみの保存処理のため、成功時や失敗時に
             // その都度ユーザに通知しない
             model.save(null,{});
+        },
+
+        /**
+         * メニュー項目ボタンのaタグをクリックした際の挙動を
+         * ブラウザデフォルトではなく
+         * pushStateに変更する
+         */
+        onClickMenuButton: function (evt) {
+            var $target = $(evt.currentTarget);
+            var href = { prop: $target.prop("href"), attr: $target.attr("href") };
+            var root = location.protocol + "//" + location.host + app.root;
+
+            if (href.prop && href.prop.slice(0, root.length) === root) {
+                evt.preventDefault();
+                app.router.navigate(href.attr, {
+                    trigger: true,
+                    replace: false
+                });
+            }
+            $('#snap-content').data("snap").close();
+        },
+        onClickHelp : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「ヘルプ」","");
+        },
+        onClickBackno : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「バックナンバー」","");
+        },
+        onClickSetting : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「設定」","");
         },
 
         /**

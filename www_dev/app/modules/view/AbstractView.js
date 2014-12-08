@@ -138,28 +138,40 @@ define(function(require, exports, module) {
          * @memberof AbstractView#
          */
         showPIOImages : function(imgElementSelector, imgArray) {
+            var $articleImage = $(this.el).find(imgElementSelector);
+
             var onGetBinary = $.proxy(function(binary,item) {
-                var articleImage = $(this.el).find(imgElementSelector);
                 var arrayBufferView = new Uint8Array(binary);
                 var blob = new Blob([ arrayBufferView ], {
                     type : "image/jpg"
                 });
                 var url = FileAPIUtil.createObjectURL(blob);
-                $(articleImage[item.imageIndex-1]).load(function() {
+
+                $articleImage.eq(item.imageIndex-1).load(function() {
                     window.URL.revokeObjectURL($(this).attr("src"));
                 });
-                $(articleImage[item.imageIndex-1]).attr("src", url);
-                $(articleImage[item.imageIndex-1]).data("blob", blob);
+                $articleImage.eq(item.imageIndex-1).attr("src", url);
+                $articleImage.eq(item.imageIndex-1).data("blob", blob);
             },this);
+            
+            var onError = function (resp, item) {
+                $articleImage.eq(item.imageIndex-1).triggerHandler("error", resp);
+            };
+
             _.each(imgArray,$.proxy(function (item) {
                 try {
                     app.box.col("dav").getBinary(item.imageUrl, {
-                        success : $.proxy(function(binary) {
+                        success : function(binary) {
                             onGetBinary(binary,item);
-                        },this)
+                        },
+
+                        error: function (resp) {
+                            onError(resp, item);
+                        }
                     });
                 } catch (e) {
                     console.error(e);
+                    onError(e, item);
                 }
             },this));
         }

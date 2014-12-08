@@ -43,6 +43,26 @@ define(function(require, exports, module) {
     Code.ARTICLE_STATUS_BEFORE_PUBLISH = "未掲載";
     Code.ARTICLE_STATUS_DEPUBLISHED = "配信停止中";
 
+    // 記事サイト
+    Code.ARTICLE_SITE_LIST = [
+            {
+                key : "福島テレビ",
+                value : "localnews"
+            }, {
+                key : "福島民報",
+                value : "localnews"
+            }, {
+                key : "浪江町役場新着情報",
+                value : "townoffice"
+            }, {
+                key : "イベント",
+                value : "event"
+            }, {
+                key : "浪江町復興支援員宮城県駐在ブログ",
+                value : "blog"
+            }
+    ];
+    Code.ARTICLE_SITE_NONE = "article";
 
     // ArticleModelの画像タイプ
     Code.IMAGE_TYPE_PIO = 2;

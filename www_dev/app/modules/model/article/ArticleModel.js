@@ -215,6 +215,25 @@ define(function(require, exports, module) {
             }
 
             return Code.IMAGE_TYPE_NONE;
+        },
+
+        /**
+         * 情報源タイプを判定する
+         * @return {string} class文字列を返す
+         */
+        getSiteType: function() {
+            var dispSite = this.get("dispSite");
+            var articleSite = null;
+
+            articleSite = _.find(Code.ARTICLE_SITE_LIST, function(item) {
+                return item.key == dispSite;
+            });
+
+            if (articleSite) {
+                return articleSite.value;
+            } else {
+                return Code.ARTICLE_SITE_NONE;
+            }
         }
     });
 

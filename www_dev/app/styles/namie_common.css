@@ -20,28 +20,20 @@ html {
 }
 
 body {
-    color: #3d391d;
+    color: #5a5738;
 }
 
 /**
  *  foundation overrides
  */
 .button {
-    background: #f2a41c;
-    background-image: -webkit-linear-gradient(top, #f2a41c, #e85c10);
-    background-image: -moz-linear-gradient(top, #f2a41c, #e85c10);
-    background-image: -ms-linear-gradient(top, #f2a41c, #e85c10);
-    background-image: -o-linear-gradient(top, #f2a41c, #e85c10);
-    background-image: linear-gradient(to bottom, #f2a41c, #e85c10);
-    -webkit-border-radius: 4;
-    -moz-border-radius: 4;
-    border-radius: 4px;
-    -webkit-box-shadow: 0px 3px 0px #792807;
-    -moz-box-shadow: 0px 3px 0px #792807;
-    box-shadow: 0px 3px 0px #792807;
+    background: #ffa801;
+    -webkit-box-shadow: 0px 3px 0px #df6f23;
+    -moz-box-shadow: 0px 3px 0px #df6f23;
+    box-shadow: 0px 3px 0px #df6f23;
     color: #ffffff;
     font-size: 20px;
-    padding: 5px 10px 5px 10px;
+    padding: 5px 25px 5px 25px;
     text-decoration: none;
 }
 
@@ -78,7 +70,7 @@ main {
     height: 100%;
     position: absolute;
     top: 0;
-    padding: 224px 10px 0;
+    padding: 96px 0px 0;
     width: 100%;
 }
 
@@ -112,7 +104,6 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 10px 10px 0;
 }
 
 .background::before {
@@ -126,7 +117,7 @@ main {
  *  header
  */
 .header {
-    margin: 10px 10px 0;
+    display: none;
     background-image: url(../../app/img/img-header-main.png);
     background-size: 100%;
     background-repeat: no-repeat;
@@ -274,18 +265,13 @@ main {
  *  global-nav
  */
 .global-nav {
-    height: 114px;
+    height: 96px;
     position: relative;
     z-index: 10;
-    margin: 0 10px 10px;
-    padding: 8px 10px;
-    background: #fbfaf4;
-    border-top: 30px solid #fbfaf4;
-    top: -50px;
+    background: #43c1d8;
 }
 
 .global-nav nav {
-    padding: 0 10px;
 }
 
 /**
@@ -295,8 +281,8 @@ main {
     position: relative;
     box-sizing: content-box;
     display: inline-block;
-    height: 72px;
-    line-height: 72px;
+    height: 96px;
+    line-height: 96px;
     vertical-align: middle;
     float: left;
 }
@@ -314,13 +300,21 @@ main {
     margin: 0;
     font-size: 1rem;
 }
+.global-nav .button[data-drawer-opener] {
+    position: absolute;
+    padding: 0 20px;
+    height: auto;
+    line-height: normal;
+    margin: 0;
+    font-size: 0.65rem;
+    opacity: 0.5;
+}
 
 /**
  *  global-navの子要素の共通の中身
  */
 .nav-content {
     height: 100%;
-    padding: 6px 0;
 }
 
 .nav-content::after {
@@ -335,6 +329,11 @@ main {
  */
 .global-nav__menu {
     width: 30%;
+    background-color: #5acee5;
+    background-image: url(../../app/img/img-title-logo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 100%;
 }
 
 .global-nav__menu .button {
@@ -364,8 +363,7 @@ main {
 .global-nav__date {
     width: 40%;
     text-align: center;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
-    color: #485a5d;
+    color: #fff;
 }
 
 .global-nav__date .nav-content {
@@ -373,7 +371,7 @@ main {
 }
 
 .date-area {
-    line-height: 60px;
+    line-height: 96px;
     font-size: 0;
 }
 
@@ -408,11 +406,10 @@ main {
     font-size: 40px;
     display: inline-block;
     transform: scale(0.8, 1);
-    margin-left: -5px;
 }
 
 .date-area__date .date--unit {
-    font-size: 30px;
+    font-size: 26px;
     margin-left: -5px;
 }
 
@@ -422,7 +419,7 @@ main {
 }
 
 .date-area__weekday .date--paren {
-    font-size: 30px;
+    font-size: 26px;
 }
 
 .date-area__weekday .date--weekday {
@@ -442,10 +439,38 @@ main {
 }
 
 /**
+ *  global-nav__menubutton
+ *  メニューボタンリスト
+ */
+.global-nav__menubutton {
+    width: 30%;
+    text-align: center;
+    background: #8de5e9;
+}
+
+.global-nav__menubutton ul li {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 8px;
+    line-height: 96px;
+}
+
+.global-nav__menubutton .button {
+    background: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    font-size: 2rem;
+    
+}
+
+/**
  *  global-nav__font
  *  フォントサイズ指定
  */
 .global-nav__font {
+    display: none;
+
     width: 30%;
     text-align: right;
 }
@@ -539,7 +564,6 @@ main {
 
 .contents {
     height: 100%;
-    padding: 0 10px;
     background-color: #fbfaf4;
 }
 
@@ -547,7 +571,6 @@ main {
     position: relative;
     height: 100%;
     overflow: hidden;
-    padding: 0 10px;
 }
 
 .contents__primary,
@@ -1138,7 +1161,6 @@ div.nehan-block.nehan-body:last-child {
 
 .backnumber-nav__month .date-area {
     line-height: 1;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
 }
 
 .backnumber-nav__prev,
@@ -1212,7 +1234,6 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .backnumber-item__date .date-area {
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
     line-height: 1;
 }
 
@@ -1236,6 +1257,10 @@ div.nehan-block.nehan-body:last-child {
 .backnumber-item__thumbnail {
     padding-top: 20px;
     padding-bottom: 20px;
+}
+
+.backnumber-item__thumbnail .articleImage {
+    min-width: 100%;
 }
 
 /*
@@ -1549,4 +1574,11 @@ select#articleCategory {
 
 .OpeArticleDetailPage {
 	margin-right: 20px;
+}
+
+/**
+ *  Login
+ */
+#login {
+    margin-top: 150px;
 }

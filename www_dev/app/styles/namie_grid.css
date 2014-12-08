@@ -5,6 +5,7 @@
     height: 100%;
     overflow: auto;
     float: none;
+    padding: 20px 0 0 0;
 }
 
 .news-detail {
@@ -25,21 +26,26 @@
     justify-content: center;
     align-items: stretch;
     list-style: none;
+    margin-left: 0;
 }
 
 .grid-list>div {
     box-sizing: border-box;
-    margin: 15px;
+    margin: 20px;
     flex: 1 1 45%;
     border: 3px solid #e8e8d0;
     background: white;
     position: relative;
+    max-width: 45%;
 }
 
 .grid-list__item {
     box-sizing: border-box;
     width: 100%;
-    padding: 10px;
+    padding: 20px 15px;
+}
+.grid-list__item>.row {
+    display: table;
 }
 
 /**
@@ -53,11 +59,16 @@
     padding: 0 10px;
 }
 
+.grid-cell--image .articleImage {
+    min-width: 100%;
+}
+
 .grid-cell--body {
     display: table-cell;
     float: none !important;
     position: static;
     padding: 0 10px;
+    width: 100%;
 }
 
 .is-no-image .grid-cell--image {
@@ -68,12 +79,33 @@
  *  グリッドのラベル
  */
 .grid-label {
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: auto 1.5rem;
+    padding-left: 2.2rem;
+    margin-bottom: 10px;
 }
 
-.grid-label--pink {
-    color: pink;
+.grid-label--blog {
+    color: #c96088;
+    background-image: url(../../app/img/img-grid-label-blog.png);
 }
-
+.grid-label--localnews {
+    color: #61b152;
+    background-image: url(../../app/img/img-grid-label-localnews.png);
+}
+.grid-label--event {
+    color: #d9bc08;
+    background-image: url(../../app/img/img-grid-label-event.png);
+}
+.grid-label--townoffice {
+    color: #27a8bd;
+    background-image: url(../../app/img/img-grid-label-townoffice.png);
+}
+.grid-label--article {
+    color: #09406c;
+    background-image: url(../../app/img/img-grid-label-article.png);
+}
 .grid-label__text {
 }
 
@@ -87,6 +119,7 @@
 .grid-description__title {
     font-size: 1.2rem;
     font-weight: bold;
+    margin-bottom: 0.5rem;
 }
 
 .grid-description__description {
@@ -98,7 +131,7 @@
 .grid-button {
     text-align: right;
     position: absolute;
-    bottom: 20px;
+    bottom: 15px;
     right: 20px;
 }
 
