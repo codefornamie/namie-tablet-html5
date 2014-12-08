@@ -76,40 +76,6 @@
 }
 
 /**
- *  グリッドのラベル
- */
-.grid-label {
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-size: auto 1.5rem;
-    padding-left: 2.2rem;
-    margin-bottom: 10px;
-}
-
-.grid-label--blog {
-    color: #c96088;
-    background-image: url(../../app/img/img-grid-label-blog.png);
-}
-.grid-label--localnews {
-    color: #61b152;
-    background-image: url(../../app/img/img-grid-label-localnews.png);
-}
-.grid-label--event {
-    color: #d9bc08;
-    background-image: url(../../app/img/img-grid-label-event.png);
-}
-.grid-label--townoffice {
-    color: #27a8bd;
-    background-image: url(../../app/img/img-grid-label-townoffice.png);
-}
-.grid-label--article {
-    color: #09406c;
-    background-image: url(../../app/img/img-grid-label-article.png);
-}
-.grid-label__text {
-}
-
-/**
  *  グリッドの説明文章
  */
 .grid-description {
@@ -137,4 +103,34 @@
 
 .grid-button .button {
     margin-bottom: 0;
+}
+
+/**
+ *  記事詳細
+ */
+.news-detail .post {
+    margin: 20px;
+    padding: 20px;
+    background: white;
+    border: 3px solid #e8e8d0;
+}
+
+.news-detail .post-header__site {
+    background: none;
+    height: auto;
+    margin: 0;
+}
+
+.news-detail .post-header__site::before,
+.news-detail .post-header__site::after {
+    display: none;
+}
+
+.news-detail .post-label {
+    background: none;
+    padding: 0;
+}
+
+.news-detail .post-body {
+    margin: 20px 0;
 }

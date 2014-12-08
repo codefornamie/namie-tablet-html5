@@ -1586,3 +1586,39 @@ select#articleCategory {
 #login {
     margin-top: 150px;
 }
+
+/**
+ *  記事のラベル
+ */
+.article-label {
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: auto 1.5rem;
+    padding-left: 2.2rem;
+    margin-bottom: 10px;
+    min-height: 40px;
+    line-height: 40px;
+}
+
+.article-label--blog {
+    color: #c96088;
+    background-image: url(../../app/img/img-article-label-blog.png);
+}
+.article-label--localnews {
+    color: #61b152;
+    background-image: url(../../app/img/img-article-label-localnews.png);
+}
+.article-label--event {
+    color: #d9bc08;
+    background-image: url(../../app/img/img-article-label-event.png);
+}
+.article-label--townoffice {
+    color: #27a8bd;
+    background-image: url(../../app/img/img-article-label-townoffice.png);
+}
+.article-label--article {
+    color: #09406c;
+    background-image: url(../../app/img/img-article-label-article.png);
+}
+.article-label__text {
+}
