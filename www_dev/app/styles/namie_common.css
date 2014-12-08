@@ -36,6 +36,10 @@ body {
     padding: 5px 25px 5px 25px;
     text-decoration: none;
 }
+.button:focus,
+.button:hover {
+    background: rgb(230, 148, 1);
+}
 
 /**
  *  foundation helpers
