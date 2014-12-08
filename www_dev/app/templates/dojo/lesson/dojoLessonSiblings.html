@@ -1,6 +1,6 @@
 <div class="dojo-lesson-siblings">
     <div class="row">
-        <div class="columns small-6">
+        <div class="columns small-6 is-<%= prevContentModel ? prevContentModel.getSolvedState() : 'unsolved' %> is-<%= prevContentModel ? prevContentModel.getWatchedState() : 'unwatched'%>">
             <% if (prevContentModel) { %>
                 <a href="/dojo/lessons/<%= prevContentModel.get('__id') %>">
                     <div class="dojo-sibling">
@@ -12,11 +12,10 @@
                             前の動画を見る
                         </div>
 
-                        <div class="dojo-sibling__content">
-                            サムネイルが入ります
-                        </div>
+                    <img src="<%= prevContentModel.get('thumbnail') %>"
+                        style="width: 100%; height: 200px; background-color: #777;" />
 
-                        <h4 class="dojo-sibling__title">
+                    <h4 class="dojo-sibling__title">
                             <%= prevContentModel.get("title") %>
                         </h4>
                     </div>
@@ -24,7 +23,7 @@
             <% } %>
         </div>
 
-        <div class="columns small-6">
+        <div class="columns small-6 is-<%= nextContentModel ? nextContentModel.getSolvedState() : 'unsolved' %> is-<%= nextContentModel ? nextContentModel.getWatchedState() : 'unwatched' %>">
             <% if (nextContentModel) { %>
                 <a href="/dojo/lessons/<%= nextContentModel.get('__id') %>">
                     <div class="dojo-sibling">
@@ -36,11 +35,10 @@
                             次の動画を見る
                         </div>
 
-                        <div class="dojo-sibling__content">
-                            サムネイルが入ります
-                        </div>
+                    <img src="<%= nextContentModel.get('thumbnail') %>"
+                        style="width: 100%; height: 200px; background-color: #777;" />
 
-                        <h4 class="dojo-sibling__title">
+                    <h4 class="dojo-sibling__title">
                             <%= nextContentModel.get("title") %>
                         </h4>
                     </div>
