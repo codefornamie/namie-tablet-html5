@@ -9,6 +9,7 @@
     background: #777;
     height: 80px;
     margin: 0;
+    display: block;
 }
 
 .page-dojo h1 {

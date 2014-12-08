@@ -414,8 +414,10 @@ define(function(require, exports, module) {
          */
         onRoute : function(route) {
             if (route === "showArticle") {
+                $(NewsView.SELECTOR_ARTICLE_LIST).hide();
                 $(NewsView.SELECTOR_ARTICLE_DESTINATION).show();
             } else {
+                $(NewsView.SELECTOR_ARTICLE_LIST).show();
                 $(NewsView.SELECTOR_ARTICLE_DESTINATION).hide();
             }
         },
@@ -429,9 +431,13 @@ define(function(require, exports, module) {
     }, {
         /**
          * 記事詳細を挿入する先のセレクタ
-         * @memberof NewsView#
          */
-        SELECTOR_ARTICLE_DESTINATION : "[data-news-detail]"
+        SELECTOR_ARTICLE_DESTINATION : "[data-news-detail]",
+
+        /**
+         * 記事一覧のセレクタ
+         */
+        SELECTOR_ARTICLE_LIST : "#contents__top"
     });
 
     module.exports = NewsView;
