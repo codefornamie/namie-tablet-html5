@@ -1333,7 +1333,7 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .posting-content #header .top-bar .button {
-    font-size: 1rem;
+    font-size: 20px;
     padding: 2px 20px;
     background: #ffa801;
     border-color: #007095;
@@ -1462,6 +1462,8 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .file-area {
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .file-area__item {
