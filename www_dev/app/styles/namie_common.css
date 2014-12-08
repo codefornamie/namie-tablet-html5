@@ -949,6 +949,13 @@ main {
 }
 
 /**
+ *  記事内の要素
+ */
+.article-detail__image-area {
+    margin: 20px 0;
+}
+
+/**
  *  post-action
  */
 .post-action {
