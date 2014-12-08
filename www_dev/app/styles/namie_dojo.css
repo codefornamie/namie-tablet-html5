@@ -86,7 +86,7 @@
  *
  */
 .dojo-tab {
-    display: table;
+    display: flex;
     list-style: none;
     border-collapse: collapse;
     margin: 0;
@@ -94,7 +94,7 @@
 }
 
 .dojo-tab__item {
-    display: table-cell;
+    flex: 1;
     background: white;
     border: 5px solid #333;
     padding: 10px;
