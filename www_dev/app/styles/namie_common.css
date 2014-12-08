@@ -1349,6 +1349,11 @@ div.nehan-block.nehan-body:last-child {
     display: none;
 }
 
+.post .eventFileImage {
+    margin-bottom: 15px;
+    max-width: 500px;
+}
+
 /**
  *  確認画面
  */
