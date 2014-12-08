@@ -11,6 +11,13 @@ define(function(require, exports, module) {
      * @constructor
      */
     var Ge = ComparisonOperatorBase.extend({
+        /**
+         * 初期化処理を行う
+         * @param {Object} key $filterクエリのキー
+         * @param {Object} value $filterクエリの値
+         * @param {Boolean} isThan gtクエリまたはgeクエリを指定するかの真偽値
+         * @memberof Ge#
+         */
         init : function(key, value, isThan) {
             this.key = key;
             this.value = value;

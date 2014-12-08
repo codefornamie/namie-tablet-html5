@@ -6,10 +6,21 @@ define(function(require, exports, module) {
     var FileAPIUtil = function() {
 
     };
+    /**
+     * File関連のAPIまたはクラスがサポートされているかチェックを行う。
+     * @return サポートの可否 true:サポートされいる false:サポートされていない
+     * @memberof FileAPIUtil#
+     */
     FileAPIUtil.isSupported = function() {
         return window.File && window.FileReader && window.FileList && window.Blob;
     };
 
+    /**
+     * オブジェクトURLを生成する。
+     * @param {Object} file ファイル
+     * @return オブジェクトURL
+     * @memberof FileAPIUtil#
+     */
     FileAPIUtil.createObjectURL = function(file) {
         app.logger.debug("createObjectURL: file: " + file);
         if (window.webkitURL) {
@@ -22,6 +33,12 @@ define(function(require, exports, module) {
             return null;
         }
     };
+    /**
+     * 画像ファイル読み込みを行う。
+     * @param {Object} el
+     * @param {Object} preview
+     * @memberof FileAPIUtil#
+     */
     FileAPIUtil.bindFileInputImpl = function(el, preview){
         var self = this;
         // 動作プラットフォーム判定
@@ -59,6 +76,12 @@ define(function(require, exports, module) {
             });
         });
     };
+    /**
+     * 画像ファイル読み込みを行う。
+     * @param {Object} el
+     * @param {Object} preview
+     * @memberof FileAPIUtil#
+     */
     FileAPIUtil.bindFileInput = function(el, preview){
         FileAPIUtil.bindFileInputImpl(el);
     };

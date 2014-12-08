@@ -27,6 +27,12 @@ define(function(require, exports, module) {
         this.cell = app.config.basic.cellId;
         this.box = app.config.basic.boxName;
     };
+    /**
+     * このLogAppenderのプロトタイプ。<br>
+     * デフォルトは、log4javascript.Appenderを使用する。
+     * 
+     * @memberOf PIOLogAppender#
+     */
     PIOLogAppender.prototype = new log4javascript.Appender();
     /**
      * このLogAppenderのレイアウト。<br>
