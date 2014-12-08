@@ -20,7 +20,7 @@ define(function(require, exports, module) {
             res.kind = response.id.kind;
             res.videoId = response.id.videoId;
             res.dispCreatedAt = DateUtil.formatDate(new Date(res.publishedAt), "yyyy年MM月dd日 HH時mm分");
-            res.thumbnail = res.thumbnails["high"].url;
+            res.thumbnail = res.thumbnails.high.url;
             res.dispTitle = CommonUtil.sanitizing(res.title);
 
             return res;

@@ -288,8 +288,8 @@ define(function(require, exports, module) {
         searchAchievement : function() {
             // 達成情報を自身の情報のみに絞り込んで検索実施
             this.achievementCollection = new AchievementCollection();
-            this.achievementCollection.condition.filters = new Equal("userId", app.user.get("__id")), new IsNull(
-                    "deletedAt");
+            this.achievementCollection.condition.filters = [new Equal("userId", app.user.get("__id")), new IsNull(
+                    "deletedAt")];
             this.achievementCollection.fetch({
                 success : $.proxy(this.onSearchAchievement, this),
                 error : function() {
