@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var DojoTabView = require("modules/view/dojo/top/DojoTabView");
     var DojoEditionView = require("modules/view/dojo/top/DojoEditionView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
+    var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
     var DojoEditionCollection = require("modules/collection/dojo/DojoEditionCollection");
     
@@ -47,9 +48,17 @@ define(function(require, exports, module) {
 
         /**
          * 詳細画面を表示する
+         * @param {Object} param
          */
-        showLesson: function () {
-            this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView);
+        showLesson: function (param) {
+            console.assert(param, "param should be specified in order to show lesson page");
+            console.assert(param.dojoEditionModel, "dojoEditionModel should be specified in order to show lesson page");
+            console.assert(param.dojoContentModel, "dojoContentModel should be specified in order to show lesson page");
+
+            this.dojoLessonView.dojoEditionModel.set(param.dojoEditionModel.toJSON());
+            this.dojoLessonView.dojoContentModel.set(param.dojoContentModel.toJSON());
+
+            this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView.layout);
             this.removeView(DojoLayout.SELECTOR_TAB);
             this.removeView(DojoLayout.SELECTOR_EDITION);
         },
@@ -59,8 +68,8 @@ define(function(require, exports, module) {
          */
         hideLesson: function () {
             this.removeView(DojoLayout.SELECTOR_LESSON);
+            this.setView(DojoLayout.SELECTOR_TAB, this.dojoTabView);
             this.setView(DojoLayout.SELECTOR_EDITION, this.dojoEditionView);
-            this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView);
         },
 
         /**
@@ -128,6 +137,7 @@ define(function(require, exports, module) {
          * @memberof TopView#
          */
         initialize : function() {
+            this.currentEditionModel = new DojoEditionModel();
             this.initCollection();
             this.initLayout();
             this.initEvents();
@@ -229,6 +239,7 @@ define(function(require, exports, module) {
             // DojoEditionViewに表示中のModelを更新する
             var dojoEditionView = this.layout.getView(DojoLayout.SELECTOR_EDITION);
             var currentEditionModel = this.dojoEditionCollection.getCurrentEdition();
+            this.currentEditionModel.set(currentEditionModel.toJSON());
             dojoEditionView.model.set(currentEditionModel.toJSON());
 
             // 3. 各子ビューをレンダリングする
@@ -261,15 +272,19 @@ define(function(require, exports, module) {
          * @param {Object} params
          */
         onRoute: function (route, params) {
-            console.log(route, params);
-
             switch (route) {
             case "dojoTop":
                 this.layout.hideLesson();
                 break;
 
             case "dojoLesson":
-                this.layout.showLesson();
+                var lessonId = params[0];
+                var dojoContentModel = this.currentEditionModel.get("contentCollection").get(lessonId);
+
+                this.layout.showLesson({
+                    dojoEditionModel: this.currentEditionModel,
+                    dojoContentModel: dojoContentModel
+                });
                 break;
 
             default:

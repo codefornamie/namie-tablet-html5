@@ -5,16 +5,16 @@
         </a>
 
         <h2 class="dojo-lesson__heading">
+            <div class="dojo-stamp right">
+                済
+            </div>
+
             <span class="dojo-lesson__edition">
                 基礎編
             </span>
             
             <div class="dojo-lesson__title">
-                電源の入れ方
-            </div>
-
-            <div class="dojo-stamp">
-                済
+                <%= model.get("title") %>
             </div>
         </h2>
     </div>
@@ -39,33 +39,19 @@
 
             <div class="row">
                 <div class="columns small-6">
-                    <button class="button expand">
+                    <button class="button expand" data-complete-lesson>
                         はい
                     </button>
                 </div>
 
                 <div class="columns small-6">
-                    <button class="button expand">
+                    <button class="button expand" data-uncomplete-lesson>
                         いいえ
                     </button>
                 </div>
             </div>
         </div>
         
-        <div class="dojo-lesson__siblings">
-            <div class="row">
-                <div class="columns small-6">
-                    <span data-lesson-prev>
-                        前の動画
-                    </span>
-                </div>
-
-                <div class="columns small-6">
-                    <span data-lesson-prev>
-                        前の動画
-                    </span>
-                </div>
-            </div>
-        </div>
+        <div id="dojo-lesson-siblings-container" class="dojo-lesson-siblings-container"></div>
     </div>
 </div>

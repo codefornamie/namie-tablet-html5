@@ -1,0 +1,51 @@
+<div class="dojo-lesson-siblings">
+    <div class="row">
+        <div class="columns small-6">
+            <% if (prevContentModel) { %>
+                <a href="/dojo/lessons/<%= prevContentModel.get('__id') %>">
+                    <div class="dojo-sibling">
+                        <div class="dojo-stamp right">
+                            済
+                        </div>
+
+                        <div class="dojo-sibling__direction">
+                            前の動画を見る
+                        </div>
+
+                        <div class="dojo-sibling__content">
+                            サムネイルが入ります
+                        </div>
+
+                        <h4 class="dojo-sibling__title">
+                            <%= prevContentModel.get("title") %>
+                        </h4>
+                    </div>
+                </a>
+            <% } %>
+        </div>
+
+        <div class="columns small-6">
+            <% if (nextContentModel) { %>
+                <a href="/dojo/lessons/<%= nextContentModel.get('__id') %>">
+                    <div class="dojo-sibling">
+                        <div class="dojo-stamp right">
+                            済
+                        </div>
+                        
+                        <div class="dojo-sibling__direction">
+                            次の動画を見る
+                        </div>
+
+                        <div class="dojo-sibling__content">
+                            サムネイルが入ります
+                        </div>
+
+                        <h4 class="dojo-sibling__title">
+                            <%= nextContentModel.get("title") %>
+                        </h4>
+                    </div>
+                </a>
+            <% } %>
+        </div>
+    </div>
+</div>
