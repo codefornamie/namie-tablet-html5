@@ -9,6 +9,7 @@
     background: #777;
     height: 80px;
     margin: 0;
+    display: block;
 }
 
 .page-dojo h1 {
@@ -163,7 +164,7 @@
 /**
  *  習得済みスタンプ
  */
-.dojo-item__stamp {
+.dojo-stamp {
     position: absolute;
     top: -2px;
     right: -2px;
@@ -180,15 +181,19 @@
     transform: rotate(10deg);
 }
 
-.dojo-item.is-solved .dojo-item__stamp {
+.dojo-item.is-solved .dojo-stamp,
+.dojo-lesson.is-solved .dojo-stamp,
+.dojo-lesson-siblings .is-solved .dojo-stamp {
     display: block;
 }
 
-.dojo-item.is-unsolved .dojo-item__stamp {
+.dojo-item.is-unsolved .dojo-stamp,
+.dojo-lesson.is-unsolved .dojo-stamp,
+.dojo-lesson-siblings .is-unsolved .dojo-stamp {
     display: none;
 }
 
-.dojo-item__stamp--solved {
+.dojo-stamp--solved {
 }
 
 .dojo-item__title {
@@ -218,4 +223,105 @@
 
 .dojo-item.is-unwatched .dojo-item__watched-state {
     display: none;
+}
+
+/**
+ *  詳細画面
+ */
+.dojo-lesson-container {
+}
+
+.dojo-lesson {
+}
+
+/**
+ *  詳細画面のヘッダ
+ */
+.dojo-lesson__header {
+    margin: 20px;
+}
+
+.dojo-lesson__heading {
+    text-align: center;
+}
+
+.dojo-lesson__edition {
+    font-size: 1.2rem;
+    color: white;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+.dojo-lesson__title {
+    font-size: 2rem;
+    display: inline-block;
+    font-weight: bold;
+    color: white;
+    font-weight: bold;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+.dojo-lesson__heading .dojo-stamp {
+    position: relative;
+    display: inline-block;
+    top: 0;
+    right: 0;    
+}
+
+/**
+ *  詳細画面のボディ
+ */
+.dojo-lesson__body {
+    width: 90%;
+    margin: auto;
+    padding: 20px 0;
+}
+
+.dojo-lesson__description {
+    color: white;
+}
+
+.dojo-lesson__content {
+    width: 100%;
+    height: 400px;
+    background: #777;
+}
+
+.dojo-lesson__completion {
+    margin: 20px 0;
+    background: white;
+    padding: 20px;
+}
+
+.dojo-lesson__siblings {
+}
+
+/**
+ *  関連動画
+ */
+.dojo-lesson-siblings {
+}
+
+.dojo-sibling {
+    background: white;
+    border: 10px solid #333;
+    padding: 20px;
+}
+
+.dojo-sibling__direction {
+    color: #333;
+    text-align: center;
+    margin: 0 0 15px 0;
+}
+
+.dojo-sibling__content {
+    width: 100%;
+    height: 200px;
+    background: #777;
+    padding: 20px;
+    color: white;
+}
+
+.dojo-sibling__title {
+    margin: 20px 0 0;
+    padding: 0;
 }

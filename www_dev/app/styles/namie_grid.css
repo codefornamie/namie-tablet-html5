@@ -5,6 +5,7 @@
     height: 100%;
     overflow: auto;
     float: none;
+    padding: 20px 0 0 0;
 }
 
 .news-detail {
@@ -25,21 +26,26 @@
     justify-content: center;
     align-items: stretch;
     list-style: none;
+    margin-left: 0;
 }
 
 .grid-list>div {
     box-sizing: border-box;
-    margin: 15px;
+    margin: 20px;
     flex: 1 1 45%;
     border: 3px solid #e8e8d0;
     background: white;
     position: relative;
+    max-width: 45%;
 }
 
 .grid-list__item {
     box-sizing: border-box;
     width: 100%;
-    padding: 10px;
+    padding: 20px 15px;
+}
+.grid-list__item>.row {
+    display: table;
 }
 
 /**
@@ -53,28 +59,29 @@
     padding: 0 10px;
 }
 
+.grid-cell--image .articleImage {
+    min-width: 100%;
+}
+
+.grid-cell--image .articleImage[src=""],
+.grid-cell--image .articleImage:not([src]) {
+    height: 200px;
+    width: 200px;
+    background: #e8e8d0;
+    outline: 1px solid #e8e8d0;
+    outline-offset: -1px;
+}
+
 .grid-cell--body {
     display: table-cell;
     float: none !important;
     position: static;
     padding: 0 10px;
+    width: 100%;
 }
 
 .is-no-image .grid-cell--image {
     display: none;
-}
-
-/**
- *  グリッドのラベル
- */
-.grid-label {
-}
-
-.grid-label--pink {
-    color: pink;
-}
-
-.grid-label__text {
 }
 
 /**
@@ -87,6 +94,7 @@
 .grid-description__title {
     font-size: 1.2rem;
     font-weight: bold;
+    margin-bottom: 0.5rem;
 }
 
 .grid-description__description {
@@ -98,10 +106,40 @@
 .grid-button {
     text-align: right;
     position: absolute;
-    bottom: 20px;
+    bottom: 15px;
     right: 20px;
 }
 
 .grid-button .button {
     margin-bottom: 0;
+}
+
+/**
+ *  記事詳細
+ */
+.news-detail .post {
+    margin: 20px;
+    padding: 20px;
+    background: white;
+    border: 3px solid #e8e8d0;
+}
+
+.news-detail .post-header__site {
+    background: none;
+    height: auto;
+    margin: 0;
+}
+
+.news-detail .post-header__site::before,
+.news-detail .post-header__site::after {
+    display: none;
+}
+
+.news-detail .post-label {
+    background: none;
+    padding: 0;
+}
+
+.news-detail .post-body {
+    margin: 20px 0;
 }

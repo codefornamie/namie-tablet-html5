@@ -28,7 +28,7 @@ define(function(require, exports, module) {
 
             // 掲載期間
             var pubDateString = this.model.getPubDateString();
-            $("#articlePublishRange").text(pubDateString);
+            $("#articlePublishRange").text("掲載期間：" + pubDateString);
 
             // 内容
             $("#articleDescription").html(CommonUtil.sanitizing(this.model.get("description")));

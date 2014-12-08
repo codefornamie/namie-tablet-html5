@@ -30,6 +30,8 @@ define(function(require, exports, module) {
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          */
         afterRendered : function() {
+            $("#snap-content").scrollTop(0);
+
             this.showImage();
         },
 

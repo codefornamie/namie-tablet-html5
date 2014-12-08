@@ -43,6 +43,8 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            $("#snap-content").scrollTop(0);
+
             // 記事カテゴリ選択肢
             var categories = _.filter(Code.ARTICLE_CATEGORY_LIST, function(category) {
                 return _.find(Code.ARTICLE_CATEGORY_LIST_BY_MODE[app.config.basic.mode], function(key) {

@@ -20,29 +20,25 @@ html {
 }
 
 body {
-    color: #3d391d;
+    color: #5a5738;
 }
 
 /**
  *  foundation overrides
  */
 .button {
-    background: #f2a41c;
-    background-image: -webkit-linear-gradient(top, #f2a41c, #e85c10);
-    background-image: -moz-linear-gradient(top, #f2a41c, #e85c10);
-    background-image: -ms-linear-gradient(top, #f2a41c, #e85c10);
-    background-image: -o-linear-gradient(top, #f2a41c, #e85c10);
-    background-image: linear-gradient(to bottom, #f2a41c, #e85c10);
-    -webkit-border-radius: 4;
-    -moz-border-radius: 4;
-    border-radius: 4px;
-    -webkit-box-shadow: 0px 3px 0px #792807;
-    -moz-box-shadow: 0px 3px 0px #792807;
-    box-shadow: 0px 3px 0px #792807;
+    background: #ffa801;
+    -webkit-box-shadow: 0px 3px 0px #df6f23;
+    -moz-box-shadow: 0px 3px 0px #df6f23;
+    box-shadow: 0px 3px 0px #df6f23;
     color: #ffffff;
     font-size: 20px;
-    padding: 5px 10px 5px 10px;
+    padding: 5px 25px 5px 25px;
     text-decoration: none;
+}
+.button:focus,
+.button:hover {
+    background: rgb(230, 148, 1);
 }
 
 /**
@@ -78,7 +74,7 @@ main {
     height: 100%;
     position: absolute;
     top: 0;
-    padding: 224px 10px 0;
+    padding: 96px 0px 0;
     width: 100%;
 }
 
@@ -112,7 +108,6 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 10px 10px 0;
 }
 
 .background::before {
@@ -126,7 +121,7 @@ main {
  *  header
  */
 .header {
-    margin: 10px 10px 0;
+    display: none;
     background-image: url(../../app/img/img-header-main.png);
     background-size: 100%;
     background-repeat: no-repeat;
@@ -274,18 +269,13 @@ main {
  *  global-nav
  */
 .global-nav {
-    height: 114px;
+    height: 96px;
     position: relative;
     z-index: 10;
-    margin: 0 10px 10px;
-    padding: 8px 10px;
-    background: #fbfaf4;
-    border-top: 30px solid #fbfaf4;
-    top: -50px;
+    background: #43c1d8;
 }
 
 .global-nav nav {
-    padding: 0 10px;
 }
 
 /**
@@ -295,8 +285,8 @@ main {
     position: relative;
     box-sizing: content-box;
     display: inline-block;
-    height: 72px;
-    line-height: 72px;
+    height: 96px;
+    line-height: 96px;
     vertical-align: middle;
     float: left;
 }
@@ -314,13 +304,21 @@ main {
     margin: 0;
     font-size: 1rem;
 }
+.global-nav .button[data-drawer-opener] {
+    position: absolute;
+    padding: 0 20px;
+    height: auto;
+    line-height: normal;
+    margin: 0;
+    font-size: 0.65rem;
+    opacity: 0.5;
+}
 
 /**
  *  global-navの子要素の共通の中身
  */
 .nav-content {
     height: 100%;
-    padding: 6px 0;
 }
 
 .nav-content::after {
@@ -335,6 +333,11 @@ main {
  */
 .global-nav__menu {
     width: 30%;
+    background-color: #5acee5;
+    background-image: url(../../app/img/img-title-logo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 100%;
 }
 
 .global-nav__menu .button {
@@ -364,8 +367,7 @@ main {
 .global-nav__date {
     width: 40%;
     text-align: center;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
-    color: #485a5d;
+    color: #fff;
 }
 
 .global-nav__date .nav-content {
@@ -373,7 +375,7 @@ main {
 }
 
 .date-area {
-    line-height: 60px;
+    line-height: 96px;
     font-size: 0;
 }
 
@@ -408,11 +410,10 @@ main {
     font-size: 40px;
     display: inline-block;
     transform: scale(0.8, 1);
-    margin-left: -5px;
 }
 
 .date-area__date .date--unit {
-    font-size: 30px;
+    font-size: 26px;
     margin-left: -5px;
 }
 
@@ -422,7 +423,7 @@ main {
 }
 
 .date-area__weekday .date--paren {
-    font-size: 30px;
+    font-size: 26px;
 }
 
 .date-area__weekday .date--weekday {
@@ -442,10 +443,38 @@ main {
 }
 
 /**
+ *  global-nav__menubutton
+ *  メニューボタンリスト
+ */
+.global-nav__menubutton {
+    width: 30%;
+    text-align: center;
+    background: #8de5e9;
+}
+
+.global-nav__menubutton ul li {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 8px;
+    line-height: 96px;
+}
+
+.global-nav__menubutton .button {
+    background: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    font-size: 2rem;
+    
+}
+
+/**
  *  global-nav__font
  *  フォントサイズ指定
  */
 .global-nav__font {
+    display: none;
+
     width: 30%;
     text-align: right;
 }
@@ -539,7 +568,6 @@ main {
 
 .contents {
     height: 100%;
-    padding: 0 10px;
     background-color: #fbfaf4;
 }
 
@@ -547,7 +575,6 @@ main {
     position: relative;
     height: 100%;
     overflow: hidden;
-    padding: 0 10px;
 }
 
 .contents__primary,
@@ -598,28 +625,8 @@ main {
     overflow: auto;
 }
 
-.contents__secondary::before {
-    content: '';
-    display: block;
-    background-image: url(../../app/img/img-side-menu-top.png);
-    background-size: 312px;
-    height: 3px;
-    background-position: -1px 0;
-}
-
-.contents__secondary::after {
-    content: '';
-    display: block;
-    background-image: url(../../app/img/img-side-menu-bottom.png);
-    background-size: 100%;
-    height: 4px;
-    margin-bottom: 20px;
-}
-
 .contents__secondary > div {
     position: relative;
-    background-image: url(../../app/img/img-side-menu-middle.png);
-    background-size: 100%;
     overflow: hidden;
 }
 
@@ -830,38 +837,6 @@ main {
     margin: 0 0 16px;
 }
 
-.post-header__site {
-    font-size: 1rem;
-    margin: 0 -27px 0 -32px;
-    background-image: url(../../app/img/img-contents-head01-middle.png);
-    background-size: auto 100%;
-    position: relative;
-    height: 48px;
-}
-    .post-header__site::before {
-        content: '';
-        display: block;
-        background-image: url(../../app/img/img-contents-head01-left.png);
-        background-size: 100%;
-        width: 5px;
-        height: 49px;
-        position: absolute;
-        top: 0;
-        left: -5px;
-    }
-
-    .post-header__site::after {
-        content: '';
-        display: block;
-        background-image: url(../../app/img/img-contents-head01-right.png);
-        background-size: 100%;
-        width: 5px;
-        height: 49px;
-        position: absolute;
-        top: 0;
-        right: -5px;
-    }
-
 .post-header__title {
     font-size: 2.3rem;
     font-weight: bold;
@@ -919,6 +894,13 @@ main {
 
 .post-main__description {
     margin: 0 0 32px;
+}
+
+/**
+ *  記事内の要素
+ */
+.article-detail__image-area {
+    margin: 20px 0;
 }
 
 /**
@@ -1095,6 +1077,13 @@ div.nehan-block.nehan-body:last-child {
 /**
  *  Backnumber
  */
+.backnumber-scroll-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
 .backnumber-nav {
     position: relative;
     z-index: 50;
@@ -1138,7 +1127,6 @@ div.nehan-block.nehan-body:last-child {
 
 .backnumber-nav__month .date-area {
     line-height: 1;
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
 }
 
 .backnumber-nav__prev,
@@ -1149,13 +1137,14 @@ div.nehan-block.nehan-body:last-child {
 .backnumber-main {
     padding-top: 70px;
     width: 100%;
-    height: 100%;
+    height: auto;
     position: absolute;
     top: 0;
     left: 0;
 }
     .backnumber-main > div {
-        height: 100%;
+        height: auto;
+        position: relative;
     }
 
 .backnumber-list-container {
@@ -1175,6 +1164,11 @@ div.nehan-block.nehan-body:last-child {
     border-radius: 15px;
     overflow: hidden;
     padding: 5px;
+}
+
+.backnumber-main .news-detail {
+    position: relative;
+    height: auto;
 }
 
 /**
@@ -1212,7 +1206,6 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .backnumber-item__date .date-area {
-    font-family: Georgia, 'ヒラギノ明朝 Pro W3', 'Hiragino Mincho ProN', 'MS P 明朝', 'MS PMincho', serif;
     line-height: 1;
 }
 
@@ -1238,6 +1231,10 @@ div.nehan-block.nehan-body:last-child {
     padding-bottom: 20px;
 }
 
+.backnumber-item__thumbnail .articleImage {
+    min-width: 100%;
+}
+
 /*
  * Posting
  */
@@ -1261,9 +1258,8 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .event__status .eventStatus {
-    background: #333;
+    background: #e8e8d0;
     border-radius: 2px;
-    color: white;
     display: inline-block;
     font-size: 1rem;
     margin-bottom: 8px;
@@ -1300,6 +1296,11 @@ div.nehan-block.nehan-body:last-child {
     display: none;
 }
 
+.post .eventFileImage {
+    margin-bottom: 15px;
+    max-width: 500px;
+}
+
 /**
  *  確認画面
  */
@@ -1313,7 +1314,6 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .posting-content {
-    color: #333;
     background-color: #fbfaf4;
 }
 .posting-content label {
@@ -1327,8 +1327,12 @@ div.nehan-block.nehan-body:last-child {
     margin-right: 12px;
     vertical-align: text-bottom;
 }
+.posting-content .button.small {
+    font-size: 1rem;
+}
 
 .posting-content #header {
+    display: block;
     background: #fff;
     height: 55px;
     margin: 0;
@@ -1336,32 +1340,52 @@ div.nehan-block.nehan-body:last-child {
 
 .posting-content .top-bar-section ul li {
     margin: 0 5px;
+    background: transparent;
+}
+
+.posting-content .top-bar-section ul li a:not(.button),
+.posting-content .top-bar-section ul li a:not(.button):hover {
+    background: transparent;
 }
 
 .posting-content .eventHeader nav {
     height: 55px;
     padding-right: 15px;
 }
+
+.posting-content #header .top-bar {
+    background: #43c1d8;
+}
+
 .posting-content #header .top-bar .name h1 {
     margin-top: 5px;
 }
+
 .posting-content #header .top-bar .button {
-    font-size: 1rem;
+    font-size: 20px;
     padding: 2px 20px;
+    background: #ffa801;
+    border-color: #007095;
 }
+
 .posting-content .contents-wrapper {
     padding: 0;
 }
 
 .posting-content .eventContents {
     padding: 0 20px 20px;
+    line-height: 1.5;
 }
 
 .posting-content .contents__secondary {
-    padding: 20px 0;
+    padding: 40px 0;
 }
 .posting-content .contents__secondary > div {
     padding: 40px 20px;
+}
+.posting-content .contents__secondary > div.sidemenu {
+    border: 3px solid #e8e8d0;
+    background: #fff;
 }
 .posting-content .contents__secondary .button {
     padding: 30px;
@@ -1372,6 +1396,10 @@ div.nehan-block.nehan-body:last-child {
     padding: 40px;
 }
 .posting-content .contents__primary .post {
+    border: 3px solid #e8e8d0;
+    background: #fff;
+    padding: 20px 30px;
+    margin-bottom: 40px;
 }
 .posting-content .contents__primary .post__body {
     font-size: 1rem;
@@ -1383,19 +1411,17 @@ div.nehan-block.nehan-body:last-child {
 .posting-content .contents__primary .post-header__site {
     font-size: 1rem;
     margin: 0 5px 0 0;
-    background-image: url(../../app/img/img-contents-head01-middle.png);
-    background-size: auto 100%;
+    background: #e8e8d0;
     position: relative;
     height: 48px;
 }
 .posting-content .contents__primary .post-label {
     background: white;
     display: inline-block;
-    margin: 5px 20px 5px 1px;
+    margin: 5px 20px 5px 5px;
     padding: 0 40px;
     height: 36px;
     line-height: 35px;
-    border-radius: 4px;
     font-size: 0.9rem;
 }
 .posting-content .contents__primary .post-label.expired {
@@ -1407,6 +1433,7 @@ div.nehan-block.nehan-body:last-child {
 }
 .posting-content .contents__primary .post-action .button {
     width: 40%;
+    font-size: 1rem;
 }
 
 .posting-content #global-nav {
@@ -1415,6 +1442,7 @@ div.nehan-block.nehan-body:last-child {
     height: auto;
     border-top: none;
     top: 0;
+    background: #5acee5;
 }
 .posting-content #global-nav nav {
     padding: 0;
@@ -1428,11 +1456,12 @@ div.nehan-block.nehan-body:last-child {
 .posting-content .posting__global-nav__menu #headerTitle {
     margin: 10px 0;
     font-size: 1.7rem;
-    color: rgb(72, 90, 93);
+    color: #fff;
 }
 
 .posting-content .eventColumnsTitle {
     font-size: 1rem;
+    text-align: right;
 }
 .posting-content .file-action {
     margin-bottom: 20px;
@@ -1462,6 +1491,8 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .file-area {
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .file-area__item {
@@ -1549,4 +1580,47 @@ select#articleCategory {
 
 .OpeArticleDetailPage {
 	margin-right: 20px;
+}
+
+/**
+ *  Login
+ */
+#login {
+    margin-top: 150px;
+}
+
+/**
+ *  記事のラベル
+ */
+.article-label {
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: auto 1.5rem;
+    padding-left: 2.2rem;
+    margin-bottom: 10px;
+    min-height: 40px;
+    line-height: 40px;
+}
+
+.article-label--blog {
+    color: #c96088;
+    background-image: url(../../app/img/img-article-label-blog.png);
+}
+.article-label--localnews {
+    color: #61b152;
+    background-image: url(../../app/img/img-article-label-localnews.png);
+}
+.article-label--event {
+    color: #d9bc08;
+    background-image: url(../../app/img/img-article-label-event.png);
+}
+.article-label--townoffice {
+    color: #27a8bd;
+    background-image: url(../../app/img/img-article-label-townoffice.png);
+}
+.article-label--article {
+    color: #09406c;
+    background-image: url(../../app/img/img-article-label-article.png);
+}
+.article-label__text {
 }

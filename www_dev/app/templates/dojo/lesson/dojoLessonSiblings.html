@@ -1,0 +1,59 @@
+<div class="dojo-lesson-siblings">
+    <div class="row">
+        <div class="columns small-6 is-<%= prevContentModel ? prevContentModel.getSolvedState() : 'unsolved' %> is-<%= prevContentModel ? prevContentModel.getWatchedState() : 'unwatched'%>">
+            <% if (prevContentModel) { %>
+                <a href="/dojo/lessons/<%= prevContentModel.get('__id') %>">
+                    <div class="dojo-sibling">
+                        <div class="dojo-stamp right">
+                            済
+                        </div>
+
+                        <div class="dojo-sibling__direction">
+                            前の動画を見る
+                        </div>
+
+                    <img src="<%= prevContentModel.get('thumbnail') %>"
+                        style="width: 100%; height: 200px; background-color: #777;" />
+
+                    <h4 class="dojo-sibling__title">
+                            <%= prevContentModel.get("title") %>
+                        </h4>
+                    </div>
+                </a>
+            <% } %>
+        </div>
+
+        <div class="columns small-6 is-<%= nextContentModel ? nextContentModel.getSolvedState() : 'unsolved' %> is-<%= nextContentModel ? nextContentModel.getWatchedState() : 'unwatched' %>">
+            <% if (nextContentModel) { %>
+                <a href="/dojo/lessons/<%= nextContentModel.get('__id') %>">
+                    <div class="dojo-sibling">
+                        <div class="dojo-stamp right">
+                            済
+                        </div>
+                        
+                        <div class="dojo-sibling__direction">
+                            次の動画を見る
+                        </div>
+
+                    <img src="<%= nextContentModel.get('thumbnail') %>"
+                        style="width: 100%; height: 200px; background-color: #777;" />
+
+                    <h4 class="dojo-sibling__title">
+                            <%= nextContentModel.get("title") %>
+                        </h4>
+                    </div>
+                </a>
+            <% } else { %>
+                <div class="dojo-sibling">
+                    <p class="dojo-sibling__direction">
+                        この動画は<%= editionModel.get("editionTitle") %>の一番最後の動画だ
+                    </p>
+
+                    <a href="/dojo-top" class="button expand">
+                        動画一覧に戻る
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
