@@ -161,6 +161,10 @@
 .dojo-item__thumbnail {
 }
 
+.dojo-item__thumbnail img {
+    min-width: 100%;
+}
+
 /**
  *  習得済みスタンプ
  */
