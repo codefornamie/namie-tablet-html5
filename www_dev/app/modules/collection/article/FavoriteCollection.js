@@ -7,6 +7,9 @@ define(function(require, exports, module) {
 
     /**
      * お気に入り情報のコレクションクラス
+     * @class お気に入り情報のコレクションクラス
+     * @exports FavoriteCollection
+     * @constructor
      */
     var FavoriteCollection = AbstractODataCollection.extend({
         model : FavoriteModel,

@@ -17,22 +17,27 @@ define(function(require, exports, module) {
     var AbstractODataCollection = AbstractCollection.extend({
         /**
          * セルID
+         * @memberof AbstractODataCollection#
          */
         cell : null,
         /**
          * Box名
+         * @memberof AbstractODataCollection#
          */
         box : null,
         /**
          * ODataCollection名
+         * @memberof AbstractODataCollection#
          */
         odata : null,
         /**
          * 操作対象のEntitySet名
+         * @memberof AbstractODataCollection#
          */
         entity : null,
         /**
          * 検索条件
+         * @memberof AbstractODataCollection#
          */
         condition : {
             top : 1,
@@ -44,6 +49,9 @@ define(function(require, exports, module) {
          * 全てのOData検索処理で共通するパース処理をこのメソッド内に実装する。<br/>
          * サブクラスが独自のパース処理を行いたい場合、parseODataメソッドをオーバライドすること。
          * </p>
+         * @param {Object} response レスポンス情報
+         * @param {Object} options オプション情報
+         * @memberof AbstractODataCollection#
          */
         parseResponse : function(response, options) {
             //Log.info("AbstractODataCollection parseResponse");
@@ -55,8 +63,10 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスは、本メソッドをオーバライドして、独自のパース処理を実装することができる。
          * </p>
-         *
+         * @param {Object} response レスポンス情報
+         * @param {Object} options オプション情報
          * @return {Object} パース後のデータ
+         * @memberof AbstractODataCollection#
          *
          */
         parseOData : function(response, options) {
@@ -72,6 +82,7 @@ define(function(require, exports, module) {
          *            model モデル
          * @param {Object}
          *            options オプション情報
+         * @memberof AbstractODataCollection#
          */
         sync : function(method, model, options) {
             Log.info("AbstractODataCollection sync");
@@ -87,6 +98,11 @@ define(function(require, exports, module) {
             var odataCollection = app.accessor.cell(this.cell).box(this.box).odata(this.odata);
             this.entityset = odataCollection.entitySet(this.entity);
 
+            /**
+             * レスポンスボディの解析を行う。
+             * @param {String} res レスポンスボディ
+             * @memberof AbstractODataCollection#
+             */
             var complete = function(res) {
                 Log.info("AbstractODataCollection search complete handler");
                 // 取得したJSONオブジェクト
@@ -131,6 +147,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却した検索情報を取得することができる。
+         * @memberof AbstractODataCollection#
          */
         search : function(method, model, options, complete) {
             Log.info("AbstractODataCollection search");
