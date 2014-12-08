@@ -128,7 +128,14 @@ define(function(require, exports, module) {
                         "onReady" : $.proxy(function() {
                             this.player.removeEventListener("onReady");
                             gapi.client.load('youtube', 'v3', $.proxy(this.onLoadYoutubePlayer, this));
-                        }, this)
+                        }, this),
+                        "onStateChange": $.proxy(function(event) {
+                            app.logger.debug("Youtube state change. state=" + event.data);
+                            if (event.data === YT.PlayerState.ENDED) {
+                                // 動画終了時に習得済みとする
+                                this.onClickCompleteLesson();
+                            }
+                        },this)
                     }
                 });
             }
