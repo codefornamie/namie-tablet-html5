@@ -1259,6 +1259,10 @@ div.nehan-block.nehan-body:last-child {
     padding-bottom: 20px;
 }
 
+.backnumber-item__thumbnail .articleImage {
+    min-width: 100%;
+}
+
 /*
  * Posting
  */

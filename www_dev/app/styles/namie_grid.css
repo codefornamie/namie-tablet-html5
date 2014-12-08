@@ -56,6 +56,10 @@
     padding: 0 10px;
 }
 
+.grid-cell--image .articleImage {
+    min-width: 100%;
+}
+
 .grid-cell--body {
     display: table-cell;
     float: none !important;
