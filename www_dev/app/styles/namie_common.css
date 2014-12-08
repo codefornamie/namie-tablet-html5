@@ -36,6 +36,10 @@ body {
     padding: 5px 25px 5px 25px;
     text-decoration: none;
 }
+.button:focus,
+.button:hover {
+    background: rgb(230, 148, 1);
+}
 
 /**
  *  foundation helpers
@@ -945,6 +949,13 @@ main {
 }
 
 /**
+ *  記事内の要素
+ */
+.article-detail__image-area {
+    margin: 20px 0;
+}
+
+/**
  *  post-action
  */
 .post-action {
@@ -1118,6 +1129,13 @@ div.nehan-block.nehan-body:last-child {
 /**
  *  Backnumber
  */
+.backnumber-scroll-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
 .backnumber-nav {
     position: relative;
     z-index: 50;
@@ -1171,13 +1189,14 @@ div.nehan-block.nehan-body:last-child {
 .backnumber-main {
     padding-top: 70px;
     width: 100%;
-    height: 100%;
+    height: auto;
     position: absolute;
     top: 0;
     left: 0;
 }
     .backnumber-main > div {
-        height: 100%;
+        height: auto;
+        position: relative;
     }
 
 .backnumber-list-container {
@@ -1197,6 +1216,11 @@ div.nehan-block.nehan-body:last-child {
     border-radius: 15px;
     overflow: hidden;
     padding: 5px;
+}
+
+.backnumber-main .news-detail {
+    position: relative;
+    height: auto;
 }
 
 /**
@@ -1581,4 +1605,40 @@ select#articleCategory {
  */
 #login {
     margin-top: 150px;
+}
+
+/**
+ *  記事のラベル
+ */
+.article-label {
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: auto 1.5rem;
+    padding-left: 2.2rem;
+    margin-bottom: 10px;
+    min-height: 40px;
+    line-height: 40px;
+}
+
+.article-label--blog {
+    color: #c96088;
+    background-image: url(../../app/img/img-article-label-blog.png);
+}
+.article-label--localnews {
+    color: #61b152;
+    background-image: url(../../app/img/img-article-label-localnews.png);
+}
+.article-label--event {
+    color: #d9bc08;
+    background-image: url(../../app/img/img-article-label-event.png);
+}
+.article-label--townoffice {
+    color: #27a8bd;
+    background-image: url(../../app/img/img-article-label-townoffice.png);
+}
+.article-label--article {
+    color: #09406c;
+    background-image: url(../../app/img/img-article-label-article.png);
+}
+.article-label__text {
 }
