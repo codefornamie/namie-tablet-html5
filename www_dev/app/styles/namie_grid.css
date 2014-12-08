@@ -44,6 +44,9 @@
     width: 100%;
     padding: 20px 15px;
 }
+.grid-list__item>.row {
+    display: table;
+}
 
 /**
  *  グリッドのアイテム内部
