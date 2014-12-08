@@ -23,6 +23,13 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/{mode}/top/top"),
 
         /**
+         * イベント一覧
+         */
+        events: {
+            "click a": "onClickAnchor"
+        },
+
+        /**
          * 初期化
          * @param {Object} param
          */
@@ -35,9 +42,7 @@ define(function(require, exports, module) {
             this.dojoEditionView = param.dojoEditionView;
             this.dojoLessonView = param.dojoLessonView;
 
-            this.setView(DojoLayout.SELECTOR_TAB, this.dojoTabView);
-            this.setView(DojoLayout.SELECTOR_EDITION, this.dojoEditionView);
-            this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView);
+            this.hideLesson();
         },
 
         /**
@@ -45,6 +50,8 @@ define(function(require, exports, module) {
          */
         showLesson: function () {
             this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView);
+            this.removeView(DojoLayout.SELECTOR_TAB);
+            this.removeView(DojoLayout.SELECTOR_EDITION);
         },
 
         /**
@@ -52,6 +59,27 @@ define(function(require, exports, module) {
          */
         hideLesson: function () {
             this.removeView(DojoLayout.SELECTOR_LESSON);
+            this.setView(DojoLayout.SELECTOR_EDITION, this.dojoEditionView);
+            this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView);
+        },
+
+        /**
+         * aタグをクリックした際の挙動を
+         * ブラウザデフォルトではなく
+         * pushStateに変更する
+         */
+        onClickAnchor: function (evt) {
+            var $target = $(evt.currentTarget);
+            var href = { prop: $target.prop("href"), attr: $target.attr("href") };
+            var root = location.protocol + "//" + location.host + app.root;
+
+            if (href.prop && href.prop.slice(0, root.length) === root) {
+                evt.preventDefault();
+                app.router.navigate(href.attr, {
+                    trigger: true,
+                    replace: false
+                });
+            }
         }
     }, {
         /**
