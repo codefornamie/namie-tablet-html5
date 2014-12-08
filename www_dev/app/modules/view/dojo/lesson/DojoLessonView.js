@@ -6,6 +6,8 @@ define(function(require, exports, module) {
     var DojoLessonSiblingsView = require("modules/view/dojo/lesson/DojoLessonSiblingsView");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
     var DojoContentModel = require("modules/model/dojo/DojoContentModel");
+    var AchievementModel = require("modules/model/misc/AchievementModel");
+    var vexDialog = require("vexDialog");
 
     /**
      * 道場アプリの個別画面のViewクラスを作成する。
@@ -31,6 +33,63 @@ define(function(require, exports, module) {
         afterRender : function() {
             this.dojoLessonSiblingsView.render();
             this.setYouTubePlayer();
+        },
+        /**
+         * イベント一覧
+         */
+        events: {
+            "click [data-complete-lesson]": "onClickCompleteLesson",
+            "click [data-uncomplete-lesson]": "onClickUncompleteLesson",
+        },
+        /**
+         * はいボタンを押したら呼ばれる
+         * @memberof DojoLessonLayout#
+         */
+        onClickCompleteLesson: function () {
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.buttons.YES.text = "取消";
+            vexDialog.alert("この操作を習得しました！！");
+            if (this.dojoContentModel.achievementModels) {
+                var solvedAchievement = _.find(this.dojoContentModel.achievementModels,function(achievement) {
+                    return achievement.get("type") === "dojo_solved";
+                });
+                if (solvedAchievement) {
+                    return;
+                }
+            }
+            $("[data-complete-lesson]").attr("disabled","disabled");
+            var achievementModel = new AchievementModel();
+            achievementModel.set("type", "dojo_solved");
+            achievementModel.set("action", this.dojoContentModel.get("videoId"));
+            achievementModel.set("count", "1");
+            achievementModel.set("lastActionDate", new Date().toISOString());
+            achievementModel.save(null,{
+                success:$.proxy(function(){
+                    this.onSaveAchievement(achievementModel);
+                },this)
+            });
+        },
+        /**
+         * 達成状況情報保存後のコールバック関数
+         * @memberof DojoLessonLayout#
+         * @param {AchievementModel} 新規保存後の達成状況情報
+         */
+        onSaveAchievement: function(achievementModel) {
+            if (!this.dojoContentModel.achievementModels) {
+                this.dojoContentModel.achievementModels = [];
+            }
+            this.dojoContentModel.achievementModels.push(achievementModel);
+            $("[data-complete-lesson]").removeAttr("disabled");
+        },
+
+        /**
+         * いいえボタンを押したら呼ばれる
+         * @memberof DojoLessonLayout#
+         */
+        onClickUncompleteLesson: function () {
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.buttons.YES.text = "はい";
+            vexDialog.alert("習得できるように頑張りましょう！");
         },
 
         /**
@@ -100,13 +159,6 @@ define(function(require, exports, module) {
      */
     var DojoLessonView = AbstractView.extend({
         /**
-         * イベント一覧
-         */
-        events: {
-            "click [data-complete-lesson]": "onClickCompleteLesson",
-            "click [data-uncomplete-lesson]": "onClickUncompleteLesson",
-        },
-        /**
          * 初期化
          * @memberof DojoLessonView#
          * @param {Object} param
@@ -119,20 +171,6 @@ define(function(require, exports, module) {
                 dojoEditionModel : dojoEditionModel,
                 dojoContentModel : dojoContentModel
             });
-        },
-
-        /**
-         * はいボタンを押したら呼ばれる
-         * @memberof DojoLessonView#
-         */
-        onClickCompleteLesson: function () {
-        },
-
-        /**
-         * いいえボタンを押したら呼ばれる
-         * @memberof DojoLessonView#
-         */
-        onClickUncompleteLesson: function () {
         },
     });
 
