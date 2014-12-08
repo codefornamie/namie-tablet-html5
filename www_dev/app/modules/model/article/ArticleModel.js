@@ -222,19 +222,17 @@ define(function(require, exports, module) {
          * @return {string} class文字列を返す
          */
         getSiteType: function() {
-            // TODO: dispSiteとclassの対応表の実装方法の検討
-            var articleSite = {
-                "福島テレビ": "localnews",
-                "福島民報": "localnews",
-                "浪江町役場新着情報": "townoffice",
-                "イベント": "event",
-                "浪江町復興支援員宮城県駐在ブログ": "blog"
-            };
+            var dispSite = this.get("dispSite");
+            var articleSite = null;
 
-            if (articleSite[this.get("dispSite")]) {
-                return articleSite[this.get("dispSite")];
+            articleSite = _.find(Code.ARTICLE_SITE_LIST, function(item) {
+                return item.key == dispSite;
+            });
+
+            if (articleSite) {
+                return articleSite.value;
             } else {
-                return "article";
+                return Code.ARTICLE_SITE_NONE;
             }
         }
     });

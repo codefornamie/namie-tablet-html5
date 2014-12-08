@@ -94,7 +94,10 @@
     color: #27a8bd;
     background-image: url(../../app/img/img-grid-label-townoffice.png);
 }
-
+.grid-label--article {
+    color: #09406c;
+    background-image: url(../../app/img/img-grid-label-article.png);
+}
 .grid-label__text {
 }
 
