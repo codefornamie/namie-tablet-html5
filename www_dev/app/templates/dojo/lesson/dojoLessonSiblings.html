@@ -12,10 +12,9 @@
                             前の動画を見る
                         </div>
 
-                    <img src="<%= prevContentModel.get('thumbnail') %>"
-                        style="width: 100%; height: 200px; background-color: #777;" />
+                        <img class="dojo-sibling__content" src="<%= prevContentModel.get('thumbnail') %>">
 
-                    <h4 class="dojo-sibling__title">
+                        <h4 class="dojo-sibling__title">
                             <%= prevContentModel.get("title") %>
                         </h4>
                     </div>
@@ -35,10 +34,9 @@
                             次の動画を見る
                         </div>
 
-                    <img src="<%= nextContentModel.get('thumbnail') %>"
-                        style="width: 100%; height: 200px; background-color: #777;" />
+                        <img class="dojo-sibling__content" src="<%= nextContentModel.get('thumbnail') %>">
 
-                    <h4 class="dojo-sibling__title">
+                        <h4 class="dojo-sibling__title">
                             <%= nextContentModel.get("title") %>
                         </h4>
                     </div>
