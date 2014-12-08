@@ -30,6 +30,7 @@ define(function(require, exports, module) {
 
         afterRender : function() {
             this.dojoLessonSiblingsView.render();
+            this.setYouTubePlayer();
         },
 
         /**
@@ -51,7 +52,38 @@ define(function(require, exports, module) {
             });
 
             this.setView(DojoLessonLayout.SELECTOR_SIBLINGS, dojoLessonSiblingsView);
-        }
+        },
+        /**
+         * YouTube動画プレイヤーの設定を行う。
+         * @memberof DojoLessonLayout#
+         */
+        setYouTubePlayer : function() {
+            if (YT.Player) {
+                this.player = new YT.Player("dojo-lesson__content", {
+                    height : '400',
+                    playerVars : {
+                        'autoplay' : 0,
+                        'controls' : 1
+                    },
+                    events : {
+                        "onReady" : $.proxy(function() {
+                            this.player.removeEventListener("onReady");
+                            gapi.client.load('youtube', 'v3', $.proxy(this.onLoadYoutubePlayer, this));
+                        }, this)
+                    }
+                });
+            }
+        },
+        /**
+         * このViewで表示するYouTube動画をYouTube動画プレイヤーに設定する。
+         * @memberof DojoLessonLayout#
+         */
+        onLoadYoutubePlayer : function() {
+            if (!this.player) {
+                return;
+            }
+            this.player.cueVideoById(this.dojoContentModel.get("videoId"));
+        },
     }, {
         /**
          * 関連コンテンツのセレクタ
@@ -74,9 +106,9 @@ define(function(require, exports, module) {
             "click [data-complete-lesson]": "onClickCompleteLesson",
             "click [data-uncomplete-lesson]": "onClickUncompleteLesson",
         },
-
         /**
          * 初期化
+         * @memberof DojoLessonView#
          * @param {Object} param
          */
         initialize : function(param) {
@@ -91,15 +123,17 @@ define(function(require, exports, module) {
 
         /**
          * はいボタンを押したら呼ばれる
+         * @memberof DojoLessonView#
          */
         onClickCompleteLesson: function () {
         },
 
         /**
          * いいえボタンを押したら呼ばれる
+         * @memberof DojoLessonView#
          */
         onClickUncompleteLesson: function () {
-        }
+        },
     });
 
     module.exports = DojoLessonView;

@@ -1,4 +1,4 @@
-<div class="dojo-lesson">
+<div class="dojo-lesson is-<%= model.getSolvedState() %> is-<%= model.getWatchedState() %>">
     <div class="dojo-lesson__header">
         <a href="/dojo-top" class="button left">
             動画一覧へ戻る
@@ -21,15 +21,10 @@
 
     <div class="dojo-lesson__body">
         <p class="dojo-lesson__description">
-            簡単な説明文が入ります。
-            簡単な説明文が入ります。
-            簡単な説明文が入ります。
-            簡単な説明文が入ります。
-            簡単な説明文が入ります。
+            <%= model.get("description") %>
         </p>
         
-        <div class="dojo-lesson__content">
-            動画が入ります
+        <div id="dojo-lesson__content" class="dojo-lesson__content">
         </div>
         
         <div class="dojo-lesson__completion">
