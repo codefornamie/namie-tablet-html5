@@ -11,6 +11,8 @@ define(function(require, exports, module) {
     var panzoom = require("panzoom");
     var config = require("resources/appConfig");
     var galocalstorage = require("galocalstorage");
+    var CustomHttpClient = require("modules/CustomHttpClient");
+    var PcsManager = require("modules/PcsManager");
     var Logger = require("modules/util/logging/Logger");
 
     // グローバルに利用できるModel
@@ -30,4 +32,12 @@ define(function(require, exports, module) {
     app.ga = require("modules/util/AnalyticsUtil");
     app.ga.initialize(app);
 
+    app.pcsManager = new PcsManager(app);
+
+    /**
+     * HttpClient を 独自クラスに差し替え.
+     */
+    dcc.http.RestAdapter.prototype.createHttpClient = function() {
+        return new CustomHttpClient(null, app);
+    };
 });
