@@ -14,7 +14,7 @@ define(function(require, exports, module) {
 
     /**
      * ログイン画面のモデルクラスを作成する。
-     *
+     * 
      * @class ログイン画面のモデルクラス
      * @exports LoginModel
      * @constructor
@@ -84,9 +84,9 @@ define(function(require, exports, module) {
             app.box = targetBox;
             var token = cellobj.getAccessToken();
             Log.info("token = " + token);
-            //app.pcsManager.setAccessToken(token);
+            // app.pcsManager.setAccessToken(token);
             app.pcsManager.setTokenAndExpiresInValue(cellobj);
-            //app.pcsManager.accessToken = token;
+            // app.pcsManager.accessToken = token;
             Log.info("end certificationWithAccount");
         },
 
@@ -171,9 +171,9 @@ define(function(require, exports, module) {
                     }
                     this.certificationWithAccount(id, pw);
                     Log.info("token certification success. start regist AccountManager");
-                    app.pcsManager.registAccountManager(id, pw, function(){
+                    app.pcsManager.registAccountManager(id, pw, function() {
                         Log.info("regist account success");
-                    }, function(error){
+                    }, function(error) {
                         Log.info("error regist account : " + error);
                     });
                 }
@@ -190,16 +190,37 @@ define(function(require, exports, module) {
                 return;
             }
             async.parallel([
-                    $.proxy(this.loadPersonal, this),
-                    $.proxy(this.loadConfiguration, this)
+                    $.proxy(this.loadPersonal, this), $.proxy(this.loadConfiguration, this)
             ], $.proxy(this.onLogin, this));
 
         },
 
-        loadPersonal : function(callback){
-            //alert("パ情作成開始");
-            //alert(this.get("loginId"));
+        /**
+         * パーソナル情報の読み込みを行う。
+         * @param {Function} callback パーソナル情報取得処理が完了した際に呼び出されるコールバック関数
+         */
+        loadPersonal : function(callback) {
             var collection = new PersonalCollection();
+            if (_.isEmpty(this.get("loginId"))) {
+                // AccountManager からログインIDを取得し、ログインモデルに設定する
+                var loginId = app.pcsManager.androidAccountManager.getAccountsByType(app.pcsManager.packageName,
+                        $.proxy(function(res, accounts) {
+                            app.logger.debug("accounts=" + accounts);
+                            app.logger.debug("accounts[0].name =" + accounts[0].name);
+                            this.set("loginId", accounts[0].name);
+                            this.fetchPersonalInfo(collection, callback);
+                        }, this));
+            } else {
+                this.fetchPersonalInfo(collection, callback);
+            }
+            
+        },
+        /**
+         * パーソナル情報取得処理を開始する。
+         * @param {Collection} collection パーソナル情報コレクション
+         * @param {Function} callback 取得処理完了後に呼び出すコールバック関数
+         */
+        fetchPersonalInfo : function(collection, callback) {
             collection.condition.filters = [
                 new And([
                         new Equal("loginId", this.get("loginId")), new IsNull("deletedAt")
@@ -232,7 +253,7 @@ define(function(require, exports, module) {
                                 // パーソナル情報新規登録に失敗
                                 callback("ユーザ情報の登録に失敗しました。再度ログインしてください。");
                                 app.logger.error("ユーザ情報の登録に失敗しました。再度ログインしてください。");
-                            },this)
+                            }, this)
                         });
                     }
                 }, this),
@@ -241,10 +262,10 @@ define(function(require, exports, module) {
                     // パーソナル情報検索に失敗
                     callback("ユーザ情報の取得に失敗しました。再度ログインしてください。");
                     app.logger.error("ユーザ情報の取得に失敗しました。再度ログインしてください。");
-                },this)
+                }, this)
             });
         },
-        loadConfiguration : function(callback){
+        loadConfiguration : function(callback) {
             // 設定情報の読み込み
             var confCol = new ConfigurationCollection();
             confCol.fetch({
@@ -252,11 +273,11 @@ define(function(require, exports, module) {
                     app.config = _.extend(app.config, col.toMap());
                     callback();
                 },
-                error: $.proxy(function() {
+                error : $.proxy(function() {
                     // 取得に失敗
                     callback("設定情報の取得に失敗しました。再度ログインしてください。");
                     app.logger.error("設定情報の取得に失敗しました。再度ログインしてください。");
-                },this)
+                }, this)
             });
         },
 
