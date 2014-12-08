@@ -28,6 +28,13 @@ define(function(require, exports, module) {
          * @memberof AchievementModel#
          */
         makeSaveData : function(saveData) {
+            saveData.userId = app.user.get("__id");
+            // TODO 現在のところ0固定。同世帯内の人物を区別したい要望が来た場合に正しく実装
+            saveData.memberId = "0";
+            saveData.type = this.get("type");
+            saveData.action = this.get("action");
+            saveData.count = this.get("count");
+            saveData.lastActionDate = this.get("lastActionDate");
         },
     });
 

@@ -62,6 +62,7 @@ define(function(require, exports, module) {
 
             this.dojoLessonView.dojoEditionModel.set(param.dojoEditionModel.toJSON());
             this.dojoLessonView.dojoContentModel.set(param.dojoContentModel.toJSON());
+            this.dojoLessonView.dojoContentModel.achievementModels = param.dojoContentModel.achievementModels;
 
             this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView.layout);
             this.removeView(DojoLayout.SELECTOR_TAB);
@@ -306,14 +307,18 @@ define(function(require, exports, module) {
         onSearchAchievement : function() {
             // 動画と達成情報の連結を行う
             if (this.achievementCollection.size() !== 0) {
-                this.achievementCollection.each(function(achievement) {
-                    this.dojoContentCollection.each(function(dojoContent) {
+                this.achievementCollection.each($.proxy(function(achievement) {
+                    this.dojoContentCollection.each($.proxy(function(dojoContent) {
                         if (dojoContent.get("videoId") === achievement.get("action")) {
-                            dojoContent.achievement = achievement;
+                            if (!dojoContent.achievementModels) {
+                                dojoContent.achievementModels = [];
+                            }
+                            dojoContent.achievementModels.push(achievement);
                         }
-                    });
-                });
+                    },this));
+                },this));
             }
+            this.onSyncDojoContent();
             this.hideLoading();
         },
         
