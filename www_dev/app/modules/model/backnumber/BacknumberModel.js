@@ -9,17 +9,17 @@ define(function(require, exports, module) {
     var CommonUtil = require("modules/util/CommonUtil");
 
     /**
-     * 記事情報のモデルクラスを作成する。
+     * 過去記事情報のモデルクラスを作成する。
      *
-     * @class 記事情報のモデルクラス
+     * @class 過去記事情報のモデルクラス
      * @exports BacknumberModel
      * @constructor
      */
     var BacknumberModel = AbstractModel.extend({
         /**
          * モデルの初期値を返す
-         *
-         * @return {Object}
+         * @return {Object} 初期値
+         * @memberof BacknumberModel#
          */
         defaults: function () {
             return {
@@ -29,6 +29,9 @@ define(function(require, exports, module) {
 
         /**
          * 初期化処理
+         * @param {Object} attr　attr
+         * @param {Object} param パラメータ
+         * @memberof BacknumberModel#
          */
         initialize: function (attr, param) {
             console.assert(param.date, "Should set param.date");
@@ -40,6 +43,7 @@ define(function(require, exports, module) {
         /**
          * 日付を設定する
          * @param {moment} date
+         * @memberof BacknumberModel#
          */
         setDate: function (date) {
             this.date = date;
@@ -47,6 +51,7 @@ define(function(require, exports, module) {
         
         /**
          * このmodelの情報を更新する
+         * @memberof BacknumberModel#
          */
         updateArticle: function () {
             var self = this;
@@ -120,8 +125,8 @@ define(function(require, exports, module) {
         
         /**
          * createdAtをYYYY-MM-DDの文字列にして返す
-         *
-         * @return {String}
+         * @return {String} 登録日時
+         * @memberof BacknumberModel#
          */
         generateDateString: function () {
             var d = new Date(this.get('createdAt'));
@@ -135,6 +140,7 @@ define(function(require, exports, module) {
          *
          * @param {String} 取得する要素の名前（"year", "month", "day", "weekday"）
          * @return {Object}
+         * @memberof BacknumberModel#
          */
         generateDateElementString: function (name) {
             var d = new Date(this.get('createdAt'));

@@ -16,8 +16,10 @@ define(function(require, exports, module) {
         entity : "event",
         /**
          * 取得したOData情報のparse処理を行う。
-         * 
+         * @param {Object} response レスポンス情報
+         * @param {Object} options オプション情報
          * @return {Object} パース後の情報
+         * @memberof EventsModel#
          */
         parseOData : function(response, options) {
             response.isNotArticle = true;
@@ -41,6 +43,8 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスは、本メソッドをオーバライドして、 永続化するデータを生成する処理を実装する。
          * </p>
+         * @param {Object} saveData 永続化データ
+         * @memberof EventsModel#
          */
         makeSaveData : function(saveData) {
             if (this.get("eventDate")) {
