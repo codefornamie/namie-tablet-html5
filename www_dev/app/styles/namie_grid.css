@@ -61,6 +61,7 @@
     float: none !important;
     position: static;
     padding: 0 10px;
+    width: 100%;
 }
 
 .is-no-image .grid-cell--image {
