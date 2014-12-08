@@ -30,7 +30,7 @@ define(function(require, exports, module) {
         beforeRendered : function() {
             // 描画用のmodelを用意する
             var siblings = this.dojoEditionModel.get("contentCollection");
-            var index = siblings.indexOf(this.dojoContentModel);
+            var index = siblings.pluck("__id").indexOf(this.dojoContentModel.get("__id"));
             var prevModel = siblings.at(index - 1);
             var nextModel = siblings.at(index + 1);
 
