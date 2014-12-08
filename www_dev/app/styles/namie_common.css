@@ -625,28 +625,8 @@ main {
     overflow: auto;
 }
 
-.contents__secondary::before {
-    content: '';
-    display: block;
-    background-image: url(../../app/img/img-side-menu-top.png);
-    background-size: 312px;
-    height: 3px;
-    background-position: -1px 0;
-}
-
-.contents__secondary::after {
-    content: '';
-    display: block;
-    background-image: url(../../app/img/img-side-menu-bottom.png);
-    background-size: 100%;
-    height: 4px;
-    margin-bottom: 20px;
-}
-
 .contents__secondary > div {
     position: relative;
-    background-image: url(../../app/img/img-side-menu-middle.png);
-    background-size: 100%;
     overflow: hidden;
 }
 
@@ -857,38 +837,6 @@ main {
 .post-header {
     margin: 0 0 16px;
 }
-
-.post-header__site {
-    font-size: 1rem;
-    margin: 0 -27px 0 -32px;
-    background-image: url(../../app/img/img-contents-head01-middle.png);
-    background-size: auto 100%;
-    position: relative;
-    height: 48px;
-}
-    .post-header__site::before {
-        content: '';
-        display: block;
-        background-image: url(../../app/img/img-contents-head01-left.png);
-        background-size: 100%;
-        width: 5px;
-        height: 49px;
-        position: absolute;
-        top: 0;
-        left: -5px;
-    }
-
-    .post-header__site::after {
-        content: '';
-        display: block;
-        background-image: url(../../app/img/img-contents-head01-right.png);
-        background-size: 100%;
-        width: 5px;
-        height: 49px;
-        position: absolute;
-        top: 0;
-        right: -5px;
-    }
 
 .post-header__title {
     font-size: 2.3rem;
@@ -1311,9 +1259,8 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .event__status .eventStatus {
-    background: #333;
+    background: #e8e8d0;
     border-radius: 2px;
-    color: white;
     display: inline-block;
     font-size: 1rem;
     margin-bottom: 8px;
@@ -1368,7 +1315,6 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .posting-content {
-    color: #333;
     background-color: #fbfaf4;
 }
 .posting-content label {
@@ -1382,8 +1328,12 @@ div.nehan-block.nehan-body:last-child {
     margin-right: 12px;
     vertical-align: text-bottom;
 }
+.posting-content .button.small {
+    font-size: 1rem;
+}
 
 .posting-content #header {
+    display: block;
     background: #fff;
     height: 55px;
     margin: 0;
@@ -1391,32 +1341,52 @@ div.nehan-block.nehan-body:last-child {
 
 .posting-content .top-bar-section ul li {
     margin: 0 5px;
+    background: transparent;
+}
+
+.posting-content .top-bar-section ul li a:not(.button),
+.posting-content .top-bar-section ul li a:not(.button):hover {
+    background: transparent;
 }
 
 .posting-content .eventHeader nav {
     height: 55px;
     padding-right: 15px;
 }
+
+.posting-content #header .top-bar {
+    background: #43c1d8;
+}
+
 .posting-content #header .top-bar .name h1 {
     margin-top: 5px;
 }
+
 .posting-content #header .top-bar .button {
-    font-size: 1rem;
+    font-size: 20px;
     padding: 2px 20px;
+    background: #ffa801;
+    border-color: #007095;
 }
+
 .posting-content .contents-wrapper {
     padding: 0;
 }
 
 .posting-content .eventContents {
     padding: 0 20px 20px;
+    line-height: 1.5;
 }
 
 .posting-content .contents__secondary {
-    padding: 20px 0;
+    padding: 40px 0;
 }
 .posting-content .contents__secondary > div {
     padding: 40px 20px;
+}
+.posting-content .contents__secondary > div.sidemenu {
+    border: 3px solid #e8e8d0;
+    background: #fff;
 }
 .posting-content .contents__secondary .button {
     padding: 30px;
@@ -1427,6 +1397,10 @@ div.nehan-block.nehan-body:last-child {
     padding: 40px;
 }
 .posting-content .contents__primary .post {
+    border: 3px solid #e8e8d0;
+    background: #fff;
+    padding: 20px 30px;
+    margin-bottom: 40px;
 }
 .posting-content .contents__primary .post__body {
     font-size: 1rem;
@@ -1438,19 +1412,17 @@ div.nehan-block.nehan-body:last-child {
 .posting-content .contents__primary .post-header__site {
     font-size: 1rem;
     margin: 0 5px 0 0;
-    background-image: url(../../app/img/img-contents-head01-middle.png);
-    background-size: auto 100%;
+    background: #e8e8d0;
     position: relative;
     height: 48px;
 }
 .posting-content .contents__primary .post-label {
     background: white;
     display: inline-block;
-    margin: 5px 20px 5px 1px;
+    margin: 5px 20px 5px 5px;
     padding: 0 40px;
     height: 36px;
     line-height: 35px;
-    border-radius: 4px;
     font-size: 0.9rem;
 }
 .posting-content .contents__primary .post-label.expired {
@@ -1462,6 +1434,7 @@ div.nehan-block.nehan-body:last-child {
 }
 .posting-content .contents__primary .post-action .button {
     width: 40%;
+    font-size: 1rem;
 }
 
 .posting-content #global-nav {
@@ -1470,6 +1443,7 @@ div.nehan-block.nehan-body:last-child {
     height: auto;
     border-top: none;
     top: 0;
+    background: #5acee5;
 }
 .posting-content #global-nav nav {
     padding: 0;
@@ -1483,11 +1457,12 @@ div.nehan-block.nehan-body:last-child {
 .posting-content .posting__global-nav__menu #headerTitle {
     margin: 10px 0;
     font-size: 1.7rem;
-    color: rgb(72, 90, 93);
+    color: #fff;
 }
 
 .posting-content .eventColumnsTitle {
     font-size: 1rem;
+    text-align: right;
 }
 .posting-content .file-action {
     margin-bottom: 20px;
@@ -1517,6 +1492,8 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .file-area {
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .file-area__item {
