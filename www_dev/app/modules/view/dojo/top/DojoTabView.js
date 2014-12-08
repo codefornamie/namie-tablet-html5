@@ -48,6 +48,7 @@ define(function(require, exports, module) {
          * @memberof DojoTabView#
          */
         afterRendered : function() {
+            this.initEvents();
         },
 
         /**
@@ -56,8 +57,6 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             console.assert(this.collection, "DojoTabView should have a collection");
-            
-            this.initEvents();
         },
 
         /**
@@ -65,7 +64,8 @@ define(function(require, exports, module) {
          * @memberof DojoTabView#
          */
         initEvents : function() {
-            this.$el.on("click", "[data-select-edition]", this.onSelectEdition.bind(this));
+            this.$el.off("click.DojoTabView");
+            this.$el.on("click.DojoTabView", "[data-select-edition]", this.onSelectEdition.bind(this));
         },
 
         /**
