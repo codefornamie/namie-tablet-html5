@@ -185,11 +185,15 @@
     transform: rotate(10deg);
 }
 
-.dojo-item.is-solved .dojo-stamp {
+.dojo-item.is-solved .dojo-stamp,
+.dojo-lesson.is-solved .dojo-stamp,
+.dojo-lesson-siblings .is-solved .dojo-stamp {
     display: block;
 }
 
-.dojo-item.is-unsolved .dojo-stamp {
+.dojo-item.is-unsolved .dojo-stamp,
+.dojo-lesson.is-unsolved .dojo-stamp,
+.dojo-lesson-siblings .is-unsolved .dojo-stamp {
     display: none;
 }
 
@@ -284,7 +288,6 @@
     width: 100%;
     height: 400px;
     background: #777;
-    padding: 20px;
 }
 
 .dojo-lesson__completion {
