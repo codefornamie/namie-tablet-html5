@@ -621,11 +621,9 @@ main {
     overflow: auto;
 }
 
-.contents__secondary > div:first-child {
+.contents__secondary > div {
     position: relative;
     overflow: hidden;
-    border: 3px solid #e8e8d0;
-    background: #fff;
 }
 
 /**
@@ -1355,6 +1353,10 @@ div.nehan-block.nehan-body:last-child {
 }
 .posting-content .contents__secondary > div {
     padding: 40px 20px;
+}
+.posting-content .contents__secondary > div.sidemenu {
+    border: 3px solid #e8e8d0;
+    background: #fff;
 }
 .posting-content .contents__secondary .button {
     padding: 30px;
