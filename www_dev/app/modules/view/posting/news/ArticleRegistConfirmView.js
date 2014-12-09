@@ -10,7 +10,7 @@ define(function(require, exports, module) {
 
     /**
      * 記事登録確認画面のViewクラス
-     * 
+     *
      * @class 記事登録確認画面のViewクラス
      * @exports ArticleRegistConfirmView
      * @constructor
@@ -23,45 +23,52 @@ define(function(require, exports, module) {
 
         afterRendered : function() {
             // 日時
-            var dateString = DateUtil.formatDate(new Date(this.model.get("startDate")),"yyyy年MM月dd日(ddd)");
-            if(this.model.get("endDate")){
-                dateString += " ～ " + DateUtil.formatDate(new Date(this.model.get("endDate")),"yyyy年MM月dd日(ddd)");
-            }
-            var st = this.model.get("startTime");
-            st = st ? st : "";
-            var et = this.model.get("endTime");
-            et = et ? et : "";
-            if(st || et){
-                dateString += "\n" + st + " ～ " + et;
-            }
-            $("#articleDateTime").html(CommonUtil.sanitizing(dateString));
-            
+            var dateString = this.model.getDateString();
+            $("#articleDateTime").html(dateString);
+
             // 掲載期間
-            var pubDateString = DateUtil.formatDate(new Date(this.model.get("publishedAt")),"yyyy年MM月dd日(ddd)");
-            if(this.model.get("depublishedAt")){
-                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.model.get("depublishedAt")) ,"yyyy年MM月dd日(ddd)");
-            }
-            $("#articlePublishRange").text("掲載期間： " + pubDateString);
-            
+            var pubDateString = this.model.getPubDateString();
+            $("#articlePublishRange").text("掲載期間：" + pubDateString);
+
+            // 内容
             $("#articleDescription").html(CommonUtil.sanitizing(this.model.get("description")));
+
+            // 連絡先
             $("#articleContactInfo").html(CommonUtil.sanitizing(this.model.get("contactInfo")));
-            
-            var imgs = $("#articleImageArea img");
+
+            // 画像
+            var $figure = this.$el.find('[data-figure]');
+            var images = this.model.get('images');
             var imgIndex = 0;
-            _.each(this.model.get("images"), function(image){
-                $(imgs[imgIndex++]).attr("src", image.src);
+
+            $figure.each(function (i) {
+                var $image = $(this).find('[data-figure-image]');
+                var $caption = $(this).find('[data-figure-caption]');
+                var image = images[i];
+
+                if (!image) {
+                    return true;
+                }
+
+                $image.attr('src', image.src);
+                $caption.text(image.comment);
             });
+
+            // おすすめ
             $("#articleRecommend").text($("#articleRecommendCheck").is(":checked") ? "する":"しない");
         },
 
+        /**
+         *  初期化処理
+         */
         initialize : function() {
-            
         },
 
         events : {
             "click #articleBackButton" : "onClickArticleBackButton",
             "click #articleRegistButton" : "onClickArticleRegistButton"
         },
+
         /**
          * 戻るボタンを押下された際に呼び出されるコールバック関数。
          */
@@ -70,6 +77,7 @@ define(function(require, exports, module) {
             $("#articleRegistPage").show();
             $("#snap-content").scrollTop(0);
         },
+
         /**
          * 登録するボタンが押下された際に呼び出されるコールバック関数。
          */
@@ -104,6 +112,7 @@ define(function(require, exports, module) {
                             this.hideLoading();
                             vexDialog.defaultOptions.className = 'vex-theme-default';
                             vexDialog.alert("保存に失敗しました。");
+                            app.logger.error("保存に失敗しました。");
                         }, this)
                     });
                 }else{
@@ -128,6 +137,7 @@ define(function(require, exports, module) {
                 error: function(e){
                     this.hideLoading();
                     vexDialog.alert("保存に失敗しました。");
+                    app.logger.error("保存に失敗しました。");
                 }
             });
         }

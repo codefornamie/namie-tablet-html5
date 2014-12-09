@@ -5,7 +5,7 @@
                 <div class="row post-header">
                     <div class="large-12 columns">
                         <div class="post-header__site">
-                            <div class="post-label">掲載中</div>
+                            <div class="post-label"><%= model.getStatusString() %></div>
                             <%= model.get("dispUpdatedAt") %>更新
                             <div class="tagListArea"></div>
                         </div>

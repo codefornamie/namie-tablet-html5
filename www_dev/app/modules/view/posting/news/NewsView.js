@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
+    var Code = require("modules/util/Code");
 
     /**
      * 記事一覧・詳細のメインとなる画面のViewクラス
@@ -43,7 +44,8 @@ define(function(require, exports, module) {
         loadArticle: function () {
             this.articleCollection.condition.filters = [
                 new And([
-                        new Equal("type", ["3", "4"]), new Equal("createUserId", app.user.get("__id"))
+                        new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING]), 
+                        new Equal("createUserId", app.user.get("__id"))
                 ])
             ];
 
@@ -54,6 +56,7 @@ define(function(require, exports, module) {
                 
                 error: $.proxy(function () {
                     alert("記事一覧の取得に失敗しました");
+                    app.logger.error("記事一覧の取得に失敗しました");
                     this.hideLoading();
                 },this)
             });

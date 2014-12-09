@@ -60,7 +60,7 @@ define(function(require, exports, module) {
             var immediate = !!param.immediate;
             var heightHeader = $('.header').height() || 0;
             var heightGlobalNav = $('.global-nav').height() || 0;
-            var heightBacknumberNav = $('.backnumber-nav').height() || 0;
+            var heightBacknumberNav = $('.backnumber-nav').outerHeight() || 0;
             var heightMargin = 10;
             var position = $("#" + articleId).offset().top - heightHeader - heightGlobalNav - heightBacknumberNav - heightMargin;
 
@@ -87,28 +87,20 @@ define(function(require, exports, module) {
                 var ListItemView;
 
                 switch (model.get("type")) {
-                case "2":
-                    template = require("ldsh!templates/{mode}/news/youTubeListItem");
-                    ListItemView = YouTubeListItemView;
-                    break;
-                case "3":
-                    template = require("ldsh!templates/{mode}/news/eventsDetail");
-                    ListItemView = EventListItemView;
-                    break;
-                case "4":
-                    template = require("ldsh!templates/{mode}/news/eventsDetail");
-                    ListItemView = EventListItemView;
-                    break;
-                default:
+                case "1": // RSS
                     template = require("ldsh!templates/{mode}/news/articleListItem");
                     ListItemView = ArticleListItemView;
                     if (model.get("rawHTML")) {
                         template = require("ldsh!templates/{mode}/news/articleListItemForHtml");
-                    } else if (model.get("modelType") === "youtube") {
-                        // TODO articleにtypeが全て登録されたら
-                        template = require("ldsh!templates/{mode}/news/youTubeListItem");
-                        ListItemView = YouTubeListItemView;
                     }
+                    break;
+                case "2": // YouTube
+                    template = require("ldsh!templates/{mode}/news/youTubeListItem");
+                    ListItemView = YouTubeListItemView;
+                    break;
+                default:
+                    template = require("ldsh!templates/{mode}/news/eventsDetail");
+                    ListItemView = EventListItemView;
                     break;
                 }
 

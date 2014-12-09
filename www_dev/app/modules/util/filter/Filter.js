@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var Class = require("modules/util/Class");
+    var Log = require("modules/util/Logger");
 
     /**
      * PCS ODataの$filterのクエリ作成処理を行うためのユーティリティクラスを作成する。
@@ -31,7 +32,7 @@ define(function(require, exports, module) {
      * country eq 'Japan' and address eq 'Kanagawa'
      * </code>
      * </p>
-     * 
+     *
      * @class $filterのクエリ作成処理を行うためのユーティリティクラス
      * @exports Filter
      * @constructor
@@ -44,7 +45,7 @@ define(function(require, exports, module) {
 
     /**
      * 指定された演算子の配列をもとに、$filterに指定可能なクエリ文字列を生成する。
-     * 
+     *
      * @param {Array}
      *            filters 演算子(Equal, Ge, Le などのインスタンス)の配列
      * @returns {String} クエリ文字列
@@ -76,7 +77,7 @@ define(function(require, exports, module) {
      * 本メソッドの処理で指定した演算子をもとにクエリが生成され、filterプロパティにクエリ文字列が設定される。</li>
      * </ul>
      * </p>
-     * 
+     *
      * @param {Object}
      *            condition 検索条件
      * @returns 変換された検索条件
@@ -96,7 +97,7 @@ define(function(require, exports, module) {
      * このメソッドはFilter#queryStringメソッド内の処理で呼び出されることを意図して作成されており、
      * 外部のクラスはこのメソッドを直接呼び出すことはできない。
      * </p>
-     * 
+     *
      * @param {Filter}
      *            filter 演算子クラスのインスタンス。または、演算子クラスのインスタンスの配列
      * @returns 生成したクエリ
@@ -129,7 +130,7 @@ define(function(require, exports, module) {
      * <p>
      * サブクラスは、このメソッドをオーバライドし、本クラスが表現する式を返却する処理を実装する必要がある。
      * </p>
-     * 
+     *
      * @returns {String} 式
      */
     Filter.prototype.expression = function() {

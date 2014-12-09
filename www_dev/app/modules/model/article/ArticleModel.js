@@ -4,11 +4,13 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
     var DateUtil = require("modules/util/DateUtil");
+    var BusinessUtil = require("modules/util/BusinessUtil");
     var CommonUtil = require("modules/util/CommonUtil");
+    var Code = require("modules/util/Code");
 
     /**
      * 記事情報のモデルクラスを作成する。
-     * 
+     *
      * @class 記事情報のモデルクラス
      * @exports EventsModel
      * @constructor
@@ -20,12 +22,12 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスは、本メソッドをオーバライドして、取得した情報のparse処理を実装する。
          * </p>
-         * 
+         *
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
-            response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt),"yyyy年MM月dd日 HH時mm分");
-            response.dispUpdatedAt = DateUtil.formatDate(new Date(response.updatedAt),"yyyy年MM月dd日 HH時mm分");
+            response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt), "yyyy年MM月dd日 HH時mm分");
+            response.dispUpdatedAt = DateUtil.formatDate(new Date(response.updatedAt), "yyyy年MM月dd日 HH時mm分");
             response.dispSite = CommonUtil.sanitizing(response.site);
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.dispPlace = CommonUtil.sanitizing(response.place);
@@ -33,24 +35,31 @@ define(function(require, exports, module) {
             response.dispContactInfo = CommonUtil.sanitizing(response.contactInfo);
             if (response.startDate) {
                 if (response.startDate.length > 10) {
-                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate),"yyyy年MM月dd日 HH時mm分");
+                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate), "yyyy年MM月dd日 HH時mm分");
                 } else {
-                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate),"yyyy年MM月dd日");
+                    response.dispStartDate = DateUtil.formatDate(new Date(response.startDate), "yyyy年MM月dd日");
                 }
             }
             response.tagsArray = [];
             response.tagsLabel = "";
             // TODO 記事情報にpublishedAtが登録されるようになったら、このif文ごと削除すること｛
             if (!response.publishedAt) {
-                response.publishedAt = DateUtil.formatDate(new Date(),"yyyy-MM-dd");
+                response.publishedAt = DateUtil.formatDate(new Date(), "yyyy-MM-dd");
             }
             // ｝
-            
+
             if (response.tags) {
                 var arr = response.tags.split(",");
-                _.each(arr,function (tag) {
+                _.each(arr, function(tag) {
                     response.tagsArray.push(decodeURIComponent(tag));
                 });
+            }
+
+            if (response.dispDescription && response.dispDescription.length > 50) {
+                // 記事が100文字以上の場合、50文字に切り取り
+                response.dispDescriptionSummary = response.dispDescription.substring(0, 50) + " ...";
+            } else {
+                response.dispDescriptionSummary = response.dispDescription;
             }
 
             return response;
@@ -79,22 +88,27 @@ define(function(require, exports, module) {
             saveData.endTime = this.get("endTime");
             saveData.publishedAt = this.get("publishedAt");
             saveData.depublishedAt = this.get("depublishedAt");
+            saveData.isDepublish = this.get("isDepublish");
+            saveData.isRecomend = this.get("isRecomend");
             saveData.place = this.get("place");
             saveData.contactInfo = this.get("contactInfo");
             saveData.status = this.get("status");
             saveData.createUserId = this.get("createUserId");
-            
+
             saveData.imageUrl = this.get("imageUrl");
             saveData.imageUrl2 = this.get("imageUrl2");
             saveData.imageUrl3 = this.get("imageUrl3");
-            
+
             saveData.imageComment = this.get("imageComment");
             saveData.imageComment2 = this.get("imageComment2");
             saveData.imageComment3 = this.get("imageComment3");
+
+            saveData.isRecommend = this.get("isRecommend");
+            saveData.isDepublish = this.get("isDepublish");
             // タグ文字列の生成
-            var tags ="";
+            var tags = "";
             if (this.get("tagsArray") && this.get("tagsArray").length) {
-                _.each(this.get("tagsArray"),function (tag) {
+                _.each(this.get("tagsArray"), function(tag) {
                     if (!tags) {
                         tags = encodeURIComponent(tag);
                     } else {
@@ -106,64 +120,120 @@ define(function(require, exports, module) {
         },
 
         /**
-         *  「掲載中」などのイベントのステータス文字列を返す
+         * 「掲載中」などのイベントのステータス文字列を返す
          *
-         *  @return {String}
+         * @return {String}
          */
-        getStatusString: function () {
-            var status = this.get('status');
-            var str = [
-                '掲載中'
-            ][status];
-
-            return str || status;
+        getStatusString : function() {
+            if (this.get("isDepublish")) {
+                return Code.ARTICLE_STATUS_DEPUBLISHED;
+            }
+            
+            var currentPubDate = DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd");
+            if (currentPubDate > new Date(this.get("publishedAt"))) {
+                return Code.ARTICLE_STATUS_PUBLISHED;
+            } else {
+                return Code.ARTICLE_STATUS_BEFORE_PUBLISH;
+            }
         },
 
         /**
-         *  掲載期間の文字列を返す
+         * 掲載期間の文字列を返す
          *
-         *  @return {String}
+         * @return {String}
          */
-        getPubDateString: function () {
-            var pubDateString = DateUtil.formatDate(new Date(this.get("publishedAt")),"yyyy年MM月dd日(ddd)");
+        getPubDateString : function() {
+            var pubDateString = DateUtil.formatDate(new Date(this.get("publishedAt")), "yyyy年MM月dd日(ddd)");
 
-            if(this.get("depublishedAt")){
-                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")) ,"yyyy年MM月dd日(ddd)");
+            if (this.get("depublishedAt")) {
+                pubDateString += " ～ " + DateUtil.formatDate(new Date(this.get("depublishedAt")), "yyyy年MM月dd日(ddd)");
             }
 
             return pubDateString;
         },
 
         /**
-         *  更新日の文字列を返す
+         * 更新日の文字列を返す
          *
-         *  @return {String}
+         * @return {String}
          */
-        getUpdatedString: function () {
-            var updatedString = DateUtil.formatDate(new Date(this.get("updatedAt")),"yyyy年MM月dd日(ddd)");
-
+        getUpdatedString : function() {
+            var updatedString = DateUtil.formatDate(new Date(this.get("updatedAt")), "yyyy年MM月dd日(ddd)");
+            if (!updatedString) {
+                updatedString = DateUtil.formatDate(new Date(this.get("createdAt")), "yyyy年MM月dd日(ddd)");
+            }
             return updatedString;
         },
 
         /**
-         *  日付文字列を返す
+         * 日付文字列を返す
          *
-         *  @return {String}
+         * @return {String}
          */
-        getDateString: function () {
+        getDateString : function() {
             // 日時
-            var dateString = DateUtil.formatDate(new Date(this.get("startDate")),"yyyy年MM月dd日(ddd)");
-            if(this.get("endDate")){
-                dateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")),"yyyy年MM月dd日(ddd)");
+            var dateString = DateUtil.formatDate(new Date(this.get("startDate")), "yyyy年MM月dd日(ddd)");
+            if (this.get("endDate")) {
+                dateString += " ～ " + DateUtil.formatDate(new Date(this.get("endDate")), "yyyy年MM月dd日(ddd)");
             }
             var st = this.get("startTime");
             st = st ? st : "";
             var et = this.get("endTime");
             et = et ? et : "";
-            if(st || et){
+            if (st || et) {
                 dateString += "\n" + st + " ～ " + et;
             }
             return CommonUtil.sanitizing(dateString);
+        },
+        /**
+         * この記事の画像がpersonium.ioに保存されている画像かどうかを判定する。
+         * @return {Boolean} personium.ioに保存されている画像の場合、<code>true</code>を返す。
+         * @memberof ArticleModel#
+         */
+        isPIOImage: function() {
+            // 記事タイプが1 or 2 の場合、imageUrlの画像がインターネットの画像
+            // それ以外は、personium.io の画像
+            if (this.get("type") === "1" || this.get("type") === "2") {
+                return false;
+            } else {
+                return true;
+            }
+        },
+
+        /**
+         * 画像タイプを判定する
+         * @return {Number} Code.IMAGE_TYPE_* を返す
+         * @memberof ArticleModel
+         */
+        getImageType: function () {
+            if (this.isPIOImage()) {
+                return Code.IMAGE_TYPE_PIO;
+            }
+
+            if (!_.isEmpty(this.get("imageUrl"))) {
+                return Code.IMAGE_TYPE_URL;
+            }
+
+            return Code.IMAGE_TYPE_NONE;
+        },
+
+        /**
+         * 情報源タイプを判定する
+         * @return {string} class文字列を返す
+         */
+        getSiteType: function() {
+            var dispSite = this.get("dispSite");
+            var articleSite = null;
+
+            articleSite = _.find(Code.ARTICLE_SITE_LIST, function(item) {
+                return item.key == dispSite;
+            });
+
+            if (articleSite) {
+                return articleSite.value;
+            } else {
+                return Code.ARTICLE_SITE_NONE;
+            }
         }
     });
 

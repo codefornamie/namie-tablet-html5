@@ -1,0 +1,327 @@
+/**
+ *  道場アプリCSS
+ */
+.page-dojo .contents {
+    background: rgb(200, 93, 47);
+}
+
+.page-dojo .header {
+    background: #777;
+    height: 80px;
+    margin: 0;
+    display: block;
+}
+
+.page-dojo h1 {
+    text-shadow:
+        1px 0 0 white,
+        0 1px 0 white,
+        -1px 0 0 white,
+        0 -1px 0 white,
+        1px 1px 0 white,
+        -1px -1px 0 white,
+        -1px 1px 0 white,
+        1px -1px 0 white;
+    font-weight: bold;
+    font-size: 1.7rem;
+    margin: 0;
+    padding: 0 15px;
+    height: 80px;
+    line-height: 70px;
+    border: 5px solid #333;
+}
+
+.page-dojo .global-nav {
+    display: none;
+}
+
+.page-dojo .contents-wrapper {
+    padding-top: 80px;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.page-dojo .contents {
+    padding: 0;
+}
+
+.page-dojo .contents > div {
+    padding: 0;
+}
+
+.dojo-contents {
+    overflow: auto;
+    height: 100%;
+}
+
+/**
+ *
+ */
+.dojo-login {
+    color: white;
+    margin-top: 40px;
+}
+
+/**
+ *
+ */
+.dojo-account {
+    margin-top: 5px;
+    height: 70px;
+    line-height: 70px;
+}
+
+.dojo-account__rank {
+    display: inline-block;
+    margin: 0 20px;
+    color: white;
+}
+
+.dojo-account__signout {
+    display: inline-block;
+    margin: 0 20px;
+}
+
+/**
+ *
+ */
+.dojo-tab {
+    display: flex;
+    list-style: none;
+    border-collapse: collapse;
+    margin: 0;
+    width: 100%;
+}
+
+.dojo-tab__item {
+    flex: 1;
+    background: white;
+    border: 5px solid #333;
+    padding: 10px;
+    text-align: center;
+}
+
+.dojo-tab__item.is-selected {
+    background: yellow;
+    position: relative;
+}
+
+.dojo-edition-title {
+    color: white;
+    margin: 20px 0;
+    font-weight: bold;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+/**
+ *  全体の視聴状況
+ */
+.dojo-watched-state {
+    margin: 0 20px;
+    color: white;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+.dojo-watched-state__description {
+    margin: 15px 0;
+}
+
+.dojo-watched-state__progress {
+    font-size: 2rem;
+}
+
+/**
+ *  動画コンテンツ一覧
+ */
+.dojo-list {
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: stretch;
+    list-style: none;
+}
+
+.dojo-list>div {
+    border: 10px solid #333;
+    box-sizing: border-box;
+    flex: 1 1 30%;
+    margin: 10px;
+    position: relative;
+    max-width: 30%;
+    background: white;
+}
+
+.dojo-item {
+    box-sizing: border-box;
+    position: static;
+    width: 100%;
+}
+
+.dojo-item__thumbnail {
+}
+
+.dojo-item__thumbnail img {
+    min-width: 100%;
+}
+
+/**
+ *  習得済みスタンプ
+ */
+.dojo-stamp {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 70px;
+    height: 70px;
+    border-radius: 35px;
+    background-color: white;
+    border: 5px solid pink;
+    text-align: center;
+    line-height: 60px;
+    font-weight: bold;
+    font-size: 45px;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2);
+    transform: rotate(10deg);
+}
+
+.dojo-item.is-solved .dojo-stamp,
+.dojo-lesson.is-solved .dojo-stamp,
+.dojo-lesson-siblings .is-solved .dojo-stamp {
+    display: block;
+}
+
+.dojo-item.is-unsolved .dojo-stamp,
+.dojo-lesson.is-unsolved .dojo-stamp,
+.dojo-lesson-siblings .is-unsolved .dojo-stamp {
+    display: none;
+}
+
+.dojo-stamp--solved {
+}
+
+.dojo-item__title {
+    padding: 10px 100px 10px 10px;
+    line-height: 1.4;
+}
+
+.dojo-item__button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    margin-bottom: 0;
+}
+
+/**
+ *  視聴状態ラベル
+ */
+.dojo-item__watched-state {
+    color: red;
+    margin: 10px;
+    font-size: 0.8rem;
+}
+
+.dojo-item.is-watched .dojo-item__watched-state {
+    display: block;
+}
+
+.dojo-item.is-unwatched .dojo-item__watched-state {
+    display: none;
+}
+
+/**
+ *  詳細画面
+ */
+.dojo-lesson-container {
+}
+
+.dojo-lesson {
+}
+
+/**
+ *  詳細画面のヘッダ
+ */
+.dojo-lesson__header {
+    margin: 20px;
+}
+
+.dojo-lesson__heading {
+    text-align: center;
+}
+
+.dojo-lesson__edition {
+    font-size: 1.2rem;
+    color: white;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+.dojo-lesson__title {
+    font-size: 2rem;
+    display: inline-block;
+    font-weight: bold;
+    color: white;
+    font-weight: bold;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+.dojo-lesson__heading .dojo-stamp {
+    position: relative;
+    display: inline-block;
+    top: 0;
+    right: 0;    
+}
+
+/**
+ *  詳細画面のボディ
+ */
+.dojo-lesson__body {
+    width: 90%;
+    margin: auto;
+    padding: 20px 0;
+}
+
+.dojo-lesson__description {
+    color: white;
+}
+
+.dojo-lesson__content {
+    width: 100%;
+    height: 400px;
+    background: #777;
+}
+
+.dojo-lesson__completion {
+    margin: 20px 0;
+    background: white;
+    padding: 20px;
+}
+
+.dojo-lesson__siblings {
+}
+
+/**
+ *  関連動画
+ */
+.dojo-lesson-siblings {
+}
+
+.dojo-sibling {
+    background: white;
+    border: 10px solid #333;
+    padding: 20px;
+}
+
+.dojo-sibling__direction {
+    color: #333;
+    text-align: center;
+    margin: 0 0 15px 0;
+}
+
+.dojo-sibling__content {
+    width: 100%;
+}
+
+.dojo-sibling__title {
+    margin: 20px 0 0;
+    padding: 0;
+}

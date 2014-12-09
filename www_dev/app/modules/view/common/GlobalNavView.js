@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var DateUtil = require("modules/util/DateUtil");
     var AbstractView = require("modules/view/AbstractView");
     var PersonalModel = require("modules/model/personal/PersonalModel");
     var Snap = require("snap");
@@ -27,9 +28,11 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             this.updateBackHomeButton();
+            this.updateDateLabel();
             var $target = $("[value='" + app.user.get("fontSize") + "']");
             var size = parseInt($target.attr('data-font-size'), 10);
             $('html, body').css('font-size', size + 'px');
+            this.setDate(this.targetDate);
         },
 
         /**
@@ -71,7 +74,29 @@ define(function(require, exports, module) {
             'click [data-drawer-opener]': 'onClickDrawerOpener',
             'click [data-back-home]': 'onClickBackHome',
             'change #selectRadiation' : "onChangeRadiationStation",
-            'click [data-font-size]': 'onClickFontSize'
+            'click [data-font-size]': 'onClickFontSize',
+
+            'click .global-nav__menubutton a': 'onClickMenuButton',
+            'click #help' : 'onClickHelp',
+            'click #backno' : 'onClickBackno',
+            'click #setting' : 'onClickSetting'
+        },
+
+
+        /**
+         * 発行日を設定する。
+         * @param {Date} date 設定する日付
+         */
+        setDate : function(date) {
+            if (date) {
+                $("#naviPublishDate").show();
+                $("#naviPublishDate").find(".date--year").text(date.getFullYear());
+                $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
+                $("#naviPublishDate").find(".date--day").text(date.getDate());
+                $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
+            } else {
+                $("#naviPublishDate").hide();
+            }
         },
 
         /**
@@ -81,8 +106,20 @@ define(function(require, exports, module) {
         updateBackHomeButton: function () {
             if (Backbone.history.fragment == 'top') {
                 $('[data-back-home]').hide();
+                $('.global-nav__menu').css('background-position', 'center');
             } else {
                 $('[data-back-home]').show();
+                $('.global-nav__menu').css('background-position', 'right');
+            }
+        },
+
+        /**
+         *  日付の表記を変更
+         */
+        updateDateLabel: function () {
+            var fragments = Backbone.history.fragment.split('/');
+            if (fragments[0] == 'backnumber') {
+                $('.global-nav__date .nav-content').html('バックナンバー');
             }
         },
 
@@ -142,12 +179,41 @@ define(function(require, exports, module) {
         },
 
         /**
+         * メニュー項目ボタンのaタグをクリックした際の挙動を
+         * ブラウザデフォルトではなく
+         * pushStateに変更する
+         */
+        onClickMenuButton: function (evt) {
+            var $target = $(evt.currentTarget);
+            var href = { prop: $target.prop("href"), attr: $target.attr("href") };
+            var root = location.protocol + "//" + location.host + app.root;
+
+            if (href.prop && href.prop.slice(0, root.length) === root) {
+                evt.preventDefault();
+                app.router.navigate(href.attr, {
+                    trigger: true,
+                    replace: false
+                });
+            }
+            $('#snap-content').data("snap").close();
+        },
+        onClickHelp : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「ヘルプ」","");
+        },
+        onClickBackno : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「バックナンバー」","");
+        },
+        onClickSetting : function(evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「設定」","");
+        },
+
+        /**
          * ルーティングによって呼ばれる
          *
          * @param {Event} ev
          */
         onRoute: function (ev) {
-            console.log(ev);
+            app.logger.debug(ev);
         }
     });
 

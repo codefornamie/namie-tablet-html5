@@ -76,7 +76,7 @@ define(function(require, exports, module) {
                     }).length;
             this.recommendCollection.each($.proxy(function(recommend){
                 if (recommend.get("isMine")) {
-                    this.articleModel.set("isRecommend", !recommend.get("deletedAt"));
+                    this.articleModel.set("isMyRecommend", !recommend.get("deletedAt"));
                     this.articleModel.recommend = recommend;
                     
                 }
@@ -135,7 +135,7 @@ define(function(require, exports, module) {
          *  article情報検索失敗後のコールバック関数
          */
         onFailure: function (err) {
-            console.log(err);
+            app.logger.error(err);
             this.hideLoading();
         },
 

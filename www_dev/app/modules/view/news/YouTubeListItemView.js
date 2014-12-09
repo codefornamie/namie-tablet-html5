@@ -30,20 +30,42 @@ define(function(require, exports, module) {
         },
 
         /**
+         * Youtubeライブラリが準備できてなければ、最大時間まで待つ。
+         */
+        waitReadyYoutube : function(callback) {
+            var counter = 0;
+            var id = setInterval(function() {
+                if (counter > 10) {
+                    clearInterval(id);
+                    callback();
+                }
+                if (YT.Player) {
+                    clearInterval(id);
+                    callback();
+                }
+                counter += 1;
+            }, 100);
+        },
+
+        /**
          * YouTube動画プレイヤーの設定を行う。
          */
         setYouTubePlayer : function() {
-            this.player = new YT.Player('youtubePlayer-' + this.model.get("link"), {
-                width : '640',
-                height : '390',
-                playerVars : {
-                    'autoplay' : 0,
-                    'controls' : 1
-                },
-                events : {
-                    "onReady" : $.proxy(this.onSetYouTubePlayer, this)
+            this.waitReadyYoutube($.proxy(function() {
+                if (YT.Player) {
+                    this.player = new YT.Player('youtubePlayer-' + this.model.get("link"), {
+                        width : '640',
+                        height : '390',
+                        playerVars : {
+                            'autoplay' : 0,
+                            'controls' : 1
+                        },
+                        events : {
+                            "onReady" : $.proxy(this.onSetYouTubePlayer, this)
+                        }
+                    });
                 }
-            });
+            }, this));
         },
 
         /**
@@ -82,7 +104,7 @@ define(function(require, exports, module) {
             try {
                 this.player.destroy();
             } catch (e) {
-                console.log(e);
+                app.logger.debug(e);
             }
         }
     });

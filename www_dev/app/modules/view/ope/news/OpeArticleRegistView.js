@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var PostingArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
+    var OpeArticleRegistConfirmView = require("modules/view/ope/news/OpeArticleRegistConfirmView");
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
     var vexDialog = require("vexDialog");
 
@@ -10,12 +11,13 @@ define(function(require, exports, module) {
      * 記事新規登録・編集画面のViewクラス
      * 
      * @class 記事新規登録・編集画面のViewクラス
-     * @exports ArticleRegistView
+     * @exports OpeArticleRegistView
      * @constructor
      */
     var OpeArticleRegistView = PostingArticleRegistView.extend({
         /**
          * 編集時にデータを各フォームにセットする
+         * @memberof OpeArticleRegistView#
          */
         setData: function () {
             $("#articleRegistTitle").text("記事編集");
@@ -33,6 +35,9 @@ define(function(require, exports, module) {
             $("#articleContact").val(this.model.get("contactInfo"));
             $("#articleRangeDate1").val(this.model.get("publishedAt"));
             $("#articleRangeDate2").val(this.model.get("depublishedAt"));
+            if (this.model.get("isRecommend")) {
+                $("#articleRecommendCheck").attr("checked","checked");
+            }
             if (this.model.get("type") !== "2") {
                 this.imgArray = [];
                 if (this.model.get("imageUrl")) {
@@ -78,6 +83,49 @@ define(function(require, exports, module) {
                     },this));
                 },this));
             }
+        },
+        /**
+         * モデルにデータをセットする関数
+         * @memberof OpeArticleRegistView#
+         */
+        setInputValue : function() {
+            PostingArticleRegistView.prototype.setInputValue.apply(this, arguments);
+            this.model.set("isRecommend",$("#articleRecommendCheck").is(":checked") ? "true" : null);
+        },
+        /**
+         * バリデーションチェックがOKとなり、登録処理が開始された際に呼び出されるコールバック関数。
+         * @memberof OpeArticleRegistView#
+         */
+        onSubmit : function() {
+            // 登録処理を開始する
+            this.setInputValue();
+            $("#articleRegistPage").hide();
+            this.setView("#articleRegistConfirmWrapperPage", new OpeArticleRegistConfirmView({
+                model : this.model,
+                recommendArticle : this.recommendArticle
+            })).render();
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         * バリデーションチェック
+         * @memberof OpeArticleRegistView#
+         * @return {String} バリデーションメッセージ
+         */
+        validate : function() {
+            if ($("#articleMultiDate").is(":checked")) {
+                if ($("#articleDate1").val() > $("#articleDate2").val()) {
+                    return "日時の日付が開始と終了で逆になっています。";
+                }
+            }
+            if ($("#articleTime1").val() && $("#articleTime2").val() &&
+                    $("#articleTime1").val() > $("#articleTime2").val()) {
+                return "日時の時間が開始と終了で逆になっています。";
+            }
+            if ($("#articleRangeDate1").val() && $("#articleRangeDate2").val() &&
+                    $("#articleRangeDate1").val() > $("#articleRangeDate2").val()) {
+                return "掲載期間の日付が開始と終了で逆になっています。";
+            }
+            return null;
         },
     });
     module.exports = OpeArticleRegistView;

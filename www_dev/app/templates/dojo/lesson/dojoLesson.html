@@ -1,0 +1,52 @@
+<div class="dojo-lesson is-<%= model.getSolvedState() %> is-<%= model.getWatchedState() %>">
+    <div class="dojo-lesson__header">
+        <a href="/dojo-top" class="button left">
+            動画一覧へ戻る
+        </a>
+
+        <h2 class="dojo-lesson__heading">
+            <div class="dojo-stamp right">
+                済
+            </div>
+
+            <span class="dojo-lesson__edition">
+                <%= editionModel.get("editionTitle") %>
+            </span>
+
+            <div class="dojo-lesson__title">
+                <%= model.get("title") %>
+            </div>
+        </h2>
+    </div>
+
+    <div class="dojo-lesson__body">
+        <p class="dojo-lesson__description">
+            <%= model.get("description") %>
+        </p>
+        
+        <div id="dojo-lesson__content" class="dojo-lesson__content">
+        </div>
+        
+        <div class="dojo-lesson__completion">
+            <p>
+                この操作はできるようになりましたか？
+            </p>
+
+            <div class="row">
+                <div class="columns small-6">
+                    <button class="button expand" data-complete-lesson>
+                        はい
+                    </button>
+                </div>
+
+                <div class="columns small-6">
+                    <button class="button expand" data-uncomplete-lesson>
+                        いいえ
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="dojo-lesson-siblings-container" class="dojo-lesson-siblings-container"></div>
+    </div>
+</div>

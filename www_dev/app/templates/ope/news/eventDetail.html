@@ -1,0 +1,106 @@
+<div id="articleDetailPage" role="content" class="OpeArticleDetailPage">
+    <div class="eventDetailHeader">
+        <div class="row">
+            <div class="large-7 columns">
+
+                <div class="row">
+                    <div class="large-2 columns event__status">
+                        <div class="eventStatus"><%=
+                            model.getStatusString() %></div>
+                    </div>
+
+                    <div class="large-10 columns">
+                        <div class="row">
+                            <div
+                                class="large-12 columns event__publication">
+                                掲載期間: <%= model.getPubDateString() %></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="large-12 columns event__updated">
+                                <%= model.getUpdatedString() %> 更新</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <article>
+
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="eventTitle"><%= model.get('title') %>
+                </div>
+            </div>
+
+            <div class="large-12 columns">
+                <div class="eventColumnsHeader">日時</div>
+            </div>
+            <div class="large-11 large-centered columns"><%=
+                model.getDateString() %></div>
+
+            <div class="large-12 columns">
+                <div class="eventColumnsHeader">場所</div>
+            </div>
+            <div class="large-11 large-centered columns"><%=
+                model.get('place') %></div>
+
+            <div class="large-12 columns">
+                <div class="eventColumnsHeader">内容</div>
+            </div>
+            <div class="large-11 large-centered columns"><%=
+                model.get('description') %></div>
+
+            <div class="large-12 columns">
+                <div class="eventColumnsHeader">画像</div>
+            </div>
+            <div class="large-11 large-centered columns">
+                <div class="eventFile">
+                    <div class="eventFileImage">
+                        <img>
+                    </div>
+
+                    <p><%= model.get('imageComment') %></p>
+                </div>
+
+                <div class="eventFile">
+                    <div class="eventFileImage">
+                        <img>
+                    </div>
+
+                    <p><%= model.get('imageComment2') %></p>
+                </div>
+
+                <div class="eventFile">
+                    <div class="eventFileImage">
+                        <img>
+                    </div>
+
+                    <p><%= model.get('imageComment3') %></p>
+                </div>
+            </div>
+
+            <div class="large-12 columns">
+                <div class="eventColumnsHeader">主催者連絡先</div>
+            </div>
+            <div class="large-11 large-centered columns end"><%=
+                model.get('contactInfo') %></div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="large-push-2 large-4 columns">
+                <button id="articleEditButton" class='button'
+                    data-goto-edit>
+                    <i class="fa fa-pencil"></i> 編集
+                </button>
+            </div>
+            <div class="large-4 columns">
+                <button id="articleCancelButton" class='button'
+                    data-goto-cancel>キャンセル</button>
+            </div>
+        </div>
+    </article>
+
+</div>

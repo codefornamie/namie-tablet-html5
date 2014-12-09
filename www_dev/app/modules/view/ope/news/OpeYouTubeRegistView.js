@@ -9,7 +9,7 @@ define(function(require, exports, module) {
      * YouTube編集画面のViewクラス
      * 
      * @class YouTube編集画面のViewクラス
-     * @exports YouTubeRegistView
+     * @exports OpeYouTubeRegistView
      * @constructor
      */
     var OpeYouTubeRegistView = YouTubeListItemView.extend({
@@ -21,10 +21,12 @@ define(function(require, exports, module) {
          * </p>
          */
         afterRendered : function() {
-            // TODO データ読み込み終わったら以下を実行
             this.showImage();
             $("#articleTitle").val(this.model.get("title"));
             $("#articleDetail").val(this.model.get("description"));
+            if (this.model.get("isRecommend")) {
+                $("#articleRecommendCheck").attr("checked","checked");
+            }
             this.hideLoading();
         },
         events : {
@@ -38,7 +40,8 @@ define(function(require, exports, module) {
             this.setInputValue();
             $("#youtubeRegistPage").hide();
             this.setView("#articleRegistConfirmWrapperPage", new OpeYouTubeRegistConfirmView({
-                model : this.model
+                model : this.model,
+                recommendArticle : this.recommendArticle
             })).render();
             $("#snap-content").scrollTop(0);
         },
@@ -46,11 +49,16 @@ define(function(require, exports, module) {
          * キャンセルボタン押下時のコールバック関数
          */
         onClickArticleCancelButton: function () {
-            app.router.back();
+            if (this.backFunction) {
+                this.backFunction();
+            } else {
+                app.router.back();
+            }
         },
         setInputValue : function() {
             this.model.set("title", $("#articleTitle").val());
             this.model.set("description", $("#articleDetail").val());
+            this.model.set("isRecommend",$("#articleRecommendCheck").is(":checked") ? "true" : null);
         }
 
     });

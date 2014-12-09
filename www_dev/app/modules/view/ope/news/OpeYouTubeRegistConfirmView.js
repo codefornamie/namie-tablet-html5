@@ -48,7 +48,20 @@ define(function(require, exports, module) {
         saveModel : function() {
             this.model.save(null, {
                 success : $.proxy(function() {
-                    app.router.go("ope-top");
+                    if (this.model.get("isRecommend") && this.recommendArticle &&
+                            this.recommendArticle.get("__id") !== this.model.get("__id")) {
+                        this.recommendArticle.set("isRecommend",null);
+                        this.recommendArticle.save(null, {
+                            success:$.proxy(function() {
+                                app.router.go("ope-top");
+                            },this),
+                            error:$.proxy(function() {
+                                app.router.go("ope-top");
+                            },this)
+                        });
+                    }else {
+                        app.router.go("ope-top");
+                    }
                 }, this),
                 error : function(e) {
                     this.hideLoading();

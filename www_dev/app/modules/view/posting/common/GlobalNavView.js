@@ -23,7 +23,8 @@ define(function(require, exports, module) {
          */
         headerTitle: {
             "articleDetail" : "投稿した記事",
-            "articleRegist" : "記事入力"
+            "articleRegist" : "記事入力",
+            "articleReport" : "記事入力"
         },
 
         /**

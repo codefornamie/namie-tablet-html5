@@ -9,7 +9,7 @@ define(function(require) {
         it("TEST-01 LoginModel#login", function(done) {
             this.timeout(15000);
             var loginModel = new LoginModel();
-            loginModel.baseUrl = "https://fj.baas.jp.fujitsu.com/";
+            loginModel.baseUrl = "https://test.namie-tablet.org/";
             loginModel.cellId = "kizunatest01";
             loginModel.box = "data";
             loginModel.set("loginId", "ukedon");

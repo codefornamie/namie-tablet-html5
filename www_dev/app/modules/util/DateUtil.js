@@ -11,6 +11,10 @@ define(function(require, exports, module) {
      */
     DateUtil.formatDate = function(date, format) {
 
+        if (!(date instanceof Date) || isNaN(date.getTime())) {
+            return "";
+        }
+            
         var result = format;
 
         var f;

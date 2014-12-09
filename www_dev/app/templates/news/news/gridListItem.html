@@ -1,0 +1,35 @@
+<li
+    data-article-id="<%= model.get('__id') %>"
+    class="grid-list__item"
+>
+    <div class="row">
+        <div class="grid-cell--image columns small-5">
+            <img class="articleImage">
+        </div>
+        
+        <div class="grid-cell--body columns small-7">
+            <div class="article-label article-label--<%= model.getSiteType() %>">
+                <span class='article-label__text'>
+                    <%= model.get("dispSite") %>
+                </span>
+            </div>
+
+            <div class="grid-description">
+                <p class="grid-description__title">
+                    <%= model.get("dispTitle") %>
+                </p>
+
+                <p class="grid-description__description">
+                    <%= model.get("dispDescriptionSummary") %>
+                </p>
+            </div>
+            
+            <div class="grid-button">
+                <button class="button">
+                    <i class="fa fa-angle-right"></i>
+                    この記事を見る
+                </button>
+            </div>
+        </div>
+    </div>
+</li>

@@ -5,8 +5,10 @@
                 <div class="post-header">
                     <div class="post-header__site">
                         <div class="post-label">
-                            <div class="post-label__site left">
-                                <%= model.get("dispSite") %>
+                            <div class="article-label article-label--<%= model.getSiteType() %> left">
+                                <span class='article-label__text'>
+                                    <%= model.get("dispSite") %>
+                                </span>
                             </div>
 
                             <span class="post-recommend right">

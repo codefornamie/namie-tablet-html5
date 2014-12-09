@@ -1228,6 +1228,10 @@ dcc.http.DcHttpClient = function(async) {
   }
 };
 
+dcc.http.DcHttpClient.prototype.setResponseType = function(type) {
+    this.httpClient.responseType = type;
+};
+
 /**
  * This method sets the HTTP Request Header.
  * @param {String} header key
@@ -1975,7 +1979,8 @@ dcc.http.RestAdapter.prototype.getBinary = function(requestUrl, etag, callback) 
   var xhr = this.httpClient;
   // xhr.setOverrideMimeType("text/plain; charset=x-user-defined");
   // FSTが修正
-  xhr.httpClient.responseType = 'arraybuffer';
+  //xhr.httpClient.responseType = 'arraybuffer';
+  xhr.setResponseType('arraybuffer');
   this.request(xhr, "GET", requestUrl, "", builder, {}, callback);
 
   if (callback === undefined) {

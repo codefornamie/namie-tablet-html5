@@ -9,8 +9,6 @@
                 </div>
                 <div class="large-9 columns end">
                     <select id="articleCategory" name="articleCategory">
-                        <option value="3">イベント</option>
-                        <option value="4">レポート</option>
                     </select>
                 </div>
             </div>
@@ -41,7 +39,7 @@
                             <input id="articleDate1" name="articleDate1" type="date" class="required"/>
                         </div>
                         <div class="large-push-2 large-1 columns">
-                            <label class="eventColumnsTitle articleDateTo">～</label>
+                            <label class="eventColumnsTitle articleDateTo text-center">～</label>
                         </div>
                         <div class="large-push-2 large-3 columns end">
 	                        <input id="articleDate2" class="articleDateTo" name="articleDate2" type="date" />
@@ -55,7 +53,7 @@
 							<input id="articleTime1" name="articleTime1" type="time" />
                         </div>
                         <div class="large-1 columns">
-                            <label class="eventColumnsTitle event">～</label>
+                            <label class="eventColumnsTitle event text-center">～</label>
                         </div>
                         <div class="large-2 columns">
 							<input id="articleTime2" name="articleTime2" type="time" />
@@ -82,13 +80,17 @@
                     <textArea id="articleDetail" rows="5"></textArea>
                 </div>
             </div>
-            <div id="fileArea">
-            </div>
-            <div class="row">
+
+            <div id="fileArea" class='file-area'></div>
+
+            <div class='row file-adder'>
                 <div class="large-9 columns right">
-                        <a href="javascript:void(0);" id="addFileForm">＋画像を追加</a>
+                    <a href="javascript:void(0);" id="addFileForm">
+                        ＋画像を追加
+                    </a>
                 </div>
             </div>
+
             <div class="row">
                 <div class="large-3 columns">
                     <label class="eventColumnsTitle">主催者連絡先</label>
@@ -103,21 +105,23 @@
                     <label class="eventColumnsTitle">掲載期間</label>
                 </div>
                 <div class="large-9 columns end">
-                    <div class="large-3 columns">
-                        <input id="articleRangeDate1" name="articleRangeDate1" type="date" class="required" />
-                    </div>
-                    <div class="large-1 columns">
-                        <label class="eventColumnsTitle">～</label>
-                    </div>
-                    <div class="large-3 columns end">
-                        <input id="articleRangeDate2" name="articleRangeDate2" type="date" />
+                    <div class="row">
+                        <div class="large-3 columns">
+                            <input id="articleRangeDate1" name="articleRangeDate1" type="date" class="required" />
+                        </div>
+                        <div class="large-1 columns">
+                            <label class="eventColumnsTitle text-center">～</label>
+                        </div>
+                        <div class="large-3 columns end">
+                            <input id="articleRangeDate2" name="articleRangeDate2" type="date" />
+                        </div>
                     </div>
                 </div>
             </div>
         </form>
         <div class="row">
             <div class="large-9 columns">
-                <button id="articleConfirmButton" class="ladda-button"
+                <button id="articleConfirmButton" class="button ladda-button"
                     data-style="contract-overlay">
                     <span class="ladda-label">確認画面へ</span>
                 </button>

@@ -30,6 +30,8 @@ define(function(require, exports, module) {
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          */
         afterRendered : function() {
+            $("#snap-content").scrollTop(0);
+
             this.showImage();
         },
 
@@ -90,6 +92,7 @@ define(function(require, exports, module) {
 
         events : {
             'click [data-goto-edit]': 'onClickGotoEdit',
+            'click [data-goto-cancel]': 'onClickGotoCancel',
             'click [data-goto-delete]': 'onClickGotoDelete'
         },
 
@@ -97,6 +100,7 @@ define(function(require, exports, module) {
          *  編集ボタンをクリックしたら呼ばれる
          */
         onClickGotoEdit: function () {
+            this.showLoading();
             app.router.articleRegist({
                 model: this.model
             });
@@ -106,6 +110,11 @@ define(function(require, exports, module) {
          *  削除ボタンをクリックしたら呼ばれる
          */
         onClickGotoDelete: function () {
+        },
+        /**
+         *  キャンセルボタンをクリックしたら呼ばれる
+         */
+        onClickGotoCancel: function () {
         }
     });
     module.exports = ArticleDetailView;

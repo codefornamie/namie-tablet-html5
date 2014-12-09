@@ -1,3 +1,5 @@
+/* global LocalFileSystem */
+
 define(function(require, exports, module) {
     "use strict";
 
@@ -21,9 +23,9 @@ define(function(require, exports, module) {
      */
     var ArticleListItemView = AbstractView.extend({
         /**
-         * このViewを表示する際に利用するアニメーション
+         * このViewを表示する際に利用するテンプレート
          */
-        template : require("ldsh!templates/{mode}/news/articleListItem"),
+        template : require("ldsh!templates/news/news/articleListItem"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * <p>
@@ -104,7 +106,7 @@ define(function(require, exports, module) {
             } else {
                 this.$el.find('[data-favorite-delete-button]').hide();
             }
-            if (this.model.get("isRecommend")) {
+            if (this.model.get("isMyRecommend")) {
                 this.$el.find('[data-recommend-register-button]').hide();
             } else {
                 this.$el.find('[data-recommend-delete-button]').hide();
@@ -146,6 +148,7 @@ define(function(require, exports, module) {
             this.favoriteModel.set("source", source);
             this.favoriteModel.set("userId", app.user.get("__id"));
             this.favoriteModel.set("contents", this.model.get("description"));
+            this.favoriteModel.set("type", this.model.get("type"));
             this.favoriteModel.set("title", this.model.get("title"));
             this.favoriteModel.set("site", this.model.get("site"));
             this.favoriteModel.set("imageUrl", this.model.get("imageUrl"));
@@ -217,6 +220,7 @@ define(function(require, exports, module) {
             this.recommendModel.set("source", source);
             this.recommendModel.set("userId", app.user.get("__id"));
             this.recommendModel.set("publishedAt", this.model.get("publishedAt"));
+            this.recommendModel.set("depublishedAt", this.model.get("depublishedAt"));
             this.recommendModel.set("isDelete", false);
             this.recommendModel.set("etag", "*");
             this.recommendModel.save(null, {
@@ -265,7 +269,7 @@ define(function(require, exports, module) {
             if (type === "favorite") {
                 this.model.set("isFavorite", !this.model.get("isFavorite"));
             } else {
-                this.model.set("isRecommend", !this.model.get("isRecommend"));
+                this.model.set("isMyRecommend", !this.model.get("isMyRecommend"));
             }
             // 対応するボタンの切り替え
             this.$el.find("[data-"+ type +"-register-button]").toggle();
@@ -301,7 +305,7 @@ define(function(require, exports, module) {
          *  非同期通信失敗後のコールバック関数
          */
         onFailure: function (err) {
-            console.log(err);
+            app.logger.error(err);
             this.hideLoading();
         },
 
@@ -355,7 +359,7 @@ define(function(require, exports, module) {
          *
          */
         saveImage : function(data, fileName) {
-            console.log("scanFile start. filePath: " + fileName);
+            app.logger.debug("scanFile start. filePath: " + fileName);
             if (window.FileTransfer === undefined) {
                 alert("ご使用の端末では保存できません。");
                 return;
@@ -366,17 +370,17 @@ define(function(require, exports, module) {
 
             // ファイルシステムエラーハンドラ
             var onFileSystemError = function(e) {
-                console.log("FileSystemError: code=" + e.code);
+                app.logger.debug("FileSystemError: code=" + e.code);
                 window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
             };
             // メディアスキャン
             var mediaScan = function(filePath){
-                console.log("scanFile start. filePath: " + filePath);
+                app.logger.debug("scanFile start. filePath: " + filePath);
                 window.MediaScanPlugin.scanFile(filePath, function(msg) {
                     window.plugins.toast.showLongBottom("画像を保存しました。");
                 }, function(err) {
                     window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                    console.log(err);
+                    app.logger.debug(err);
                 });
             };
 
@@ -391,7 +395,7 @@ define(function(require, exports, module) {
                             };
                             fileWriter.onerror = function(e) {
                                 window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                                console.log('Write failed: ' + e.toString());
+                                app.logger.debug('Write failed: ' + e.toString());
                             };
                             fileWriter.write(blob);
 
@@ -405,9 +409,9 @@ define(function(require, exports, module) {
                     mediaScan(filePath);
                 }, function(error) {
                     window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                    console.log("download error source: " + error.source);
-                    console.log("download error target: " + error.target);
-                    console.log("download error code: " + error.code);
+                    app.logger.debug("download error source: " + error.source);
+                    app.logger.debug("download error target: " + error.target);
+                    app.logger.debug("download error code: " + error.code);
                 }, false, {});
             }
         }
