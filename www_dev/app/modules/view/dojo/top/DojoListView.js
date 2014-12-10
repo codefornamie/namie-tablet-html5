@@ -29,6 +29,28 @@ define(function(require, exports, module) {
         listElementSelector : "#dojo-list",
 
         /**
+         * 級の一覧を格納したオブジェクト
+         * @memberof DojoListView#
+         */
+        levels : null,
+
+        /**
+         * テンプレートに渡す情報をシリアライズする
+         * @return {Object}
+         */
+        serialize: function () {
+/*            // 級の値を抽出する
+            var levels = this.collection.map(function(model) {
+                return model.get("level");
+            });
+            levels = _.uniq(levels.sort());
+*/
+            return _.extend({}, Super.prototype.serialize.call(this), {
+                levels: this.levels
+            });
+        },
+
+        /**
          * Viewの描画処理の開始前に呼び出されるコールバック関数。
          * <p>
          * 記事一覧の表示処理を開始する。
@@ -36,6 +58,8 @@ define(function(require, exports, module) {
          * @memberof DojoListView#
          */
         beforeRendered : function() {
+            this.extractLevels();
+
             Super.prototype.beforeRendered.call(this);
         },
 
@@ -55,6 +79,45 @@ define(function(require, exports, module) {
             console.assert(this.collection, "DojoListView should have a collection");
 
             Super.prototype.setFeedListItemViewClass.call(this, DojoListItemView);
+        },
+
+        /**
+         * コレクション内のモデルの値から級の一覧を作る
+         * @memberof DojoListView#
+         */
+        extractLevels : function() {
+            var levels = {};
+            // 級の名称を収集し、ソートして重複を削除する
+            var levelValues = this.collection.map(function(model) {
+                return model.get("level");
+            });
+            levelValues = _.uniq(levelValues.sort());
+
+            // 「級の名称=>インデックス」の対応を格納する
+            _.each(levelValues, function(levelValue, index) {
+                levels[levelValue] = index;
+            });
+
+            this.levels = levels;
+        },
+
+        /**
+         * 取得した動画一覧を描画する
+         * @memberof DojoListView#
+         */
+        setFeedList : function() {
+            var self = this;
+            var animationDeley = 0;
+            this.collection.each($.proxy(function(model) {
+                var ItemView = self.feedListItemViewClass;
+                var selectorPrefix = "-" + this.levels[model.get("level")];
+                this.insertView(this.listElementSelector + selectorPrefix, new ItemView({
+                    model : model,
+                    animationDeley : animationDeley,
+                    parentView: this
+                }));
+                animationDeley += 0.2;
+            }, this));
         }
     });
 
