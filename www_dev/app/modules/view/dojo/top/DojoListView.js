@@ -75,11 +75,11 @@ define(function(require, exports, module) {
          */
         extractLevels : function() {
             var levels = {};
-            // 級の名称を収集し、ソートして重複を削除する
+            // 級の名称を収集し、重複を削除する
             var levelValues = this.collection.map(function(model) {
                 return model.get("level");
             });
-            levelValues = _.uniq(levelValues.sort());
+            levelValues = _.uniq(levelValues);
 
             // 「級の名称=>インデックス」の対応を格納する
             _.each(levelValues, function(levelValue, index) {
