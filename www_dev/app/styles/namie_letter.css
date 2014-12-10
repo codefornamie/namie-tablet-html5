@@ -1,0 +1,44 @@
+/**
+ *  町民投稿アプリCSS
+ */
+.page-letter {
+    background-color: #fbfaf4;
+}
+
+.page-letter .header {
+    display: block;
+    background-image: none;
+    height: auto;
+}
+
+.page-letter .header .top-bar {
+    background: #43c1d8;
+}
+
+.page-letter .global-nav {
+    display: none;
+}
+
+.page-letter .contents-wrapper {
+    padding-top: 45px;
+}
+
+.page-letter .contents>div {
+    height: auto;
+    overflow: auto;
+}
+
+.page-letter .contents__primary .post-action .button {
+    height: auto;
+    width: 100%;
+}
+
+.page-letter .contents__secondary {
+    height: auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.page-letter .contents__secondary .button {
+    margin-bottom: 5px;
+}
