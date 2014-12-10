@@ -32,10 +32,6 @@ define(function(require, exports, module) {
          * </p>
          */
         afterRendered : function() {
-            // タグリストの追加
-            this.tagListView = new TagListView();
-            this.tagListView.tagsArray = this.model.get("tagsArray");
-            this.setView(".articleTags", this.tagListView);
             if (this.model.get("type") === "1") {
                 // RSS収集記事は編集ボタンを非表示にする
                 this.$el.find("[data-article-edit-button]").hide();
@@ -44,7 +40,6 @@ define(function(require, exports, module) {
                 // 今日のおすすめ記事フラグがある場合はラジオボタンを選択状態にする
                 this.$el.find("input[type='radio']").attr("checked","checked");
             }
-            this.tagListView.render();
             this.setData();
         },
         /**
