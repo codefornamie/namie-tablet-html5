@@ -7,8 +7,10 @@ define(function(require, exports, module) {
 
     // アプリ動作モード
     Code.APP_MODE_NEWS = "news";
+    Code.APP_MODE_LETTER = "letter";
     Code.APP_MODE_POSTING = "posting";
     Code.APP_MODE_OPE = "ope";
+    Code.APP_MODE_DOJO = "dojo";
 
     // 記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST = [
