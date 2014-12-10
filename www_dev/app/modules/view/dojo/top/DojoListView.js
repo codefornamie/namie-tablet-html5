@@ -39,12 +39,6 @@ define(function(require, exports, module) {
          * @return {Object}
          */
         serialize: function () {
-/*            // 級の値を抽出する
-            var levels = this.collection.map(function(model) {
-                return model.get("level");
-            });
-            levels = _.uniq(levels.sort());
-*/
             return _.extend({}, Super.prototype.serialize.call(this), {
                 levels: this.levels
             });
