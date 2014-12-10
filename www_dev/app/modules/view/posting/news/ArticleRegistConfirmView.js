@@ -76,6 +76,7 @@ define(function(require, exports, module) {
             this.$el.remove();
             $("#articleRegistPage").show();
             $("#snap-content").scrollTop(0);
+            $("#contents__primary").scrollTop(0);
         },
 
         /**
