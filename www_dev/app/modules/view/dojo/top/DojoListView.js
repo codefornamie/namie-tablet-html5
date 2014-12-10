@@ -29,18 +29,12 @@ define(function(require, exports, module) {
         listElementSelector : "#dojo-list",
 
         /**
-         * 級の一覧を格納したオブジェクト
-         * @memberof DojoListView#
-         */
-        levels : null,
-
-        /**
          * テンプレートに渡す情報をシリアライズする
          * @return {Object}
          */
         serialize: function () {
             return _.extend({}, Super.prototype.serialize.call(this), {
-                levels: this.levels
+                levels: this.extractLevels()
             });
         },
 
@@ -92,7 +86,7 @@ define(function(require, exports, module) {
                 levels[levelValue] = index;
             });
 
-            this.levels = levels;
+            return levels;
         },
 
         /**
@@ -101,10 +95,11 @@ define(function(require, exports, module) {
          */
         setFeedList : function() {
             var self = this;
+            var levels = this.extractLevels();
             var animationDeley = 0;
             this.collection.each($.proxy(function(model) {
                 var ItemView = self.feedListItemViewClass;
-                var selectorPrefix = "-" + this.levels[model.get("level")];
+                var selectorPrefix = "-" + levels[model.get("level")];
                 this.insertView(this.listElementSelector + selectorPrefix, new ItemView({
                     model : model,
                     animationDeley : animationDeley,
