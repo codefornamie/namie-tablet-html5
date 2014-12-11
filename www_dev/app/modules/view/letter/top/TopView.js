@@ -10,16 +10,6 @@ define(function(require, exports, module) {
     var Code = require("modules/util/Code");
 
     /**
-     * 町民投稿アプリの通信部分を管理する
-     */
-    var PostOffice = _.extend({}, Backbone.Events, {
-        collection : new ArticleCollection(),
-
-        load : function() {
-        }
-    });
-
-    /**
      * 町民投稿アプリのトップ画面を表示するためのLayoutクラスを作成する。
      * 
      * @class
