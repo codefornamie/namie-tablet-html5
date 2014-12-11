@@ -56,7 +56,7 @@ define(function(require, exports, module) {
                 closeButton : false,
                 current : "",
                 photo : true,
-                maxWidth : "85%",
+                maxWidth : "83%",
                 maxHeight : "100%",
                 onComplete : $.proxy(function() {
                     $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
@@ -354,7 +354,7 @@ define(function(require, exports, module) {
          */
         onClickImage : function(ev) {
             var uri = $("#colorbox").find("img").attr("src");
-            var blob = $(this.el).find("[src='" + uri + "']").data("blob");
+            var blob = $("#colorbox").find("img").data("blob");
 
             var base = DateUtil.formatDate(new Date(), "yyyy-MM-dd_HH-mm-ss");
             var ext = uri.replace(/.*\//, "").replace(/.*\./, "");

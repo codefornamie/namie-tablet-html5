@@ -47,7 +47,7 @@ define(function(require, exports, module) {
                     closeButton : false,
                     current : "",
                     photo : true,
-                    maxWidth : "85%",
+                    maxWidth : "83%",
                     maxHeight : "100%",
                     onComplete : $.proxy(function() {
                         $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");

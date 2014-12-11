@@ -160,7 +160,7 @@ define(function(require, exports, module) {
                             closeButton : false,
                             current : "",
                             photo : true,
-                            maxWidth : "85%",
+                            maxWidth : "83%",
                             maxHeight : "100%",
                             onComplete : function() {
                                 $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
@@ -171,6 +171,7 @@ define(function(require, exports, module) {
                                 $("#cboxSaveButton").click(function(ev) {
                                     saveFunc(ev);
                                 });
+                                $("#colorbox").find("img").data("blob",blob);
                             },
                             onClosed : function() {
                                 $("#cboxSaveButton").remove();
@@ -179,9 +180,8 @@ define(function(require, exports, module) {
                         });
                     }
                     window.URL.revokeObjectURL($(this).attr("src"));
-                }, this, url));
+                }, this, url, blob));
                 $targetElem.attr("src", url);
-                $targetElem.data("blob", blob);
             }, this);
             
             var onError = function (resp, item) {
