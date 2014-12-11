@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var colorbox = require("colorbox");
 
     /**
      * 全てのViewの基底クラスを作成する。
@@ -135,24 +136,38 @@ define(function(require, exports, module) {
          * 以下のプロパティを含める。<br/>
          * imageUrl: 画像のDAVのファイルパス<br/>
          * imageIndex: 画像のインデックス<br/>
+         * @param {Boolean} isExpansion 画像拡大処理を設定するかどうか<br/>
          * @memberof AbstractView#
          */
-        showPIOImages : function(imgElementSelector, imgArray) {
+        showPIOImages : function(imgElementSelector, imgArray, isExpansion) {
             var $articleImage = $(this.el).find(imgElementSelector);
 
-            var onGetBinary = $.proxy(function(binary,item) {
+            var onGetBinary = $.proxy(function(binary, item) {
                 var arrayBufferView = new Uint8Array(binary);
-                var blob = new Blob([ arrayBufferView ], {
+                var blob = new Blob([
+                    arrayBufferView
+                ], {
                     type : "image/jpg"
                 });
                 var url = FileAPIUtil.createObjectURL(blob);
 
-                $articleImage.eq(item.imageIndex-1).load(function() {
+                var $targetElem = $articleImage.eq(item.imageIndex - 1);
+
+                $targetElem.load($.proxy(function() {
+                    if (isExpansion) {
+                        $targetElem.wrap("<a class='expansionPicture' href='" + url + "'></a>");
+                        $(".expansionPicture").colorbox({
+                            rel : "expansionPicture",
+                            photo : true,
+                            maxWidth : "100%",
+                            maxHeight : "100%"
+                        });
+                    }
                     window.URL.revokeObjectURL($(this).attr("src"));
-                });
-                $articleImage.eq(item.imageIndex-1).attr("src", url);
-                $articleImage.eq(item.imageIndex-1).data("blob", blob);
-            },this);
+                }, this, url));
+                $targetElem.attr("src", url);
+                $targetElem.data("blob", blob);
+            }, this);
             
             var onError = function (resp, item) {
                 $articleImage.eq(item.imageIndex-1).triggerHandler("error", resp);

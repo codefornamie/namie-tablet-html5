@@ -13,6 +13,7 @@ define(function(require, exports, module) {
     var DateUtil = require("modules/util/DateUtil");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var vexDialog = require("vexDialog");
+    var colorbox = require("colorbox");
 
     /**
      * 記事一覧アイテムのViewを作成する。
@@ -45,6 +46,18 @@ define(function(require, exports, module) {
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
          */
         showImage : function() {
+            var imageElems = $(this.el).find("img");
+            imageElems.each(function() {
+                if ($(this).attr("src")) {
+                    $(this).wrap("<a class='expansionPicture' href='" + $(this).attr("src") + "'></a>");
+                }
+            });
+            $(this.el).find(".expansionPicture").colorbox({
+                rel : "expansionPicture",
+                photo : true,
+                maxWidth : "100%",
+                maxHeight : "100%"
+            });
             var articleImage = $(this.el).find(".articleDetailImage");
             var onGetBinary = function(binary) {
                 var arrayBufferView = new Uint8Array(binary);
@@ -117,7 +130,7 @@ define(function(require, exports, module) {
             });
 
             // 画像クリックイベント
-            this.$el.find(".post__body img").on("click", $.proxy(this.onClickImage, this));
+//            this.$el.find(".post__body img").on("click", $.proxy(this.onClickImage, this));
         },
 
         /**
@@ -130,7 +143,7 @@ define(function(require, exports, module) {
             "click [data-recommend-delete-button]" : "onClickRecommendDeleteButton",
             "click #tagAddButton" : "onClickTagAddButton",
             "click .deleteTag" : "onClickDeleteTag",
-            "click a" : "onClickAnchorTag"
+            "click a:not(.expansionPicture)" : "onClickAnchorTag"
         },
         /**
          * 切り抜きボタン押下時に呼び出されるコールバック関数。
@@ -345,7 +358,8 @@ define(function(require, exports, module) {
         /**
          * 記事詳細内のアンカータグがクリックされた際のハンドラ
          */
-        onClickAnchorTag: function () {
+        onClickAnchorTag: function (ev) {
+            ev.preventDefault();
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.alert(this.model.get("dispSite") + "のHPを直接開いてリンクを参照してください。");
         },

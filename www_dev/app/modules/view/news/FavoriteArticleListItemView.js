@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var ArticleListItemView = require("modules/view/news/ArticleListItemView");
+    var colorbox = require("colorbox");
 
     /**
      * 切り抜き記事一覧アイテムのViewを作成する。
@@ -33,9 +34,22 @@ define(function(require, exports, module) {
                         imageIndex : 1
                     }
 
-                ]);
+                ],true);
             } else if (!_.isEmpty(this.model.get("imageUrl"))) {
                 articleImageElement.attr("src", this.model.get("imageUrl"));
+                var imageElems = $(this.el).find("img");
+                imageElems.each(function() {
+                    if ($(this).attr("src")) {
+                        $(this).wrap("<a class='expansionPicture' href='" + $(this).attr("src") + "'></a>");
+                    }
+                });
+                $(this.el).find(".expansionPicture").colorbox({
+                    rel:"expansionPicture",
+                    photo: true,
+                    maxWidth: "100%",
+                    maxHeight: "100%"
+                });
+
             }
         },
 
