@@ -38,127 +38,146 @@ define(function(require, exports, module) {
 
     var LetterTopView = require("modules/view/letter/top/TopView");
 
+    // Use main layout and set Views.
+    var getViews = function() {
+        if (_.isEmpty(app.config.basic.mode) || app.config.basic.mode === "news") {
+            return {
+                "#header" : new login.HeaderView(),
+                "#global-nav" : new login.GlobalNavView(),
+                "#menu" : new login.MenuView(),
+                "#contents" : new login.LoginView(),
+                "#footer" : new login.FooterView()
+            };
+        } else if (app.config.basic.mode === Code.APP_MODE_DOJO) {
+            return {
+                "#header" : new login.HeaderView(),
+                "#contents" : new login.dojo.LoginView(),
+            };
+        } else if (app.config.basic.mode === Code.APP_MODE_POSTING) {
+            return {
+                "#header" : new login.HeaderView(),
+                "#contents" : new login.posting.LoginView(),
+            };
+        } else if (app.config.basic.mode === Code.APP_MODE_LETTER) {
+            return {
+                "#header" : new login.HeaderView(),
+                "#contents" : new login.letter.LoginView(),
+            };
+        } else if (app.config.basic.mode === Code.APP_MODE_OPE) {
+            return {
+                "#contents" : new login.ope.LoginView(),
+                "#footer" : new login.FooterView()
+            };
+        }
+    };
+
     // Defining the application router.
+    var Layout = Backbone.Layout.extend({
+        el : "main",
+
+        template : require("ldsh!templates/{mode}/main"),
+
+        templateMap : {
+            news : require("ldsh!templates/news/main"),
+            ope : require("ldsh!templates/ope/main"),
+            posting : require("ldsh!templates/posting/main"),
+            letter : require("ldsh!templates/letter/main"),
+            dojo : require("ldsh!templates/dojo/main"),
+        },
+
+        /**
+         * 描画目に実行する処理。
+         * @memberof router#
+         */
+        beforeRender : function() {
+            this.template = this.templateMap[app.config.basic.mode];
+        },
+        views : getViews(),
+
+        setHeader : function(headerView) {
+            this.setView("#header", headerView).render();
+        },
+        setGlobalNav : function(globalNavView) {
+            this.setView("#global-nav", globalNavView).render();
+        },
+        setFooter : function(footerView) {
+            this.setView("#footer", footerView).render();
+        },
+        setMenu : function(menuView) {
+            this.setView("#menu", menuView).render();
+        },
+        setSettings : function(settingsView) {
+            this.setView("#settings", settingsView).render();
+        },
+        showView : function(view) {
+            this.setView("#contents", view).render();
+        },
+
+        /**
+         * セレクタで指定したviewをremoveする
+         * 
+         * @param {String} viewName
+         */
+        removeViewByName : function(viewName) {
+            var view = this.getView(viewName);
+
+            if (view) {
+                view.remove();
+            }
+        }
+    });
+
+    /**
+     * ルーター
+     * @class
+     * @exports Router
+     * @constructor
+     */
     var Router = Backbone.Router.extend({
         initialize : function() {
-            // Use main layout and set Views.
-            var getViews = function() {
-                if (_.isEmpty(app.config.basic.mode) || app.config.basic.mode === "news") {
-                    return {
-                        "#header" : new login.HeaderView(),
-                        "#global-nav" : new login.GlobalNavView(),
-                        "#menu" : new login.MenuView(),
-                        "#contents" : new login.LoginView(),
-                        "#footer" : new login.FooterView()
-                    };
-                } else if (app.config.basic.mode === Code.APP_MODE_DOJO) {
-                    return {
-                        "#header" : new login.HeaderView(),
-                        "#contents" : new login.dojo.LoginView(),
-                    };
-                } else if (app.config.basic.mode === Code.APP_MODE_POSTING) {
-                    return {
-                        "#header" : new login.HeaderView(),
-                        "#contents" : new login.posting.LoginView(),
-                    };
-                } else if (app.config.basic.mode === Code.APP_MODE_LETTER) {
-                    return {
-                        "#header" : new login.HeaderView(), 
-                        "#contents" : new login.letter.LoginView(),
-                    };
-                } else if (app.config.basic.mode === Code.APP_MODE_OPE) {
-                    return {
-                        "#contents" : new login.ope.LoginView(),
-                        "#footer" : new login.FooterView()
-                    };
-                }
-            };
-            var Layout = Backbone.Layout.extend({
-                el : "main",
-
-                template : require("ldsh!templates/{mode}/main"),
-                templateMap : {
-                    news : require("ldsh!templates/news/main"),
-                    ope : require("ldsh!templates/ope/main"),
-                    posting : require("ldsh!templates/posting/main"),
-                    letter : require("ldsh!templates/letter/main"),
-                    dojo : require("ldsh!templates/dojo/main"),
-                },
-                /**
-                 * 描画目に実行する処理。
-                 * @memberof router#
-                 */
-                beforeRender : function() {
-                    this.template = this.templateMap[app.config.basic.mode];
-                },
-                views : getViews(),
-
-                setHeader : function(headerView) {
-                    this.setView("#header", headerView).render();
-                },
-                setGlobalNav : function(globalNavView) {
-                    this.setView("#global-nav", globalNavView).render();
-                },
-                setFooter : function(footerView) {
-                    this.setView("#footer", footerView).render();
-                },
-                setMenu : function(menuView) {
-                    this.setView("#menu", menuView).render();
-                },
-                setSettings : function(settingsView) {
-                    this.setView("#settings", settingsView).render();
-                },
-                showView : function(view) {
-                    this.setView("#contents", view).render();
-                },
-
-                /**
-                 * セレクタで指定したviewをremoveする
-                 * 
-                 * @param {String} viewName
-                 */
-                removeViewByName : function(viewName) {
-                    var view = this.getView(viewName);
-
-                    if (view) {
-                        view.remove();
-                    }
-                }
-            });
-
             // Render to the page.
             this.layout = new Layout();
             if (!app.noRendering) {
                 this.layout.render();
             }
         },
+
         routes : {
             "" : "index",
             "redirect?*queryString" : "redirect",
             "news?*queryString" : "top",
+
+            // 新聞アプリ
             "top" : "top",
             "article/:id" : "showArticle",
-            // "events": "events",
-            // "eventsRegisted": "eventsRegisted",
-            // "showEvents": "showEvents",
-            // "news": "news"
             'scrap' : 'scrap',
             'tutorial' : 'tutorial',
             'backnumber' : 'backnumber',
             'backnumber/:date' : 'backnumberDate',
             'settings' : 'settings',
+
+            // 投稿アプリ
             'posting-top' : 'postingTop',
-            'letter-top' : 'letterTop',
+            "articleDetail" : "articleDetail",
+
+            // 管理アプリ
             'ope-top' : 'opeTop',
+
+            // 道場アプリ
             'dojo-top' : 'dojoTop',
             "dojo/lessons/:id" : "dojoLesson",
-            "articleDetail" : "articleDetail"
+
+            // 町民投稿アプリ
+            "letters" : "letterList",
+            "letters/new*queryString" : "letterWizard",
+            "letters/:id" : "letterDetail",
+            "letters/:id/edit" : "letterEdit"
         },
 
         index : function() {
             app.logger.debug("Welcome to your / route.");
         },
-        
+
         /**
          * 別アプリへの遷移処理。
          * @memberof router#
@@ -171,11 +190,14 @@ define(function(require, exports, module) {
             var loginModel = new LoginModel();
             loginModel.accessToken = params.accessToken;
             loginModel.set("loginId", params.loginId);
-            loginModel.login($.proxy(function(){
+            loginModel.login($.proxy(function() {
                 this.go("news?preview=true&targetDate=" + params.targetDate);
             }, this));
         },
-        
+
+        /**
+         * ---------- 新聞アプリ ----------
+         */
         /**
          * Top画面の表示。
          * @memberof router#
@@ -188,7 +210,7 @@ define(function(require, exports, module) {
             this.layout.showView(new NewsView({
                 targetDate : targetDate,
                 preview : params.preview,
-                scrollTop: app.scrollTop || 0
+                scrollTop : app.scrollTop || 0
             }));
             // this.layout.setHeader(new common.HeaderView());
             // this.layout.setGlobalNav(new common.GlobalNavView());
@@ -202,8 +224,7 @@ define(function(require, exports, module) {
          * 記事詳細を表示する
          * 
          * <p>
-         * `this.layout.showView`を使うと記事一覧のViewをリセットしてしまうため、
-         * 記事詳細は記事一覧の上にかぶせる形で表示する。
+         * `this.layout.showView`を使うと記事一覧のViewをリセットしてしまうため、 記事詳細は記事一覧の上にかぶせる形で表示する。
          * </p>
          * 
          * @param {String} articleId
@@ -216,24 +237,6 @@ define(function(require, exports, module) {
             app.newsView.showArticle(articleId);
         },
 
-        postingTop : function() {
-            this.layout.showView(new EventNewsView());
-            this.layout.setHeader(new postingCommon.HeaderView());
-            this.layout.setGlobalNav(new postingCommon.GlobalNavView());
-        },
-        letterTop : function() {
-            // 実際の描画処理はdojo/TopViewに書かれている
-            // アプリのライフサイクルの中で、LetterTopViewの初期化は1度だけ行う
-            if (!app.letterTopView) {
-                app.letterTopView = new LetterTopView();
-                this.layout.showView(app.letterTopView);
-            }
-        },
-        opeTop : function() {
-            this.layout.showView(new TopView());
-            this.layout.setHeader(new common.HeaderView());
-            this.layout.setFooter(new common.FooterView());
-        },
         scrap : function() {
             app.logger.debug('[route] scrap');
             this.layout.showView(new ScrapView());
@@ -266,11 +269,20 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ---------- イベント投稿アプリ ----------
+         */
+        postingTop : function() {
+            this.layout.showView(new EventNewsView());
+            this.layout.setHeader(new postingCommon.HeaderView());
+            this.layout.setGlobalNav(new postingCommon.GlobalNavView());
+        },
+
+        /**
          * このメソッドは手動で呼ばれる
          */
         articleDetail : function(options) {
             app.logger.debug('[route] articleDetail');
-            if(options){
+            if (options) {
                 this.lastArticleDetailArgs = options;
             } else {
                 options = this.lastArticleDetailArgs;
@@ -309,6 +321,15 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ---------- 管理アプリ ----------
+         */
+        opeTop : function() {
+            this.layout.showView(new TopView());
+            this.layout.setHeader(new common.HeaderView());
+            this.layout.setFooter(new common.FooterView());
+        },
+
+        /**
          * このメソッドは手動で呼ばれる
          */
         opeArticleRegist : function(options) {
@@ -328,7 +349,7 @@ define(function(require, exports, module) {
             $("#contents__primary").scrollTop(0);
         },
         /**
-         *  このメソッドは手動で呼ばれる
+         * このメソッドは手動で呼ばれる
          */
         opeEventDetail : function(options) {
             app.logger.debug('[route] opeEventDetail');
@@ -337,7 +358,7 @@ define(function(require, exports, module) {
             $("#contents__primary").scrollTop(0);
         },
         /**
-         *  このメソッドは手動で呼ばれる
+         * このメソッドは手動で呼ばれる
          */
         opeArticleDetail : function(options) {
             app.logger.debug('[route] opeArticleDetail');
@@ -346,7 +367,7 @@ define(function(require, exports, module) {
             $("#contents__primary").scrollTop(0);
         },
         /**
-         *  このメソッドは手動で呼ばれる
+         * このメソッドは手動で呼ばれる
          */
         opeYouTubeDetail : function(options) {
             app.logger.debug('[route] opeYouTubeDetail');
@@ -355,8 +376,9 @@ define(function(require, exports, module) {
             $("#contents__primary").scrollTop(0);
         },
 
-        // 道場アプリのルーティング
-
+        /**
+         * ---------- 道場アプリ ----------
+         */
         /**
          * 道場：トップページ
          */
@@ -372,22 +394,68 @@ define(function(require, exports, module) {
         /**
          * 道場：個別ページ
          */
-        dojoLesson: function () {
+        dojoLesson : function() {
             // 実際の描画処理はdojo/TopViewに書かれている
         },
 
-        // Shortcut for building a url.
+        /**
+         * ---------- 町民投稿 ----------
+         */
+        /**
+         * 町民投稿：トップページ
+         */
+        letterList : function() {
+            // 実際の描画処理はletter/TopViewに書かれている
+            // アプリのライフサイクルの中で、LetterTopViewの初期化は1度だけ行う
+            if (!app.letterTopView) {
+                app.letterTopView = new LetterTopView();
+                this.layout.showView(app.letterTopView.layout);
+            }
+        },
+
+        /**
+         * 町民投稿：詳細情報ページ
+         */
+        letterDetail : function(id) {
+        },
+
+        /**
+         * 町民投稿：詳細編集ページ
+         */
+        letterEdit : function() {
+        },
+
+        /**
+         * 町民投稿：新規投稿ウィザード
+         */
+        letterWizard : function() {
+        },
+
+        /**
+         * ---------- ユーティリティ ----------
+         */
+        /**
+         * 引数をURLに展開してnavigateする
+         */
         go : function() {
             return this.navigate(_.toArray(arguments).join("/"), true);
         },
 
+        /**
+         * 共通のviewをセットする
+         * @param {Object} options
+         */
         commonView : function(options) {
             this.layout.setGlobalNav(new common.GlobalNavView(options));
             this.layout.setView("#menu", new common.MenuView()).render();
             this.layout.removeViewByName('#settings');
         },
+
         /**
-         * 前の画面に戻る http://stackoverflow.com/questions/14860461/selective-history-back-using-backbone-js
+         * 前の画面に戻る
+         * <p>
+         * http://stackoverflow.com/questions/14860461/selective-history-back-using-backbone-js
+         * </p>
          */
         back : function() {
             window.history.back();
@@ -415,7 +483,7 @@ define(function(require, exports, module) {
                 });
             }
             return params;
-        }        
+        }
     });
 
     module.exports = Router;

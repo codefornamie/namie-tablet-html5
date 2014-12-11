@@ -1,0 +1,49 @@
+<article
+    class='post'
+    id="<%= model.get('__id') %>"
+>
+    <section class='post__body'>
+        <div class="row">
+            <div class="small-2 columns">
+                <div class="date-area">
+                    <span class="date--month">
+                        <%= moment(model.get("updatedAt")).format("MM") %>
+                    </span>
+                    /
+                    <span class="date--day">
+                        <%= moment(model.get("updatedAt")).format("DD") %>
+                    </span>
+
+                    <br />
+
+                    (
+                    <span class="date--weekday">
+                        <%= "日月火水木金土"[moment(model.get("updatedAt")).format("e")] %>
+                    </span>
+                    )
+                </div>
+            </div>
+            
+            <div class="small-8 columns">
+                <h4>
+                    <%= model.get("dispTitle") %>
+                </h4>
+
+                <p>
+                    テキスト
+                </p>
+            </div>
+
+            <div class="small-2 columns">
+                <div class="post-action">
+                    <a
+                        href="/letters/<%= model.get('__id') %>/edit"
+                        class="button"
+                    >
+                        編集
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>

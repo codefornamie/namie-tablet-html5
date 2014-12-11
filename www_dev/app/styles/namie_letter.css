@@ -1,0 +1,106 @@
+/**
+ *  町民投稿アプリCSS
+ */
+.page-letter {
+    background-color: #fbfaf4;
+}
+
+.page-letter .header {
+    display: block;
+    background-image: none;
+    height: auto;
+}
+
+.page-letter .header .top-bar {
+    background: #43c1d8;
+}
+
+.page-letter .global-nav {
+    display: none;
+}
+
+.page-letter .contents-wrapper {
+    padding-top: 45px;
+}
+
+.page-letter .contents>div {
+    height: auto;
+    overflow: auto;
+}
+
+.page-letter .contents__primary {
+    width: 80%;
+    margin: auto;
+    padding: 0;
+}
+
+.page-letter .contents__primary h2 {
+    color: rgb(90, 87, 56);
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.page-letter .contents__primary .post-action .button {
+    height: auto;
+    width: 100%;
+    margin: 0;
+    padding: 10px 40px;
+}
+
+.page-letter .contents__secondary {
+    height: auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.page-letter .contents__secondary .button--letter-new {
+    margin-bottom: 5px;
+    padding: 15px 80px;
+}
+
+.page-letter .letter-list {
+    margin: 0;
+}
+
+.page-letter .post {
+    box-sizing: border-box;
+    margin: 20px auto;
+    border: 3px solid #e8e8d0;
+    background: white;
+    position: relative;
+    padding: 15px;
+    width: 100%;
+    color: rgb(90, 87, 56);
+}
+
+.page-letter .post__body {
+    margin: 0;
+}
+
+.page-letter .post__body > .row > .columns {
+    position: static;
+}
+
+.page-letter .date-area {
+    line-height: 1.4;
+    font-size: 1.4rem;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.page-letter .post h4 {
+    color: rgb(90, 87, 56);
+    font-size: 1.2rem;
+}
+
+.page-letter .post p {
+    color: rgb(90, 87, 56);
+    font-size: 1.0rem;
+    margin: 0;
+}
+
+.page-letter .post-action {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+}
