@@ -4,11 +4,27 @@
 >
     <section class='post__body'>
         <div class="row">
-            <div class="large-2 columns">
-                <%= model.get("dispUpdatedAt") %>更新
+            <div class="small-2 columns">
+                <div class="date-area">
+                    <span class="date--month">
+                        <%= moment(model.get("updatedAt")).format("MM") %>
+                    </span>
+                    /
+                    <span class="date--day">
+                        <%= moment(model.get("updatedAt")).format("DD") %>
+                    </span>
+
+                    <br />
+
+                    (
+                    <span class="date--weekday">
+                        <%= "日月火水木金土"[moment(model.get("updatedAt")).format("e")] %>
+                    </span>
+                    )
+                </div>
             </div>
             
-            <div class="large-8 columns">
+            <div class="small-8 columns">
                 <h4>
                     <%= model.get("dispTitle") %>
                 </h4>
@@ -18,7 +34,7 @@
                 </p>
             </div>
 
-            <div class="large-2 columns">
+            <div class="small-2 columns">
                 <div class="post-action">
                     <a
                         href="/letters/<%= model.get('__id') %>/edit"
