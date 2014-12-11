@@ -101,8 +101,8 @@ define(function(require, exports, module) {
 
             this.letterCollection.condition.filters = [
                 new And([
-                        new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING]),
-                        new Equal("createUserId", app.user.get("__id"))
+                    new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING]),
+                    new Equal("createUserId", app.user.get("__id"))
                 ])
             ];
 
