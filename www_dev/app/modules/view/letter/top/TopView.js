@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var LetterListView = require("modules/view/letter/top/LetterListView");
+    var LetterWizardView = require("modules/view/letter/wizard/LetterWizardView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
@@ -35,6 +36,7 @@ define(function(require, exports, module) {
         initialize : function(param) {
             console.assert(param, "param should be specified");
             console.assert(param.letterListView, "param.letterListView should be specified");
+            console.assert(param.letterWizardView, "param.letterWizardView should be specified");
 
             this.letterListView = param.letterListView;
         },
@@ -43,7 +45,24 @@ define(function(require, exports, module) {
          * 一覧画面を開く
          */
         showList: function () {
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
             this.setView(LetterTopLayout.SELECTOR_LETTER_LIST, this.letterListView);
+        },
+
+        /**
+         * ウィザード画面を開く
+         * @param {Number} step
+         */
+        showWizard: function (step) {
+            var isRendered = !!this.getView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+
+            // レンダリング済みならば何もしない
+            if (!isRendered) {
+                var letterWizardView = new LetterWizardView();
+
+                this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
+                this.setView(LetterTopLayout.SELECTOR_LETTER_WIZARD, letterWizardView);
+            }
         },
 
         /**
@@ -68,9 +87,14 @@ define(function(require, exports, module) {
         }
     }, {
         /**
-         * ユーザーが投稿した記事一覧
+         * ユーザーが投稿した記事一覧のセレクタ
          */
-        SELECTOR_LETTER_LIST : "#letter-list-container"
+        SELECTOR_LETTER_LIST : "#letter-list-container",
+
+        /**
+         * ウィザード画面のセレクタ
+         */
+        SELECTOR_LETTER_WIZARD : "#letter-wizard-container"
     });
 
     /**
@@ -158,7 +182,7 @@ define(function(require, exports, module) {
                 var query = app.router.parseQueryString(queryString);
                 var step = query.step;
 
-                console.log("TODO ウィザード画面を開く step:%s", step);
+                this.layout.showWizard(step);
                 break;
 
             default:
