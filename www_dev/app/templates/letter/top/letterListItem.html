@@ -1,48 +1,61 @@
 <article
-    class='post'
+    class='post <%= _.shuffle(["is-no-image", ""])[0] %>'
     id="<%= model.get('__id') %>"
 >
-    <section class='post__body'>
+    <section>
         <div class="row">
-            <div class="small-2 columns">
+            <div class="small-2 columns columns--date">
                 <div class="date-area">
-                    <span class="date--month">
-                        <%= moment(model.get("updatedAt")).format("MM") %>
-                    </span>
-                    /
-                    <span class="date--day">
-                        <%= moment(model.get("updatedAt")).format("DD") %>
-                    </span>
+                    <div class="date--year">
+                        <%= moment(model.get("updatedAt")).format("YYYY") %>年
+                    </div>
+
+                    <div class="date--date">
+                        <span class="date--month"><%= moment(model.get("updatedAt")).format("MM") %></span><!--
+                        --><span class="date--day"><%= moment(model.get("updatedAt")).format("DD") %></span>
+                    </div>
 
                     <br />
 
-                    (
-                    <span class="date--weekday">
-                        <%= "日月火水木金土"[moment(model.get("updatedAt")).format("e")] %>
-                    </span>
-                    )
+                    <div class="date--weekday">
+                        <%= "日月火水木金土"[moment(model.get("updatedAt")).format("e")] %>曜日
+                    </div>
                 </div>
             </div>
             
-            <div class="small-8 columns">
+            <div class="small-7 columns columns--body">
                 <h4>
                     <%= model.get("dispTitle") %>
                 </h4>
 
                 <p>
-                    テキスト
+                    非常に長いテキストが入ります。
+                    非常に長いテキストが入ります。
+                    非常に長いテキストが入ります。
+                    非常に長いテキストが入ります。
+                    非常に長いテキストが入ります。
+                    非常に長いテキストが入ります。
                 </p>
-            </div>
 
-            <div class="small-2 columns">
                 <div class="post-action">
                     <a
                         href="/letters/<%= model.get('__id') %>/edit"
                         class="button"
                     >
-                        編集
+                        編集する
+                    </a>
+
+                    <a
+                        href="/letters/<%= model.get('__id') %>/edit"
+                        class="button"
+                    >
+                        削除する
                     </a>
                 </div>
+            </div>
+
+            <div class="small-3 columns columns--thumbnail">
+                <img src="app/img/dummy-manga.png" alt="DUMMY">
             </div>
         </div>
     </section>

@@ -29,78 +29,185 @@
 }
 
 .page-letter .contents__primary {
-    width: 80%;
+    width: 100%;
     margin: auto;
-    padding: 0;
+    padding: 0 30px;
 }
 
 .page-letter .contents__primary h2 {
     color: rgb(90, 87, 56);
-    font-size: 1.4rem;
+    font-size: 2rem;
     font-weight: bold;
-}
-
-.page-letter .contents__primary .post-action .button {
-    height: auto;
-    width: 100%;
     margin: 0;
-    padding: 10px 40px;
 }
 
 .page-letter .contents__secondary {
     height: auto;
     text-align: center;
-    padding: 20px;
+    padding: 0 30px;
+}
+
+.page-letter .contents__secondary .row {
+    width: 100%;
+    max-width: 100%;
+}
+
+.page-letter .contents__secondary .letter-jumbotron {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 30px auto;
+    border: 3px solid #e8e8d0;
+    background: white;
+    padding: 45px 0 50px;
+    text-align: center;
+}
+
+.page-letter .contents__secondary .letter-jumbotron p {
+    color: rgb(66, 193, 216);
+    letter-spacing: 1.4;
+    font-size: 1.6rem;
+    margin-bottom: 40px;
+    font-weight: 600;
 }
 
 .page-letter .contents__secondary .button--letter-new {
+    font-size: 1.5rem;
     margin-bottom: 5px;
     padding: 15px 80px;
 }
 
 .page-letter .letter-list {
-    margin: 0;
+    margin: 20px 0 0;
 }
 
 .page-letter .post {
     box-sizing: border-box;
     margin: 20px auto;
     border: 3px solid #e8e8d0;
-    background: white;
+    background: #e8e8d0;
     position: relative;
-    padding: 15px;
+    padding: 0;
     width: 100%;
     color: rgb(90, 87, 56);
+    text-align: left;
 }
 
-.page-letter .post__body {
-    margin: 0;
+/**
+ *  画像がない場合
+ */
+.page-letter .post.is-no-image .row > .columns--body {
+    width: 100%;
 }
 
-.page-letter .post__body > .row > .columns {
-    position: static;
+.page-letter .post.is-no-image .row > .columns--thumbnail {
+    display: none;
+}
+
+.page-letter .post .row {
+    display: table;
+    width: 100%;
+    max-width: 100%;
+}
+
+.page-letter .post .row > .columns {
+    display: table-cell;
+    float: none;
+    vertical-align: top;
+}
+
+.page-letter .columns--date {
+    background: rgb(66, 193, 216);
+    color: white;
 }
 
 .page-letter .date-area {
-    line-height: 1.4;
-    font-size: 1.4rem;
-    margin: 20px 0;
+    color: white;
     text-align: center;
+    line-height: 1;
+    position: relative;
+    margin-top: 40px;
 }
 
-.page-letter .post h4 {
-    color: rgb(90, 87, 56);
-    font-size: 1.2rem;
+.page-letter .date--year {
+    font-size: 1.3rem;
 }
 
-.page-letter .post p {
-    color: rgb(90, 87, 56);
-    font-size: 1.0rem;
+.page-letter .date--date {
+    font-size: 2.1rem;
+    margin: 60px 0;
+}
+
+.page-letter .date--date::before {
+    content: "";
+    width: 110px;
+    border-top: 1px solid white;
+    display: block;
+    position: absolute;
+    transform: rotate(-45deg);
+    top: 50%;
+    left: 50%;
+    margin-left: -55px;
+}
+
+.page-letter .date--month {
+    position: relative;
+    top: -25px;
+    font-size: 2.1rem;
+    font-weight: bold;
+}
+
+.page-letter .date--day {
+    position: relative;
+    top: 25px;
+    font-size: 2.1rem;
+    font-weight: bold;
+}
+
+.page-letter .date--weekday {
+    font-size: 1.3rem;
+}
+
+.page-letter .columns--body {
+    background: white;
+    padding: 40px;
+}
+
+.page-letter .columns--body h4 {
+    color: rgb(167, 110, 0);
+    font-weight: bold;
+    font-size: 1.6rem;
+    line-height: 1.4;
     margin: 0;
 }
 
-.page-letter .post-action {
-    position: absolute;
-    right: 15px;
-    bottom: 15px;
+.page-letter .columns--body p {
+    color: #5a563c;
+    font-size: 1.4rem;
+    margin: 2rem 0;
+    line-height: 1.6;
+}
+
+.page-letter .columns--body .button {
+    display: inline-block;
+    background: rgb(145, 145, 145);
+    box-shadow: 0 3px 0 rgb(90, 86, 61);
+    font-size: 1.4rem;
+    margin: 0 20px 10px 0;
+    padding: 0.85rem 1.25rem;
+    line-height: 1;
+}
+
+.page-letter .columns--body .post-action {
+    text-align: left;
+}
+
+.page-letter .columns--body .button:hover,
+.page-letter .columns--body .button:focus {
+    background: rgb(145, 145, 145);
+    box-shadow: 0 3px 0 rgb(90, 86, 61);
+}
+
+.page-letter .columns--thumbnail {
+    background: #e8e8d0;
+    padding: 35px 25px 35px 30px;
 }
