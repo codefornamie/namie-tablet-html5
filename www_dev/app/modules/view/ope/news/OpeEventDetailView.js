@@ -34,6 +34,7 @@ define(function(require, exports, module) {
             app.router.opeArticleRegist({
                 model : this.model,
                 recommendArticle : this.recommendArticle,
+                targetDate : this.targetDate,
                 backFunction : $.proxy(function() {
                     app.router.opeEventDetail({
                         model : this.model,
@@ -47,7 +48,7 @@ define(function(require, exports, module) {
          * @memberof OpeEventDetailView#
          */
         onClickGotoCancel : function() {
-            app.router.go("ope-top");
+            app.router.go("ope-top" ,this.model.get("publishedAt"));
         }
     });
     module.exports = OpeEventDetailView;

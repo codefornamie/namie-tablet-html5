@@ -107,12 +107,14 @@ define(function(require, exports, module) {
             if (this.model.get("type") === "2") {
                 app.router.opeYouTubeRegist({
                     model : this.model,
-                    recommendArticle : this.parentView.recommendArticle
+                    recommendArticle : this.parentView.recommendArticle,
+                    targetDate : this.parentView.targetDate
                 });
             } else {
                 app.router.opeArticleRegist({
                     model : this.model,
-                    recommendArticle : this.parentView.recommendArticle
+                    recommendArticle : this.parentView.recommendArticle,
+                    targetDate : this.parentView.targetDate
                 });
             }
             $("#contents__primary").scrollTop(0);

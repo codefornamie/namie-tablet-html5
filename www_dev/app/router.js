@@ -162,6 +162,7 @@ define(function(require, exports, module) {
 
             // 管理アプリ
             'ope-top' : 'opeTop',
+            'ope-top/:date' : 'opeTop',
 
             // 道場アプリ
             'dojo-top' : 'dojoTop',
@@ -323,8 +324,8 @@ define(function(require, exports, module) {
         /**
          * ---------- 管理アプリ ----------
          */
-        opeTop : function() {
-            this.layout.showView(new TopView());
+        opeTop : function(targetDate) {
+            this.layout.showView(new TopView({targetDate:targetDate}));
             this.layout.setHeader(new common.HeaderView());
             this.layout.setFooter(new common.FooterView());
         },

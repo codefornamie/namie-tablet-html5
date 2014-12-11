@@ -105,6 +105,7 @@ define(function(require, exports, module) {
                 this.notFoundMessage.hide("slow");
             }
             var listView = new OpeFeedListView();
+            listView.targetDate = this.targetDate;
             listView.setFeedListItemViewClass(OpeFeedListItemView);
             return listView;
         },
@@ -121,7 +122,7 @@ define(function(require, exports, module) {
          *  @memberof OpeNewsView#
          */
         onClickArticleRegisterButton: function () {
-            app.router.opeArticleRegist();
+            app.router.opeArticleRegist({targetDate : this.targetDate});
         },
     });
 

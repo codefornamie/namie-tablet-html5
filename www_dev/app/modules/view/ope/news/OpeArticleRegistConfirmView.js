@@ -25,14 +25,14 @@ define(function(require, exports, module) {
                         this.recommendArticle.set("isRecommend",null);
                         this.recommendArticle.save(null, {
                             success:$.proxy(function() {
-                                app.router.go("ope-top");
+                                app.router.go("ope-top" ,this.publishedAt);
                             },this),
                             error:$.proxy(function() {
-                                app.router.go("ope-top");
+                                app.router.go("ope-top" ,this.publishedAt);
                             },this)
                         });
                     }else {
-                        app.router.go("ope-top");
+                        app.router.go("ope-top", this.publishedAt);
                     }
                 }, this),
                 error: function(e){
