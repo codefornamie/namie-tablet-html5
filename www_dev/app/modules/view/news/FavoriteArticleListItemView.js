@@ -34,7 +34,7 @@ define(function(require, exports, module) {
                         imageIndex : 1
                     }
 
-                ],true);
+                ], true);
             } else if (!_.isEmpty(this.model.get("imageUrl"))) {
                 articleImageElement.attr("src", this.model.get("imageUrl"));
                 var imageElems = $(this.el).find("img");
@@ -44,15 +44,14 @@ define(function(require, exports, module) {
                     }
                 });
                 $(this.el).find(".expansionPicture").colorbox({
-                    rel:"expansionPicture",
-                    photo: true,
-                    maxWidth: "100%",
-                    maxHeight: "100%"
+                    rel : "expansionPicture",
+                    photo : true,
+                    maxWidth : "100%",
+                    maxHeight : "100%"
                 });
 
             }
         },
-
 
     });
     module.exports = FavoriteArticleListItemView;
