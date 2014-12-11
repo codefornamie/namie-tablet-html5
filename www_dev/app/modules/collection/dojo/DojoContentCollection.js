@@ -55,7 +55,11 @@ define(function(require, exports, module) {
 
             this.each(function (model) {
                 // この model を入れる先の DojoEditionModel を決定する
+                /* 本来の処理
                 var editionKey = model.get("category");
+                */
+                // 編を固定
+                var editionKey = "タブレットの使い方";
                 var editionModel = editionCollection.findWhere({
                     editionKey: editionKey
                 });
