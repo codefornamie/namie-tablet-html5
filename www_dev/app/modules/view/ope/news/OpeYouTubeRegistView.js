@@ -25,7 +25,7 @@ define(function(require, exports, module) {
             $("#articleTitle").val(this.model.get("title"));
             $("#articleDetail").val(this.model.get("description"));
             if (this.model.get("isRecommend")) {
-                $("#articleRecommendCheck").attr("checked","checked");
+                $("#articleRecommendCheck").attr("checked", "checked");
             }
             this.hideLoading();
         },
@@ -41,24 +41,25 @@ define(function(require, exports, module) {
             $("#youtubeRegistPage").hide();
             this.setView("#articleRegistConfirmWrapperPage", new OpeYouTubeRegistConfirmView({
                 model : this.model,
-                recommendArticle : this.recommendArticle
+                recommendArticle : this.recommendArticle,
+                publishedAt : this.model.get("publishedAt")
             })).render();
             $("#snap-content").scrollTop(0);
         },
         /**
          * キャンセルボタン押下時のコールバック関数
          */
-        onClickArticleCancelButton: function () {
+        onClickArticleCancelButton : function() {
             if (this.backFunction) {
                 this.backFunction();
             } else {
-                app.router.back();
+                app.router.go("ope-top", this.targetDate);
             }
         },
         setInputValue : function() {
             this.model.set("title", $("#articleTitle").val());
             this.model.set("description", $("#articleDetail").val());
-            this.model.set("isRecommend",$("#articleRecommendCheck").is(":checked") ? "true" : null);
+            this.model.set("isRecommend", $("#articleRecommendCheck").is(":checked") ? "true" : null);
         }
 
     });

@@ -53,7 +53,7 @@ define(function(require, exports, module) {
          * @memberof OpeYouTubeDetailView#
          */
         onClickGotoCancel : function() {
-            app.router.go("ope-top");
+            app.router.go("ope-top" ,this.model.get("publishedAt"));
         }
 
     });
