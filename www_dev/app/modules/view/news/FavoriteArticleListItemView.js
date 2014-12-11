@@ -34,7 +34,7 @@ define(function(require, exports, module) {
                         imageIndex : 1
                     }
 
-                ], true);
+                ], true, $.proxy(this.onClickImage, this));
             } else if (!_.isEmpty(this.model.get("imageUrl"))) {
                 articleImageElement.attr("src", this.model.get("imageUrl"));
                 var imageElems = $(this.el).find("img");
@@ -44,10 +44,23 @@ define(function(require, exports, module) {
                     }
                 });
                 $(this.el).find(".expansionPicture").colorbox({
-                    rel : "expansionPicture",
+                    closeButton : false,
+                    current : "",
                     photo : true,
-                    maxWidth : "100%",
-                    maxHeight : "100%"
+                    maxWidth : "85%",
+                    maxHeight : "100%",
+                    onComplete : $.proxy(function() {
+                        $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
+                        $("#cboxOverlay").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                        $("#cboxCloseButton").click(function() {
+                            $.colorbox.close();
+                        });
+                        $("#cboxSaveButton").click($.proxy(this.onClickImage, this));
+                    },this),
+                    onClosed : function() {
+                        $("#cboxSaveButton").remove();
+                        $("#cboxCloseButton").remove();
+                    }
                 });
 
             }

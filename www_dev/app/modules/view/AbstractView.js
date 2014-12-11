@@ -139,7 +139,7 @@ define(function(require, exports, module) {
          * @param {Boolean} isExpansion 画像拡大処理を設定するかどうか<br/>
          * @memberof AbstractView#
          */
-        showPIOImages : function(imgElementSelector, imgArray, isExpansion) {
+        showPIOImages : function(imgElementSelector, imgArray, isExpansion, saveFunc) {
             var $articleImage = $(this.el).find(imgElementSelector);
 
             var onGetBinary = $.proxy(function(binary, item) {
@@ -157,10 +157,25 @@ define(function(require, exports, module) {
                     if (isExpansion) {
                         $targetElem.wrap("<a class='expansionPicture' href='" + url + "'></a>");
                         $(".expansionPicture").colorbox({
-                            rel : "expansionPicture",
+                            closeButton : false,
+                            current : "",
                             photo : true,
-                            maxWidth : "100%",
-                            maxHeight : "100%"
+                            maxWidth : "85%",
+                            maxHeight : "100%",
+                            onComplete : function() {
+                                $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
+                                $("#cboxOverlay").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                                $("#cboxCloseButton").click(function() {
+                                    $.colorbox.close();
+                                });
+                                $("#cboxSaveButton").click(function(ev) {
+                                    saveFunc(ev);
+                                });
+                            },
+                            onClosed : function() {
+                                $("#cboxSaveButton").remove();
+                                $("#cboxCloseButton").remove();
+                            }
                         });
                     }
                     window.URL.revokeObjectURL($(this).attr("src"));
