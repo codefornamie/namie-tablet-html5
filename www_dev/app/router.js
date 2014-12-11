@@ -206,6 +206,7 @@ define(function(require, exports, module) {
                 var params = parseQueryString(queryString);
                 app.config.basic.mode = params.mode;
                 app.preview = params.preview;
+                app.loginId = params.loginId;
                 app.previewTargetDate = params.targetDate;
                 app.pcsManager.refreshToken = params.refreshToken;
                 app.pcsManager.accessToken = "x";
