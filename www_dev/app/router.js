@@ -2,7 +2,9 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var Code = require("modules/util/Code");
     var login = require("modules/view/login/index");
+    login.letter = require("modules/view/letter/login/index");
     login.posting = require("modules/view/posting/login/index");
     login.ope = require("modules/view/ope/login/index");
     login.dojo = require("modules/view/dojo/login/index");
@@ -34,6 +36,8 @@ define(function(require, exports, module) {
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
     var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
 
+    var LetterTopView = require("modules/view/letter/top/TopView");
+
     // Defining the application router.
     var Router = Backbone.Router.extend({
         initialize : function() {
@@ -47,17 +51,22 @@ define(function(require, exports, module) {
                         "#contents" : new login.LoginView(),
                         "#footer" : new login.FooterView()
                     };
-                } else if (app.config.basic.mode === "dojo") {
+                } else if (app.config.basic.mode === Code.APP_MODE_DOJO) {
                     return {
                         "#header" : new login.HeaderView(),
                         "#contents" : new login.dojo.LoginView(),
                     };
-                } else if (app.config.basic.mode === "posting") {
+                } else if (app.config.basic.mode === Code.APP_MODE_POSTING) {
                     return {
                         "#header" : new login.HeaderView(),
                         "#contents" : new login.posting.LoginView(),
                     };
-                } else if (app.config.basic.mode === "ope") {
+                } else if (app.config.basic.mode === Code.APP_MODE_LETTER) {
+                    return {
+                        "#header" : new login.HeaderView(), 
+                        "#contents" : new login.letter.LoginView(),
+                    };
+                } else if (app.config.basic.mode === Code.APP_MODE_OPE) {
                     return {
                         "#contents" : new login.ope.LoginView(),
                         "#footer" : new login.FooterView()
@@ -72,6 +81,7 @@ define(function(require, exports, module) {
                     news : require("ldsh!templates/news/main"),
                     ope : require("ldsh!templates/ope/main"),
                     posting : require("ldsh!templates/posting/main"),
+                    letter : require("ldsh!templates/letter/main"),
                     dojo : require("ldsh!templates/dojo/main"),
                 },
                 /**
@@ -138,6 +148,7 @@ define(function(require, exports, module) {
             'backnumber/:date' : 'backnumberDate',
             'settings' : 'settings',
             'posting-top' : 'postingTop',
+            'letter-top' : 'letterTop',
             'ope-top' : 'opeTop',
             'dojo-top' : 'dojoTop',
             "dojo/lessons/:id" : "dojoLesson",
@@ -209,6 +220,14 @@ define(function(require, exports, module) {
             this.layout.showView(new EventNewsView());
             this.layout.setHeader(new postingCommon.HeaderView());
             this.layout.setGlobalNav(new postingCommon.GlobalNavView());
+        },
+        letterTop : function() {
+            // 実際の描画処理はdojo/TopViewに書かれている
+            // アプリのライフサイクルの中で、LetterTopViewの初期化は1度だけ行う
+            if (!app.letterTopView) {
+                app.letterTopView = new LetterTopView();
+                this.layout.showView(app.letterTopView);
+            }
         },
         opeTop : function() {
             this.layout.showView(new TopView());
