@@ -74,7 +74,7 @@ main {
     height: 100%;
     position: absolute;
     top: 0;
-    padding: 96px 0px 0;
+    padding: 54px 0px 0;
     width: 100%;
 }
 
@@ -269,10 +269,10 @@ main {
  *  global-nav
  */
 .global-nav {
-    height: 96px;
+    height: 54px;
     position: relative;
     z-index: 10;
-    background: #43c1d8;
+    background: #53c0d3;
 }
 
 .global-nav nav {
@@ -285,8 +285,8 @@ main {
     position: relative;
     box-sizing: content-box;
     display: inline-block;
-    height: 96px;
-    line-height: 96px;
+    height: 54px;
+    line-height: 54px;
     vertical-align: middle;
     float: left;
 }
@@ -306,12 +306,13 @@ main {
 }
 .global-nav .button[data-drawer-opener] {
     position: absolute;
-    padding: 0 20px;
+    padding: 0 15px;
     height: auto;
     line-height: normal;
     margin: 0;
     font-size: 0.65rem;
     opacity: 0.5;
+    z-index: 1;
 }
 
 /**
@@ -332,12 +333,8 @@ main {
  *  メニューボタンのエリア
  */
 .global-nav__menu {
-    width: 30%;
-    background-color: #5acee5;
-    background-image: url(../../app/img/img-title-logo.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: auto 100%;
+    width: 7%;
+    background: #44bbcf;
 }
 
 .global-nav__menu .button {
@@ -348,8 +345,31 @@ main {
     text-decoration: underline;
 }
 
+.global-nav__menu a[data-back-home] {
+    display: block;
+    width: 100%;
+    height: 54px;
+    background-image: url(../../app/img/img-btn-back.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+}
+
 .posting__global-nav__menu {
     width: 100%;
+}
+
+/**
+ *  global-nav__title
+ *  タイトルロゴのエリア
+ */
+.global-nav__title {
+    width: 25%;
+    background-color: #78d0df;
+    background-image: url(../../app/img/img-title-logo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 100%;
 }
 
 /**
@@ -365,9 +385,12 @@ main {
  *  日付のエリア
  */
 .global-nav__date {
-    width: 40%;
+    width: 43%;
     text-align: center;
     color: #fff;
+}
+.global-nav__date.no-backbutton {
+    width: 50%;
 }
 
 .global-nav__date .nav-content {
@@ -375,7 +398,7 @@ main {
 }
 
 .date-area {
-    line-height: 96px;
+    line-height: 54px;
     font-size: 0;
 }
 
@@ -385,7 +408,7 @@ main {
 }
 
 .date-area__year .date--year {
-    font-size: 34px;
+    font-size: 30px;
     display: inline-block;
     transform: scale(0.8, 1);
 }
@@ -447,16 +470,21 @@ main {
  *  メニューボタンリスト
  */
 .global-nav__menubutton {
-    width: 30%;
+    width: 25%;
     text-align: center;
-    background: #8de5e9;
+    background: #78d0df;
+}
+
+.global-nav__menubutton ul {
+    margin: 0;
 }
 
 .global-nav__menubutton ul li {
     display: inline-block;
     vertical-align: middle;
     margin-top: 8px;
-    line-height: 96px;
+    line-height: 54px;
+    width: 30%;
 }
 
 .global-nav__menubutton .button {

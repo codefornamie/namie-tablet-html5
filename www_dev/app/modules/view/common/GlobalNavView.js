@@ -90,10 +90,10 @@ define(function(require, exports, module) {
         setDate : function(date) {
             if (date) {
                 $("#naviPublishDate").show();
-                $("#naviPublishDate").find(".date--year").text(date.getFullYear());
+                $("#naviPublishDate").find(".date--year").text(DateUtil.formatDate(date, "ggge"));
                 $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
                 $("#naviPublishDate").find(".date--day").text(date.getDate());
-                $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
+                $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd") + "曜日");
             } else {
                 $("#naviPublishDate").hide();
             }
@@ -105,11 +105,11 @@ define(function(require, exports, module) {
          */
         updateBackHomeButton: function () {
             if (Backbone.history.fragment == 'top') {
-                $('[data-back-home]').hide();
-                $('.global-nav__menu').css('background-position', 'center');
+                $('.global-nav__menu').hide();
+                $('.global-nav__date').addClass('no-backbutton');
             } else {
-                $('[data-back-home]').show();
-                $('.global-nav__menu').css('background-position', 'right');
+                $('.global-nav__menu').show();
+                $('.global-nav__date').removeClass('no-backbutton');
             }
         },
 
