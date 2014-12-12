@@ -36,7 +36,6 @@ define(function(require, exports, module) {
         initialize : function(param) {
             console.assert(param, "param should be specified");
             console.assert(param.letterListView, "param.letterListView should be specified");
-            console.assert(param.letterWizardView, "param.letterWizardView should be specified");
 
             this.letterListView = param.letterListView;
         },
@@ -77,7 +76,7 @@ define(function(require, exports, module) {
             };
             var root = location.protocol + "//" + location.host + app.root;
 
-            if (href.prop && href.prop.slice(0, root.length) === root) {
+            if (href.prop && href.attr[0] !== "#" && href.prop.slice(0, root.length) === root) {
                 evt.preventDefault();
                 app.router.navigate(href.attr, {
                     trigger : true,
