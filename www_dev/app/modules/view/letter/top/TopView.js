@@ -11,18 +11,19 @@ define(function(require, exports, module) {
 
     /**
      * 町民投稿アプリのトップ画面を表示するためのLayoutクラスを作成する。
-     * 
      * @class
      * @constructor
      */
     var LetterTopLayout = Backbone.Layout.extend({
         /**
          * このLayoutのテンプレートファイルパス
+         * @memberof LetterTopLayout#
          */
         template : require("ldsh!templates/{mode}/top/top"),
 
         /**
          * イベント一覧
+         * @memberof LetterTopLayout#
          */
         events : {
             "click a" : "onClickAnchor"
@@ -31,6 +32,7 @@ define(function(require, exports, module) {
         /**
          * 初期化
          * @param {Object} param
+         * @memberof LetterTopLayout#
          */
         initialize : function(param) {
             console.assert(param, "param should be specified");
@@ -41,6 +43,7 @@ define(function(require, exports, module) {
 
         /**
          * 一覧画面を開く
+         * @memberof LetterTopLayout#
          */
         showList: function () {
             this.setView(LetterTopLayout.SELECTOR_LETTER_LIST, this.letterListView);
@@ -48,6 +51,7 @@ define(function(require, exports, module) {
 
         /**
          * aタグをクリックした際の挙動を ブラウザデフォルトではなく pushStateに変更する
+         * @memberof LetterTopLayout#
          */
         // TODO onClickAnchorメソッドが色々なファイルにコピペされているので、どこかにまとめる
         onClickAnchor : function(evt) {
