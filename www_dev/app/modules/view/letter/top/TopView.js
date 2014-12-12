@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var LetterListView = require("modules/view/letter/top/LetterListView");
     var LetterWizardView = require("modules/view/letter/wizard/LetterWizardView");
+    var LetterEditView = require("modules/view/letter/edit/LetterEditView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
@@ -45,6 +46,7 @@ define(function(require, exports, module) {
          */
         showList: function () {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
             this.setView(LetterTopLayout.SELECTOR_LETTER_LIST, this.letterListView);
         },
 
@@ -60,8 +62,24 @@ define(function(require, exports, module) {
                 var letterWizardView = new LetterWizardView();
 
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
+                this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
                 this.setView(LetterTopLayout.SELECTOR_LETTER_WIZARD, letterWizardView);
             }
+        },
+
+        /**
+         * 編集画面を開く
+         * @param {String} id 編集する記事のID
+         * @memberof LetterTopLayout#
+         */
+        showEdit: function (id) {
+            console.assert(_.isString(id), "id should be a string");
+
+            var letterEditView = new LetterEditView();
+
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.setView(LetterTopLayout.SELECTOR_LETTER_EDIT, letterEditView);
         },
 
         /**
@@ -93,7 +111,12 @@ define(function(require, exports, module) {
         /**
          * ウィザード画面のセレクタ
          */
-        SELECTOR_LETTER_WIZARD : "#letter-wizard-container"
+        SELECTOR_LETTER_WIZARD : "#letter-wizard-container",
+
+        /**
+         * 編集画面のセレクタ
+         */
+        SELECTOR_LETTER_EDIT : "#letter-edit-container"
     });
 
     /**
@@ -173,7 +196,7 @@ define(function(require, exports, module) {
 
             case "letterEdit":
                 var id = params[0];
-                console.log("TODO 編集画面を開く id:%s", id);
+                this.layout.showEdit(id);
                 break;
 
             case "letterWizard":

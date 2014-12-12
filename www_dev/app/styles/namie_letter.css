@@ -1,6 +1,11 @@
 /**
  *  町民投稿アプリCSS
  */
+/**
+ *  ----------
+ *  1. Base
+ *  ----------
+ */
 .page-letter {
     background-color: #fbfaf4;
 }
@@ -28,6 +33,27 @@
     overflow: auto;
 }
 
+.page-letter h2 {
+    color: rgb(90, 86, 60);
+    font-size: 2rem;
+    margin: 20px 0 15px 0;
+    text-align: center;
+    line-height: 1;
+}
+
+.page-letter .button {
+    display: inline-block;
+    font-size: 1.4rem;
+    margin: 0 20px 10px 0;
+    padding: 0.85rem 1.25rem;
+    line-height: 1;
+}
+
+/**
+ *  ----------
+ *  2. Project
+ *  ----------
+ */
 .page-letter .contents__primary {
     width: 100%;
     margin: auto;
@@ -39,6 +65,7 @@
     font-size: 2rem;
     font-weight: bold;
     margin: 0;
+    text-align: left;
 }
 
 .page-letter .contents__secondary {
@@ -56,8 +83,6 @@
     box-sizing: border-box;
     width: 100%;
     margin: 30px auto;
-    border: 3px solid #e8e8d0;
-    background: white;
     padding: 45px 0 50px;
     text-align: center;
 }
@@ -83,7 +108,6 @@
 .page-letter .post {
     box-sizing: border-box;
     margin: 20px auto;
-    border: 3px solid #e8e8d0;
     background: #e8e8d0;
     position: relative;
     padding: 0;
@@ -95,11 +119,11 @@
 /**
  *  画像がない場合
  */
-.page-letter .post.is-no-image .row > .columns--body {
+.page-letter .post.is-no-image .row>.columns--body {
     width: 100%;
 }
 
-.page-letter .post.is-no-image .row > .columns--thumbnail {
+.page-letter .post.is-no-image .row>.columns--thumbnail {
     display: none;
 }
 
@@ -109,7 +133,7 @@
     max-width: 100%;
 }
 
-.page-letter .post .row > .columns {
+.page-letter .post .row>.columns {
     display: table-cell;
     float: none;
     vertical-align: top;
@@ -191,14 +215,6 @@
     text-align: left;
 }
 
-.page-letter .columns--body .button {
-    display: inline-block;
-    font-size: 1.4rem;
-    margin: 0 20px 10px 0;
-    padding: 0.85rem 1.25rem;
-    line-height: 1;
-}
-
 .page-letter .columns--thumbnail {
     background: #e8e8d0;
     padding: 35px 25px 35px 30px;
@@ -209,14 +225,6 @@
  */
 .letter-wizard {
     position: relative;
-}
-
-.letter-wizard h2 {
-    color: rgb(90, 86, 60);
-    font-size: 2rem;
-    margin: 20px 0 15px 0;
-    text-align: center;
-    line-height: 1;
 }
 
 .letter-wizard-pages {
@@ -248,7 +256,7 @@
     display: none;
 }
 
-.letter-wizard li[role="tab"] > a {
+.letter-wizard li[role="tab"]>a {
     background: rgb(214, 209, 178);
     display: block;
     position: relative;
@@ -262,7 +270,7 @@
     padding-left: 0;
 }
 
-.letter-wizard li[role="tab"].current > a {
+.letter-wizard li[role="tab"].current>a {
     background: rgb(66, 193, 216);
 }
 
@@ -291,10 +299,10 @@
     background: white;
     display: block;
     margin: 10px 0;
-    height: 400px;
-    overflow: auto;
+    height: 400px; overflow : auto;
     position: relative;
     width: auto;
+    overflow: auto;
 }
 
 .letter-wizard h3 {
@@ -329,7 +337,7 @@
     display: none;
 }
 
-.letter-wizard ul[role="menu"] li > a {
+.letter-wizard ul[role="menu"] li>a {
     font-size: 1.4rem;
     padding-top: 0.85rem;
     padding-bottom: 0.85rem;
@@ -337,7 +345,8 @@
 }
 
 .letter-wizard ul[role="menu"] a[href="#next"],
-.letter-wizard ul[role="menu"] a[href="#finish"] {
+.letter-wizard ul[role="menu"] a[href="#finish"]
+    {
     position: absolute;
     width: 280px;
     top: 0;
@@ -353,22 +362,6 @@
     padding: 0;
 }
 
-.letter-wizard .body label {
-    font-size: 1.6rem;
-    color: rgb(90, 86, 61);
-    margin: 15px 0;
-    font-weight: bold;
-}
-
-.letter-wizard .body input,
-.letter-wizard .body textarea {
-    padding: 20px;
-    font-size: 1.3rem;
-    background: rgb(247, 247, 247);
-    height: auto;
-    line-height: 1.4;
-}
-
 .letter-wizard .body table {
     border: none;
     color: rgb(90, 86, 60);
@@ -377,7 +370,7 @@
 
 .letter-wizard .body table tr,
 .letter-wizard .body table th,
-.letter-wizard .body table td {
+    .letter-wizard .body table td {
     background: none;
 }
 
@@ -391,4 +384,53 @@
     font-size: 1.33rem;
     color: rgb(90, 86, 60);
     line-height: 1.4;
+}
+
+/**
+ *  編集画面
+ */
+.letter-edit {
+    margin-top: 30px;
+}
+
+.letter-edit-form {
+    margin: 30px;
+    padding: 75px 5% 100px;
+}
+
+/**
+ *  ----------
+ *  3. Cosmetic
+ *  ----------
+ */
+/**
+ *  汎用セクション
+ */
+.letter-section {
+    border: 3px solid #e8e8d0;
+    background: white;
+}
+
+/**
+ *  フォーム
+ */
+.letter-form {
+    margin-bottom: 30px;
+}
+
+.letter-form label {
+    font-size: 1.6rem;
+    color: rgb(90, 86, 61);
+    margin: 15px 0;
+    font-weight: bold;
+}
+
+.letter-form input,
+.letter-form textarea {
+    padding: 20px;
+    font-size: 1.3rem;
+    background: rgb(247, 247, 247);
+    height: auto;
+    line-height: 1.4;
+    color: rgb(90, 86, 60);
 }
