@@ -11,6 +11,9 @@ define(function(require, exports, module) {
 
     var GlobalNavView = AbstractView.extend({
         template : require("ldsh!templates/{mode}/common/global-nav"),
+        templateMap : {
+            "news" : require("ldsh!templates/news/common/global-nav")
+        },
 
         /**
          * 文字サイズ変更後のタイマー
@@ -49,6 +52,12 @@ define(function(require, exports, module) {
 
             // ルーティングのイベントハンドラを登録する
             app.router.on('route:globalNav', this.onRoute.bind(this));
+
+            // プレビューモードの場合は自身を表示しない
+            if (app.preview) {
+                $(".contents-wrapper").css("padding-top", "0");
+                $("#global-nav").hide();
+            }
         },
 
         /**
