@@ -39,7 +39,7 @@ define(function(require, exports, module) {
          */
         events : {
             'click [data-goto-cancel]' : 'onClickGotoCancel',
-            "click a" : "onClickAnchorTag"
+            "click a:not(.expansionPicture)" : "onClickAnchorTag"
         },
         /**
          * キャンセルボタンをクリックしたら呼ばれる

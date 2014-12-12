@@ -992,6 +992,18 @@ main {
     border: solid 1px #666666;
     min-height : 600px;
 }
+
+#cboxCloseButton {
+    top:0px;
+    float:right;
+}
+
+#cboxSaveButton {
+    top:0px;
+    float:right;
+    margin-right:5px;
+}
+
 div.nehan-block.nehan-body {
     border-bottom: solid 1px #aaaaaa;
     margin-bottom: 7px;
