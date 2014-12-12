@@ -207,20 +207,20 @@
 /**
  *  ウィザード
  */
-.page-letter .letter-wizard {
+.letter-wizard {
     position: relative;
 }
 
-.page-letter .letter-wizard ul[role="tablist"] {
+.letter-wizard ul[role="tablist"] {
     margin: 0;
     list-style: none;
 }
 
-.page-letter .letter-wizard ul[role="tablist"] a {
+.letter-wizard ul[role="tablist"] a {
     color: white;
 }
 
-.page-letter .letter-wizard li[role="tab"] {
+.letter-wizard li[role="tab"] {
     float: left;
     width: 25%;
     background: rgb(214, 209, 178);
@@ -228,44 +228,44 @@
     text-align: center;
 }
 
-.page-letter .letter-wizard li[role="tab"].current {
+.letter-wizard li[role="tab"].current {
     background: rgb(66, 193, 216);
 }
 
-.page-letter .letter-wizard li[role="tab"] .current-info {
+.letter-wizard li[role="tab"] .current-info {
     display: none;
 }
 
-.page-letter .letter-wizard .content {
+.letter-wizard .content {
     background: #eee;
     display: block;
     margin: .5em;
-    min-height: 25em;
+    min-height: 20em;
     overflow: hidden;
     position: relative;
     width: auto;
 }
 
-.page-letter .letter-wizard h3 {
+.letter-wizard h3 {
     position: absolute;
     left: -999em;
 }
 
-.page-letter .letter-wizard .body {
+.letter-wizard .body {
     position: absolute;
     top: 0;
     width: 100%;
 }
 
-.page-letter .letter-wizard ul[role="menu"] {
+.letter-wizard ul[role="menu"] {
     list-style: none;
     margin: 0;
 }
 
-.page-letter .letter-wizard ul[role="menu"] li {
+.letter-wizard ul[role="menu"] li {
     display: inline-block;
 }
 
-.page-letter .letter-wizard ul[role="menu"] li.disabled {
+.letter-wizard ul[role="menu"] li.disabled {
     display: none;
 }
