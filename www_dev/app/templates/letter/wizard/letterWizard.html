@@ -2,112 +2,108 @@
     id="letter-wizard"
     class="letter-wizard"
 >
-    <h3>画像選択</h3>
-    <section>
-        <h4>画像を選んでください。</h4>
-    </section>
+    <h2>お便りの投稿</h2>
 
-    <h3>文章入力</h3>
-    <section>
-        <h4>文章を入力してください。</h4>
+    <div
+        id="letter-wizard-pages"
+        class="letter-wizard-pages"
+    >
+        <h3>画像選択</h3>
+        <section>
+            <h4>画像を選んでください。</h4>
+        </section>
 
-        <form action="">
-            <div class="row">
-                <div class="columns large-2">
-                    <label for="letter-wizard-form-title"> 題名 </label>
+        <h3>文章入力</h3>
+        <section>
+            <h4>文章を入力してください。</h4>
+
+            <form action="">
+                <div class="row">
+                    <div class="columns large-3">
+                        <label for="letter-wizard-form-title">
+                            題名 </label>
+                    </div>
+
+                    <div class="columns large-9">
+                        <input
+                            type="text"
+                            id="letter-wizard-form-title"
+                            placeholder="例：タブレット体験会でうけどんに会いました！"
+                        >
+                    </div>
                 </div>
 
-                <div class="columns large-10">
-                    <input
-                        type="text"
-                        id="letter-wizard-form-title"
-                        placeholder="例：タブレット体験会でうけどんに会いました！"
-                    >
+                <div class="row">
+                    <div class="columns large-3">
+                        <label for="letter-wizard-form-title">
+                            本文 </label>
+                    </div>
+
+                    <div class="columns large-9">
+                        <textarea
+                            type="text"
+                            id="letter-wizard-form-body"
+                            placeholder="例：うけどんの道着姿がかわいかったなあ。..."
+                            rows="10"
+                        ></textarea>
+                    </div>
                 </div>
-            </div>
+            </form>
+        </section>
 
-            <div class="row">
-                <div class="columns large-2">
-                    <label for="letter-wizard-form-title"> 本文 </label>
+        <h3>ニックネーム入力</h3>
+        <section>
+            <h4>ニックネームを入力して下さい。</h4>
+
+            <form action="">
+                <div class="row">
+                    <div class="columns large-3">
+                        <label for="letter-wizard-form-nickname">ニックネーム</label>
+                    </div>
+
+                    <div class="columns large-9">
+                        <input
+                            type="text"
+                            id="letter-wizard-form-nickname"
+                            placeholder="例：寿司屋のおかみ"
+                        >
+                    </div>
                 </div>
+            </form>
+        </section>
 
-                <div class="columns large-10">
-                    <textarea
-                        type="text"
-                        id="letter-wizard-form-body"
-                        placeholder="例：うけどんの道着姿がかわいかったなあ。..."
-                        row="10"
-                    ></textarea>
-                </div>
-            </div>
-        </form>
-    </section>
+        <h3>確認</h3>
+        <section>
+            <h4>下記の内容で投稿をしますがよろしいですか？</h4>
+            
+            <table>
+                <tr>
+                    <th><label>ニックネーム</label></th>
 
-    <h3>ニックネーム入力</h3>
-    <section>
-        <h4>ニックネームを入力して下さい。</h4>
+                    <td>寿司屋のおかみ</td>
+                </tr>
 
-        <form action="">
-            <div class="row">
-                <div class="columns large-2">
-                    <label for="letter-wizard-form-nickname">ニックネーム</label>
-                </div>
+                <tr>
+                    <th><label> 題名 </label></th>
 
-                <div class="columns large-10">
-                    <input
-                        type="text"
-                        id="letter-wizard-form-nickname"
-                        placeholder="例：寿司屋のおかみ"
-                    >
-                </div>
-            </div>
-        </form>
-    </section>
+                    <td>タブレット体験会でうけどんに会いました！</td>
+                </tr>
 
-    <h3>確認</h3>
-    <section>
-        <h4>下記の内容で投稿しますがよろしいですか？</h4>
-        
-        <table>
-            <tr>
-                <th>
-                    ニックネーム
-                </th>
-                
-                <td>
-                    寿司屋のおかみ
-                </td>
-            </tr>
+                <tr>
+                    <th><label> 本文 </label></th>
 
-            <tr>
-                <th>
-                    題名
-                </th>
-                
-                <td>
-                    タブレット体験会でうけどんに会いました！
-                </td>
-            </tr>
+                    <td>うけどんの道着姿がかわいかったなあ。...</td>
+                </tr>
 
-            <tr>
-                <th>
-                    本文
-                </th>
+                <tr>
+                    <th><label> 画像 </label></th>
 
-                <td>
-                    うけどんの道着姿がかわいかったなあ。...
-                </td>
-            </tr>
-
-            <tr>
-                <th>
-                    画像
-                </th>
-
-                <td>
-                    <img src="/app/img/dummy-manga.png" alt="DUMMY">
-                </td>
-            </tr>
-        </table>
-    </section>
+                    <td><img
+                        src="/app/img/dummy-manga.png"
+                        alt="DUMMY"
+                    ></td>
+                </tr>
+            </table>
+        </section>
+    </div>
 </div>

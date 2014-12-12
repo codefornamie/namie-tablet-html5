@@ -211,6 +211,18 @@
     position: relative;
 }
 
+.letter-wizard h2 {
+    color: rgb(90, 86, 60);
+    font-size: 2rem;
+    margin: 20px 0 15px 0;
+    text-align: center;
+    line-height: 1;
+}
+
+.letter-wizard-pages {
+    margin: 0 100px;
+}
+
 .letter-wizard ul[role="tablist"] {
     margin: 0;
     list-style: none;
@@ -223,13 +235,47 @@
 .letter-wizard li[role="tab"] {
     float: left;
     width: 25%;
-    background: rgb(214, 209, 178);
-    padding: 10px 0;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
+    font-size: 1.3rem;
+    padding-left: 5px;
+    padding-right: 20px;
 }
 
-.letter-wizard li[role="tab"].current {
+.letter-wizard li[role="tab"] .number {
+    display: none;
+}
+
+.letter-wizard li[role="tab"] > a {
+    background: rgb(214, 209, 178);
+    display: block;
+    position: relative;
+    outline: none;
+}
+
+.letter-wizard li[role="tab"]:first-child {
+    padding-left: 0;
+}
+
+.letter-wizard li[role="tab"].current > a {
     background: rgb(66, 193, 216);
+}
+
+.letter-wizard li[role="tab"] > a::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-left-color: rgb(214, 209, 178);
+    position: absolute;
+    top: 0;
+    right: -40px;
+    display: block;
+}
+
+.letter-wizard li[role="tab"].current > a::after {
+    border-left-color: rgb(66, 193, 216);
 }
 
 .letter-wizard li[role="tab"] .current-info {
@@ -237,11 +283,12 @@
 }
 
 .letter-wizard .content {
-    background: #eee;
+    border: 3px solid rgb(234, 231, 210);
+    background: white;
     display: block;
-    margin: .5em;
-    min-height: 20em;
-    overflow: hidden;
+    margin: 10px 0;
+    min-height: 30em;
+    overflow: auto;
     position: relative;
     width: auto;
 }
@@ -255,11 +302,19 @@
     position: absolute;
     top: 0;
     width: 100%;
+    padding: 25px 50px;
+}
+
+.letter-wizard h4 {
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    color: rgb(90, 86, 60);
 }
 
 .letter-wizard ul[role="menu"] {
     list-style: none;
-    margin: 0;
+    margin: 0 0 2rem 0;
+    position: relative;
 }
 
 .letter-wizard ul[role="menu"] li {
@@ -268,4 +323,67 @@
 
 .letter-wizard ul[role="menu"] li.disabled {
     display: none;
+}
+
+.letter-wizard ul[role="menu"] li > a {
+    font-size: 1.4rem;
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    line-height: 1;
+}
+
+.letter-wizard ul[role="menu"] a[href="#next"],
+.letter-wizard ul[role="menu"] a[href="#finish"] {
+    position: absolute;
+    width: 280px;
+    top: 0;
+    left: 50%;
+    margin-left: -140px;
+}
+
+.letter-wizard .body form {
+    margin-top: 40px;
+}
+
+.letter-wizard .body form .columns {
+    padding: 0;
+}
+
+.letter-wizard .body label {
+    font-size: 1.6rem;
+    color: rgb(90, 86, 61);
+    margin: 15px 0;
+    font-weight: bold;
+}
+
+.letter-wizard .body input,
+.letter-wizard .body textarea {
+    padding: 20px;
+    font-size: 1.3rem;
+    background: rgb(247, 247, 247);
+    height: auto;
+    line-height: 1.4;
+}
+
+.letter-wizard .body table {
+    border: none;
+    color: rgb(90, 86, 60);
+    margin-top: 30px;
+}
+
+.letter-wizard .body table tr,
+.letter-wizard .body table th,
+.letter-wizard .body table td {
+    background: none;
+}
+
+.letter-wizard .body table th {
+    padding: 0 1.2rem 0 0;
+    text-align: right;
+}
+
+.letter-wizard .body table td {
+    background: none;
+    font-size: 1.33rem;
+    color: rgb(90, 86, 60);
 }

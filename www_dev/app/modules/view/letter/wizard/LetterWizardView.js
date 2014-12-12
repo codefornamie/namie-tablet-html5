@@ -14,10 +14,14 @@ define(function(require, exports, module) {
      * @constructor
      */
     var LetterWizardView = AbstractView.extend({
+        /**
+         * @memberof LetterWizardView#
+         */
         template : require("ldsh!templates/{mode}/wizard/letterWizard"),
 
         /**
          * Layoutがレンダリングされたら呼ばれる
+         * @memberof LetterWizardView#
          */
         afterRendered : function() {
             this.$step = this.$el.find(LetterWizardView.SELECTOR_LETTER_WIZARD).steps({
@@ -30,19 +34,18 @@ define(function(require, exports, module) {
                     finish: "投稿する"
                 },
                 onStepChanging: this.onStepChanging.bind(this),
-                onFinshed: this.onFinished.bind(this),
+                onFinishing: this.onFinishing.bind(this),
+                onFinished: this.onFinished.bind(this),
             });
 
             this.$step.find("[href='#previous']").addClass("button button--gray");
             this.$step.find("[href='#next']").addClass("button");
             this.$step.find("[href='#finish']").addClass("button");
-
-            // タブを直接押して切り替えられないようにする
-            //this.$step.find("[role='tab']").find("a").attr("href", "");
         },
 
         /**
          * 初期化する
+         * @memberof LetterWizardView#
          */
         initialize: function () {
             this.initEvents();
@@ -53,6 +56,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
+         * @memberof LetterWizardView#
          */
         initEvents: function () {
             this.listenTo(app.router, "route", this.onRoute);
@@ -61,12 +65,20 @@ define(function(require, exports, module) {
         /**
          * ウィザード内の指定のページヘ移動する
          * @param {Number} expectedStep
+         * @memberof LetterWizardView#
          */
         moveTo: function (expectedStep) {
             expectedStep = +expectedStep;
 
             if (this.$step) {
-                var actualStep = this.$step.steps("getCurrentIndex") + 1;
+                var actualStep;
+
+                // ウィザード終了時にgetCurrentIndexが例外を投げるので応急処置
+                try {
+                    actualStep = this.$step.steps("getCurrentIndex") + 1;
+                } catch (e) {
+                    return;
+                }
 
                 if (expectedStep < actualStep) {
                     while (expectedStep < actualStep) {
@@ -81,7 +93,12 @@ define(function(require, exports, module) {
                 }
 
                 // URLを更新する
-                app.router.navigate("/letters/new?step=" + expectedStep);
+                // ルーティングによって呼ばれた場合は新たなルーティングを行わない
+                if (!this._isRouting) {
+                    app.router.navigate("/letters/new?step=" + expectedStep);
+                }
+
+                this._isMoving = false;
             }
         },
 
@@ -89,44 +106,64 @@ define(function(require, exports, module) {
          * ルーティング時に呼ばれる
          * @param {String} route
          * @param {Array} params
+         * @memberof LetterWizardView#
          */
         onRoute: function (route, params) {
             var queryString = params[1];
             var query = app.router.parseQueryString(queryString);
             var step = query.step;
 
+            this._isRouting = true;
             this.moveTo(step);
+            this._isRouting = false;
         },
 
         /**
-         * ウィザード画面を移動するときに呼ばれる
+         * ウィザード画面を移動する前に呼ばれる
          * @param {Event} ev
          * @param {Number} currentIndex
          * @param {Number} newIndex
+         * @return {Boolean} trueならば実際の移動を許可する
+         * @memberof LetterWizardView#
          */
         onStepChanging: function (ev, currentIndex, newIndex) {
-            if (this.isMoving) {
-                this.isMoving = false;
+            // this.moveTo()が再帰的に呼び出されてしまうのを防ぐ
+            if (this._isMoving) {
                 return true;
             }
 
-            this.isMoving = true;
+            this._isMoving = true;
             this.moveTo(newIndex + 1);
         },
 
         /**
-         * ウィザードを終了すときに
+         * ウィザードを終了する前に呼ばれる
          * @param {Event} ev
          * @param {Number} currentIndex
+         * @return {Boolean} trueならば実際の移動を許可する
+         * @memberof LetterWizardView#
+         */
+        onFinishing: function (ev, currentIndex) {
+            // TODO バリデーション処理などを行う？
+            return true;
+        },
+
+        /**
+         * ウィザードを終了した後に呼ばれる
+         * @param {Event} ev
+         * @param {Number} currentIndex
+         * @memberof LetterWizardView#
          */
         onFinished: function (ev, currentIndex) {
-            console.log("finish");
+            // TODO 実際の処理を行う
+            alert("送信しました！（DUMMY）");
+            app.router.go('/letters');
         }
     }, {
         /**
          * ウィザードのセレクタ
          */
-        SELECTOR_LETTER_WIZARD : "#letter-wizard"
+        SELECTOR_LETTER_WIZARD : "#letter-wizard-pages"
     });
 
     module.exports = LetterWizardView;
