@@ -4,51 +4,36 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport"
-    content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 <link rel="stylesheet" href="bower_components/animate.css/animate.css">
 <script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="lib/dao/dc1-client.jsnts/jquery/dist/jquery.js"></script>
 </head>
 
 <style>
 #slideImage {
-    -vendor-animation-duration: 5s;
-    -vendor-animation-delay: 1s;
-    -vendor-animation-iteration-count: infinite;
+	-vendor-animation-duration: 5s;
+	-vendor-animation-delay: 1s;
+	-vendor-animation-iteration-count: infinite;
 }
 </style>
 <script>
-
     var images = [
-"10411974_745593568858423_3338845195879494958_n.jpg",
-"10841998_745593565525090_3002790559317490279_o.jpg",
-"1499676_720510028037494_821496066096814829_n.jpg",
-"20141122002je.jpg",
-"20141202 (2).JPG",
-"20141202 (4).JPG",
-"slide11.JPG",
-"slide12.JPG",
-"slide13.JPG",
-"slide14.JPG",
-"slide29.JPG",
-"slide36.JPG",
-"slide45.JPG",
-"slide46.JPG",
-"slide6.JPG",
-"slide7.JPG",
-"slide8.JPG",
-"slide9.JPG"
+            "10411974_745593568858423_3338845195879494958_n.jpg", "10841998_745593565525090_3002790559317490279_o.jpg",
+            "1499676_720510028037494_821496066096814829_n.jpg", "20141122002je.jpg", "20141202 (2).JPG",
+            "20141202 (4).JPG", "slide11.JPG", "slide12.JPG", "slide13.JPG", "slide14.JPG", "slide29.JPG",
+            "slide36.JPG", "slide45.JPG", "slide46.JPG", "slide6.JPG", "slide7.JPG", "slide8.JPG", "slide9.JPG"
     ];
+    var _token = "";
     var index = 1;
     var interval = 2000;
     function showImages() {
         if (index >= images.length) {
             index = 0;
         }
-
         $("#slideImage").addClass("animated fadeOut");
         setTimeout(function() {
             $("#container").children().remove();
-
             var imgElement = '<img id="slideImage" src="app/img/slideshow/' + images[index++] +
                     '" style="width: 100%; height: 100%;" class="animated fadeIn" />';
             $("#container").append(imgElement);
@@ -57,13 +42,32 @@
     }
 
     $(document).ready(function() {
-
-        setInterval("showImages()", 12000);
+        //setInterval("showImages()", 12000);
+        setTimeout(function() {
+            refreshSlideShow();
+        }, 1000);
+        window.onRefreshSlideShow = function(token, files) {
+            $("<div>").text(token).appendTo($("#container"));
+            $("<div>").text(files).appendTo($("#container"));
+            _token = token
+        }
     });
+
+    /**
+     * TODO: 実際はIntervalで１時間毎くらいに実行する
+     */
+    function refreshSlideShow() {
+        // Javaメソッドを呼び出し、スライドショーデータの再取得を行う
+        appJsInterface.refreshSlideShowData();
+    }
 </script>
 <body>
-    <div id="container">
-        <img id="slideImage" src="app/img/slideshow/slide9.JPG" style="width: 100%; height: 100%;" class="animated fadeIn" />
-    </div>
+	<div id="container">
+		<button id="btn">hello</button>
+		<h1>hello</h1>
+		<!-- 		<img id="slideImage" src="app/img/slideshow/slide9.JPG"
+			style="width: 100%; height: 100%;" class="animated fadeIn" />
+ -->
+	</div>
 </body>
 </html>
