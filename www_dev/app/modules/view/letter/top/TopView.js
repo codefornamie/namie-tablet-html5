@@ -81,13 +81,13 @@ define(function(require, exports, module) {
      * 町民投稿アプリのトップ画面を表示するためのViewクラスを作成する。
      * 
      * @class 町民投稿アプリのトップ画面を表示するためのView
-     * @exports TopView
+     * @exports LetterTopView
      * @constructor
      */
-    var TopView = AbstractView.extend({
+    var LetterTopView = AbstractView.extend({
         /**
          * 初期化
-         * @memberof TopView#
+         * @memberof LetterTopView#
          * @param {Object} param
          */
         initialize : function(param) {
@@ -98,7 +98,7 @@ define(function(require, exports, module) {
 
         /**
          * コレクションを初期化する
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         initCollection : function() {
             this.letterCollection = new ArticleCollection();
@@ -115,7 +115,7 @@ define(function(require, exports, module) {
 
         /**
          * layoutを初期化する
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         initLayout : function() {
             this.letterListView = new LetterListView({
@@ -129,7 +129,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
@@ -139,7 +139,7 @@ define(function(require, exports, module) {
 
         /**
          * ルーティングを監視して描画処理を行う
-         * @memberof TopView#
+         * @memberof LetterTopView#
          * @param {String} route
          * @param {Object} params
          */
@@ -174,7 +174,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事一覧が読み込まれたら呼ばれる
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         onSyncLetter : function() {
             this.layout.render();
@@ -183,7 +183,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事一覧の読み込みに失敗したら呼ばれる
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         onErrorLetter : function() {
             alert("記事一覧の取得に失敗しました");
@@ -192,5 +192,5 @@ define(function(require, exports, module) {
         }
     });
 
-    module.exports = TopView;
+    module.exports = LetterTopView;
 });
