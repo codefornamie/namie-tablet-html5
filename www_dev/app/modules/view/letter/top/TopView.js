@@ -2,10 +2,13 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var moment = require("moment");
     var AbstractView = require("modules/view/AbstractView");
     var LetterListView = require("modules/view/letter/top/LetterListView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var Equal = require("modules/util/filter/Equal");
+    var Ge = require("modules/util/filter/Ge");
+    var Le = require("modules/util/filter/Le");
     var And = require("modules/util/filter/And");
     var Code = require("modules/util/Code");
 
@@ -101,10 +104,18 @@ define(function(require, exports, module) {
          * @memberof LetterTopView#
          */
         initCollection : function() {
+            // 直近１ヶ月分を表示する
+            var dateFrom = moment().subtract(1, "month").format("YYYY-MM-DD");
+            var dateTo = moment().format("YYYY-MM-DD");
+
             this.letterCollection = new ArticleCollection();
 
             this.letterCollection.condition.filters = [
                 new And([
+                    new And([
+                        new Ge("publishedAt", dateFrom),
+                        new Le("publishedAt", dateTo)
+                    ]),
                     new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING]),
                     new Equal("createUserId", app.user.get("__id"))
                 ])
