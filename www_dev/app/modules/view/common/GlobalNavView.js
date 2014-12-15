@@ -102,7 +102,7 @@ define(function(require, exports, module) {
                 $("#naviPublishDate").find(".date--year").text(DateUtil.formatDate(date, "ggge"));
                 $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
                 $("#naviPublishDate").find(".date--day").text(date.getDate());
-                $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd") + "曜日");
+                $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
             } else {
                 $("#naviPublishDate").hide();
             }

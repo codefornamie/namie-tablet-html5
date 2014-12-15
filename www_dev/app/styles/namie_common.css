@@ -469,6 +469,16 @@ main {
     font-size: 36px;
 }
 
+.date-area__weekday .date--weekday-unit {
+    font-size: 36px;
+}
+
+@media only screen and (orientation:portrait) {
+    .date-area__weekday .date--weekday-unit {
+        display: none;
+    }
+}
+
 /* date and weekday */
 .date-area__date-weekday {
     display: block;
