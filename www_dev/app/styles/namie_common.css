@@ -41,6 +41,17 @@ body {
     background: rgb(230, 148, 1);
 }
 
+.button--gray {
+    background: rgb(145, 145, 145);
+    box-shadow: 0 3px 0 rgb(90, 86, 61);
+}
+
+.button--gray:hover,
+.button--gray:focus {
+    background: rgb(145, 145, 145);
+    box-shadow: 0 3px 0 rgb(90, 86, 61);
+}
+
 /**
  *  foundation helpers
  */
