@@ -451,7 +451,12 @@
     margin-bottom: 30px;
 }
 
-.letter-form label {
+.letter-form label.error {
+    font-size: 1.0rem;
+    margin: 10px 0;
+}
+
+.letter-form label:not(.error) {
     font-size: 1.6rem;
     color: rgb(90, 86, 61);
     margin: 15px 0;
