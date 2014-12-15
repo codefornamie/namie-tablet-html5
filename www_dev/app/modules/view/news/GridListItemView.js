@@ -28,6 +28,7 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             var self = this;
+            var eventId = "ev-" + this.cid;
             var imageType = this.model.getImageType();
 
             // 画像URLがない場合は、画像のエリアをつめる
@@ -42,12 +43,19 @@ define(function(require, exports, module) {
                     var width = $(this).width();
                     var containerWidth = $container.width();
 
-                    $(this).css({
+                    $(this)
+                    .css({
                         left: containerWidth / 2 - width / 2
                     });
                 })
                 .on("load", function () {
-                    $(this).triggerHandler("center");
+                    var el = this;
+
+                    $(el).triggerHandler("center");
+
+                    $(window).on("resize." + eventId, function () {
+                        $(el).triggerHandler("center");
+                    });
                 })
                 .on("error", function() {
                     self.$el.find(".grid-list__item").addClass("is-no-image");
@@ -55,6 +63,16 @@ define(function(require, exports, module) {
             }
 
             Super.prototype.afterRendered.call(this);
+        },
+
+        /**
+         * viewが破棄される時に呼ばれる
+         * @memberof GridListItemView#
+         */
+        cleanup: function () {
+            var eventId = "ev-" + this.cid;
+
+            $(window).off("resize." + eventId);
         }
     });
 
