@@ -32,45 +32,11 @@
             <div class="large-12 columns nehandiv">
                 <div id="articleDetailImageArea" class="article-detail__image-area" height="390" width="390" >
                     <div class="article-detail__image-area--inner">
-                        <!-- <img class="articleDetailImage" class="nehan-float-start"></img> -->
-                        <div id='youtubePlayer-<%= model.get("link") %>'></div>
+                        <div id='youtubePlayer-<%= model.get("link") %>' style="max-width: 100%;"></div>
                     </div>
                 </div>
                 <%= model.get("description") %>
             </div>
         </div>
-    </section>
-    
-    <section class='post__footer'>
-        <div class="post-action">
-            <button data-recommend-register-button type="button" class="button button--recommend">
-                おすすめ
-            </button>
-
-            <button data-recommend-delete-button type="button" class="button button--recommend">
-                おすすめ取消
-            </button>
-
-            <button data-favorite-register-button type="button" class="button button--scrap">
-                切り抜き
-            </button>
-
-            <button data-favorite-delete-button type="button" class="button button--scrap">
-                切り抜き削除
-            </button>
-        </div>
-
-        <div class="row tagInputArea collapse">
-            <div class="large-2 columns tagColumnsLabel">
-                <span>タグ追加</span>
-            </div>
-            <div class="large-5 columns">
-                <input id="tagInput" type="text">
-            </div>
-            <div class="large-1 columns end" style="font-size: small;">
-                <button id="tagAddButton" type="button" style="font-size: small;" class="button postfix">追加</button>
-            </div>
-        </div>
-
     </section>
 </article>
