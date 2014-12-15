@@ -52,6 +52,11 @@ body {
     box-shadow: 0 3px 0 rgb(90, 86, 61);
 }
 
+hr {
+    border-color: #ebe8da;
+    border-width: 1px 0;;
+}
+
 /**
  *  foundation helpers
  */
@@ -321,7 +326,7 @@ main {
     height: auto;
     line-height: normal;
     margin: 0;
-    font-size: 0.65rem;
+    font-size: 12px;
     opacity: 0.5;
     z-index: 1;
 }
@@ -493,7 +498,7 @@ main {
 .global-nav__menubutton ul li {
     display: inline-block;
     vertical-align: middle;
-    margin-top: 8px;
+    margin-top: 6px;
     line-height: 54px;
     width: 30%;
 }
@@ -503,7 +508,7 @@ main {
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-    font-size: 2rem;
+    font-size: 36px;
     
 }
 
@@ -607,7 +612,7 @@ main {
 
 .contents {
     height: 100%;
-    background-color: #fbfaf4;
+    background-color: #f6f5ec;
 }
 
 .contents > div {
@@ -850,7 +855,7 @@ main {
 }
 
 .post__body {
-    margin: 0 32px 16px;
+    margin: 0 0 16px;
     line-height: 1.6;
 }
 
@@ -941,6 +946,12 @@ main {
  */
 .article-detail__image-area {
     margin: 20px 0;
+}
+
+.article-detail__image-area--inner {
+    display: inline-block;
+    background-color: #f2f0e2;
+    padding: 65px;
 }
 
 /**
@@ -1606,6 +1617,7 @@ div.nehan-block.nehan-body:last-child {
     right: -25px;
     width: 50px;
     height: 50px;
+    padding: 0;
     border-radius: 25px;
     font-size: 28px;
 }
@@ -1655,7 +1667,7 @@ select#articleCategory {
 }
 
 .article-label--blog {
-    color: #c96088;
+    color: #c66287;
     background-image: url(../../app/img/img-article-label-blog.png);
 }
 .article-label--localnews {
@@ -1670,9 +1682,9 @@ select#articleCategory {
     color: #27a8bd;
     background-image: url(../../app/img/img-article-label-townoffice.png);
 }
-.article-label--article {
-    color: #09406c;
-    background-image: url(../../app/img/img-article-label-article.png);
+.article-label--other {
+    color: #9c9c9c;
+    background-image: url(../../app/img/img-article-label-other.png);
 }
 .article-label__text {
 }

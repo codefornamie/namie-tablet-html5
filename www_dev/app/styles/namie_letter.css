@@ -139,9 +139,7 @@
     text-align: left;
 }
 
-/**
- *  画像がない場合
- */
+/** 画像が無い場合がないためコメントアウト
 .page-letter .post.is-no-image .row>.columns--body {
     width: 100%;
 }
@@ -149,6 +147,7 @@
 .page-letter .post.is-no-image .row>.columns--thumbnail {
     display: none;
 }
+**/
 
 .page-letter .post .row {
     display: table;
