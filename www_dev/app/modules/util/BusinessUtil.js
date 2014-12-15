@@ -19,7 +19,7 @@ define(function(require, exports, module) {
      * @memberof BusinessUtil#
      * @return {Date} 現在発行中の新聞の日付(最後に新聞を発行した日時)
      */
-    BusinessUtil.calcCurrentPublishDateForNewsTop = function() {
+    BusinessUtil.getCurrentPublishDate = function() {
         var publishDate = new Date();
         var nowTimeString = moment(publishDate).format("HH:mm");
         if (nowTimeString < app.config.PUBLISH_TIME) {
