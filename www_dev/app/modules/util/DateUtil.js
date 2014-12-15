@@ -22,13 +22,6 @@ define(function(require, exports, module) {
 
         var yobi = new Array('日', '月', '火', '水', '木', '金', '土');
 
-        f = 'ggge';
-        if (result.indexOf(f) > -1) {
-            var japaneseDate = new Intl.DateTimeFormat("ja-JP-u-ca-japanese").format(date);
-            rep = japaneseDate.substring(0, japaneseDate.indexOf(("/")));
-            result = result.replace(/ggge/, rep);
-        }
-
         f = 'yyyy';
         if (result.indexOf(f) > -1) {
             rep = date.getFullYear();
