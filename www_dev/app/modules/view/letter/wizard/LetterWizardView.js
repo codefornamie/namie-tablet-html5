@@ -4,7 +4,13 @@ define(function(require, exports, module) {
     require("jquery-steps");
 
     var app = require("app");
-    var AbstractView = require("modules/view/AbstractView");
+    var ArticleModel = require("modules/model/article/ArticleModel");
+    var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
+    var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var CommonUtil = require("modules/util/CommonUtil");
+    var BusinessUtil = require("modules/util/BusinessUtil");
+    var moment = require("moment");
+    var vexDialog = require("vexDialog");
 
     /**
      * 記事一覧のViewクラス
@@ -13,17 +19,24 @@ define(function(require, exports, module) {
      * @exports LetterWizardView
      * @constructor
      */
-    var LetterWizardView = AbstractView.extend({
+    var LetterWizardView = ArticleRegistFileItemView.extend({
         /**
+         * テンプレート
          * @memberof LetterWizardView#
          */
         template : require("ldsh!templates/{mode}/wizard/letterWizard"),
-
+        /**
+         * このクラスのモデル
+         * @memberof LetterWizardView#
+         */
+        model : new ArticleModel(),
         /**
          * Layoutがレンダリングされたら呼ばれる
          * @memberof LetterWizardView#
          */
         afterRendered : function() {
+            this.prepareValidate();
+
             this.$step = this.$el.find(LetterWizardView.SELECTOR_LETTER_WIZARD).steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -41,6 +54,8 @@ define(function(require, exports, module) {
             this.$step.find("[href='#previous']").addClass("button button--gray");
             this.$step.find("[href='#next']").addClass("button");
             this.$step.find("[href='#finish']").addClass("button");
+            
+            FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
         },
 
         /**
@@ -127,13 +142,28 @@ define(function(require, exports, module) {
          * @memberof LetterWizardView#
          */
         onStepChanging: function (ev, currentIndex, newIndex) {
-            // this.moveTo()が再帰的に呼び出されてしまうのを防ぐ
-            if (this._isMoving) {
-                return true;
-            }
+            if (this.form.valid()) {
+                // this.moveTo()が再帰的に呼び出されてしまうのを防ぐ
+                if (this._isMoving) {
+                    return true;
+                }
+                
+                if (!this.file) {
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("画像が未選択です。");
 
-            this._isMoving = true;
-            this.moveTo(newIndex + 1);
+                    return false;
+                }
+                
+                this.setConfirmLabel();
+                
+                this._isMoving = true;
+                this.moveTo(newIndex + 1);
+            } else {
+                this._isMoving = false;
+                return false;
+            }
+            
         },
 
         /**
@@ -144,8 +174,7 @@ define(function(require, exports, module) {
          * @memberof LetterWizardView#
          */
         onFinishing: function (ev, currentIndex) {
-            // TODO バリデーション処理などを行う？
-            return true;
+            return this.form.valid();
         },
 
         /**
@@ -155,10 +184,79 @@ define(function(require, exports, module) {
          * @memberof LetterWizardView#
          */
         onFinished: function (ev, currentIndex) {
-            // TODO 実際の処理を行う
-            alert("送信しました！（DUMMY）");
-            app.router.go('/letters');
-        }
+            this.showLoading();
+            this.setInputValue();
+            this.hideLoading();
+            alert("mada");
+//            app.router.go('/letters');
+        },
+        /**
+         * バリデータの初期化処理を行う
+         * @memberof LetterWizardView#
+         */
+        prepareValidate : function() {
+            this.form = $("#letter-form");
+            this.form.validate();
+        },
+        /**
+         * 確認画面にインプットデータをセットする関数
+         * @memberof LetterWizardView#
+         */
+        setConfirmLabel : function() {
+            $("#confirmTitle").text($("#letter-wizard-form__title").val());
+            $("#confirmDescription").html(CommonUtil.sanitizing($("#letter-wizard-form__body").val()));
+            $("#confirmNickname").text($("#letter-wizard-form__nickname").val());
+        },
+        /**
+         * モデルにデータをセットする関数
+         * @memberof LetterWizardView#
+         */
+        setInputValue : function() {
+            this.model.set("type","6");
+            this.model.set("title",$("#letter-wizard-form__title").val());
+            this.model.set("description",$("#letter-wizard-form__body").val());
+            this.model.set("nickname",$("#letter-wizard-form__nickname").val());
+            this.model.set("imageUrl",this.generateFileName(this.file.name));
+            
+            // 配信日は固定で翌日とする
+            var prePublishedAt = BusinessUtil.getCurrentPublishDate();
+            this.model.set("publishedAt", moment(prePublishedAt).add(1,"d"));
+        },
+        /**
+         * ファイル読み込み後に行う拡張処理
+         * @memberof LetterWizardView#
+         * @param {Event} ファイルロードイベント
+         */
+        onLoadFileExtend : function(ev, file) {
+            this.file = file;
+            this.file.data = ev.target.result;
+            $("#letterPicture").attr("src",$("#previewFile").attr("src"));
+        },
+        /**
+         * ファイル名を元に、ユニークなID付きのファイル名を生成する
+         * 
+         * @memberof LetterWizardView#
+         * @param {String} fileName ファイル名
+         * @return {String} 生成したファイルパス名
+         */
+        generateFileName : function(fileName) {
+            var preName = fileName.substr(0, fileName.lastIndexOf("."));
+            var suffName = fileName.substr(fileName.lastIndexOf("."));
+
+            return preName + "_" + new Date().getTime() + _.uniqueId("") + suffName;
+        },
+        /**
+         * 削除ボタン押下時のハンドラ
+         * @memberof LetterWizardView#
+         */
+        onClickFileDeleteButton : function() {
+            // fileインプットと画像プレビューのリセット
+            $(this.el).find("#articleFile").val("");
+            $(this.el).find("#previewFile").attr("src", "");
+            $(this.el).find("#previewFile").hide();
+            $(this.el).find("#fileDeleteButton").hide();
+            this.file = null;
+        },
     }, {
         /**
          * ウィザードのセレクタ

@@ -75,6 +75,7 @@ define(function(require, exports, module) {
          * ファイル選択時のハンドラ
          */
         onChangeFileData : function(event) {
+            var self = this;
             app.logger.debug("onChangeFileData");
             var inputFile = event.target;
             var file = (event.target.files ? event.target.files[0] : event.target.file);
@@ -102,6 +103,7 @@ define(function(require, exports, module) {
                     var reader = new FileReader();
                     reader.onload = function(e) {
                         inputFile.data = e.target.result;
+                        self.onLoadFileExtend(e, file);
                     };
                     reader.readAsArrayBuffer(file);
                 };
@@ -124,6 +126,14 @@ define(function(require, exports, module) {
         },
         setInputValue : function() {
         },
+        /**
+         * ファイル読み込み後に行う拡張処理
+         * @memberof ArticleRegistFileItemView#
+         * @param {Event} ファイルロードイベント
+         */
+        onLoadFileExtend : function(ev) {
+            
+        }
     });
     module.exports = ArticleRegistFileItemView;
 });
