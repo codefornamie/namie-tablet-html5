@@ -180,7 +180,7 @@ define(function(require, exports, module) {
             } catch (e) {
                 Log.info("login failure msg : " + e);
                 var message = "";
-                if (e.name === "NetworkError") {
+                if (e.name === "NetworkError" || e.name === "NETWORK_ERR") {
                     message = "ネットワーク接続エラーが発生しました。";
                 } else {
                     message = "ユーザーID、または、パスワードが正しくありません。";
