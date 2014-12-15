@@ -228,9 +228,9 @@ define(function(require, exports, module) {
          * @memberof router#
          * @param {String} targetDate 日付文字列yyyy-MM-dd
          */
-        top : function(targetDate) {
+        top : function(date) {
             app.logger.debug("It's a top page.");
-            var targetDate = app.previewTargetDate ? app.previewTargetDate : targetDate;
+            var targetDate = app.previewTargetDate ? app.previewTargetDate : date;
             if (targetDate) {
                 // 日付が設定されているなら描画開始
                 this.layout.showView(new NewsView({
@@ -243,8 +243,8 @@ define(function(require, exports, module) {
                 });
             } else {
                 // 日付が設定されていない場合は配信日を計算する
-                BusinessUtil.calcConsiderSuspendPublication($.proxy(function(targetDate) {
-                    this.go("top", targetDate);
+                BusinessUtil.calcConsiderSuspendPublication($.proxy(function(considerDate) {
+                    this.go("top", considerDate);
                 }, this));
             }
         },
