@@ -53,10 +53,23 @@ define(function(require, exports, module) {
                 }
             });
             $(this.el).find(".expansionPicture").colorbox({
-                rel : "expansionPicture",
+                closeButton : false,
+                current : "",
                 photo : true,
-                maxWidth : "100%",
-                maxHeight : "100%"
+                maxWidth : "83%",
+                maxHeight : "100%",
+                onComplete : $.proxy(function() {
+                    $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
+                    $("#cboxOverlay").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                    $("#cboxCloseButton").click(function() {
+                        $.colorbox.close();
+                    });
+                    $("#cboxSaveButton").click($.proxy(this.onClickImage, this));
+                },this),
+                onClosed : function() {
+                    $("#cboxSaveButton").remove();
+                    $("#cboxCloseButton").remove();
+                }
             });
             var articleImage = $(this.el).find(".articleDetailImage");
             var onGetBinary = function(binary) {
@@ -128,9 +141,6 @@ define(function(require, exports, module) {
                 minScale : 1,
                 contain : "invert"
             });
-
-            // 画像クリックイベント
-//            this.$el.find(".post__body img").on("click", $.proxy(this.onClickImage, this));
         },
 
         /**
@@ -343,8 +353,8 @@ define(function(require, exports, module) {
          * </p>
          */
         onClickImage : function(ev) {
-            var uri = ev.target.src;
-            var blob = $(ev.target).data("blob");
+            var uri = $("#colorbox").find("img").attr("src");
+            var blob = $("#colorbox").find("img").data("blob");
 
             var base = DateUtil.formatDate(new Date(), "yyyy-MM-dd_HH-mm-ss");
             var ext = uri.replace(/.*\//, "").replace(/.*\./, "");

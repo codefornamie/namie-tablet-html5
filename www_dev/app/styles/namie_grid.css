@@ -258,6 +258,7 @@
     font-size: 1.3rem;
     line-height: 2.3rem;
     padding: 27px;
+    word-break: break-all;
 }
 .news-detail .post__body table tr:nth-child(odd) th {
     background: #cac4a2;
@@ -296,6 +297,7 @@
 .news-detail .post__body table.eventDetail tr td {
     background: #fff;
     border-top: 2px solid #dbd7ba;
+    word-break: break-all;
 }
 
 /* YouTube用補正 */

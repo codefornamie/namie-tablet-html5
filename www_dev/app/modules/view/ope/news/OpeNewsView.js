@@ -60,7 +60,7 @@ define(function(require, exports, module) {
             });
             this.searchArticles();
             $("#articlePreview").colorbox({
-                "href" : "redirect?mode=news&loginId=namie01&preview=true&targetDate=" + DateUtil.formatDate(targetDate, "yyyy-MM-dd") + "&accessToken=" + app.accessor.accessToken, 
+                "href" : "/?mode=news&loginId=namie01&preview=true&targetDate=" + DateUtil.formatDate(targetDate, "yyyy-MM-dd") + "&refreshToken=" + app.accessor.refreshToken, 
                 iframe : true, width : "80%", height : "90%"});
         },
 

@@ -37,9 +37,12 @@ define(function(require, exports, module) {
     var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
 
     var LetterTopView = require("modules/view/letter/top/TopView");
+    var LetterGlobalNavView = require("modules/view/letter/common/GlobalNavView");
 
     // Use main layout and set Views.
     var getViews = function() {
+        var params = parseQueryString(location.href.split("?")[1]);
+        app.config.basic.mode = params.mode || app.config.basic.mode;
         if (_.isEmpty(app.config.basic.mode) || app.config.basic.mode === "news") {
             return {
                 "#header" : new login.HeaderView(),
@@ -69,6 +72,30 @@ define(function(require, exports, module) {
                 "#footer" : new login.FooterView()
             };
         }
+    };
+
+    /**
+     * URLのクエリ文字列をパースする。
+     * @param {String} queryString クエリ文字列
+     * @return {Object} queryStringをパースした結果のマップオブジェクト。
+     */
+    var parseQueryString = function(queryString) {
+        var params = {};
+        if (queryString) {
+            _.each(_.map(decodeURI(queryString).split(/&/g), function(el, i) {
+                var aux = el.split('='), o = {};
+                if (aux.length >= 1) {
+                    var val;
+                    if (aux.length == 2)
+                        val = aux[1];
+                    o[aux[0]] = val;
+                }
+                return o;
+            }), function(o) {
+                _.extend(params, o);
+            });
+        }
+        return params;
     };
 
     // Defining the application router.
@@ -149,6 +176,7 @@ define(function(require, exports, module) {
 
             // 新聞アプリ
             "top" : "top",
+            "top/:date" : "top",
             "article/:id" : "showArticle",
             'scrap' : 'scrap',
             'tutorial' : 'tutorial',
@@ -175,25 +203,22 @@ define(function(require, exports, module) {
             "letters/:id/edit" : "letterEdit"
         },
 
-        index : function() {
+        index : function(queryString) {
             app.logger.debug("Welcome to your / route.");
-        },
-
-        /**
-         * 別アプリへの遷移処理。
-         * @memberof router#
-         * @param {String} queryString クエリ文字列。
-         */
-        redirect : function(queryString) {
-            var params = this.parseQueryString(queryString);
-            app.config.basic.mode = params.mode;
-            app.preview = params.preview;
-            var loginModel = new LoginModel();
-            loginModel.accessToken = params.accessToken;
-            loginModel.set("loginId", params.loginId);
-            loginModel.login($.proxy(function() {
-                this.go("news?preview=true&targetDate=" + params.targetDate);
-            }, this));
+            if(queryString){
+                var params = parseQueryString(queryString);
+                app.config.basic.mode = params.mode;
+                app.preview = params.preview;
+                app.loginId = params.loginId;
+                app.previewTargetDate = params.targetDate;
+                app.pcsManager.refreshToken = params.refreshToken;
+                app.pcsManager.accessToken = "x";
+                app.pcsManager.expirationDate = -1;
+                var loginModel = new LoginModel();
+                loginModel.set("loginId", params.loginId);
+                loginModel.login($.proxy(function(){
+                }, this));
+            }
         },
 
         /**
@@ -202,23 +227,27 @@ define(function(require, exports, module) {
         /**
          * Top画面の表示。
          * @memberof router#
-         * @param {String} queryString クエリ文字列。
+         * @param {String} targetDate 日付文字列yyyy-MM-dd
          */
-        top : function(queryString) {
+        top : function(date) {
             app.logger.debug("It's a top page.");
-            var params = this.parseQueryString(queryString);
-            var targetDate = params.targetDate ? new Date(params.targetDate) : BusinessUtil.getCurrentPublishDate();
-            this.layout.showView(new NewsView({
-                targetDate : targetDate,
-                preview : params.preview,
-                scrollTop : app.scrollTop || 0
-            }));
-            // this.layout.setHeader(new common.HeaderView());
-            // this.layout.setGlobalNav(new common.GlobalNavView());
-            // this.layout.setFooter(new common.FooterView());
-            this.commonView({
-                "targetDate" : targetDate
-            });
+            var targetDate = app.previewTargetDate ? app.previewTargetDate : date;
+            if (targetDate) {
+                // 日付が設定されているなら描画開始
+                this.layout.showView(new NewsView({
+                    targetDate : new Date(targetDate),
+                    preview : app.preview,
+                    scrollTop : app.scrollTop || 0
+                }));
+                this.commonView({
+                    "targetDate" : new Date(targetDate)
+                });
+            } else {
+                // 日付が設定されていない場合は配信日を計算する
+                BusinessUtil.calcConsiderSuspendPublication($.proxy(function(considerDate) {
+                    this.go("top", considerDate);
+                }, this));
+            }
         },
 
         /**
@@ -406,11 +435,16 @@ define(function(require, exports, module) {
          * 町民投稿：トップページ
          */
         letterList : function() {
+            var letterGlobalNavView;
+
             // 実際の描画処理はletter/TopViewに書かれている
             // アプリのライフサイクルの中で、LetterTopViewの初期化は1度だけ行う
             if (!app.letterTopView) {
                 app.letterTopView = new LetterTopView();
+                letterGlobalNavView = new LetterGlobalNavView();
+
                 this.layout.showView(app.letterTopView.layout);
+                this.layout.setGlobalNav(letterGlobalNavView);
             }
         },
 
@@ -462,29 +496,7 @@ define(function(require, exports, module) {
             window.history.back();
         },
 
-        /**
-         * URLのクエリ文字列をパースする。
-         * @param {String} queryString クエリ文字列
-         * @return {Object} queryStringをパースした結果のマップオブジェクト。
-         */
-        parseQueryString : function(queryString) {
-            var params = {};
-            if (queryString) {
-                _.each(_.map(decodeURI(queryString).split(/&/g), function(el, i) {
-                    var aux = el.split('='), o = {};
-                    if (aux.length >= 1) {
-                        var val;
-                        if (aux.length == 2)
-                            val = aux[1];
-                        o[aux[0]] = val;
-                    }
-                    return o;
-                }), function(o) {
-                    _.extend(params, o);
-                });
-            }
-            return params;
-        }
+        parseQueryString: parseQueryString
     });
 
     module.exports = Router;

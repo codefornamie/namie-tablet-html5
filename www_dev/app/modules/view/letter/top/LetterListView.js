@@ -13,10 +13,15 @@ define(function(require, exports, module) {
      * @constructor
      */
     var LetterListView = TabletArticleListView.extend({
+        /**
+         * テンプレート
+         * @memberof LetterListView#
+         */
         template : require("ldsh!templates/{mode}/top/letterList"),
 
         /**
-         * Layoutがレンダリングされたら呼ばれる
+         * Layoutがレンダリングされた後に呼ばれる
+         * @memberof LetterListView#
          */
         afterRendered : function() {
             if (this.collection.size() === 0) {
@@ -27,6 +32,7 @@ define(function(require, exports, module) {
         /**
          * 取得した記事一覧を描画する
          * @override
+         * @memberof LetterListView#
          */
         setArticleList : function() {
             this.setLetterListItemViews();
@@ -34,6 +40,7 @@ define(function(require, exports, module) {
 
         /**
          * 取得した記事一覧を元にLetterListItemViewをセットする
+         * @memberof LetterListView#
          */
         setLetterListItemViews : function() {
             this.collection.each(function(model) {
