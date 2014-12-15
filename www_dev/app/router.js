@@ -37,6 +37,7 @@ define(function(require, exports, module) {
     var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
 
     var LetterTopView = require("modules/view/letter/top/TopView");
+    var LetterGlobalNavView = require("modules/view/letter/common/GlobalNavView");
 
     // Use main layout and set Views.
     var getViews = function() {
@@ -425,11 +426,16 @@ define(function(require, exports, module) {
          * 町民投稿：トップページ
          */
         letterList : function() {
+            var letterGlobalNavView;
+
             // 実際の描画処理はletter/TopViewに書かれている
             // アプリのライフサイクルの中で、LetterTopViewの初期化は1度だけ行う
             if (!app.letterTopView) {
                 app.letterTopView = new LetterTopView();
+                letterGlobalNavView = new LetterGlobalNavView();
+
                 this.layout.showView(app.letterTopView.layout);
+                this.layout.setGlobalNav(letterGlobalNavView);
             }
         },
 

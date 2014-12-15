@@ -18,10 +18,33 @@
 
 .page-letter .header .top-bar {
     background: #43c1d8;
+    height: 55px;
+}
+
+.page-letter .top-bar .name h1 {
+    line-height: 55px;
+}
+
+.is-subpage .page-letter .top-bar .name h1 {
+    padding-left: 100px;
 }
 
 .page-letter .global-nav {
+    display: block;
+    position: relative;
+    height: 0;
+    background: none;
+    z-index: 30;
+}
+
+.page-letter .global-nav__menu {
+    position: relative;
+    top: -55px;
     display: none;
+}
+
+.is-subpage .page-letter .global-nav__menu {
+    display: block;
 }
 
 .page-letter .contents-wrapper {
