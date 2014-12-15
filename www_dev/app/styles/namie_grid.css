@@ -30,11 +30,11 @@
 .grid-list>div {
     box-sizing: border-box;
     margin: 10px;
-    flex: 1 1 30%;
+    flex: 1 1 45%;
     border: 3px solid #e8e8d0;
     background: white;
     position: relative;
-    max-width: 30%;
+    max-width: 45%;
 }
 
 .grid-list__item {
