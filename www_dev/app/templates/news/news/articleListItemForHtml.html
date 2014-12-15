@@ -1,11 +1,11 @@
-<article class='post' id="<%= model.get('__id') %>">
+<article class='post post--<%= model.getSiteType() %>' id="<%= model.get('__id') %>">
     <section class='post__body'>
         <div class="row">
             <div class="large-12 columns">
                 <div class="post-header">
-                    <div class="post-header__site post-header__site--<%= model.getSiteType() %>">
+                    <div class="post-header__site">
                         <div class="post-label">
-                            <div class="article-label article-label--<%= model.getSiteType() %> left">
+                            <div class="article-label left">
                                 <span class='article-label__text'>
                                     <%= model.get("dispSite") %>
                                 </span>

@@ -937,6 +937,12 @@ main {
     margin: 20px 0;
 }
 
+.article-detail__image-area--inner {
+    display: inline-block;
+    background-color: #f2f0e2;
+    padding: 65px;
+}
+
 /**
  *  post-action
  */
@@ -1588,6 +1594,7 @@ div.nehan-block.nehan-body:last-child {
     right: -25px;
     width: 50px;
     height: 50px;
+    padding: 0;
     border-radius: 25px;
     font-size: 28px;
 }
@@ -1652,9 +1659,9 @@ select#articleCategory {
     color: #27a8bd;
     background-image: url(../../app/img/img-article-label-townoffice.png);
 }
-.article-label--article {
-    color: #09406c;
-    background-image: url(../../app/img/img-article-label-article.png);
+.article-label--other {
+    color: #9c9c9c;
+    background-image: url(../../app/img/img-article-label-other.png);
 }
 .article-label__text {
 }
