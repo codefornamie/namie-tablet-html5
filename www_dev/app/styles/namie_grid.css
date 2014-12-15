@@ -93,6 +93,7 @@
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
+    word-break: break-all;
 }
 
 .grid-description__description {
