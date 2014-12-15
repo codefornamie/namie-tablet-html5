@@ -35,7 +35,21 @@ define(function(require, exports, module) {
             if (imageType === Code.IMAGE_TYPE_NONE) {
                 this.$el.find(".grid-list__item").addClass("is-no-image");
             } else {
-                this.$el.find(".articleImage").on("error", function() {
+                this.$el.find(".articleImage")
+                .on("center", function () {
+                    // 画像を中央に寄せる
+                    var $container = $(this).parent();
+                    var width = $(this).width();
+                    var containerWidth = $container.width();
+
+                    $(this).css({
+                        left: containerWidth / 2 - width / 2
+                    });
+                })
+                .on("load", function () {
+                    $(this).triggerHandler("center");
+                })
+                .on("error", function() {
                     self.$el.find(".grid-list__item").addClass("is-no-image");
                 });
             }
