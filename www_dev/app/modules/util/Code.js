@@ -60,11 +60,14 @@ define(function(require, exports, module) {
                 key : "イベント",
                 value : "event"
             }, {
+                key : "レポート",
+                value : "event"
+            }, {
                 key : "浪江町復興支援員宮城県駐在ブログ",
                 value : "blog"
             }
     ];
-    Code.ARTICLE_SITE_NONE = "article";
+    Code.ARTICLE_SITE_NONE = "other";
 
     // ArticleModelの画像タイプ
     Code.IMAGE_TYPE_PIO = 2;

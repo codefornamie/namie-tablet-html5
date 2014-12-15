@@ -1,20 +1,18 @@
-<article class='post' id="<%= model.get('__id') %>">
+<article class='post post--<%= model.getSiteType() %>' id="<%= model.get('__id') %>">
     <section class='post__body'>
         <div class="row">
             <div class="large-12 columns">
                 <div class="post-header">
                     <div class="post-header__site">
                         <div class="post-label">
-                            <div class="article-label article-label--<%= model.getSiteType() %> left">
+                            <div class="article-label left">
                                 <span class='article-label__text'>
                                     <%= model.get("dispSite") %>
                                 </span>
                             </div>
 
                             <div class="post-recommend right">
-                                <div class="post-recommend__amount">
-                                    <%= model.recommendAmount %>
-                                </div>
+                                <div class="post-recommend__amount"><%= model.recommendAmount %></div>
 
                                 おすすめ
                             </div>
@@ -34,57 +32,57 @@
                 </div>
 
                 <div class="large-12 columns">
-                    <div class="eventColumnsHeader">日時</div>
+                    <table class="eventDetail">
+                        <tr>
+                            <th>日時</th>
+                            <td id="articleDateTime"></td>
+                        </tr>
+                        <tr>
+                            <th>場所</th>
+                            <td>
+                                <%=model.get("dispPlace")%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>内容</th>
+                            <td>
+                                <%=model.get("dispDescription")%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>画像</th>
+                            <td>
+                                <div class="eventFile">
+                                    <div class="eventFileImage">
+                                        <img>
+                                    </div>
+                                   <%=model.get("imageComment")%>
+                                </div>
+                                <div class="eventFile">
+                                    <div class="eventFileImage">
+                                        <img>
+                                    </div>
+                                   <%=model.get("imageComment2")%>
+                                </div>
+                                <div class="eventFile">
+                                    <div class="eventFileImage">
+                                        <img>
+                                    </div>
+                                   <%=model.get("imageComment3")%>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>主催者連絡先</th>
+                            <td>
+                                <%=model.get("dispContactInfo")%>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="large-11 large-centered columns">
-                    <div id="articleDateTime"></div>
-                </div>
-
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">場所</div>
-                </div>
-                <div class="large-11 large-centered columns">
-                    <%=model.get("dispPlace")%>
-                </div>
-
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">内容</div>
-                </div>
-                <div class="large-11 large-centered columns">
-                    <%=model.get("dispDescription")%>
-                </div>
-
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">画像</div>
-                </div>
-                <div class="large-11 large-centered columns">
-                    <div class="eventFile">
-                        <div class="eventFileImage">
-                            <img>
-                        </div>
-                       <%=model.get("imageComment")%>
-                    </div>
-                    <div class="eventFile">
-                        <div class="eventFileImage">
-                            <img>
-                        </div>
-                       <%=model.get("imageComment2")%>
-                    </div>
-                    <div class="eventFile">
-                        <div class="eventFileImage">
-                            <img>
-                        </div>
-                       <%=model.get("imageComment3")%>
-                    </div>
-                </div>
-
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">主催者連絡先</div>
-                </div>
-                <div class="large-11 large-centered columns end">
-                    <%=model.get("dispContactInfo")%>
-                </div>
-            </div>    </section>
+            </div>
+        </div>
+    </section>
 
     <section class='post__footer'>
         <div class="post-action">
