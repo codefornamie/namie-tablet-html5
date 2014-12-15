@@ -2,27 +2,31 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var moment = require("moment");
     var AbstractView = require("modules/view/AbstractView");
     var LetterListView = require("modules/view/letter/top/LetterListView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var Equal = require("modules/util/filter/Equal");
+    var Ge = require("modules/util/filter/Ge");
+    var Le = require("modules/util/filter/Le");
     var And = require("modules/util/filter/And");
     var Code = require("modules/util/Code");
 
     /**
      * 町民投稿アプリのトップ画面を表示するためのLayoutクラスを作成する。
-     * 
      * @class
      * @constructor
      */
     var LetterTopLayout = Backbone.Layout.extend({
         /**
          * このLayoutのテンプレートファイルパス
+         * @memberof LetterTopLayout#
          */
         template : require("ldsh!templates/{mode}/top/top"),
 
         /**
          * イベント一覧
+         * @memberof LetterTopLayout#
          */
         events : {
             "click a" : "onClickAnchor"
@@ -31,6 +35,7 @@ define(function(require, exports, module) {
         /**
          * 初期化
          * @param {Object} param
+         * @memberof LetterTopLayout#
          */
         initialize : function(param) {
             console.assert(param, "param should be specified");
@@ -41,6 +46,7 @@ define(function(require, exports, module) {
 
         /**
          * 一覧画面を開く
+         * @memberof LetterTopLayout#
          */
         showList: function () {
             this.setView(LetterTopLayout.SELECTOR_LETTER_LIST, this.letterListView);
@@ -48,6 +54,7 @@ define(function(require, exports, module) {
 
         /**
          * aタグをクリックした際の挙動を ブラウザデフォルトではなく pushStateに変更する
+         * @memberof LetterTopLayout#
          */
         // TODO onClickAnchorメソッドが色々なファイルにコピペされているので、どこかにまとめる
         onClickAnchor : function(evt) {
@@ -77,13 +84,13 @@ define(function(require, exports, module) {
      * 町民投稿アプリのトップ画面を表示するためのViewクラスを作成する。
      * 
      * @class 町民投稿アプリのトップ画面を表示するためのView
-     * @exports TopView
+     * @exports LetterTopView
      * @constructor
      */
-    var TopView = AbstractView.extend({
+    var LetterTopView = AbstractView.extend({
         /**
          * 初期化
-         * @memberof TopView#
+         * @memberof LetterTopView#
          * @param {Object} param
          */
         initialize : function(param) {
@@ -94,13 +101,21 @@ define(function(require, exports, module) {
 
         /**
          * コレクションを初期化する
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         initCollection : function() {
+            // 直近１ヶ月分を表示する
+            var dateFrom = moment().subtract(1, "month").format("YYYY-MM-DD");
+            var dateTo = moment().format("YYYY-MM-DD");
+
             this.letterCollection = new ArticleCollection();
 
             this.letterCollection.condition.filters = [
                 new And([
+                    new And([
+                        new Ge("publishedAt", dateFrom),
+                        new Le("publishedAt", dateTo)
+                    ]),
                     new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING]),
                     new Equal("createUserId", app.user.get("__id"))
                 ])
@@ -111,7 +126,7 @@ define(function(require, exports, module) {
 
         /**
          * layoutを初期化する
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         initLayout : function() {
             this.letterListView = new LetterListView({
@@ -125,7 +140,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
@@ -135,7 +150,7 @@ define(function(require, exports, module) {
 
         /**
          * ルーティングを監視して描画処理を行う
-         * @memberof TopView#
+         * @memberof LetterTopView#
          * @param {String} route
          * @param {Object} params
          */
@@ -170,7 +185,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事一覧が読み込まれたら呼ばれる
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         onSyncLetter : function() {
             this.layout.render();
@@ -179,7 +194,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事一覧の読み込みに失敗したら呼ばれる
-         * @memberof TopView#
+         * @memberof LetterTopView#
          */
         onErrorLetter : function() {
             alert("記事一覧の取得に失敗しました");
@@ -188,5 +203,5 @@ define(function(require, exports, module) {
         }
     });
 
-    module.exports = TopView;
+    module.exports = LetterTopView;
 });

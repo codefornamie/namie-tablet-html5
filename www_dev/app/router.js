@@ -479,7 +479,9 @@ define(function(require, exports, module) {
          */
         back : function() {
             window.history.back();
-        }
+        },
+
+        parseQueryString: parseQueryString
     });
 
     module.exports = Router;
