@@ -322,7 +322,8 @@
     background: white;
     display: block;
     margin: 10px 0;
-    height: 400px; overflow : auto;
+    height: 520px;
+    overflow : auto;
     position: relative;
     width: auto;
     overflow: auto;
