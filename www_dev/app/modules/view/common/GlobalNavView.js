@@ -113,7 +113,9 @@ define(function(require, exports, module) {
          *  topでは表示しない
          */
         updateBackHomeButton: function () {
-            if (Backbone.history.fragment == 'top') {
+            var fragment = Backbone.history.fragment;
+
+            if (fragment && fragment.match(/^top/)) {
                 $('.global-nav__menu').hide();
                 $('.global-nav__date').addClass('no-backbutton');
             } else {
