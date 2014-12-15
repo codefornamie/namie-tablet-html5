@@ -3,7 +3,7 @@
         <div class="row">
             <div class="large-12 columns">
                 <div class="post-header">
-                    <div class="post-header__site">
+                    <div class="post-header__site post-header__site--<%= model.getSiteType() %>">
                         <div class="post-label">
                             <div class="article-label article-label--<%= model.getSiteType() %> left">
                                 <span class='article-label__text'>
@@ -12,9 +12,7 @@
                             </div>
 
                             <div class="post-recommend right">
-                                <div class="post-recommend__amount">
-                                    <%= model.recommendAmount %>
-                                </div>
+                                <div class="post-recommend__amount"><%= model.recommendAmount %></div>
 
                                 おすすめ
                             </div>

@@ -15,7 +15,6 @@
     width: 100%;
     height: 100%;
     background-color: #fbfaf4;
-    padding-top: 10px;
     overflow: auto;
 }
 
@@ -118,16 +117,23 @@
  *  記事詳細
  */
 .news-detail .post {
-    margin: 20px;
-    padding: 20px;
+    margin: 27px;
+    padding: 0;
     background: white;
     border: 3px solid #e8e8d0;
+}
+
+.news-detail .post__body {
+    padding: 0 100px;
+    font-size: 1.3rem;
+    line-height: 2.3rem;
 }
 
 .news-detail .post-header__site {
     background: none;
     height: auto;
-    margin: 0;
+    margin: 0 -100px;
+    color: #fff;
 }
 
 .news-detail .post-header__site::before,
@@ -135,11 +141,38 @@
     display: none;
 }
 
-.news-detail .post-label {
-    background: none;
-    padding: 0;
+.news-detail .post-header__site--localnews {
+    background-color: #73c563;
 }
 
-.news-detail .post-body {
-    margin: 20px 0;
+.news-detail .post-label {
+    background: none;
+    padding: 0 0 0 100px;
+}
+
+.news-detail .post-label .article-label {
+    background-repeat: no-repeat;
+    background-size: auto 65%;
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 60px;
+    margin-bottom: 0;
+    padding-left: 3rem;
+}
+.news-detail .post-header__site--localnews .article-label {
+    background-image: url(../../app/img/img-article-header-localnews.png);
+}
+
+.news-detail .post-recommend {
+    margin-right: 100px;
+    line-height: 60px;
+}
+.news-detail .post-recommend__amount  {
+    padding: 8px 10px;
+    display: inline;
+}
+
+.news-detail .post-header__title {
+    font-size: 44px;
+    margin: 60px 0;
 }
