@@ -55,10 +55,16 @@
     vertical-align: middle;
     text-align: center;
     padding: 0 10px;
+    overflow: hidden;
 }
 
 .grid-cell--image .articleImage {
-    min-width: 100%;
+    max-width: initial;
+    position: absolute;
+    top: 0;
+    right: -25%;
+    height: 100%;
+    width: auto;
 }
 
 .grid-cell--image .articleImage[src=""],
