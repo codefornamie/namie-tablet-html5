@@ -462,6 +462,10 @@
     font-weight: bold;
 }
 
+.letter-form label.is-nowrap {
+    white-space: nowrap;
+}
+
 .letter-form input,
 .letter-form textarea {
     padding: 20px;
