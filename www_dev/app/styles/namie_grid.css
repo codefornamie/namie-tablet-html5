@@ -96,7 +96,7 @@
  *  グリッドの説明文章
  */
 .grid-description {
-    padding-bottom: 60px;
+    padding-bottom: 10px;
 }
 
 .grid-description__title {
@@ -114,10 +114,6 @@
  */
 .grid-button {
     text-align: right;
-    position: absolute;
-    bottom: 15px;
-    right: 20px;
-    max-width: 45%;
 }
 
 .grid-button .button {
