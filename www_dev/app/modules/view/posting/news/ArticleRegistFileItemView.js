@@ -103,7 +103,7 @@ define(function(require, exports, module) {
                     var reader = new FileReader();
                     reader.onload = function(e) {
                         inputFile.data = e.target.result;
-                        self.onLoadFileExtend(e);
+                        self.onLoadFileExtend(e, file);
                     };
                     reader.readAsArrayBuffer(file);
                 };

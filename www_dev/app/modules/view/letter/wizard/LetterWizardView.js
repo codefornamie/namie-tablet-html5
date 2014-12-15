@@ -35,7 +35,6 @@ define(function(require, exports, module) {
          * @memberof LetterWizardView#
          */
         afterRendered : function() {
-            FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
             this.prepareValidate();
 
             this.$step = this.$el.find(LetterWizardView.SELECTOR_LETTER_WIZARD).steps({
@@ -55,6 +54,8 @@ define(function(require, exports, module) {
             this.$step.find("[href='#previous']").addClass("button button--gray");
             this.$step.find("[href='#next']").addClass("button");
             this.$step.find("[href='#finish']").addClass("button");
+            
+            FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
         },
 
         /**
@@ -226,8 +227,8 @@ define(function(require, exports, module) {
          * @memberof LetterWizardView#
          * @param {Event} ファイルロードイベント
          */
-        onLoadFileExtend : function(ev) {
-            this.file = $("#articleFile").prop("files")[0];
+        onLoadFileExtend : function(ev, file) {
+            this.file = file;
             this.file.data = ev.target.result;
             $("#letterPicture").attr("src",$("#previewFile").attr("src"));
         },
