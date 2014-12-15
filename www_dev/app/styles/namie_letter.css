@@ -256,6 +256,13 @@
     margin: 0 100px;
 }
 
+.letter-wizard-pages .preview-file {
+    padding-bottom: 10px;
+    float: right;
+    max-height: 400px;
+    display: none;
+}
+
 .letter-wizard ul[role="tablist"] {
     margin: 0;
     list-style: none;
