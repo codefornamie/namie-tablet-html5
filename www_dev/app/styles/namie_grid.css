@@ -29,7 +29,7 @@
 
 .grid-list>div {
     box-sizing: border-box;
-    margin: 10px;
+    margin: 5px;
     flex: 1 1 45%;
     border: 3px solid #e8e8d0;
     background: white;
