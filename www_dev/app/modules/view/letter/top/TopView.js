@@ -154,7 +154,9 @@ define(function(require, exports, module) {
             var dateFrom = moment().subtract(1, "month").format("YYYY-MM-DD");
             var dateTo = moment().add(1,"d").format("YYYY-MM-DD");
 
-            this.letterCollection = new ArticleCollection();
+            if (!this.letterCollection) {
+                this.letterCollection = new ArticleCollection();
+            }
 
             this.letterCollection.condition.filters = [
                     new Ge("publishedAt", dateFrom), new Le("publishedAt", dateTo),

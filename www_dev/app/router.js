@@ -445,6 +445,9 @@ define(function(require, exports, module) {
 
                 this.layout.showView(app.letterTopView.layout);
                 this.layout.setGlobalNav(letterGlobalNavView);
+            } else {
+                // 投稿後の新規記事取得処理
+                app.letterTopView.initCollection();
             }
         },
 
