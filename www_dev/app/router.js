@@ -176,6 +176,7 @@ define(function(require, exports, module) {
 
             // 新聞アプリ
             "top" : "top",
+            "top/:date" : "top",
             "article/:id" : "showArticle",
             'scrap' : 'scrap',
             'tutorial' : 'tutorial',
@@ -226,19 +227,27 @@ define(function(require, exports, module) {
         /**
          * Top画面の表示。
          * @memberof router#
-         * @param {String} queryString クエリ文字列。
+         * @param {String} targetDate 日付文字列yyyy-MM-dd
          */
-        top : function(queryString) {
+        top : function(date) {
             app.logger.debug("It's a top page.");
-            var targetDate = app.previewTargetDate ? new Date(app.previewTargetDate) : BusinessUtil.getCurrentPublishDate();
-            this.layout.showView(new NewsView({
-                targetDate : targetDate,
-                preview : app.preview,
-                scrollTop: app.scrollTop || 0
-            }));
-            this.commonView({
-                "targetDate" : targetDate
-            });
+            var targetDate = app.previewTargetDate ? app.previewTargetDate : date;
+            if (targetDate) {
+                // 日付が設定されているなら描画開始
+                this.layout.showView(new NewsView({
+                    targetDate : new Date(targetDate),
+                    preview : app.preview,
+                    scrollTop : app.scrollTop || 0
+                }));
+                this.commonView({
+                    "targetDate" : new Date(targetDate)
+                });
+            } else {
+                // 日付が設定されていない場合は配信日を計算する
+                BusinessUtil.calcConsiderSuspendPublication($.proxy(function(considerDate) {
+                    this.go("top", considerDate);
+                }, this));
+            }
         },
 
         /**
