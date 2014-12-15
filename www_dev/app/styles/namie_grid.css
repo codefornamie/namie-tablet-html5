@@ -5,7 +5,7 @@
     height: 100%;
     overflow: auto;
     float: none;
-    padding: 20px 0 0 0;
+    padding: 10px 0 0 0;
 }
 
 .news-detail {
@@ -29,12 +29,12 @@
 
 .grid-list>div {
     box-sizing: border-box;
-    margin: 20px;
-    flex: 1 1 45%;
+    margin: 10px;
+    flex: 1 1 30%;
     border: 3px solid #e8e8d0;
     background: white;
     position: relative;
-    max-width: 45%;
+    max-width: 30%;
 }
 
 .grid-list__item {
@@ -107,10 +107,12 @@
     position: absolute;
     bottom: 15px;
     right: 20px;
+    max-width: 50%;
 }
 
 .grid-button .button {
     margin-bottom: 0;
+    font-size: 0.8rem;
 }
 
 /**
