@@ -203,6 +203,7 @@
 .news-detail .post-header__title {
     font-size: 1.9rem;
     margin: 50px 0;
+    word-break: break-all;
 }
 
 .news-detail .post__body h1 {
@@ -268,6 +269,7 @@
     font-size: 1.9rem;
     font-weight: bold;
     margin: 27px 0;
+    word-break: break-all;
 }
 .news-detail .post__body table.eventDetail {
     border-collapse: collapse;
