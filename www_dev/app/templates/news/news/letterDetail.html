@@ -1,0 +1,110 @@
+<article
+    class='post'
+    id="<%= model.get('__id') %>"
+>
+    <section class='post__body'>
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="post-header">
+                    <div class="post-header__site">
+                        <div class="post-label">
+                            <div
+                                class="article-label article-label--<%= model.getSiteType() %> left"
+                            >
+                                <span class='article-label__text'>
+                                    <%= model.get("dispSite") %>
+                                </span>
+                            </div>
+
+                            <div class="post-recommend right">
+                                <div class="post-recommend__amount">
+                                    <%= model.recommendAmount %>
+                                </div>
+                                おすすめ
+                            </div>
+                        </div>
+
+                        <div class="tagListArea"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="large-12 columns">
+                    <div class="eventTitle">
+                        <%= model.get("dispTitle") %>
+                    </div>
+                </div>
+
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">本文</div>
+                </div>
+                <div class="large-11 large-centered columns">
+                    <%=model.get("dispDescription")%>
+                </div>
+
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">画像</div>
+                </div>
+                <div class="large-11 large-centered columns">
+                    <div class="eventFile">
+                        <div class="eventFileImage">
+                            <img>
+                        </div>
+                        <%=model.get("imageComment")%>
+                    </div>
+
+                    <div class="eventFile">
+                        <div class="eventFileImage">
+                            <img>
+                        </div>
+                        <%=model.get("imageComment2")%>
+                    </div>
+
+                    <div class="eventFile">
+                        <div class="eventFileImage">
+                            <img>
+                        </div>
+                        <%=model.get("imageComment3")%>
+                    </div>
+                </div>
+
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">ニックネーム</div>
+                </div>
+
+                <div class="large-11 large-centered columns end">
+                    ニックネームが入ります
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class='post__footer'>
+        <div class="post-action">
+            <button
+                data-recommend-register-button
+                type="button"
+                class="button button--recommend"
+            >おすすめ</button>
+
+            <button
+                data-recommend-delete-button
+                type="button"
+                class="button button--recommend"
+            >おすすめ取消</button>
+
+            <button
+                data-favorite-register-button
+                type="button"
+                class="button button--scrap"
+            >切り抜き</button>
+
+            <button
+                data-favorite-delete-button
+                type="button"
+                class="button button--scrap"
+            >切り抜き削除</button>
+        </div>
+    </section>
+</article>
