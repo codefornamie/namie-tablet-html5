@@ -7,18 +7,18 @@
             <div class="small-2 columns columns--date">
                 <div class="date-area">
                     <div class="date--year">
-                        <%= moment(model.get("updatedAt")).format("YYYY") %>年
+                        <%= moment(model.get("publishedAt")).format("YYYY") %>年
                     </div>
 
                     <div class="date--date">
-                        <span class="date--month"><%= moment(model.get("updatedAt")).format("MM") %></span><!--
-                        --><span class="date--day"><%= moment(model.get("updatedAt")).format("DD") %></span>
+                        <span class="date--month"><%= moment(model.get("publishedAt")).format("MM") %></span><!--
+                        --><span class="date--day"><%= moment(model.get("publishedAt")).format("DD") %></span>
                     </div>
 
                     <br />
 
                     <div class="date--weekday">
-                        <%= "日月火水木金土"[moment(model.get("updatedAt")).format("e")] %>曜日
+                        <%= "日月火水木金土"[moment(model.get("publishedAt")).format("e")] %>曜日
                     </div>
                 </div>
             </div>
@@ -29,12 +29,7 @@
                 </h4>
 
                 <p>
-                    非常に長いテキストが入ります。
-                    非常に長いテキストが入ります。
-                    非常に長いテキストが入ります。
-                    非常に長いテキストが入ります。
-                    非常に長いテキストが入ります。
-                    非常に長いテキストが入ります。
+                   <%= model.get("dispDescription") %>
                 </p>
 
                 <div class="post-action">
@@ -55,7 +50,7 @@
             </div>
 
             <div class="small-3 columns columns--thumbnail">
-                <img src="app/img/dummy-manga.png" alt="DUMMY">
+                <img class="letterListItemPicture" src="">
             </div>
         </div>
     </section>

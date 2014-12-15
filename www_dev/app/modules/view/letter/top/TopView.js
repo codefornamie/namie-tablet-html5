@@ -50,7 +50,7 @@ define(function(require, exports, module) {
          * 一覧画面を開く
          * @memberof LetterTopLayout#
          */
-        showList: function () {
+        showList : function() {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
             this.setView(LetterTopLayout.SELECTOR_LETTER_LIST, this.letterListView);
@@ -60,7 +60,7 @@ define(function(require, exports, module) {
          * ウィザード画面を開く
          * @param {Number} step
          */
-        showWizard: function (step) {
+        showWizard : function(step) {
             var isRendered = !!this.getView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
 
             // レンダリング済みならば何もしない
@@ -78,7 +78,7 @@ define(function(require, exports, module) {
          * @param {String} id 編集する記事のID
          * @memberof LetterTopLayout#
          */
-        showEdit: function (id) {
+        showEdit : function(id) {
             console.assert(_.isString(id), "id should be a string");
 
             var letterEditView = new LetterEditView();
@@ -152,19 +152,14 @@ define(function(require, exports, module) {
         initCollection : function() {
             // 直近１ヶ月分を表示する
             var dateFrom = moment().subtract(1, "month").format("YYYY-MM-DD");
-            var dateTo = moment().format("YYYY-MM-DD");
+            var dateTo = moment().add(1,"d").format("YYYY-MM-DD");
 
             this.letterCollection = new ArticleCollection();
 
             this.letterCollection.condition.filters = [
-                new And([
-                    new And([
-                        new Ge("publishedAt", dateFrom),
-                        new Le("publishedAt", dateTo)
-                    ]),
-                    new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING]),
+                    new Ge("publishedAt", dateFrom), new Le("publishedAt", dateTo),
+                    new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_LETTER]),
                     new Equal("createUserId", app.user.get("__id"))
-                ])
             ];
 
             this.letterCollection.fetch();
