@@ -105,6 +105,8 @@ define(function(require, exports, module) {
 
             saveData.isRecommend = this.get("isRecommend");
             saveData.isDepublish = this.get("isDepublish");
+
+            saveData.nickname = this.get("nickname");
             // タグ文字列の生成
             var tags = "";
             if (this.get("tagsArray") && this.get("tagsArray").length) {
