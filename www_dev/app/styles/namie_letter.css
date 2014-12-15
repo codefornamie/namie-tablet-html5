@@ -248,6 +248,7 @@
  */
 .letter-wizard {
     position: relative;
+    margin-top: 10px;
 }
 
 .letter-wizard-pages {
