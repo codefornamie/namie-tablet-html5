@@ -402,6 +402,10 @@ define(function(require, exports, module) {
                 template = require("ldsh!templates/{mode}/news/youTubeListItem");
                 ListItemView = YouTubeListItemView;
                 break;
+            case "6": // 町民投稿
+                template = require("ldsh!templates/{mode}/news/letterDetail");
+                ListItemView = EventListItemView;
+                break;
             default:
                 template = require("ldsh!templates/{mode}/news/eventsDetail");
                 ListItemView = EventListItemView;
