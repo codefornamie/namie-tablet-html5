@@ -234,36 +234,6 @@ body {
             img.prependTo($("#container")).fadeIn("slow");
         });
     }
-
-    /**
-     * １つの画像の表示を行う。
-     * @param {String} fname 表示する画像のファイル名
-     */
-    function showImage2(fname) {
-        log("start showImage : " + fname);
-        try {
-            _collectonObj.getBinary(fname, {
-                success : function(binary) {
-                    log("start onGetBinary");
-                    var img = $("<img class='slideImage'>");
-                    var arrayBufferView = new Uint8Array(binary);
-                    var blob = new Blob([
-                        arrayBufferView
-                    ], {
-                        type : "image/jpg"
-                    });
-                    var url = window.URL.createObjectURL(blob);
-                    img.attr("src", url);
-                    img.data("blob", blob);
-                    img.hide();
-                    img.prependTo($("#container")).fadeIn("slow");
-                }
-            });
-        } catch (e) {
-            log("Personium load file failure");
-            log(e);
-        }
-    }
 </script>
 <body>
 	<div id="container" style="font-size: 1.5em;" />
