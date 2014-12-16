@@ -4,66 +4,238 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport"
-    content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 <link rel="stylesheet" href="bower_components/animate.css/animate.css">
 <script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="lib/dao/dc1-client.js"></script>
 </head>
 
 <style>
 #slideImage {
-    -vendor-animation-duration: 5s;
-    -vendor-animation-delay: 1s;
-    -vendor-animation-iteration-count: infinite;
+	-vendor-animation-duration: 5s;
+	-vendor-animation-delay: 1s;
+	-vendor-animation-iteration-count: infinite;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.slideImage {
+	width: 50%;
+	height: 50%;
 }
 </style>
 <script>
+    // TODO: appConfigから取得するようにする
+    var _base = "https://test.namie-tablet.org/";
+    var _cellName = "kizuna01";
 
-    var images = [
-"10411974_745593568858423_3338845195879494958_n.jpg",
-"10841998_745593565525090_3002790559317490279_o.jpg",
-"1499676_720510028037494_821496066096814829_n.jpg",
-"20141122002je.jpg",
-"20141202 (2).JPG",
-"20141202 (4).JPG",
-"slide11.JPG",
-"slide12.JPG",
-"slide13.JPG",
-"slide14.JPG",
-"slide29.JPG",
-"slide36.JPG",
-"slide45.JPG",
-"slide46.JPG",
-"slide6.JPG",
-"slide7.JPG",
-"slide8.JPG",
-"slide9.JPG"
-    ];
-    var index = 1;
-    var interval = 2000;
-    function showImages() {
-        if (index >= images.length) {
-            index = 0;
-        }
+    /** Personiumアクセスライブラリ。 */
+    var _dc = new dcc.DcContext(_base);
+    /** アクセストークン。 */
+    var _token = "";
+    /** PersoniumのCollectionオブジェクト。 */
+    var _collectonObj;
+    /** 表示対象のファイル一覧。 */
+    var _fileList = [];
+    /** 画像インターバル中のインターバルＩＤ。*/
+    var _slideInterval = null;
+    /** 画像の表示間隔。 */
+    var _slideTime = 20 * 1000; // 20秒
+    /** 画像インターバル中のインターバルＩＤ。*/
+    var _updateInterval = null;
+    /** 画像の表示間隔。 */
+    var _updateTime = 10 * 60 * 1000; // 10分
+    /** 画像データのキャッシュ。 */
+    var _cache = {};
 
-        $("#slideImage").addClass("animated fadeOut");
-        setTimeout(function() {
-            $("#container").children().remove();
+    /**
+     * 初期処理。jQueryの準備が出来た後に最初の処理を行う。
+     */
+    $(document).ready(function() {
+        callJava();
 
-            var imgElement = '<img id="slideImage" src="app/img/slideshow/' + images[index++] +
-                    '" style="width: 100%; height: 100%;" class="animated fadeIn" />';
-            $("#container").append(imgElement);
-        }, interval);
+        // 以降は一定時間毎に対象画像を再取得する
+        _updateInterval = setInterval(function() {
+            callJava();
+        }, _updateTime);
+    });
 
+    /**
+     * Javaのメソッドを呼び出し、AccountManagerからトークンの取得を行う。処理後、「window.javaToJs」が呼び出される。
+     */
+    function callJava() {
+        log("start refreshSlideShow method");
+        appJsInterface.jsToJava();
     }
 
-    $(document).ready(function() {
+    /**
+     * デバッグ用。
+     */
+    function log(msg) {
+        $("<div>").text(msg).prependTo($("#container"));
+    }
 
-        setInterval("showImages()", 12000);
-    });
+    /**
+     * Javaから呼び出されるI/F。スライドショーのデータ入れ替えを行う。
+     * @param {String} token Personiumアクセストークン
+     */
+    window.javaToJs = function(token) {
+        log("start refreshJavaToJs");
+        _token = token;
+        refresh();
+    }
+
+    /**
+     * 対象画像をPersoniumから再取得。
+     */
+    function refresh() {
+        log("start refresh ");
+        _fileList = getFileList();
+        startSlideShow();
+        return;
+    }
+
+    /**
+     * 対象のファイル一覧を取得する。
+     * @return {Array} ファイル名の配列
+     */
+    function getFileList() {
+        log("start getFileList");
+        var list = [];
+        try {
+            log("start refresh method / token : " + _token);
+            var cellObj = _dc.withToken(_token).cell(_cellName);
+            _odataObj = cellObj.box("data").odata("odata");
+            _collectonObj = cellObj.box("data").col("dav").col("slideshow");
+        } catch (e) {
+            log("Personium certificate failure");
+
+            log(e);
+        }
+        try {
+            var ret = _odataObj.entitySet("slideshow").query().filter("published eq '1'").run();
+            for (var i = 0; i < ret.length; i++) {
+                list.push(ret[i].filename);
+            }
+        } catch (e) {
+            log("Personium odata failure");
+            log(e);
+        }
+        return list;
+     }
+
+    /**
+     * 対象のファイル一覧を取得する。
+     * @return {Array} ファイル名の配列
+     */
+    function getFileListFromWebDAV() {
+        log("start getFileList");
+        var list = [];
+        try {
+            log("start refresh method / token : " + _token);
+            var cellObj = _dc.withToken(_token).cell(_cellName);
+            _collectonObj = cellObj.box("data").col("dav").col("slideshow");
+        } catch (e) {
+            log("Personium certificate failure");
+            log(e);
+        }
+        try {
+            var objlist = _collectonObj.getFileList();
+            for (var i = 0; i < objlist.length; i++) {
+                var fobj = objlist[i];
+                var name = fobj.Name.substring(fobj.Name.lastIndexOf("/") + 1);
+                list.push(name);
+            }
+        } catch (e) {
+            log("Personium DAV PROPFIND failure");
+            log(e);
+        }
+        return list;
+    }
+
+    /**
+     *　スライドショー開始。
+     */
+    function startSlideShow() {
+        log("start startSlideShow");
+        // 最初の１枚は待たずに表示
+        showImage(getNextImage());
+
+        // すでにスライドショーが動作している場合は、インターバルを一旦解除する。
+		if (_slideInterval) {
+		    clearInterval(_slideInterval);
+		    _slideInterval = null;
+		}
+
+        // 以降は定期的に更新する
+        _slideInterval = setInterval(function() {
+            showImage(getNextImage());
+        }, _slideTime);
+    }
+
+    /**
+     * 次に表示する画像を取得。
+     * @return {String} 画像のファイル名
+     */
+    function getNextImage() {
+        log("start getNextImage");
+        return _fileList[Math.floor(Math.random() * _fileList.length)];
+    }
+
+	/**
+	 * 画像のバイナリを取得。キャッシュにあれば再利用する。
+	 */
+    function getImageBinary(fname, callback) {
+        if (_cache[fname]) {
+            log("use cache");
+            callback(_cache[fname]);
+            return;
+        }
+        try {
+            _collectonObj.getBinary(fname, {
+                success : function(binary) {
+                    _cache[fname] = binary;
+                    callback(binary);
+                }
+            });
+        } catch (e) {
+            log("Personium load file failure");
+            log(e);
+            callback(null);
+        }
+    }
+
+    /**
+     * １つの画像の表示を行う。
+     * @param {String} fname 表示する画像のファイル名
+     */
+    function showImage(fname) {
+        log("start showImage : " + fname);
+        getImageBinary(fname, function(binary) {
+            if (!binary) {
+                log("failure binary null");
+                return;
+            }
+            log("start onGetBinary");
+            var img = $("<img class='slideImage'>");
+            var arrayBufferView = new Uint8Array(binary);
+            var blob = new Blob([
+                arrayBufferView
+            ], {
+                type : "image/jpg"
+            });
+            var url = window.URL.createObjectURL(blob);
+            img.attr("src", url);
+            img.data("blob", blob);
+            img.hide();
+            img.prependTo($("#container")).fadeIn("slow");
+        });
+    }
 </script>
 <body>
-    <div id="container">
-        <img id="slideImage" src="app/img/slideshow/slide9.JPG" style="width: 100%; height: 100%;" class="animated fadeIn" />
-    </div>
+	<div id="container" style="font-size: 1.5em;" />
 </body>
 </html>
