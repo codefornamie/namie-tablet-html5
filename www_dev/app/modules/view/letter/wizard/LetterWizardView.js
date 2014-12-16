@@ -196,7 +196,14 @@ define(function(require, exports, module) {
          */
         prepareValidate : function() {
             this.form = $("#letter-form");
-            this.form.validate();
+            this.form.validate({
+                submitHandler : function() {
+                    return false;
+                },
+                invalidHandler : function() {
+                    return false;
+                }
+            });
         },
         /**
          * 確認画面にインプットデータをセットする関数
