@@ -5,7 +5,7 @@
     height: 100%;
     overflow: auto;
     float: none;
-    padding: 20px 0 0 0;
+    padding: 10px 0 0 0;
 }
 
 .news-detail {
@@ -15,6 +15,10 @@
     width: 100%;
     height: 100%;
     overflow: auto;
+}
+
+.is-article .news-detail {
+    height: auto;
 }
 
 .grid-list {
@@ -29,7 +33,7 @@
 
 .grid-list>div {
     box-sizing: border-box;
-    margin: 20px;
+    margin: 5px;
     flex: 1 1 45%;
     border: 3px solid #e8e8d0;
     background: white;
@@ -55,10 +59,16 @@
     vertical-align: middle;
     text-align: center;
     padding: 0 10px;
+    overflow: hidden;
 }
 
 .grid-cell--image .articleImage {
-    min-width: 100%;
+    max-width: initial;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: auto;
 }
 
 .grid-cell--image .articleImage[src=""],
@@ -74,8 +84,12 @@
     display: table-cell;
     float: none !important;
     position: static;
-    padding: 0 10px;
+    padding: 0 10px 0 25px;
     width: 100%;
+}
+
+.is-no-image .grid-cell--body {
+    padding-left: 10px;
 }
 
 .is-no-image .grid-cell--image {
@@ -86,7 +100,7 @@
  *  グリッドの説明文章
  */
 .grid-description {
-    padding-bottom: 60px;
+    padding-bottom: 10px;
 }
 
 .grid-description__title {
@@ -104,13 +118,11 @@
  */
 .grid-button {
     text-align: right;
-    position: absolute;
-    bottom: 15px;
-    right: 20px;
 }
 
 .grid-button .button {
     margin-bottom: 0;
+    font-size: 0.8rem;
 }
 
 /**

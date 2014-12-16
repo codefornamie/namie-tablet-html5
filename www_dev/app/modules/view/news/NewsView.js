@@ -418,6 +418,10 @@ define(function(require, exports, module) {
             })).render();
             $("#contents__secondary").hide();
             $("#contents__primary").show();
+
+            // TODO 各記事のviewで行いたい
+            $("#snap-content").scrollTop(0);
+            $(".backnumber-scroll-container").scrollTop(0);
         },
 
         /**
@@ -462,6 +466,23 @@ define(function(require, exports, module) {
                 $(NewsView.SELECTOR_ARTICLE_LIST).show();
                 $(NewsView.SELECTOR_ARTICLE_DESTINATION).hide();
             }
+
+            $("#main").removeClass("is-top");
+            $("#main").removeClass("is-article");
+
+            if (route === "top") {
+                $("#main").addClass("is-top");
+            } else if (route === "showArticle") {
+                $("#main").addClass("is-article");
+            }
+        },
+
+        /**
+         * ビューが破棄される時に呼ばれる
+         */
+        cleanup: function () {
+            $("#main").removeClass("is-top");
+            $("#main").removeClass("is-article");
         },
 
         /**
