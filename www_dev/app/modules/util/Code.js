@@ -42,7 +42,7 @@ define(function(require, exports, module) {
             "3", "4"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_OPE] = [
-            "3", "4", "5"
+            "3", "4", "5", "6"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_LETTER] = [
             "6"
