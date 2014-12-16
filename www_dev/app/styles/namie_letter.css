@@ -189,6 +189,7 @@
     border-top: 1px solid white;
     display: block;
     position: absolute;
+    -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
     top: 50%;
     left: 50%;
@@ -247,10 +248,18 @@
  */
 .letter-wizard {
     position: relative;
+    margin-top: 10px;
 }
 
 .letter-wizard-pages {
     margin: 0 100px;
+}
+
+.letter-wizard-pages .preview-file {
+    padding-bottom: 10px;
+    float: right;
+    max-height: 400px;
+    display: none;
 }
 
 .letter-wizard ul[role="tablist"] {
@@ -321,7 +330,8 @@
     background: white;
     display: block;
     margin: 10px 0;
-    height: 400px; overflow : auto;
+    height: 520px;
+    overflow : auto;
     position: relative;
     width: auto;
     overflow: auto;
@@ -440,11 +450,20 @@
     margin-bottom: 30px;
 }
 
-.letter-form label {
+.letter-form label.error {
+    font-size: 1.0rem;
+    margin: 10px 0;
+}
+
+.letter-form label:not(.error) {
     font-size: 1.6rem;
     color: rgb(90, 86, 61);
     margin: 15px 0;
     font-weight: bold;
+}
+
+.letter-form label.is-nowrap {
+    white-space: nowrap;
 }
 
 .letter-form input,
