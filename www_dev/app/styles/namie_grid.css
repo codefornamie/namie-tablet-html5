@@ -257,7 +257,7 @@
     color: inherit;
     font-size: 1.3rem;
     line-height: 2.3rem;
-    padding: 27px;
+    padding: 6px 27px 6px 27px;
     word-break: break-all;
 }
 .news-detail .post__body table tr:nth-child(odd) th {
@@ -281,7 +281,7 @@
 .news-detail .post__body .eventTitle {
     font-size: 1.9rem;
     font-weight: bold;
-    margin: 27px 0;
+    margin: 15px 0;
     word-break: break-all;
 }
 .news-detail .post__body table.eventDetail {
