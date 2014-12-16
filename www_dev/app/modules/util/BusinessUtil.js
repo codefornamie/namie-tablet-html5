@@ -3,7 +3,6 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var moment = require("moment");
-    var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var IsNull = require("modules/util/filter/IsNull");
     var Le = require("modules/util/filter/Le");
 
@@ -16,7 +15,7 @@ define(function(require, exports, module) {
 
     /**
      * 現在発行中の新聞の日付を返す。
-     * @memberof BusinessUtil#
+     * @memberOf BusinessUtil#
      * @return {Date} 現在発行中の新聞の日付(最後に新聞を発行した日時)
      */
     BusinessUtil.getCurrentPublishDate = function() {
@@ -30,9 +29,11 @@ define(function(require, exports, module) {
     /**
      * 休刊日を加味した配信日計算を行う
      * @memberof BusinessUtil#
+     * @param {ArticleCollection} articleCollection 記事情報コレクション：インポートしてしまうとループが発生してしまうため、
+     * 引数でインスタンスをもらう
      * @param {Function} callback 休刊日を加味した配信日計算後の処理
      */
-    BusinessUtil.calcConsiderSuspendPublication = function(callback) {
+    BusinessUtil.calcConsiderSuspendPublication = function(articleCollection, callback) {
         var publishDate = new Date();
         var nowTimeString = moment(publishDate).format("HH:mm");
         if (nowTimeString < app.config.PUBLISH_TIME) {
@@ -40,7 +41,6 @@ define(function(require, exports, module) {
         }
 
         // 休刊対応の場合は、直近の配信日を知るため、publishedAtでorderbyし、先頭一件取得を行う
-        var articleCollection = new ArticleCollection();
         articleCollection.condition = {
             top : 1,
             orderby : "publishedAt desc"
