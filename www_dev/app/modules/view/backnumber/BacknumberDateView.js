@@ -66,6 +66,8 @@ define(function(require, exports, module) {
                     replace: false
                 });
             }
+
+            $("#main").addClass("is-backnumber-date");
         },
 
         events : {
@@ -135,7 +137,14 @@ define(function(require, exports, module) {
             if (DateUtil.formatDate(this.date, "yyyy-MM-dd") == DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd")) {
                 $("[data-backnumber-day-next]").css("visibility", "hidden");
             }
-        }
+        },
+
+        /**
+         * ビューが破棄される時に呼ばれる
+         */
+        cleanup: function () {
+            $("#main").removeClass("is-backnumber-date");
+        },
     });
     module.exports = BacknumberDateView;
 });
