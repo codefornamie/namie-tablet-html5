@@ -55,12 +55,11 @@ body {
      * 初期処理。jQueryの準備が出来た後に最初の処理を行う。
      */
     $(document).ready(function() {
-        //callJava();
-        local();
+        callJava();
 
         // 以降は一定時間毎に対象画像を再取得する
         _updateInterval = setInterval(function() {
-            local();
+            callJava();
         }, _updateTime);
     });
 
@@ -70,11 +69,6 @@ body {
     function callJava() {
         log("start refreshSlideShow method");
         appJsInterface.jsToJava();
-    }
-
-    function local() {
-        _token = "devel-20141114";
-        refresh();
     }
 
     /**
@@ -109,6 +103,35 @@ body {
      * @return {Array} ファイル名の配列
      */
     function getFileList() {
+        log("start getFileList");
+        var list = [];
+        try {
+            log("start refresh method / token : " + _token);
+            var cellObj = _dc.withToken(_token).cell(_cellName);
+            _odataObj = cellObj.box("data").odata("odata");
+            _collectonObj = cellObj.box("data").col("dav").col("slideshow");
+        } catch (e) {
+            log("Personium certificate failure");
+
+            log(e);
+        }
+        try {
+            var ret = _odataObj.entitySet("slideshow").query().filter("published eq '1'").run();
+            for (var i = 0; i < ret.length; i++) {
+                list.push(ret[i].filename);
+            }
+        } catch (e) {
+            log("Personium odata failure");
+            log(e);
+        }
+        return list;
+     }
+
+    /**
+     * 対象のファイル一覧を取得する。
+     * @return {Array} ファイル名の配列
+     */
+    function getFileListFromWebDAV() {
         log("start getFileList");
         var list = [];
         try {
