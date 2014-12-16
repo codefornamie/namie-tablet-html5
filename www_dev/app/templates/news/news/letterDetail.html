@@ -1,5 +1,5 @@
 <article
-    class='post'
+    class='post post--other'
     id="<%= model.get('__id') %>"
 >
     <section class='post__body'>
@@ -16,12 +16,6 @@
                                 </span>
                             </div>
 
-                            <div class="post-recommend right">
-                                <div class="post-recommend__amount">
-                                    <%= model.recommendAmount %>
-                                </div>
-                                おすすめ
-                            </div>
                         </div>
 
                         <div class="tagListArea"></div>
@@ -61,30 +55,5 @@
     </section>
 
     <section class='post__footer'>
-        <div class="post-action">
-            <button
-                data-recommend-register-button
-                type="button"
-                class="button button--recommend"
-            >おすすめ</button>
-
-            <button
-                data-recommend-delete-button
-                type="button"
-                class="button button--recommend"
-            >おすすめ取消</button>
-
-            <button
-                data-favorite-register-button
-                type="button"
-                class="button button--scrap"
-            >切り抜き</button>
-
-            <button
-                data-favorite-delete-button
-                type="button"
-                class="button button--scrap"
-            >切り抜き削除</button>
-        </div>
     </section>
 </article>
