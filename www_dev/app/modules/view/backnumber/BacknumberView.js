@@ -86,11 +86,12 @@ define(function(require, exports, module) {
             $("[data-backnumber-month-next]").css("visibility", (isLastMonth) ? "hidden" : "");
 
             // TODO GlobalNavViewの方で日付データを受け取って処理するようにするべし
-            var $dateArea = this.$el.find(".backnumber-nav__month").find(".date-area");
+            // TODO 暫定 
+//            var $dateArea = this.$el.find(".backnumber-nav__month").find(".date-area");
             $(document).trigger("backnumber-date", {
-                dateAreaHtml: $dateArea.html()
+                dateAreaHtml: "バックナンバー"
             });
-            $dateArea.hide();
+//            $dateArea.hide();
         },
 
         /**
