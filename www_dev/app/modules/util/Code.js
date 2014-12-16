@@ -75,7 +75,7 @@ define(function(require, exports, module) {
                 value : "blog"
             }, {
                 key : "おたより",
-                value : "event"
+                value : "other"
             }
     ];
     Code.ARTICLE_SITE_NONE = "other";
