@@ -418,6 +418,10 @@ define(function(require, exports, module) {
             })).render();
             $("#contents__secondary").hide();
             $("#contents__primary").show();
+
+            // TODO 各記事のviewで行いたい
+            $("#snap-content").scrollTop(0);
+            $(".backnumber-scroll-container").scrollTop(0);
         },
 
         /**
