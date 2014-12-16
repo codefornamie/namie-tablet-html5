@@ -17,6 +17,10 @@
     overflow: auto;
 }
 
+.is-article .news-detail {
+    height: auto;
+}
+
 .grid-list {
     display: -webkit-flex;
     display: flex;

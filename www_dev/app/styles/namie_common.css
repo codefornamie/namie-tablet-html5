@@ -94,6 +94,16 @@ main {
     width: 100%;
 }
 
+.is-top .contents-wrapper {
+    position: relative;
+    padding: 0;
+}
+
+.is-article .contents-wrapper {
+    position: relative;
+    padding: 0;
+}
+
 .footer {
     position: fixed;
     bottom: 0;
@@ -112,7 +122,7 @@ main {
 
 .snap-content {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
-    background: #14434a;
+    background-color: #f6f5ec;
 }
 .posting-content {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
@@ -625,10 +635,18 @@ main {
     background-color: #f6f5ec;
 }
 
+.is-top .contents {
+    height: auto;
+}
+
 .contents > div {
     position: relative;
     height: 100%;
     overflow: hidden;
+}
+
+.is-article .contents > div {
+    overflow: visible;
 }
 
 .contents__primary,
