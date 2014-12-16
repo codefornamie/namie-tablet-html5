@@ -1181,8 +1181,7 @@ div.nehan-block.nehan-body:last-child {
     height: 70px;
     text-align: center;
     border-top: 2px solid #ebeade;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px 0 10px 5%;
 }
 .backnumber-nav__section {
     float: left;

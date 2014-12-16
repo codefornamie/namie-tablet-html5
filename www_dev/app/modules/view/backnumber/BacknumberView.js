@@ -74,6 +74,13 @@ define(function(require, exports, module) {
 
             // 最新配信日の場合は「次の日」を非表示にする
             $("[data-backnumber-month-next]").css("visibility", (isLastMonth) ? "hidden" : "");
+
+            // TODO GlobalNavViewの方で日付データを受け取って処理するようにするべし
+            var $dateArea = this.$el.find(".backnumber-nav__month").find(".date-area");
+            $(document).trigger("backnumber-date", {
+                dateAreaHtml: $dateArea.html()
+            });
+            $dateArea.hide();
         },
 
         /**
