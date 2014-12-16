@@ -54,6 +54,8 @@ define(function(require, exports, module) {
             this.$step.find("[href='#previous']").addClass("button button--gray");
             this.$step.find("[href='#next']").addClass("button");
             this.$step.find("[href='#finish']").addClass("button");
+            
+            $(".contents-wrapper").css("overflow", "hidden");
 
             FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
         },
@@ -295,8 +297,14 @@ define(function(require, exports, module) {
                     app.logger.error("保存に失敗しました。");
                 }
             });
-        }
+        },
 
+        /**
+         * ビューが破棄される時に呼ばれる
+         */
+        cleanup: function () {
+            $(".contents-wrapper").css("overflow", "");
+        },
     }, {
         /**
          * ウィザードのセレクタ
