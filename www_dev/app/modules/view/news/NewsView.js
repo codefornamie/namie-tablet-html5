@@ -469,11 +469,14 @@ define(function(require, exports, module) {
 
             $("#main").removeClass("is-top");
             $("#main").removeClass("is-article");
+            $("#main").removeClass("is-backnumber");
 
             if (route === "top") {
                 $("#main").addClass("is-top");
             } else if (route === "showArticle") {
                 $("#main").addClass("is-article");
+            } else if (route === "backnumber") {
+                $("#main").addClass("is-backnumber");
             }
         },
 

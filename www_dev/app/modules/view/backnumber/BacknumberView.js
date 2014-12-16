@@ -46,13 +46,23 @@ define(function(require, exports, module) {
             });
 
             this.setView('#backnumber', backnumberListView);
+            this.initEvents();
+
+            $("#main").addClass("is-backnumber");
         },
 
         events : {
             'click [data-backnumber-month-prev]': 'onClickMonthPrev',
             'click [data-backnumber-month-next]': 'onClickMonthNext'
         },
-        
+
+        /**
+         * イベントを初期化する
+         */
+        initEvents: function () {
+            this.listenTo(app.router, "route", this.onRoute);
+        },
+
         /**
          * 月を変更する
          * @param {moment} month
@@ -107,7 +117,27 @@ define(function(require, exports, module) {
             month.add(1, "month");
             
             this.updateMonth(month);
-        }
+        },
+
+        /**
+         * ルーティングしたら呼ばれる
+         * @param {String} route
+         * @memberof BacknumberView#
+         */
+        onRoute: function (route) {
+            $("#main").removeClass("is-backnumber");
+
+            if (route === "backnumber") {
+                $("#main").addClass("is-backnumber");
+            }
+        },
+
+        /**
+         * ビューが破棄される時に呼ばれる
+         */
+        cleanup: function () {
+            $("#main").removeClass("is-backnumber");
+        },
     });
     module.exports = BacknumberView;
 });

@@ -94,11 +94,13 @@ main {
     width: 100%;
 }
 
+.is-backnumber-date .contents-wrapper,
 .is-top .contents-wrapper {
     position: relative;
     padding: 0;
 }
 
+.is-backnumber .contents-wrapper,
 .is-article .contents-wrapper {
     position: relative;
     padding: 0;
@@ -635,6 +637,7 @@ main {
     background-color: #f6f5ec;
 }
 
+.is-backnumber-date .contents,
 .is-top .contents {
     height: auto;
 }
@@ -645,6 +648,11 @@ main {
     overflow: hidden;
 }
 
+.is-backnumber-date .contents > div {
+    overflow: visible;
+}
+
+.is-backnumber .contents > div,
 .is-article .contents > div {
     overflow: visible;
 }
@@ -1173,6 +1181,16 @@ div.nehan-block.nehan-body:last-child {
     width: 100%;
     height: 100%;
     overflow: auto;
+}
+
+.is-backnumber-date .backnumber-scroll-container {
+    overflow: visible;
+}
+
+.is-article .backnumber-scroll-container,
+.is-backnumber .backnumber-scroll-container {
+    height: auto;
+    overflow: visible;
 }
 
 .backnumber-nav {
