@@ -5,7 +5,7 @@
     height: 100%;
     overflow: auto;
     float: none;
-    padding: 20px 0 0 0;
+    padding: 10px 0 0 0;
 }
 
 .news-detail {
@@ -14,9 +14,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #fbfaf4;
-    padding-top: 10px;
     overflow: auto;
+}
+
+.is-article .news-detail {
+    height: auto;
 }
 
 .grid-list {
@@ -31,7 +33,7 @@
 
 .grid-list>div {
     box-sizing: border-box;
-    margin: 20px;
+    margin: 5px;
     flex: 1 1 45%;
     border: 3px solid #e8e8d0;
     background: white;
@@ -57,10 +59,16 @@
     vertical-align: middle;
     text-align: center;
     padding: 0 10px;
+    overflow: hidden;
 }
 
 .grid-cell--image .articleImage {
-    min-width: 100%;
+    max-width: initial;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: auto;
 }
 
 .grid-cell--image .articleImage[src=""],
@@ -76,8 +84,12 @@
     display: table-cell;
     float: none !important;
     position: static;
-    padding: 0 10px;
+    padding: 0 10px 0 25px;
     width: 100%;
+}
+
+.is-no-image .grid-cell--body {
+    padding-left: 10px;
 }
 
 .is-no-image .grid-cell--image {
@@ -88,13 +100,14 @@
  *  グリッドの説明文章
  */
 .grid-description {
-    padding-bottom: 60px;
+    padding-bottom: 10px;
 }
 
 .grid-description__title {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
+    word-break: break-all;
 }
 
 .grid-description__description {
@@ -105,29 +118,38 @@
  */
 .grid-button {
     text-align: right;
-    position: absolute;
-    bottom: 15px;
-    right: 20px;
 }
 
 .grid-button .button {
     margin-bottom: 0;
+    font-size: 0.8rem;
 }
 
 /**
  *  記事詳細
  */
 .news-detail .post {
-    margin: 20px;
-    padding: 20px;
+    margin: 27px;
+    padding: 0;
     background: white;
     border: 3px solid #e8e8d0;
+}
+
+.news-detail .post__body {
+    padding: 0 100px;
+    font-size: 1.3rem;
+    line-height: 2.3rem;
+}
+
+.news-detail .post__body > .row{
+    max-width: none;
 }
 
 .news-detail .post-header__site {
     background: none;
     height: auto;
-    margin: 0;
+    margin: 0 -100px;
+    color: #fff;
 }
 
 .news-detail .post-header__site::before,
@@ -135,11 +157,169 @@
     display: none;
 }
 
-.news-detail .post-label {
-    background: none;
-    padding: 0;
+.news-detail .post--blog .post-header__site {
+    background-color: #c66287;
+}
+.news-detail .post--localnews .post-header__site {
+    background-color: #73c563;
+}
+.news-detail .post--event .post-header__site {
+    background-color: #d9bc08;
+}
+.news-detail .post--townoffice .post-header__site {
+    background-color: #27a8bd;
+}
+.news-detail .post--other .post-header__site {
+    background-color: #9c9c9c;
 }
 
-.news-detail .post-body {
-    margin: 20px 0;
+.news-detail .post-label {
+    background: none;
+    padding: 0 0 0 100px;
+}
+
+.news-detail .post-label .article-label {
+    background-repeat: no-repeat;
+    background-size: auto 65%;
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 60px;
+    margin-bottom: 0;
+    padding-left: 3rem;
+}
+.news-detail .post--blog .article-label {
+    background-image: url(../../app/img/img-article-header-blog.png);
+}
+.news-detail .post--localnews .article-label {
+    background-image: url(../../app/img/img-article-header-localnews.png);
+}
+.news-detail .post--event .article-label {
+    background-image: url(../../app/img/img-article-header-event.png);
+}
+.news-detail .post--townoffice .article-label {
+    background-image: url(../../app/img/img-article-header-townoffice.png);
+}
+.news-detail .post--other .article-label {
+    background-image: url(../../app/img/img-article-header-other.png);
+}
+
+.news-detail .post-recommend {
+    margin-right: 100px;
+    line-height: 60px;
+}
+.news-detail .post-recommend__amount  {
+    padding: 8px 10px;
+    display: inline;
+}
+
+.news-detail .post-header__title {
+    font-size: 1.9rem;
+    margin: 50px 0;
+    word-break: break-all;
+}
+
+.news-detail .post__body h1 {
+    color: #955b08;
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-top: 2rem;
+}
+.news-detail .post__body h2 {
+    color: #955b08;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 2rem;
+}
+.news-detail .post__body h3 {
+    color: #955b08;
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-top: 2rem;
+}
+.news-detail .post__body h4 {
+    color: inherit;
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.news-detail .post__body p {
+    font-size: 1.3rem;
+    line-height: 2.3rem;
+}
+
+.news-detail .post__body table {
+    border: none;
+    width: 100%;
+}
+.news-detail .post__body table tr th,
+.news-detail .post__body table tr td {
+    color: inherit;
+    font-size: 1.3rem;
+    line-height: 2.3rem;
+    padding: 27px;
+    word-break: break-all;
+}
+.news-detail .post__body table tr:nth-child(odd) th {
+    background: #cac4a2;
+}
+.news-detail .post__body table tr:nth-child(even) th {
+    background: #d5d0b3;
+}
+.news-detail .post__body table tr:nth-child(odd) td {
+    background: #f2f0e6;
+}
+.news-detail .post__body table tr:nth-child(even) td {
+    background: #f9f8f2;
+}
+
+.news-detail .post__body ul, ol, dl {
+    font-size: 1.3rem;
+}
+
+/* イベント用補正 */
+.news-detail .post__body .eventTitle {
+    font-size: 1.9rem;
+    font-weight: bold;
+    margin: 27px 0;
+    word-break: break-all;
+}
+.news-detail .post__body table.eventDetail {
+    border-collapse: collapse;
+}
+.news-detail .post__body table.eventDetail tr th {
+    background: #f2f0e2;
+    border-top: 2px solid #dbd7ba;
+}
+.news-detail .post__body table.eventDetail tr th:first-child {
+    white-space: nowrap;
+}
+.news-detail .post__body table.eventDetail tr td {
+    background: #fff;
+    border-top: 2px solid #dbd7ba;
+    word-break: break-all;
+}
+
+/* YouTube用補正 */
+.news-detail .post__body .post-header__title--youtube {
+    margin: 50px 0 0px;
+}
+
+/**
+ *  縦画面用の補正
+ */
+
+@media screen and (max-width: 800px) {
+    .news-detail .post__body {
+        padding: 0 27px;
+    }
+    .news-detail .post-header__site {
+        margin: 0 -27px;
+    }
+    .news-detail .post-label {
+        padding: 0 0 0 27px;
+    }
+    .news-detail .post-recommend {
+        margin-right: 27px;
+    }
 }

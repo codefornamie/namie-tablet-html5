@@ -30,6 +30,8 @@ define(function(require, exports, module) {
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          */
         afterRendered : function() {
+            var self = this;
+
             this.updateBackHomeButton();
             this.updateDateLabel();
             var $target = $("[value='" + app.user.get("fontSize") + "']");
@@ -42,6 +44,8 @@ define(function(require, exports, module) {
          *  初期化処理
          */
         initialize : function() {
+            var self = this;
+
             // snap.jsを初期化する
             this.snapper = new Snap({
                 element: $('#snap-content')[0],
@@ -58,6 +62,13 @@ define(function(require, exports, module) {
                 $(".contents-wrapper").css("padding-top", "0");
                 $("#global-nav").hide();
             }
+
+            // TODO appに刺さない
+            $(document).on("backnumber-date", function (ev, data) {
+                app.backnumberDateAreaHtml = data.dateAreaHtml;
+
+                $('.global-nav__date .nav-content').empty().html(app.backnumberDateAreaHtml);
+            });
         },
 
         /**
@@ -99,7 +110,7 @@ define(function(require, exports, module) {
         setDate : function(date) {
             if (date) {
                 $("#naviPublishDate").show();
-                $("#naviPublishDate").find(".date--year").text(date.getFullYear());
+                $("#naviPublishDate").find(".date--year").text(DateUtil.formatDate(date, "ggge"));
                 $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
                 $("#naviPublishDate").find(".date--day").text(date.getDate());
                 $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
@@ -113,12 +124,14 @@ define(function(require, exports, module) {
          *  topでは表示しない
          */
         updateBackHomeButton: function () {
-            if (Backbone.history.fragment == 'top') {
-                $('[data-back-home]').hide();
-                $('.global-nav__menu').css('background-position', 'center');
+            var fragment = Backbone.history.fragment;
+
+            if (fragment && fragment.match(/^top/)) {
+                $('.global-nav__menu').hide();
+                $('.global-nav__date').addClass('no-backbutton');
             } else {
-                $('[data-back-home]').show();
-                $('.global-nav__menu').css('background-position', 'right');
+                $('.global-nav__menu').show();
+                $('.global-nav__date').removeClass('no-backbutton');
             }
         },
 
@@ -126,9 +139,11 @@ define(function(require, exports, module) {
          *  日付の表記を変更
          */
         updateDateLabel: function () {
+            var self = this;
             var fragments = Backbone.history.fragment.split('/');
             if (fragments[0] == 'backnumber') {
-                $('.global-nav__date .nav-content').html('バックナンバー');
+                //$('.global-nav__date .nav-content').html('バックナンバー');
+                if (app.backnumberDateAreaHtml) $('.global-nav__date .nav-content').empty().html(app.backnumberDateAreaHtml);
             }
         },
 

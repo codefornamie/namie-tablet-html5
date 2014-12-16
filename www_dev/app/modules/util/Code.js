@@ -11,6 +11,7 @@ define(function(require, exports, module) {
     Code.APP_MODE_POSTING = "posting";
     Code.APP_MODE_OPE = "ope";
     Code.APP_MODE_DOJO = "dojo";
+    Code.APP_MODE_LETTER = "letter";
 
     // 記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST = [
@@ -29,7 +30,10 @@ define(function(require, exports, module) {
             }, {
                 key : "5",
                 value : "記事"
-            },
+            }, {
+                key : "6",
+                value : "おたより"
+            }
     ];
 
     // 各アプリで使用する記事カテゴリ
@@ -40,6 +44,10 @@ define(function(require, exports, module) {
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_OPE] = [
             "3", "4", "5"
     ];
+    Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_LETTER] = [
+            "6"
+    ];
+
     // 記事ステータス
     Code.ARTICLE_STATUS_PUBLISHED = "掲載中";
     Code.ARTICLE_STATUS_BEFORE_PUBLISH = "未掲載";
@@ -60,11 +68,17 @@ define(function(require, exports, module) {
                 key : "イベント",
                 value : "event"
             }, {
+                key : "レポート",
+                value : "event"
+            }, {
                 key : "浪江町復興支援員宮城県駐在ブログ",
                 value : "blog"
+            }, {
+                key : "おたより",
+                value : "event"
             }
     ];
-    Code.ARTICLE_SITE_NONE = "article";
+    Code.ARTICLE_SITE_NONE = "other";
 
     // ArticleModelの画像タイプ
     Code.IMAGE_TYPE_PIO = 2;

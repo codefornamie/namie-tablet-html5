@@ -37,6 +37,7 @@ define(function(require, exports, module) {
     var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
 
     var LetterTopView = require("modules/view/letter/top/TopView");
+    var LetterGlobalNavView = require("modules/view/letter/common/GlobalNavView");
 
     // Use main layout and set Views.
     var getViews = function() {
@@ -175,6 +176,7 @@ define(function(require, exports, module) {
 
             // 新聞アプリ
             "top" : "top",
+            "top/:date" : "top",
             "article/:id" : "showArticle",
             'scrap' : 'scrap',
             'tutorial' : 'tutorial',
@@ -225,19 +227,27 @@ define(function(require, exports, module) {
         /**
          * Top画面の表示。
          * @memberof router#
-         * @param {String} queryString クエリ文字列。
+         * @param {String} targetDate 日付文字列yyyy-MM-dd
          */
-        top : function(queryString) {
+        top : function(date) {
             app.logger.debug("It's a top page.");
-            var targetDate = app.previewTargetDate ? new Date(app.previewTargetDate) : BusinessUtil.getCurrentPublishDate();
-            this.layout.showView(new NewsView({
-                targetDate : targetDate,
-                preview : app.preview,
-                scrollTop: app.scrollTop || 0
-            }));
-            this.commonView({
-                "targetDate" : targetDate
-            });
+            var targetDate = app.previewTargetDate ? app.previewTargetDate : date;
+            if (targetDate) {
+                // 日付が設定されているなら描画開始
+                this.layout.showView(new NewsView({
+                    targetDate : new Date(targetDate),
+                    preview : app.preview,
+                    scrollTop : app.scrollTop || 0
+                }));
+                this.commonView({
+                    "targetDate" : new Date(targetDate)
+                });
+            } else {
+                // 日付が設定されていない場合は配信日を計算する
+                BusinessUtil.calcConsiderSuspendPublication($.proxy(function(considerDate) {
+                    this.go("top", considerDate);
+                }, this));
+            }
         },
 
         /**
@@ -425,11 +435,19 @@ define(function(require, exports, module) {
          * 町民投稿：トップページ
          */
         letterList : function() {
+            var letterGlobalNavView;
+
             // 実際の描画処理はletter/TopViewに書かれている
             // アプリのライフサイクルの中で、LetterTopViewの初期化は1度だけ行う
             if (!app.letterTopView) {
                 app.letterTopView = new LetterTopView();
+                letterGlobalNavView = new LetterGlobalNavView();
+
                 this.layout.showView(app.letterTopView.layout);
+                this.layout.setGlobalNav(letterGlobalNavView);
+            } else {
+                // 投稿後の新規記事取得処理
+                app.letterTopView.initCollection();
             }
         },
 
@@ -479,7 +497,9 @@ define(function(require, exports, module) {
          */
         back : function() {
             window.history.back();
-        }
+        },
+
+        parseQueryString: parseQueryString
     });
 
     module.exports = Router;
