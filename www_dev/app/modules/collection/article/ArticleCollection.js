@@ -34,6 +34,10 @@ define(function(require, exports, module) {
                     });
                 }
             });
+            response = _.sortBy(response,function(res) {
+                return parseInt(res.sequence);
+            });
+            
             return response;
         },
 

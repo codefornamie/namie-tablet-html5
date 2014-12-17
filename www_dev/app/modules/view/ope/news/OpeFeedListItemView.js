@@ -104,6 +104,7 @@ define(function(require, exports, module) {
          */
         onClickArticleEditButton: function () {
             this.showLoading();
+            $("[data-sequence-register-button]").hide();
             if (this.model.get("type") === "2") {
                 app.router.opeYouTubeRegist({
                     model : this.model,
@@ -125,6 +126,7 @@ define(function(require, exports, module) {
          */
         onClickOpeTitleAnchor: function () {
             this.showLoading();
+            $("[data-sequence-register-button]").hide();
             switch (this.model.get("type")) {
             case "1":
                 var template = require("ldsh!templates/{mode}/news/articleDetail");
