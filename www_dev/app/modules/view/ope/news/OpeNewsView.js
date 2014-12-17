@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var NewsView = require("modules/view/news/NewsView");
     var OpeFeedListView = require("modules/view/ope/news/OpeFeedListView");
     var OpeFeedListItemView = require("modules/view/ope/news/OpeFeedListItemView");
+    var OpeNewsPreviewView = require("modules/view/ope/news/OpeNewsPreviewView");
+
     var Equal = require("modules/util/filter/Equal");
     /**
      * 運用管理アプリの記事一覧画面を表示するためのViewクラスを作成する。
@@ -26,7 +28,8 @@ define(function(require, exports, module) {
          * @memberof OpeNewsView#
          */
         events : {
-            "click [data-article-register-button]" : "onClickArticleRegisterButton"
+            "click [data-article-register-button]" : "onClickArticleRegisterButton",
+            "click [data-article-preview-button]" : "onClickArticlePreviewButton"
         },
         
         /**
@@ -59,9 +62,6 @@ define(function(require, exports, module) {
                 targetDate : targetDate
             });
             this.searchArticles();
-            $("#articlePreview").colorbox({
-                "href" : "/?mode=news&loginId=namie01&preview=true&targetDate=" + DateUtil.formatDate(targetDate, "yyyy-MM-dd") + "&refreshToken=" + app.accessor.refreshToken, 
-                iframe : true, width : "80%", height : "90%"});
         },
 
         /**
@@ -124,6 +124,13 @@ define(function(require, exports, module) {
         onClickArticleRegisterButton: function () {
             app.router.opeArticleRegist({targetDate : this.targetDate});
         },
+        /**
+         *  
+         *  @memberof OpeNewsView#
+         */
+        onClickArticlePreviewButton: function () {
+            this.setView("#ope_news_preview", new OpeNewsPreviewView()).render();
+        }
     });
 
     module.exports = OpeNewsView;
