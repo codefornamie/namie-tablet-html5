@@ -1334,6 +1334,12 @@ div.nehan-block.nehan-body:last-child {
     text-overflow: ellipsis;
 }
 
+@media only screen and (orientation:portrait) {
+    .backnumber-item__body ul > li {
+        width: 300px;
+    }
+}
+
 .backnumber-item__thumbnail {
     padding-top: 20px;
     padding-bottom: 20px;
