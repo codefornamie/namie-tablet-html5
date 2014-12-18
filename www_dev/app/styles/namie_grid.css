@@ -41,6 +41,12 @@
     max-width: 45%;
 }
 
+.grid-list-footer {
+    background: #78d0df;
+    padding: 20px;
+    color: white;
+}
+
 .grid-list__item {
     box-sizing: border-box;
     width: 100%;
