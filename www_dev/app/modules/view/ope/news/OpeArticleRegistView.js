@@ -132,7 +132,11 @@ define(function(require, exports, module) {
          * キャンセルボタン押下時のコールバック関数
          */
         onClickArticleCancelButton : function() {
-            app.router.go("ope-top",this.targetDate);
+            if (this.backFunction) {
+                this.backFunction();
+            } else {
+                app.router.go("ope-top", this.targetDate);
+            }
         }
     });
     module.exports = OpeArticleRegistView;
