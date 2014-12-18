@@ -52,6 +52,16 @@
     height: 20px;
 }
 
+.grid-list-footer .grid-list-footer__logo--minpo {
+    display: inline-block;
+    background-image: url(../../app/img/img-logo-minpo.png);
+    width: 124px;
+    height: 20px;
+    background-size: 100%;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+}
+
 .grid-list__item {
     box-sizing: border-box;
     width: 100%;
