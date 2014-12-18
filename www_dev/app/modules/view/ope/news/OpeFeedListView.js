@@ -28,7 +28,7 @@ define(function(require, exports, module) {
                 return model.get("isRecommend");
             }, this));
             $("[data-sequence-register-button]").show();
-            $("[data-sequence-register-button]").unbind("click")
+            $("[data-sequence-register-button]").unbind("click");
             $("[data-sequence-register-button]").bind("click", $.proxy(this.onClickSequenceRegist, this));
         },
         /**
