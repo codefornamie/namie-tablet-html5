@@ -164,6 +164,10 @@ main {
     line-height: 20px;
     overflow: hidden;
 }
+.date-picker .header {
+    display: block;
+}
+
 .eventHeader nav {
     height: 100%;
     line-height: 20px;

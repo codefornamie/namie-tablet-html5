@@ -23,8 +23,37 @@ body {
 }
 
 .slideImage {
+	width: 100%;
+	height: 100%;
+}
+
+#message {
+	padding: 30px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
 	width: 50%;
-	height: 50%;
+	height: 30%;
+	margin-left: -25%;
+	margin-top: -15%;
+	display: relative;
+	background-color: #ffff00;
+	z-index: 100;
+	vertical-align: middle;
+	display: none;
+	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
+}
+
+#icon {
+
+}
+
+#msg {
+	line-height: 1.1em;
+	vertical-align: middle;
+	font-size: 70px;
+	color: #000000;
+	font-weight: bold;
 }
 </style>
 <script>
@@ -43,25 +72,63 @@ body {
     /** 画像インターバル中のインターバルＩＤ。*/
     var _slideInterval = null;
     /** 画像の表示間隔。 */
-    var _slideTime = 20 * 1000; // 20秒
+    var _slideTime = 30 * 1000; // 30秒
     /** 画像インターバル中のインターバルＩＤ。*/
     var _updateInterval = null;
     /** 画像の表示間隔。 */
-    var _updateTime = 10 * 60 * 1000; // 10分
+    var _updateTime = 5 * 60 * 1000; // 5分
     /** 画像データのキャッシュ。 */
     var _cache = {};
+    /** 発行時刻。 */
+    var _publishTime = new Date();
+    /** 新着記事有無フラグ。 */
+    var _hasRecentAtricle = false;
+    /** デバッグモード。 */
+    // TODO: 関連処理はすべて削除する予定
+    var _debug = false;
+    var _debug_pubdate = "2014-12-13"
+    var _debug_pubHours = 11;
+    var _debug_pubMinutes = 15;
 
     /**
      * 初期処理。jQueryの準備が出来た後に最初の処理を行う。
      */
     $(document).ready(function() {
+        init();
+    });
+
+    /**
+     * 初期処理
+     */
+    function init() {
+        _publishTime.setHours(0);
+        _publishTime.setMinutes(0, 0, 0);
+        $("body").click(function() {
+            console.log("++++++++++++++++++++++++++++++++++");
+            appJsInterface.closeDreamService();
+        });
+        $("#message").click(function() {
+            var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
+            if (_debug) {
+                pub = _debug_pubdate;
+            }
+            // 同じ日に２度と表示されないようにフラグを立てる
+            log("localStorage.getItem(pub) : " + localStorage.getItem(pub));
+            localStorage.clear();
+            localStorage.setItem(pub, true);
+            // 新聞アプリを起動
+            window.location.href = "namie-news://"
+            // メッセージを消す
+            $("#message").fadeOut("slow");
+            return false;
+        });
         callJava();
 
         // 以降は一定時間毎に対象画像を再取得する
         _updateInterval = setInterval(function() {
             callJava();
         }, _updateTime);
-    });
+    }
 
     /**
      * Javaのメソッドを呼び出し、AccountManagerからトークンの取得を行う。処理後、「window.javaToJs」が呼び出される。
@@ -75,7 +142,10 @@ body {
      * デバッグ用。
      */
     function log(msg) {
-        $("<div>").text(msg).prependTo($("#container"));
+        if (_debug) {
+            $("<div>").text(msg).prependTo($("#container"));
+        }
+        console.log(msg);
     }
 
     /**
@@ -84,6 +154,9 @@ body {
      */
     window.javaToJs = function(token) {
         log("start refreshJavaToJs");
+        if (!token) {
+            return;
+        }
         _token = token;
         refresh();
     }
@@ -94,8 +167,41 @@ body {
     function refresh() {
         log("start refresh ");
         _fileList = getFileList();
+        updateAtricleInfo();
         startSlideShow();
         return;
+    }
+
+    /**
+     * Personiumに保存されている設定情報を読み込み。
+     */
+    function updateAtricleInfo() {
+        log("start updateConfigure");
+        var conf = _odataObj.entitySet("configuration").retrieveAsResponse("PUBLISH_TIME");
+        if ((conf) && (conf.body) && (conf.body.value)) {
+            log(conf.body.value);
+            var ar = conf.body.value.split(":");
+            if (ar.length > 0) {
+                _publishTime.setHours(ar[0]);
+                _publishTime.setMinutes(ar[1]);
+                if (_debug) {
+                    _publishTime.setHours(_debug_pubHours);
+                    _publishTime.setMinutes(_debug_pubMinutes);
+                }
+            }
+        }
+        var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
+        if (_debug) {
+            pub = _debug_pubdate;
+        }
+        log("search arcile start : " + pub);
+        var ret = _odataObj.entitySet("article").query().top(0).filter("publishedAt eq '" + pub + "' and isDepublish eq null").run();
+        if (ret.length > 0) {
+            _hasRecentAtricle = true;
+        } else {
+            _hasRecentAtricle = false;
+        }
+        log("search article end : " + ret.length);
     }
 
     /**
@@ -112,45 +218,16 @@ body {
             _collectonObj = cellObj.box("data").col("dav").col("slideshow");
         } catch (e) {
             log("Personium certificate failure");
-
             log(e);
         }
         try {
             var ret = _odataObj.entitySet("slideshow").query().filter("published eq '1'").run();
+            log("slideshow target file length : " + ret.length);
             for (var i = 0; i < ret.length; i++) {
                 list.push(ret[i].filename);
             }
         } catch (e) {
             log("Personium odata failure");
-            log(e);
-        }
-        return list;
-     }
-
-    /**
-     * 対象のファイル一覧を取得する。
-     * @return {Array} ファイル名の配列
-     */
-    function getFileListFromWebDAV() {
-        log("start getFileList");
-        var list = [];
-        try {
-            log("start refresh method / token : " + _token);
-            var cellObj = _dc.withToken(_token).cell(_cellName);
-            _collectonObj = cellObj.box("data").col("dav").col("slideshow");
-        } catch (e) {
-            log("Personium certificate failure");
-            log(e);
-        }
-        try {
-            var objlist = _collectonObj.getFileList();
-            for (var i = 0; i < objlist.length; i++) {
-                var fobj = objlist[i];
-                var name = fobj.Name.substring(fobj.Name.lastIndexOf("/") + 1);
-                list.push(name);
-            }
-        } catch (e) {
-            log("Personium DAV PROPFIND failure");
             log(e);
         }
         return list;
@@ -165,10 +242,11 @@ body {
         showImage(getNextImage());
 
         // すでにスライドショーが動作している場合は、インターバルを一旦解除する。
-		if (_slideInterval) {
-		    clearInterval(_slideInterval);
-		    _slideInterval = null;
-		}
+        if (_slideInterval) {
+            log("clear interval for slideshow");
+            clearInterval(_slideInterval);
+            _slideInterval = null;
+        }
 
         // 以降は定期的に更新する
         _slideInterval = setInterval(function() {
@@ -182,13 +260,15 @@ body {
      */
     function getNextImage() {
         log("start getNextImage");
-        return _fileList[Math.floor(Math.random() * _fileList.length)];
+        var fileName = _fileList[Math.floor(Math.random() * _fileList.length)];
+        return fileName;
     }
 
-	/**
-	 * 画像のバイナリを取得。キャッシュにあれば再利用する。
-	 */
+    /**
+     * 画像のバイナリを取得。キャッシュにあれば再利用する。
+     */
     function getImageBinary(fname, callback) {
+        log("start getImageBinary");
         if (_cache[fname]) {
             log("use cache");
             callback(_cache[fname]);
@@ -199,6 +279,10 @@ body {
                 success : function(binary) {
                     _cache[fname] = binary;
                     callback(binary);
+                },
+                error : function(e) {
+                    log("personium request failure");
+                    log(e);
                 }
             });
         } catch (e) {
@@ -209,11 +293,42 @@ body {
     }
 
     /**
+     * 発行時刻と、記事の有無をチェック。
+     * @param {Function} 記事があった場合に呼び出すコールバック
+     */
+    function checkRecentArticle(callback) {
+        log("★ start checkRecentArticle");
+        var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
+        var now = new Date();
+        log("now : " + now);
+        log("publishTime : " + _publishTime);
+        log("_hasRecentAtricle : " + _hasRecentAtricle);
+        log("localStorage.getItem(pub) : " + localStorage.getItem(pub));
+        if (now > _publishTime) {
+            if (_hasRecentAtricle) {
+                if (!localStorage.getItem(pub)) {
+                    log("callback called by checkRecentArticle");
+                    callback();
+                    return;
+                }
+            }
+        }
+        $("#message").hide();
+    }
+
+    /**
      * １つの画像の表示を行う。
      * @param {String} fname 表示する画像のファイル名
      */
     function showImage(fname) {
+        log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         log("start showImage : " + fname);
+        checkRecentArticle(function() {
+            log("hits recent article");
+            var msg = (_publishTime.getMonth() + 1) + "月" + _publishTime.getDate() + "日版のなみえ新聞が発行されました";
+            $("#msg").text(msg);
+            $("#message").fadeIn("slow");
+        });
         getImageBinary(fname, function(binary) {
             if (!binary) {
                 log("failure binary null");
@@ -237,5 +352,11 @@ body {
 </script>
 <body>
 	<div id="container" style="font-size: 1.5em;" />
+	<div id="message">
+		<div>
+			<img id="icon" src="app/img/img-character01.png" />
+		</div>
+		<div id="msg">12月17日版のなみえ新聞が発行されました!</div>
+	</div>
 </body>
 </html>
