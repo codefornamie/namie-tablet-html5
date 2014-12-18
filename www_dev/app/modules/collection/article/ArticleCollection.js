@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var ArticleModel = require("modules/model/article/ArticleModel");
+    var Code = require("modules/util/Code");
     var DateUtil = require("modules/util/DateUtil");
     var Equal = require("modules/util/filter/Equal");
     var Ge = require("modules/util/filter/Ge");
@@ -34,9 +35,12 @@ define(function(require, exports, module) {
                     });
                 }
             });
-            response = _.sortBy(response, function(res) {
-                return parseInt(res.sequence);
-            });
+
+            if (app.config.basic.mode === Code.APP_MODE_NEWS || app.config.basic.mode === Code.APP_MODE_OPE) {
+                response = _.sortBy(response, function(res) {
+                    return parseInt(res.sequence);
+                });
+            }
 
             return response;
         },
