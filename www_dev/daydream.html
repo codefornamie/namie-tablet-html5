@@ -85,7 +85,7 @@ body {
     var _hasRecentAtricle = false;
     /** デバッグモード。 */
     // TODO: 関連処理はすべて削除する予定
-    var _debug = true;
+    var _debug = false;
     var _debug_pubdate = "2014-12-13"
     var _debug_pubHours = 11;
     var _debug_pubMinutes = 15;
@@ -113,9 +113,9 @@ body {
                 pub = _debug_pubdate;
             }
             // 同じ日に２度と表示されないようにフラグを立てる
-            log("localStorage.getItem('pub') : " + localStorage.getItem("pub"));
+            log("localStorage.getItem(pub) : " + localStorage.getItem(pub));
             localStorage.clear();
-            localStorage.setItem("pub", true);
+            localStorage.setItem(pub, true);
             // 新聞アプリを起動
             window.location.href = "namie-news://"
             // メッセージを消す
@@ -298,14 +298,15 @@ body {
      */
     function checkRecentArticle(callback) {
         log("★ start checkRecentArticle");
+        var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
         var now = new Date();
         log("now : " + now);
         log("publishTime : " + _publishTime);
         log("_hasRecentAtricle : " + _hasRecentAtricle);
-        log("localStorage.getItem('pub') : " + localStorage.getItem("pub"));
+        log("localStorage.getItem(pub) : " + localStorage.getItem(pub));
         if (now > _publishTime) {
             if (_hasRecentAtricle) {
-                if (!localStorage.getItem("pub")) {
+                if (!localStorage.getItem(pub)) {
                     log("callback called by checkRecentArticle");
                     callback();
                     return;
