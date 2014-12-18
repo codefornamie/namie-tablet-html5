@@ -29,7 +29,8 @@ define(function(require, exports, module) {
          */
         events : {
             "click [data-article-register-button]" : "onClickArticleRegisterButton",
-            "click [data-article-preview-button]" : "onClickArticlePreviewButton"
+            "click [data-article-preview-button]" : "onClickArticlePreviewButton",
+            "click [ope-preview-back-button]" : "onClickOpePreviewBackButton"
         },
         
         /**
@@ -126,22 +127,24 @@ define(function(require, exports, module) {
             app.router.opeArticleRegist({targetDate : this.targetDate});
         },
         /**
-         *  
+         *  プレビュー表示ボタン押下時に呼び出されるコールバック関数
          *  @memberof OpeNewsView#
          */
         onClickArticlePreviewButton: function () {
-            this.$el.append("<div id='ope_news_preview_hidden_area' style='display: block'></div>");
-            this.setView("#ope_news_preview_hidden_area", new OpeNewsPreviewView({targetDate: this.targetDate})).render();
-            this.$el.append("<a id='ope_news_preview_ank' href='#ope_news_preview_hidden_area'></a>");
-            $("#ope_news_preview_ank").colorbox({inline: true, scrolling: true, width: "80%", height : "80%"});
-            $("#ope_news_preview_ank").trigger("click");
-            var onClose = function(){
-            // 後始末
-               $("#ope_news_preview_hidden_area").remove();
-               $("#ope_news_preview_ank").remove();
-               $(document).off("cbox_closed", onClose);
-            };
-            $(document).on("cbox_closed", $.proxy(onClose , this));
+            $("#opeNewsHolder").hide();
+            this.setView("#article_list_preview", new OpeNewsPreviewView({targetDate: this.targetDate})).render();
+            $("#opePreviewHolder").show();
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         *  戻るボタン押下時に呼び出されるコールバック関数
+         *  @memberof OpeNewsView#
+         */
+        onClickOpePreviewBackButton: function () {
+            $("#opePreviewHolder").hide();
+            $("#article_list_preview").empty();
+            $("#opeNewsHolder").show();
+            $("#contents__primary").scrollTop(0);
         }
     });
 

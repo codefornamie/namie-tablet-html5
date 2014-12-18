@@ -1,10 +1,22 @@
-        <div class="panel">
-            <div class="clearfix">
-                <h3 class="left"><span id="targetDate"></span> 配信予定の記事</h3>
-                <button data-article-register-button class="button right">新規記事投稿</button>
-            </div>
-            <div id="article_list"></div>
-            <div class="text-center">
-                <button data-article-preview-button class="button">プレビュー表示</button>
-            </div>
+<div class="panel">
+    <div id="opeNewsHolder">
+        <div class="clearfix">
+            <h3 class="left">
+                <span id="targetDate"></span> 配信予定の記事
+            </h3>
+            <button data-article-register-button class="button right">新規記事投稿</button>
         </div>
+        <div id="article_list"></div>
+        <div class="text-center">
+            <button data-article-preview-button
+                class="button">プレビュー表示</button>
+        </div>
+    </div>
+    <div id="opePreviewHolder" style="display: none">
+        <div id="article_list_preview"></div>
+        <div class="text-center">
+            <button id="opePreviewBackButton" type="button"
+                class="small button" ope-preview-back-button>戻る</button>
+        </div>
+    </div>
+</div>
