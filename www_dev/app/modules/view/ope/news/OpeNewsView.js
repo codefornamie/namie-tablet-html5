@@ -57,7 +57,7 @@ define(function(require, exports, module) {
          */
         setDate : function(targetDate) {
             this.closePreview();
-            this.targetDate = targetDate;
+            
             this.$el.find("#targetDate").text(
                     DateUtil.formatDate(targetDate, "yyyy年MM月dd日") + app.config.PUBLISH_TIME);
 

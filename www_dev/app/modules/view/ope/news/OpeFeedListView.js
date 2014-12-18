@@ -23,11 +23,10 @@ define(function(require, exports, module) {
                 items : 'tr',
                 forcePlaceholderSize : true,
                 handle : '.handle'
-            });
+            }).bind("sortupdate", $.proxy(this.onSortUpdate,this));
             this.recommendArticle = this.collection.find($.proxy(function(model) {
                 return model.get("isRecommend");
             }, this));
-            $("[data-sequence-register-button]").show();
             $("[data-sequence-register-button]").unbind("click");
             $("[data-sequence-register-button]").bind("click", $.proxy(this.onClickSequenceRegist, this));
         },
@@ -73,6 +72,7 @@ define(function(require, exports, module) {
          */
         onClickSequenceRegist : function() {
             this.showLoading();
+            $("#sequenceConfirm").hide();
             var saveModels = [];
             // ListItemView取得
             var itemViews = this.getViews("#feedList").value();
@@ -128,6 +128,25 @@ define(function(require, exports, module) {
                     }, this)
                 });
             }, this));
+        },
+        /**
+         * @memberOf OpeFeedListView#
+         * @param {Event} ev ソートイベント
+         * @param {Element} elem 移動した要素
+         */
+        onSortUpdate : function(ev, elem) {
+            var sortArr = [];
+            // ListItemView取得
+            var itemViews = this.getViews("#feedList").value();
+            _.each(itemViews, function(itemView) {
+                var sequence = itemView.$el.index().toString();
+                if (itemView.model.get("sequence") !== sequence) {
+                    sortArr.push(itemView);
+                }
+            });
+            if (sortArr.length > 0) {
+                $("#sequenceConfirm").show();
+            }
         }
     });
 
