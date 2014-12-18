@@ -28,7 +28,8 @@ define(function(require, exports, module) {
                 return model.get("isRecommend");
             }, this));
             $("[data-sequence-register-button]").show();
-            $("[data-sequence-register-button]").click($.proxy(this.onClickSequenceRegist, this));
+            $("[data-sequence-register-button]").unbind("click");
+            $("[data-sequence-register-button]").bind("click", $.proxy(this.onClickSequenceRegist, this));
         },
         /**
          * おすすめ記事登録処理後のコールバック関数処理
@@ -102,6 +103,8 @@ define(function(require, exports, module) {
          */
         saveSequence : function(models, callback) {
             if (!models || models.length === 0) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("並び順を変更してから保存ボタンを押してください。");
                 this.hideLoading();
                 return;
             }
