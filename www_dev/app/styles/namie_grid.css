@@ -42,9 +42,14 @@
 }
 
 .grid-list-footer {
-    background: #78d0df;
+    border-top: 3px solid #e8e8d0;
     padding: 20px;
-    color: white;
+    background: white;
+}
+
+.grid-list-footer .grid-list-footer__logo {
+    margin-right: 20px;
+    height: 20px;
 }
 
 .grid-list__item {
