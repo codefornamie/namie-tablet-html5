@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var NewsView = require("modules/view/news/NewsView");
     var OpeFeedListView = require("modules/view/ope/news/OpeFeedListView");
     var OpeFeedListItemView = require("modules/view/ope/news/OpeFeedListItemView");
+    var OpeNewsPreviewView = require("modules/view/ope/news/OpeNewsPreviewView");
+
     var Equal = require("modules/util/filter/Equal");
     /**
      * 運用管理アプリの記事一覧画面を表示するためのViewクラスを作成する。
@@ -26,7 +28,9 @@ define(function(require, exports, module) {
          * @memberof OpeNewsView#
          */
         events : {
-            "click [data-article-register-button]" : "onClickArticleRegisterButton"
+            "click [data-article-register-button]" : "onClickArticleRegisterButton",
+            "click [data-article-preview-button]" : "onClickArticlePreviewButton",
+            "click [ope-preview-back-button]" : "onClickOpePreviewBackButton"
         },
         
         /**
@@ -52,6 +56,8 @@ define(function(require, exports, module) {
          * @param {Date} targetDate 表示する日付。
          */
         setDate : function(targetDate) {
+            this.closePreview();
+            this.targetDate = targetDate;
             this.$el.find("#targetDate").text(
                     DateUtil.formatDate(targetDate, "yyyy年MM月dd日") + app.config.PUBLISH_TIME);
 
@@ -59,9 +65,6 @@ define(function(require, exports, module) {
                 targetDate : targetDate
             });
             this.searchArticles();
-            $("#articlePreview").colorbox({
-                "href" : "/?mode=news&loginId=namie01&preview=true&targetDate=" + DateUtil.formatDate(targetDate, "yyyy-MM-dd") + "&refreshToken=" + app.accessor.refreshToken, 
-                iframe : true, width : "80%", height : "90%"});
         },
 
         /**
@@ -125,6 +128,33 @@ define(function(require, exports, module) {
             $("[data-sequence-register-button]").hide();
             app.router.opeArticleRegist({targetDate : this.targetDate});
         },
+        /**
+         *  プレビュー表示ボタン押下時に呼び出されるコールバック関数
+         *  @memberof OpeNewsView#
+         */
+        onClickArticlePreviewButton: function () {
+            $("#opeNewsHolder").hide();
+            this.setView("#article_list_preview", new OpeNewsPreviewView({targetDate: this.targetDate})).render();
+            $("#opePreviewHolder").show();
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         *  戻るボタン押下時に呼び出されるコールバック関数
+         *  @memberof OpeNewsView#
+         */
+        onClickOpePreviewBackButton: function () {
+            this.closePreview();
+        },
+        /**
+         *  プレビュー表示を閉じる
+         *  @memberof OpeNewsView#
+         */
+        closePreview: function () {
+            $("#opePreviewHolder").hide();
+            $("#article_list_preview").empty();
+            $("#opeNewsHolder").show();
+            $("#contents__primary").scrollTop(0);
+        }
     });
 
     module.exports = OpeNewsView;

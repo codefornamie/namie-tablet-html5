@@ -42,10 +42,6 @@ define(function(require, exports, module) {
     var NewsView = AbstractView.extend({
 
         template : require("ldsh!templates/{mode}/news/news"),
-        templateMap : {
-            news : require("ldsh!templates/news/news/news"),
-            ope : require("ldsh!templates/ope/news/news")
-        },
         model : new ArticleModel(),
         fetchCounter : 0,
         articleCollection : new ArticleCollection(),
@@ -79,7 +75,7 @@ define(function(require, exports, module) {
             this.searchArticles();
             this.initEvents();
         },
-        
+
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
@@ -305,7 +301,7 @@ define(function(require, exports, module) {
          * 記事一覧Viewを表示する要素のセレクタ
          * @memberof NewsView#
          */
-        feedListElement: "#contents__top",
+        feedListElement : "#contents__top",
         /**
          * 左ペインの記事一覧メニューを表示する。
          * @memberof NewsView#
@@ -315,7 +311,7 @@ define(function(require, exports, module) {
             gridListView.collection = this.newsCollection;
 
             this.removeView(this.gridListElement);
-            
+
             this.setView(this.feedListElement, gridListView);
             gridListView.render();
 
@@ -357,18 +353,16 @@ define(function(require, exports, module) {
         },
 
         /**
-         * 指定されたarticleIdの記事までスクロール
+         * News一覧の各Gridがクリックされたときの動作
          * 
          * @param {jQuery.Event} ev
          * @param {Object} param
          * @memberof NewsView#
          */
         onClickGridItem : function(ev, param) {
-            if (!this.preview) {
-                var articleId = $(ev.currentTarget).attr("data-article-id");
-                app.newsView = this;
-                app.router.go("article", articleId);
-            }
+            var articleId = $(ev.currentTarget).attr("data-article-id");
+            app.newsView = this;
+            app.router.go("article", articleId);
         },
 
         /**
@@ -427,7 +421,7 @@ define(function(require, exports, module) {
         /**
          * 初期スクロール位置が指定されている場合、スクロールする
          */
-        initScrollTop: function () {
+        initScrollTop : function() {
             if (this.initialScrollTop) {
                 this.setScrollTop(this.initialScrollTop);
             }
@@ -437,7 +431,7 @@ define(function(require, exports, module) {
          * 記事一覧の現在のスクロール位置を設定する
          * @param {Number} scrollTop
          */
-        setScrollTop: function (scrollTop) {
+        setScrollTop : function(scrollTop) {
             var $container = this.$el.find("#contents__top");
 
             $container.scrollTop(scrollTop);
@@ -447,7 +441,7 @@ define(function(require, exports, module) {
          * 記事一覧の現在のスクロール位置を取得する
          * @return {Number}
          */
-        getScrollTop: function () {
+        getScrollTop : function() {
             var $container = this.$el.find("#contents__top");
             var scrollTop = $container.scrollTop();
 
@@ -483,7 +477,7 @@ define(function(require, exports, module) {
         /**
          * ビューが破棄される時に呼ばれる
          */
-        cleanup: function () {
+        cleanup : function() {
             $("#main").removeClass("is-top");
             $("#main").removeClass("is-article");
         },
