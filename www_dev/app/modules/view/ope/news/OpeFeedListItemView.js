@@ -38,7 +38,7 @@ define(function(require, exports, module) {
             }
             if (this.model.get("isRecommend")) {
                 // 今日のおすすめ記事フラグがある場合はラジオボタンを選択状態にする
-                this.$el.find("input[type='radio']").attr("checked","checked");
+                this.$el.find("input[type='radio']").attr("checked", "checked");
             }
             this.setData();
         },
@@ -56,7 +56,7 @@ define(function(require, exports, module) {
          * モデルから画面項目への設定。
          * @memberof OpeFeedListItemView#
          */
-        setData : function(){
+        setData : function() {
             this.lastModel = this.model;
             this.$el.find(".isPublishCheckBox").prop("checked", !this.model.get("isDepublish"));
         },
@@ -64,7 +64,7 @@ define(function(require, exports, module) {
          * 保存の開始
          * @memberof OpeFeedListItemView#
          */
-        saveStart : function(){
+        saveStart : function() {
             this.$el.find(".isPublishCheckBox").prop("disabled", true);
             this.$el.find("[data-article-edit-button]").prop("disabled", true);
         },
@@ -73,10 +73,10 @@ define(function(require, exports, module) {
          * @memberof OpeFeedListItemView#
          * @param {Boolean} 保存に成功したかどうか
          */
-        saveEnd : function(success){
-            if(success){
+        saveEnd : function(success) {
+            if (success) {
                 this.lastModel = this.model;
-            }else{
+            } else {
                 this.model = this.lastModel;
             }
             this.setData();
@@ -88,22 +88,23 @@ define(function(require, exports, module) {
          * @memberof OpeFeedListItemView#
          * @param {Event} イベント
          */
-        onChangeIsPublishCheckBox : function(e){
+        onChangeIsPublishCheckBox : function(e) {
             this.save();
         },
         /**
          * 画面項目からモデルへの設定。
          * @memberof OpeFeedListItemView#
          */
-        setInputValue : function(){
+        setInputValue : function() {
             this.model.set("isDepublish", this.$el.find(".isPublishCheckBox").prop('checked') ? null : "true");
         },
         /**
-         *  編集ボタン押下時に呼び出されるコールバック関数
+         * 編集ボタン押下時に呼び出されるコールバック関数
          * @memberof OpeFeedListItemView#
          */
-        onClickArticleEditButton: function () {
+        onClickArticleEditButton : function() {
             this.showLoading();
+            $("[data-sequence-register-button]").hide();
             if (this.model.get("type") === "2") {
                 app.router.opeYouTubeRegist({
                     model : this.model,
@@ -120,11 +121,12 @@ define(function(require, exports, module) {
             $("#contents__primary").scrollTop(0);
         },
         /**
-         *  タイトル押下時に呼び出されるコールバック関数
+         * タイトル押下時に呼び出されるコールバック関数
          * @memberof OpeFeedListItemView#
          */
-        onClickOpeTitleAnchor: function () {
+        onClickOpeTitleAnchor : function() {
             this.showLoading();
+            $("[data-sequence-register-button]").hide();
             switch (this.model.get("type")) {
             case "1":
                 var template = require("ldsh!templates/{mode}/news/articleDetail");
@@ -164,53 +166,55 @@ define(function(require, exports, module) {
          * 画面データ保存
          * @memberof OpeFeedListItemView#
          */
-        save : function(){
+        save : function() {
             this.setInputValue();
             this.saveStart();
             this.model.save(null, {
-                success : $.proxy(function(){
+                success : $.proxy(function() {
                     this.model.fetch({
-                        success : $.proxy(function(){
+                        success : $.proxy(function() {
                             this.saveEnd(true);
                         }, this),
-                        error : $.proxy(function(){
+                        error : $.proxy(function() {
                             this.saveEnd();
                         }, this)
                     });
                 }, this),
-                error : $.proxy(function(){
+                error : $.proxy(function() {
                     this.saveEnd();
                 }, this)
             });
         },
         /**
-         *  おすすめ記事のラジオボタンが変更された際のコールバック関数
+         * おすすめ記事のラジオボタンが変更された際のコールバック関数
          * @memberof OpeFeedListItemView#
          */
-        onChangeTodayRecommendRadio: function () {
+        onChangeTodayRecommendRadio : function() {
             this.showLoading();
-            this.model.set("isRecommend","true");
-            this.model.save(null,{
-                success:$.proxy(this.onRecommendSave,this),
-                error:$.proxy(function() {
+            this.model.set("isRecommend", "true");
+            this.model.save(null, {
+                success : $.proxy(this.onRecommendSave, this),
+                error : $.proxy(function() {
                     alert("おすすめ記事情報の保存に失敗しました");
                     this.hideLoading();
-                },this)
+                }, this)
             });
         },
         /**
          * おすすめ記事情報保存後のコールバック関数
          * @memberof OpeFeedListItemView#
          */
-        onRecommendSave: function() {
+        onRecommendSave : function() {
             this.model.fetch({
-                success: $.proxy(function() {
-                    $(this.el).find("input[type='radio']").trigger("onRecommendFetch",[this.model]);
-                },this),
-                error:$.proxy(function() {
+                success : $.proxy(function() {
+                    $(this.el).find("input[type='radio']").trigger("onRecommendFetch", [
+                        this.model
+                    ]);
+                }, this),
+                error : $.proxy(function() {
                     alert("おすすめ記事情報の保存に失敗しました");
                     this.hideLoading();
-                },this)
+                }, this)
             });
         }
 

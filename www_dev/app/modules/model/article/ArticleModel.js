@@ -61,7 +61,7 @@ define(function(require, exports, module) {
             } else {
                 response.dispDescriptionSummary = response.dispDescription;
             }
-
+            
             return response;
         },
         /**
@@ -107,6 +107,8 @@ define(function(require, exports, module) {
             saveData.isDepublish = this.get("isDepublish");
 
             saveData.nickname = this.get("nickname");
+
+            saveData.sequence = this.get("sequence");
             // タグ文字列の生成
             var tags = "";
             if (this.get("tagsArray") && this.get("tagsArray").length) {

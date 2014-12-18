@@ -122,6 +122,7 @@ define(function(require, exports, module) {
          *  @memberof OpeNewsView#
          */
         onClickArticleRegisterButton: function () {
+            $("[data-sequence-register-button]").hide();
             app.router.opeArticleRegist({targetDate : this.targetDate});
         },
     });
