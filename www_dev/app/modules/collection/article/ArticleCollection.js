@@ -34,10 +34,10 @@ define(function(require, exports, module) {
                     });
                 }
             });
-            response = _.sortBy(response,function(res) {
+            response = _.sortBy(response, function(res) {
                 return parseInt(res.sequence);
             });
-            
+
             return response;
         },
 
@@ -50,11 +50,11 @@ define(function(require, exports, module) {
             var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
 
             this.condition.filters = [
-                new Or([
-                    new Equal("publishedAt", dateString), new And([
-                        new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
-                    ])
-                ]), new IsNull("isDepublish")
+                    new Or([
+                            new Equal("publishedAt", dateString), new And([
+                                    new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
+                            ])
+                    ]), new IsNull("isDepublish")
             ];
         }
     });
