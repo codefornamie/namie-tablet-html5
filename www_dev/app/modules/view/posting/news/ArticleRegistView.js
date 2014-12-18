@@ -94,6 +94,13 @@ define(function(require, exports, module) {
             } else {
                 $("#articleDate1").removeClass("required");
             }
+            if (articleCategory === "6") {
+                $("#articleTitle").removeClass("required");
+                $("#articleDetail").addClass("required");
+            } else {
+                $("#articleTitle").addClass("required");
+                $("#articleDetail").removeClass("required");
+            }
         },
 
         initialize : function() {

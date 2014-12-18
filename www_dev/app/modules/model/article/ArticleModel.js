@@ -29,6 +29,13 @@ define(function(require, exports, module) {
             response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt), "yyyy年MM月dd日 HH時mm分");
             response.dispUpdatedAt = DateUtil.formatDate(new Date(response.updatedAt), "yyyy年MM月dd日 HH時mm分");
             response.dispSite = CommonUtil.sanitizing(response.site);
+            if (!response.title && response.description) {
+                // おたよりなどのタイトルがないものは本文の先頭10文字をタイトルとする
+                response.title = response.description.substr(0,10);
+                if (response.description.length > 10) {
+                    response.title += "...";
+                }
+            }
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.dispPlace = CommonUtil.sanitizing(response.place);
             response.dispDescription = CommonUtil.sanitizing(response.description);
