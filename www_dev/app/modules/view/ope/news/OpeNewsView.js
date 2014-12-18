@@ -56,6 +56,7 @@ define(function(require, exports, module) {
          * @param {Date} targetDate 表示する日付。
          */
         setDate : function(targetDate) {
+            this.closePreview();
             this.targetDate = targetDate;
             this.$el.find("#targetDate").text(
                     DateUtil.formatDate(targetDate, "yyyy年MM月dd日") + app.config.PUBLISH_TIME);
@@ -141,6 +142,13 @@ define(function(require, exports, module) {
          *  @memberof OpeNewsView#
          */
         onClickOpePreviewBackButton: function () {
+            this.closePreview();
+        },
+        /**
+         *  プレビュー表示を閉じる
+         *  @memberof OpeNewsView#
+         */
+        closePreview: function () {
             $("#opePreviewHolder").hide();
             $("#article_list_preview").empty();
             $("#opeNewsHolder").show();
