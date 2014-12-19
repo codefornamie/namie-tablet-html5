@@ -6,6 +6,12 @@ define(function(require) {
     app.noRendering = true;
 
     describe("AbstractODataModel", function() {
+        before(function () {
+            if (Backbone.fetchCache) {
+                Backbone.fetchCache.enabled = false;
+            }
+        });
+
         it("TEST-01 LoginModel#login", function(done) {
             this.timeout(15000);
             var loginModel = new LoginModel();
