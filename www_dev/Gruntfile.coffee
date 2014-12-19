@@ -23,6 +23,16 @@ module.exports = ->
     "replace:mode"
   ]
 
+  @registerTask "skipTests", [
+    "clean"
+    "processhtml"
+    "requirejs"
+    "styles"
+    # "cssmin"
+    "copy"
+    "replace:mode"
+  ]
+
   @registerTask "server", [
     "connect:development"
   ]
