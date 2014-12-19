@@ -52,11 +52,15 @@ define(function(require, exports, module) {
          * @memberof GridListView#
          */
         afterRendered : function() {
-            var masonry = new Masonry(
+            if (this.masonry) {
+                this.masonry.destroy();
+            }
+
+            this.masonry = new Masonry(
                 document.querySelector("#grid-list"),
                 {
                     itemSelector: ".grid-list-item-div",
-                    columnWidth: 300
+                    transitionDuration: 0
                 }
             );
         },
