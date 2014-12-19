@@ -15,6 +15,25 @@ define(function(require, exports, module) {
     var PcsManager = require("modules/PcsManager");
     var Logger = require("modules/util/logging/Logger");
 
+    require("backbone-fetch-cache");
+
+    /**
+     * backbone-fetch-cacheの設定
+     */
+    // fetch結果をlocalStorageにはキャッシュしない
+    Backbone.fetchCache.localStorage = false;
+
+    // キャッシュのキーを生成するメソッド
+    Backbone.fetchCache.getCacheKey = function(instance, options) {
+        return JSON.stringify([
+            instance.entity,
+            instance.odata,
+            instance.box,
+            instance.cell,
+            instance.condition
+        ]);
+    };
+
     // グローバルに利用できるModel
     var app = module.exports = new Backbone.Model();
 
