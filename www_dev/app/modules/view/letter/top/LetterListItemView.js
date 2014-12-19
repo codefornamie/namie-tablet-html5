@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var WebDavModel = require("modules/model/WebDavModel");
     var TabletArticleListItemView = require("modules/view/news/ArticleListItemView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
 
@@ -23,26 +24,32 @@ define(function(require, exports, module) {
          * @memberof LetterListItemView#
          */
         afterRendered : function() {
-            app.box.col("dav").getBinary(this.model.get("imageUrl"), {
-                success : $.proxy(function(binary) {
-                    app.logger.debug("getBinary()");
-                    var arrayBufferView = new Uint8Array(binary);
-                    var blob = new Blob([
-                        arrayBufferView
-                    ], {
-                        type : "image/jpg"
-                    });
-                    var url = FileAPIUtil.createObjectURL(blob);
-                    var imgElement = this.$el.find(".letterListItemPicture");
-                    imgElement.load(function() {
-                    });
-                    imgElement.attr("src", url);
-                },this),
-                error: $.proxy(function () {
-                    app.logger.error("画像の取得に失敗しました");
-                },this)
-            });
+            if(this.model.get("imageUrl")){
+                var davModel = new WebDavModel();
+                var path = this.model.get("imagePath");
+                path = path ? path + "/" : "";
+                davModel.id = path + this.model.get("imageUrl");
+                davModel.fetch({
+                    success : $.proxy(function(model, binary) {
+                        app.logger.debug("getBinary()");
+                        var arrayBufferView = new Uint8Array(binary);
+                        var blob = new Blob([
+                            arrayBufferView
+                        ], {
+                            type : "image/jpg"
+                        });
 
+                        var url = FileAPIUtil.createObjectURL(blob);
+                        var imgElement = this.$el.find(".letterListItemPicture");
+                        imgElement.load(function() {
+                        });
+                        imgElement.attr("src", url);
+                    },this),
+                    error: $.proxy(function () {
+                        app.logger.error("画像の取得に失敗しました");
+                    },this)
+                });
+            }
         },
 
         /**

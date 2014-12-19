@@ -2,7 +2,10 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var AbstractModel = require("modules/model/AbstractModel");
     var AbstractView = require("modules/view/AbstractView");
+    var WebDavModel = require("modules/model/WebDavModel");
+    
     var ArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
     var DateUtil = require("modules/util/DateUtil");
     var CommonUtil = require("modules/util/CommonUtil");
@@ -90,6 +93,14 @@ define(function(require, exports, module) {
          * 添付された画像をdavへ登録する
          */
         saveArticlePicture : function() {
+            if(!this.model.get("__id")){
+                this.model.id = AbstractModel.createNewId();
+            }
+            
+            if(!this.model.get("imagePath")){
+                this.model.set("imagePath", this.generateFilePath());
+            }
+
             var imageCount = this.model.get("images").length;
             if(imageCount === 0){
                 this.hideLoading();
@@ -98,12 +109,22 @@ define(function(require, exports, module) {
             }
             _.each(this.model.get("images"), $.proxy(function(image){
                 if(image.data){
-                    app.box.col("dav").put(image.fileName, {
-                        body : image.data,
-                        headers : {
-                            "Content-Type" : image.contentType,
-                            "If-Match" : "*"
-                        },
+                    if(!this.model.get("__id")){
+                        this.model.id = AbstractModel.createNewId();
+                    }
+                    
+                    if(!this.model.get("imagePath")){
+                        this.model.set("imagePath", this.generateFilePath());
+                    }
+
+                    var davModel = new WebDavModel();
+                    davModel.set("path", this.model.get("imagePath"));
+                    davModel.set("fileName", image.fileName);
+                    
+                    davModel.set("data", image.data);
+                    davModel.set("contentType", image.contentType);
+                    
+                    davModel.save(null, {
                         success : $.proxy(function(e){
                             if(--imageCount <= 0){
                                 this.saveModel();

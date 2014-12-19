@@ -234,6 +234,9 @@ define(function(require, exports, module) {
         getSaveData : function() {
             Log.info("AbstractODataModel getSaveData");
             var saveData = {};
+            if(this.id){
+                saveData.__id = this.id;
+            }
             if (this.get("__id")) {
                 saveData.__id = this.get("__id");
             }

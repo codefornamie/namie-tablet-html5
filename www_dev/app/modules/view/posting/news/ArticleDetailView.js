@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var WebDavModel = require("modules/model/WebDavModel");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var DateUtil = require("modules/util/DateUtil");
     var CommonUtil = require("modules/util/CommonUtil");
@@ -80,8 +81,12 @@ define(function(require, exports, module) {
             }
             _.each(imgArray,$.proxy(function (item) {
                 try {
-                    app.box.col("dav").getBinary(item.imageUrl, {
-                        success : $.proxy(function(binary) {
+                    var davModel = new WebDavModel();
+                    var path = this.model.get("imagePath");
+                    path = path ? path + "/" : "";
+                    davModel.id = path + item.imageUrl;
+                    davModel.fetch({
+                        success : $.proxy(function(model, binary) {
                             onGetBinary(binary,item);
                         },this)
                     });

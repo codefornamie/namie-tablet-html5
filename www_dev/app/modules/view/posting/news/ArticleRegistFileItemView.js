@@ -2,6 +2,8 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var WebDavModel = require("modules/model/WebDavModel");
+    
     var AbstractView = require("modules/view/AbstractView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
 
@@ -30,8 +32,11 @@ define(function(require, exports, module) {
             if (!this.imageUrl) {
                 return;
             }
-            app.box.col("dav").getBinary(this.imageUrl, {
-                success : $.proxy(function(binary) {
+
+            var davModel = new WebDavModel();
+            davModel.id = this.imageUrl;
+            davModel.fetch({
+                success : $.proxy(function(model, binary) {
                     app.logger.debug("getBinary()");
                     var arrayBufferView = new Uint8Array(binary);
                     var blob = new Blob([

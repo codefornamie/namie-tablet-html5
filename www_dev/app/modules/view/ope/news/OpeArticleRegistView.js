@@ -68,7 +68,7 @@ define(function(require, exports, module) {
                 var index = 0;
                 _.each(this.imgArray,$.proxy(function(img) {
                     var view = new ArticleRegistFileItemView();
-                    view.imageUrl = img.fileName;
+                    view.imageUrl = this.model.get("imagePath") + "/" + img.fileName;
                     view.imageComment = img.imageComment;
                     this.insertView("#fileArea", view).render();
                     // 全ての画像の読み込み処理が完了したタイミングでローディングマスクを解除したいため

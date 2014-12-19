@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var AbstractModel = require("modules/model/AbstractModel");
     var AbstractView = require("modules/view/AbstractView");
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
     var ArticleRegistConfirmView = require("modules/view/posting/news/ArticleRegistConfirmView");
@@ -161,7 +162,7 @@ define(function(require, exports, module) {
                 var index = this.imgArray.length;
                 _.each(this.imgArray, $.proxy(function(img) {
                     var view = new ArticleRegistFileItemView();
-                    view.imageUrl = img.fileName;
+                    view.imageUrl = this.model.get("imagePath") + "/" + img.fileName;
                     view.imageComment = img.comment;
                     this.insertView("#fileArea", view).render();
                     // 全ての画像の読み込み処理が完了したタイミングでローディングマスクを解除したいため
@@ -247,8 +248,12 @@ define(function(require, exports, module) {
         setInputValue : function() {
             if (this.model === null) {
                 this.model = new ArticleModel();
+                this.model.id = AbstractModel.createNewId();
             }
-
+            if(!this.model.get("imagePath")){
+                this.model.set("imagePath", this.generateFilePath());
+            }
+            
             if (this.parentModel) {
                 this.model.set("parent", this.parentModel.get("__id"));
             }

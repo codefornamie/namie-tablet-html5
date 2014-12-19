@@ -102,6 +102,7 @@ define(function(require, exports, module) {
             saveData.status = this.get("status");
             saveData.createUserId = this.get("createUserId");
 
+            saveData.imagePath = this.get("imagePath");
             saveData.imageUrl = this.get("imageUrl");
             saveData.imageUrl2 = this.get("imageUrl2");
             saveData.imageUrl3 = this.get("imageUrl3");
