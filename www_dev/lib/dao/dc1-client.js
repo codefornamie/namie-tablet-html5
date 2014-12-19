@@ -14453,6 +14453,9 @@ dcc.http.DcResponse.prototype.debugHttpResponse = function(res) {
     return dest;
 }*/
 
-return dcc;
+return {
+    http: dcc.http,
+    DcContext: dcc.DcContext
+};
 
 }));
