@@ -20,6 +20,14 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/news/news/gridListItem"),
 
         /**
+         * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         * @memberof GridListItemView#
+         */
+        beforeRendered : function() {
+            this.$el.addClass("grid-list-item-div");
+        },
+
+        /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。

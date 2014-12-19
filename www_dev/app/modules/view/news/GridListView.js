@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var Masonry = require("masonry");
     var AbstractView = require("modules/view/AbstractView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var FeedListView = require("modules/view/news/FeedListView");
@@ -20,11 +21,13 @@ define(function(require, exports, module) {
          * @memberof GridListView#
          */
         listElementSelector : "#grid-list",
+
         /**
          * このViewのテンプレートファイルパス
          * @memberof GridListView#
          */
         template : require("ldsh!templates/news/news/gridList"),
+
         /**
          * このViewのイベント
          * @memberof GridListView#
@@ -32,6 +35,7 @@ define(function(require, exports, module) {
         events : {
             "click [data-grid-list-item]" : "onClickFeedListItem"
         },
+
         /**
          * Viewの描画処理の前に呼び出されるコールバック関数
          * <p>
@@ -44,12 +48,27 @@ define(function(require, exports, module) {
         },
 
         /**
+         * Viewの描画処理の後に呼び出されるコールバック関数
+         * @memberof GridListView#
+         */
+        afterRendered : function() {
+            var masonry = new Masonry(
+                document.querySelector("#grid-list"),
+                {
+                    itemSelector: ".grid-list-item-div",
+                    columnWidth: 300
+                }
+            );
+        },
+
+        /**
          * 初期化処理
          * @memberof GridListView#
          */
         initialize : function() {
             Super.prototype.setFeedListItemViewClass.call(this, GridListItemView);
         },
+
         /**
          * 記事リストアイテムをクリックされたときのコールバック関数
          * 
