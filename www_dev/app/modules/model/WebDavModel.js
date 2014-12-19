@@ -99,7 +99,7 @@ define(function(require, exports, module) {
             var onSuccess = options.success;
             var onFailure = options.failure;
             
-            this.mkCol(path)
+            this.mkCol(path);
             this.dav.put(path + "/" + this.get("fileName"),{
                 body : data,
                 headers : {
