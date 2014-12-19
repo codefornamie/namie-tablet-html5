@@ -75,6 +75,9 @@ define(function(require, exports, module) {
          */
         sync : function(method, model, options) {
             Log.info("AbstractODataCollection sync");
+
+            var def = $.Deferred();
+
             if (!options) {
                 options = {};
             }
@@ -89,12 +92,16 @@ define(function(require, exports, module) {
 
             var complete = function(res) {
                 Log.info("AbstractODataCollection search complete handler");
+
                 // 取得したJSONオブジェクト
                 var json = null;
+
                 if (res.error) {
                     if (options.error) {
                         options.error(res);
                     }
+
+                    def.reject(res);
                 } else if (options.success) {
                     if (res.bodyAsJson) {
                         json = res.bodyAsJson();
@@ -102,13 +109,19 @@ define(function(require, exports, module) {
                     if (json && json.d) {
                         json = json.d.results;
                     }
+
                     options.success(json);
                 }
 
                 if (options.complete) {
                     options.complete(res, model, json);
                 }
+
+                if (def.state() === "pending") {
+                    def.resolve(json);
+                }
             };
+
             try {
                 this.search(method, model, options, complete);
             } catch (e) {
@@ -116,6 +129,8 @@ define(function(require, exports, module) {
                 //app.router.go("login");
                 window.location.href = "/";
             }
+
+            return def.promise();
         },
         /**
          * PCS ODataの検索処理を行う。
@@ -142,7 +157,6 @@ define(function(require, exports, module) {
                 }
             });
         }
-
     });
 
     module.exports = AbstractODataCollection;
