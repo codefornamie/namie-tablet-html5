@@ -27,6 +27,7 @@ define(function(require, exports, module) {
             this.recommendArticle = this.collection.find($.proxy(function(model) {
                 return model.get("isRecommend");
             }, this));
+            $("#sequenceConfirm").hide();
             $("[data-sequence-register-button]").unbind("click");
             $("[data-sequence-register-button]").bind("click", $.proxy(this.onClickSequenceRegist, this));
         },

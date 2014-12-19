@@ -66,7 +66,7 @@ define(function(require, exports, module) {
             });
             this.searchArticles();
         },
-
+        
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
@@ -76,8 +76,8 @@ define(function(require, exports, module) {
             var targetDate = condition.targetDate;
             var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
             this.articleCollection.condition.filters = [
-                                                        new Equal("publishedAt", dateString)
-                                                                ];
+                new Equal("publishedAt", dateString)
+            ];
         },
         /**
          * 左ペインの記事一覧メニューを表示する。
@@ -126,6 +126,7 @@ define(function(require, exports, module) {
          */
         onClickArticleRegisterButton: function () {
             $("[data-sequence-register-button]").hide();
+            $("#sequenceConfirm").hide();
             app.router.opeArticleRegist({targetDate : this.targetDate});
         },
         /**
