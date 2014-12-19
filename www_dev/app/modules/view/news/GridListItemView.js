@@ -34,7 +34,7 @@ define(function(require, exports, module) {
          * </p>
          * @memberof GridListItemView#
          */
-        afterRendered : function() {
+        afterRender : function() {
             var self = this;
             var eventId = "ev-" + this.cid;
             var imageType = this.model.getImageType();
