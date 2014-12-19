@@ -82,6 +82,10 @@ body {
     var _updateInterval = null;
     /** 画像の表示間隔。 */
     var _updateTime = 50 * 60 * 1000; // 50分
+    /** 負荷分散用の間隔。 */
+    var _distributionTime = 30;
+    /** 負荷分散時のタイマーで利用するタイマーID. */
+    var _distributionTimerID = null;
     /** 画像データのキャッシュ。 */
     var _cache = {};
     /** 発行時刻。 */
@@ -350,10 +354,20 @@ body {
         log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         log("start showImage : " + fname);
         checkRecentArticle(function() {
-            log("hits recent article");
-            var msg = (_publishTime.getMonth() + 1) + "月" + _publishTime.getDate() + "日版のなみえ新聞が発行されました";
-            $("#msg").text(msg);
-            $("#message").fadeIn("slow");
+            if (_distributionTimerID) {
+                // すでに遅延用のタイマーをセットされていれば、表示処理は行わない。
+                log("skip popup");
+                return;
+            }
+            // サーバー負荷を軽減させるため、同じ条件でも、３０分間でバラつかせる。
+            var displayTime = Math.floor( Math.random() * _distributionTime );
+            log("★　hits recent article. displayTime after " + displayTime + " minutes ");
+            _distributionTimerID = setTimeout(function() {
+                log("show popup message");
+                var msg = (_publishTime.getMonth() + 1) + "月" + _publishTime.getDate() + "日版のなみえ新聞が発行されました";
+                $("#msg").text(msg);
+                $("#message").fadeIn("slow");
+            }, displayTime * 60 * 1000);
         });
         getImageBinary(fname, function(binary) {
             if (!binary) {
