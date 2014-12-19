@@ -3,6 +3,20 @@
 /*
  * Copyright 2012-2013 Fujitsu Limited all rights reserved.
  */
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], factory);
+    } else if (typeof exports === 'object') {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like enviroments that support module.exports,
+        // like Node.
+        module.exports = factory();
+    } else {
+        // Browser globals
+        root.dcc = factory();
+    }
+}(this, function () {
 
 ///**
 //* @namespace PCSクライアントライブラリクラス群を内包する名前空間。
@@ -234,12 +248,6 @@ dcc.ClientConfig.prototype.setHttpClient = function(value) {
 dcc.DcContext = function(url, name, boxSchema, bName) {
   this.initializeProperties(this, url, name, boxSchema, bName);
 };
-
-(function () {
-  if (typeof exports !== "undefined") {
-    exports.DcContext = dcc.DcContext;
-  }
-})();
 
 ///**
 //* バージョン情報を指定するヘッダ.
@@ -14444,3 +14452,7 @@ dcc.http.DcResponse.prototype.debugHttpResponse = function(res) {
     }
     return dest;
 }*/
+
+return dcc;
+
+}));
