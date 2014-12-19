@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var Backbone = require("backbone");
     var Layout = require("layoutmanager");
-    var dc1 = require("dc1-client");
+    var dcc = window.dcc = require("dc1-client");
     var jqueryvalidation = require("jqueryvalidation");
     var messageja = require("messageja");
     var nehan = require("jquerynehan");
