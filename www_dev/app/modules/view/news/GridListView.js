@@ -71,6 +71,16 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             Super.prototype.setFeedListItemViewClass.call(this, GridListItemView);
+
+            this.initEvent();
+        },
+
+        /**
+         * イベント処理
+         * @memberof GridListView#
+         */
+        initEvent : function() {
+            this.$el.on("imageError", this.onImageError.bind(this));
         },
 
         /**
@@ -80,7 +90,18 @@ define(function(require, exports, module) {
          * @memberof GridListView#
          */
         onClickFeedListItem : function(ev) {
-        }
+        },
+
+        /**
+         * 子ビューで画像読み込みに失敗したときに呼ばれる
+         * 
+         * @memberof GridListView#
+         */
+        onImageError : _.debounce(function() {
+            if (this.masonry) {
+                this.masonry.layout();
+            }
+        }, 100)
     });
 
     module.exports = GridListView;

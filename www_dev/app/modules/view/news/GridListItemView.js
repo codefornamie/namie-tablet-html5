@@ -67,6 +67,10 @@ define(function(require, exports, module) {
                 })
                 .on("error", function() {
                     self.$el.find(".grid-list__item").addClass("is-no-image");
+
+                    // 画像読み込み失敗によってレイアウトが変化することを
+                    // 親のviewに伝えるため、イベントをトリガする
+                    self.$el.trigger("imageError");
                 });
             }
 
