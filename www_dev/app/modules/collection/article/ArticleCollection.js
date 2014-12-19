@@ -54,11 +54,13 @@ define(function(require, exports, module) {
             var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
 
             this.condition.filters = [
-                    new Or([
-                            new Equal("publishedAt", dateString), new And([
-                                    new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
-                            ])
-                    ]), new IsNull("isDepublish")
+                new And([
+                        new Or([
+                                new Equal("publishedAt", dateString), new And([
+                                        new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
+                                ])
+                        ]), new IsNull("isDepublish")
+                ])
             ];
         }
     });

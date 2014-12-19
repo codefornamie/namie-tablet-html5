@@ -57,6 +57,7 @@ define(function(require, exports, module) {
             // 記事一覧を表示
             this.setView("#opeNewsList", newsView).render();
             newsView.setDate(this.targetDate ? new Date(this.targetDate) : new Date());
+            $("[data-sequence-register-button]").show();
         },
     });
 
