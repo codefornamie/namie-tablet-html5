@@ -1743,3 +1743,7 @@ select#articleCategory {
 }
 .article-label__text {
 }
+
+.text--localnews {
+    color: #61b152;
+}
