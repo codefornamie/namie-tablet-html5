@@ -166,6 +166,8 @@ define(function(require, exports, module) {
             var self = this;
 
             this.articleCollection.fetch({
+                cache : true,
+
                 success : function() {
                     self.loadFavorite(callback);
                 },
@@ -186,6 +188,8 @@ define(function(require, exports, module) {
             ];
 
             this.favoriteCollection.fetch({
+                cache : true,
+
                 success : function() {
                     callback();
                 },
@@ -204,6 +208,8 @@ define(function(require, exports, module) {
         loadEvents : function(callback) {
             this.eventsCollection.reset();
             this.eventsCollection.fetch({
+                cache : true,
+
                 success : function() {
                     callback();
                 },
@@ -220,6 +226,8 @@ define(function(require, exports, module) {
          */
         loadRecommend : function(callback) {
             this.recommendCollection.fetch({
+                cache : true,
+
                 success : function() {
                     callback();
                 },
