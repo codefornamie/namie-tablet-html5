@@ -43,6 +43,7 @@ define(function(require, exports, module) {
             // 画像URLがある場合は、画像読み込みに失敗したら画像のエリアをつめる
             if (imageType === Code.IMAGE_TYPE_NONE) {
                 this.$el.find(".grid-list__item").addClass("is-no-image");
+                self.$el.trigger("imageError");
             } else {
                 this.$el.find(".articleImage")
                 .on("center", function () {
