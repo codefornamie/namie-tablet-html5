@@ -157,15 +157,14 @@ define(function(require, exports, module) {
                             maxWidth : "83%",
                             maxHeight : "100%",
                             onComplete : function() {
-                                $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
-                                $("#cboxOverlay").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                                $("#colorbox").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
+                                $("#colorbox").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
                                 $("#cboxCloseButton").click(function() {
                                     $.colorbox.close();
                                 });
                                 $("#cboxSaveButton").click(function(ev) {
                                     saveFunc(ev);
                                 });
-                                $("#colorbox").find("img").data("blob",blob);
                             },
                             onClosed : function() {
                                 $("#cboxSaveButton").remove();
