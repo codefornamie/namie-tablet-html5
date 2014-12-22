@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport"
-  content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 <link rel="stylesheet" href="bower_components/animate.css/animate.css">
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/requirejs/require.js"></script>
@@ -13,38 +13,33 @@
 
 <style>
 #slideImage {
-  -vendor-animation-duration: 5s;
-  -vendor-animation-delay: 1s;
-  -vendor-animation-iteration-count: infinite;
-  width: 100%;
-  height: 100%;
+    -vendor-animation-duration: 5s;
+    -vendor-animation-delay: 1s;
+    -vendor-animation-iteration-count: infinite;
+    width: 100%;
+    height: 100%;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-}
-
-.slideImage {
-  width: 100%;
-  height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 #message {
-  padding: 30px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 50%;
-  height: 30%;
-  margin-left: -25%;
-  margin-top: -15%;
-  adisplay: relative;
-  display: none;
-  background-color: #ffff00;
-  z-index: 100;
-  vertical-align: middle;
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 30%;
+    margin-left: -25%;
+    margin-top: -15%;
+    adisplay: relative;
+    display: none;
+    background-color: #ffff00;
+    z-index: 100;
+    vertical-align: middle;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
 }
 
 #icon {
@@ -52,11 +47,11 @@ body {
 }
 
 #msg {
-  line-height: 1.1em;
-  vertical-align: middle;
-  font-size: 70px;
-  color: #000000;
-  font-weight: bold;
+    line-height: 1.1em;
+    vertical-align: middle;
+    font-size: 70px;
+    color: #000000;
+    font-weight: bold;
 }
 </style>
 <script>
@@ -83,7 +78,7 @@ body {
     /** 画像の表示間隔。 */
     var _updateTime = 50 * 60 * 1000; // 50分
     /** 負荷分散用の間隔。 */
-    var _distributionTime = 30;
+    var _distributionTime = 5;
     /** 負荷分散時のタイマーで利用するタイマーID. */
     var _distributionTimerID = null;
     /** 画像データのキャッシュ。 */
@@ -198,7 +193,6 @@ body {
         _fileList = getFileList();
         updateAtricleInfo();
         startSlideShow();
-        return;
     }
 
     /**
@@ -326,24 +320,39 @@ body {
 
     /**
      * 発行時刻と、記事の有無をチェック。
-     * @param {Function} 記事があった場合に呼び出すコールバック
+     * @param {Function} callback 記事があった場合に呼び出すコールバック
      */
     function checkRecentArticle(callback) {
         log("start checkRecentArticle");
         var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
         var now = new Date();
-        log("now : " + now + " / publishTime : " + _publishTime + " / _hasRecentAtricle : " + _hasRecentAtricle +
-                " / localStorage(" + pub + ") : " + localStorage.getItem(pub));
-        if (now > _publishTime) {
-            if (_hasRecentAtricle) {
-                if (!localStorage.getItem(pub)) {
-                    log("callback called by checkRecentArticle");
-                    callback();
-                    return;
-                }
+        var distTime = new Date(_publishTime.getTime() + (_distributionTime * 60 * 1000));
+        log("checkRecentArticle now : " + now);
+        log("checkRecentArticle publishTime : " + _publishTime);
+        log("checkRecentArticle distTime : " + distTime);
+        log("_hasRecentAtricle : " + _hasRecentAtricle);
+        log("localStorage(" + pub + ") : " + localStorage.getItem(pub));
+
+        if ((_hasRecentAtricle) && (!localStorage.getItem(pub)) && (now > _publishTime)) {
+            log("popup");
+            if (now < distTime) {
+                // 数分間の負荷分散を行う
+                callback.distribution();
+            } else if (now > distTime) {
+                // リアルタイムにポップアップ表示
+                callback.realtime();
             }
         }
-        $("#message").hide();
+    }
+
+    /**
+     * ポップアップ表示。
+     */
+    function showPopup() {
+        log("show popup message");
+        var msg = (_publishTime.getMonth() + 1) + "月" + _publishTime.getDate() + "日版のなみえ新聞が発行されました";
+        $("#msg").text(msg);
+        $("#message").fadeIn("slow");
     }
 
     /**
@@ -353,21 +362,30 @@ body {
     function showImage(fname) {
         log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         log("start showImage : " + fname);
-        checkRecentArticle(function() {
-            if (_distributionTimerID) {
-                // すでに遅延用のタイマーをセットされていれば、表示処理は行わない。
-                log("skip popup");
-                return;
+        checkRecentArticle({
+            hidden : function() {
+                $("#message").hide();
+            },
+            realtime : function() {
+                if (!_distributionTimerID) {
+                    // ポップアップタイマーがセットされていなければ実行
+                    showPopup();
+                }
+            },
+            distribution : function() {
+                if (_distributionTimerID) {
+                    // すでに遅延用のタイマーをセットされていれば、表示処理は行わない。
+                    log("skip popup");
+                    return;
+                }
+                // サーバー負荷を軽減させるため、同じ条件でも、数分間でバラつかせる。
+                var displayTime = Math.floor(Math.random() * _distributionTime);
+                log("★　hits recent article. displayTime after " + displayTime + " minutes ");
+                _distributionTimerID = setTimeout(function() {
+                    showPopup();
+                    _distributionTimerID = null;
+                }, displayTime * 60 * 1000);
             }
-            // サーバー負荷を軽減させるため、同じ条件でも、３０分間でバラつかせる。
-            var displayTime = Math.floor( Math.random() * _distributionTime );
-            log("★　hits recent article. displayTime after " + displayTime + " minutes ");
-            _distributionTimerID = setTimeout(function() {
-                log("show popup message");
-                var msg = (_publishTime.getMonth() + 1) + "月" + _publishTime.getDate() + "日版のなみえ新聞が発行されました";
-                $("#msg").text(msg);
-                $("#message").fadeIn("slow");
-            }, displayTime * 60 * 1000);
         });
         getImageBinary(fname, function(binary) {
             if (!binary) {
@@ -393,12 +411,12 @@ body {
     }
 </script>
 <body>
-  <div id="container" style="font-size: 1.5em;" />
-  <div id="message">
-    <div>
-      <img id="icon" src="app/img/img-character01.png" />
+    <div id="container" style="font-size: 1.5em;"></div>
+    <div id="message">
+        <div>
+            <img id="icon" src="app/img/img-character01.png" />
+        </div>
+        <div id="msg"></div>
     </div>
-    <div id="msg"></div>
-  </div>
 </body>
 </html>
