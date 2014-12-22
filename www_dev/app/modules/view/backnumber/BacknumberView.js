@@ -19,17 +19,20 @@ define(function(require, exports, module) {
     var BacknumberView = AbstractView.extend({
         /**
          *  テンプレートファイル
+         * @memberOf BacknumberView#
          */
         template : require("ldsh!templates/{mode}/backnumber/backnumber"),
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         * @memberOf BacknumberView#
          */
         beforeRendered : function() {
         },
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * @memberOf BacknumberView#
          */
         afterRendered : function() {
             app.ga.trackPageView("News/BackNoDate","新聞アプリ/バックナンバー日付選択ページ");
@@ -39,6 +42,7 @@ define(function(require, exports, module) {
 
         /**
          *  初期化処理
+         * @memberOf BacknumberView#
          */
         initialize : function() {
             var backnumberListView = this.backnumberListView = new BacknumberListView({
@@ -58,6 +62,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
+         * @memberOf BacknumberView#
          */
         initEvents: function () {
             this.listenTo(app.router, "route", this.onRoute);
@@ -66,6 +71,7 @@ define(function(require, exports, module) {
         /**
          * 月を変更する
          * @param {moment} month
+         * @memberOf BacknumberView#
          */
         updateMonth: function (month) {
             this.backnumberListView.collection.setMonth(month);
@@ -74,6 +80,7 @@ define(function(require, exports, module) {
         
         /**
          *  日付の表示を更新する
+         * @memberOf BacknumberView#
          */
         updateDateLabel : function() {
             var month = moment(this.backnumberListView.collection.month);
@@ -97,7 +104,8 @@ define(function(require, exports, module) {
         /**
          *  前の月へ戻るボタンを押したら呼ばれる
          *
-         *  @param {Event} evt
+         *  @param {Event} evt クリックイベント
+         * @memberOf BacknumberView#
          */
         onClickMonthPrev: function (evt) {
             var month = moment(this.backnumberListView.collection.month);
@@ -110,7 +118,8 @@ define(function(require, exports, module) {
         /**
          *  次の月へ進むボタンを押したら呼ばれる
          *
-         *  @param {Event} evt
+         *  @param {Event} evt クリックイベント
+         * @memberOf BacknumberView#
          */
         onClickMonthNext: function (evt) {
             var month = moment(this.backnumberListView.collection.month);
@@ -135,6 +144,7 @@ define(function(require, exports, module) {
 
         /**
          * ビューが破棄される時に呼ばれる
+         * @memberof BacknumberView#
          */
         cleanup: function () {
             $("#main").removeClass("is-backnumber");

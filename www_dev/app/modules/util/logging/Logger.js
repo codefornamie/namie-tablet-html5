@@ -19,6 +19,7 @@ define(function(require, exports, module) {
         /**
          * コンストラクタ。
          * @param {Object} app app.jsのインスタンス。アプリケーションの設定情報を参照するために利用される。
+         * @memberof Logger#
          */
         init : function(app) {
             // ロガー初期化

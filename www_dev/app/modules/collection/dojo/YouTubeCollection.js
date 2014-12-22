@@ -14,6 +14,10 @@ define(function(require, exports, module) {
      */
     var YouTubeCollection = AbstractCollection.extend({
         model : YouTubeModel,
+        /**
+         * 操作対象のチャンネルID
+         * @memberof YouTubeCollection#
+         */
         channelId : null,
         sync : function(method, model, options) {
             if (!options) {
@@ -47,7 +51,10 @@ define(function(require, exports, module) {
             });
         },
         /**
-         * 検索してきた情報をパースする
+         * レスポンスのパース処理を行う
+         * @param {Object} レスポンス情報
+         * @param {Object} オプション
+         * @return {Object} レスポンス情報のitemオブジェクト
          * @memberof YouTubeCollection#
          */
         parse : function(response, options) {

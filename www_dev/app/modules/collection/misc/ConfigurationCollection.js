@@ -20,11 +20,8 @@ define(function(require, exports, module) {
         },
         /**
          * 配列をマップに変換する。
-         * 
-         * @param {Array} array 対象の配列
-         * @param {String} keyField 配列要素のキーのプロパティ名
-         * @param {String} valueField 配列要素の値のプロパティ名
          * @return {Objecy} 変換されたマップ
+         * @memberof ConfigurationCollection#
          */
         toMap : function() {
             var map = {};

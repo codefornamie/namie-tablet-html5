@@ -20,27 +20,46 @@ define(function(require, exports, module) {
      * @constructor
      */
     var LoginModel = Backbone.Model.extend({
-        /** ログインID */
+        /** ログインID
+         * @memberof LoginModel#
+         */
         loginId : null,
-        /** パスワード */
+        /** パスワード
+         * @memberof LoginModel#
+         */
         password : null,
-        /** 暗号化済みパスワード */
+        /** 暗号化済みパスワード
+         * @memberof LoginModel#
+         */
         encryptionPassword : null,
-        /** ログイン完了後に呼び出されるコールバック関数 */
+        /** ログイン完了後に呼び出されるコールバック関数
+         * @memberof LoginModel#
+         */
         onLogin : null,
-        /** baseurl */
+        /** baseurl
+         * @memberof LoginModel#
+         */
         baseUrl : null,
-        /** cellId */
+        /** cellId
+         * @memberof LoginModel#
+         */
         cellId : null,
-        /** box */
+        /** box
+         * @memberof LoginModel#
+         */
         box : null,
-        /** Account Manager */
+        /** Account Manager
+         * @memberof LoginModel#
+         */
         accountManager : null,
-        /** package name */
+        /** package name
+         * @memberof LoginModel#
+         */
         packageName : "jp.fukushima.namie.town.Pcs",
 
         /**
          * モデルの初期化処理を行う。
+         * @param {Object} options オプション情報
          * @memberOf LoginModel
          */
         initialize : function(options) {
@@ -55,6 +74,7 @@ define(function(require, exports, module) {
         /**
          * 入力された認証情報のバリデータ。
          * @memberOf LoginModel
+         * @return 入力エラーがある場合、tureを返す。
          */
         validate : function() {
             // 検証には、underscore の便利メソッドを使っている。
@@ -69,7 +89,7 @@ define(function(require, exports, module) {
 
         /**
          * ID/PWでPCS認証を行う。
-         * @memberOf LoginModel
+         * @memberOf LoginModel#
          * @param {String} id ユーザーID
          * @param {String} pw パスワード
          */
@@ -92,7 +112,7 @@ define(function(require, exports, module) {
 
         /**
          * トークンを指定してPCS接続。
-         * @memberOf LoginModel
+         * @memberOf LoginModel#
          * @param {String} token アクセストークン
          */
         certificationWithToken : function() {
@@ -114,6 +134,7 @@ define(function(require, exports, module) {
          * AccountManagerにアカウントを登録する。
          * @param {String} id ユーザーID
          * @param {String} pw パスワード
+         * @memberOf LoginModel#
          */
         registAccountManager : function(id, pw) {
             if (window.plugins) {
@@ -148,7 +169,7 @@ define(function(require, exports, module) {
          * <li>ログインID,パスワードに誤りがあった場合</li>
          * </ul>
          * </p>
-         * @memberOf LoginModel
+         * @memberOf LoginModel#
          * @param {Function} onLogin 認証完了後に呼び出されるコールバック関数。
          */
         login : function(onLogin) {
@@ -197,6 +218,7 @@ define(function(require, exports, module) {
 
         /**
          * パーソナル情報の読み込みを行う。
+         * @memberOf LoginModel#
          * @param {Function} callback パーソナル情報取得処理が完了した際に呼び出されるコールバック関数
          */
         loadPersonal : function(callback) {
@@ -217,6 +239,7 @@ define(function(require, exports, module) {
         },
         /**
          * パーソナル情報取得処理を開始する。
+         * @memberOf LoginModel#
          * @param {Collection} collection パーソナル情報コレクション
          * @param {Function} callback 取得処理完了後に呼び出すコールバック関数
          */
@@ -265,6 +288,11 @@ define(function(require, exports, module) {
                 }, this)
             });
         },
+        /**
+         * 設定情報を読み込む
+         * @param {Function} callback トークン取得成功時のコールバック
+         * @memberOf LoginModel#
+         */
         loadConfiguration : function(callback) {
             // 設定情報の読み込み
             var confCol = new ConfigurationCollection();
@@ -281,6 +309,11 @@ define(function(require, exports, module) {
             });
         },
 
+        /**
+         * アクセストークンを設定する
+         * @param {String} token アクセストークン
+         * @memberOf LoginModel#
+         */
         setAccessToken : function(token) {
             app.logger.debug("set access token : " + token);
             this.accessToken = token;

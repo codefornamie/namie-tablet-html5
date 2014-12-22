@@ -7,6 +7,13 @@ define(function(require, exports, module) {
     var DateUtil = require("modules/util/DateUtil");
     var Equal = require("modules/util/filter/Equal");
 
+    /**
+     * イベントのコレクションクラス。
+     * 
+     * @class イベントのコレクションクラス
+     * @exports ArticleCollection
+     * @constructor
+     */
     var EventsCollection = AbstractODataCollection.extend({
         model : EventsModel,
         entity : "event",
@@ -17,6 +24,7 @@ define(function(require, exports, module) {
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @memberof EventsCollection#
          */
         setSearchCondition : function(condition) {
             var targetDate = condition.targetDate;

@@ -8,6 +8,7 @@ define(function(require, exports, module) {
 
     /**
      * 業務ユーティリティクラス
+     * @memberof BusinessUtil#
      */
     var BusinessUtil = function() {
 
@@ -17,6 +18,7 @@ define(function(require, exports, module) {
      * 現在発行中の新聞の日付を返す。
      * @memberOf BusinessUtil#
      * @return {Date} 現在発行中の新聞の日付(最後に新聞を発行した日時)
+     * @memberof BusinessUtil#
      */
     BusinessUtil.getCurrentPublishDate = function() {
         var publishDate = new Date();
