@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var PIOImage = require("modules/util/PIOImage");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var colorbox = require("colorbox");
 
@@ -163,8 +164,8 @@ define(function(require, exports, module) {
                             maxWidth : "83%",
                             maxHeight : "100%",
                             onComplete : function() {
-                                $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
-                                $("#cboxOverlay").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                                $("#colorbox").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
+                                $("#colorbox").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
                                 $("#cboxCloseButton").click(function() {
                                     $.colorbox.close();
                                 });
@@ -187,10 +188,10 @@ define(function(require, exports, module) {
             var onError = function (resp, item) {
                 $articleImage.eq(item.imageIndex-1).triggerHandler("error", resp);
             };
-
+            
             _.each(imgArray,$.proxy(function (item) {
                 try {
-                    app.box.col("dav").getBinary(item.imageUrl, {
+                    PIOImage.getBinaryWithCache(app.box.col("dav"), item.imageUrl, {
                         success : function(binary) {
                             onGetBinary(binary,item);
                         },
