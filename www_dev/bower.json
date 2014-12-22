@@ -27,6 +27,7 @@
     "GALocalStorage": "https://github.com/ggendre/GALocalStorage.git",
     "moment": "~2.8.4",
     "jquery-colorbox": "~1.5.14",
-    "jquery-steps": "~1.1.0"
+    "jquery-steps": "~1.1.0",
+    "masonry": "~3.2.2"
   }
 }
