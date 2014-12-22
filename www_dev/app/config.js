@@ -29,7 +29,8 @@ require.config({
         "moment" : "../bower_components/moment/min/moment.min",
         "log4javascript": "../lib/log4javascript/log4javascript_uncompressed",
         "colorbox" : "../bower_components/jquery-colorbox/jquery.colorbox",
-        "jquery-steps": "../bower_components/jquery-steps/build/jquery.steps.min"
+        "jquery-steps": "../bower_components/jquery-steps/build/jquery.steps.min",
+        "masonry": "../bower_components/masonry/dist/masonry.pkgd"
     },
 
     deps : [ "main" ],
