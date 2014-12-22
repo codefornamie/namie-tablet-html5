@@ -1,6 +1,11 @@
 define(function(require, exports, module) {
     "use strict";
 
+    /**
+     * 日付ユーティリティ
+     * @class 日付ユーティリティ
+     * @constructor
+     */
     var DateUtil = function() {
 
     };
@@ -83,6 +88,7 @@ define(function(require, exports, module) {
     };
     /**
      * ゼロ埋めを行う
+     * @memberof DateUtil#
      * @param {Number} value ゼロ埋め後に加える値
      * @param {Number} length length
      */
@@ -91,6 +97,7 @@ define(function(require, exports, module) {
     };
     /**
      * Dateオブジェクトを生成する
+     * @memberof DateUtil#
      * @param {Number} date 時間
      * @param {Number} days 日付
      * @return Dateオブジェクト

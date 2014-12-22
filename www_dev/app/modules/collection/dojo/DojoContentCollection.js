@@ -43,9 +43,10 @@ define(function(require, exports, module) {
         achievementCollection: null,
         /**
          * レスポンス情報のパースを行う。
+         * @memberOf DojoContentCollection#
          * @param {Array} レスポンス情報の配列
          * @param {Object} オプション
-         * @memberof DojoContentCollection#
+         * @returns DojoContentCollection
          */
         parseOData : function(response, options) {
             if (!this.youtubeCollection) {

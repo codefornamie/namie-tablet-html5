@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     /**
      * 継承可能なクラス。
      * 参考：http://qiita.com/edo_m18/items/200ae66bd18011bda377
+     * @class 継承可能なクラス。
+     * @constructor
      */
     function Class() { /* noop. */
     }

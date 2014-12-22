@@ -1,6 +1,11 @@
 define(function(require, exports, module) {
     "use strict";
 
+    /**
+     * 定数クラス
+     * @class 定数クラス
+     * @constructor
+     */
     var Code = function() {
 
     };

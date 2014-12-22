@@ -3,6 +3,11 @@ define(function(require, exports, module) {
 
     var app = require("app");
 
+    /**
+     * ファイルユーティリティ
+     * @class ファイルユーティリティ
+     * @constructor
+     */
     var FileAPIUtil = function() {
 
     };

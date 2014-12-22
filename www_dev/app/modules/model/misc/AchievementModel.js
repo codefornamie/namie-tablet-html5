@@ -17,6 +17,8 @@ define(function(require, exports, module) {
          * 取得したOData情報のparse処理を行う。
          * 
          * @memberof AchievementModel#
+         * @param {Object} レスポンス
+         * @param {Object} オプション
          * @return {Object} パース後の情報
          */
         parseOData : function(response, options) {
@@ -25,6 +27,7 @@ define(function(require, exports, module) {
         /**
          * モデル固有の永続化データを生成する。
          * 
+         * @param {Object} saveData 保存データ
          * @memberof AchievementModel#
          */
         makeSaveData : function(saveData) {

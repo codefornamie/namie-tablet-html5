@@ -74,6 +74,7 @@ define(function(require, exports, module) {
         /**
          * 入力された認証情報のバリデータ。
          * @memberOf LoginModel
+         * @return 入力エラーがある場合、tureを返す。
          */
         validate : function() {
             // 検証には、underscore の便利メソッドを使っている。
@@ -238,6 +239,7 @@ define(function(require, exports, module) {
         },
         /**
          * パーソナル情報取得処理を開始する。
+         * @memberOf LoginModel#
          * @param {Collection} collection パーソナル情報コレクション
          * @param {Function} callback 取得処理完了後に呼び出すコールバック関数
          */
