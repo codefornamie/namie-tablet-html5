@@ -22,7 +22,15 @@ define(function(require, exports, module) {
      */
     var ArticleCollection = AbstractODataCollection.extend({
         model : ArticleModel,
+        /**
+         * 操作対象のEntitySet名
+         * @memberof ArticleCollection#
+         */
         entity : "article",
+        /**
+         * 検索条件
+         * @memberof ArticleCollection#
+         */
         condition : {
             top : 100,
             orderby : "createdAt desc"

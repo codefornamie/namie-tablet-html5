@@ -21,7 +21,15 @@ define(function(require, exports, module) {
      */
     var RecommendCollection = AbstractODataCollection.extend({
         model : RecommendModel,
+        /**
+         * 操作対象のEntitySet名
+         * @memberof RecommendCollection#
+         */
         entity : "recommend",
+        /**
+         * 検索条件
+         * @memberof RecommendCollection#
+         */
         condition : {
             top : 10,
         },
