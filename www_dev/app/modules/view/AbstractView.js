@@ -172,6 +172,7 @@ define(function(require, exports, module) {
                                 $("#cboxSaveButton").click(function(ev) {
                                     saveFunc(ev);
                                 });
+                                $("#colorbox").find("img").data("blob",blob);
                             },
                             onClosed : function() {
                                 $("#cboxSaveButton").remove();
