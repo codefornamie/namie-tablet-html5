@@ -265,6 +265,7 @@ define(function(require, exports, module) {
             app.scrollTop = (app.newsView) ? app.newsView.getScrollTop() : 0;
 
             this.layout.setGlobalNav(new common.GlobalNavView());
+            this.layout.removeViewByName('#settings');
             app.newsView.showArticle(articleId);
         },
 
