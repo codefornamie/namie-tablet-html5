@@ -406,6 +406,12 @@ define(function(require, exports, module) {
                 break;
             }
 
+            // 既にレンダリングされている要素をクリアする
+            var dest = this.getView(NewsView.SELECTOR_ARTICLE_DESTINATION);
+            if (dest) {
+                dest.remove();
+            }
+
             this.insertView(NewsView.SELECTOR_ARTICLE_DESTINATION, new ListItemView({
                 model : model,
                 template : template
@@ -453,7 +459,8 @@ define(function(require, exports, module) {
          * @memberof NewsView#
          */
         onRoute : function(route) {
-            if (route === "showArticle") {
+            if (route === "settings") {
+            } else if (route === "showArticle") {
                 $(NewsView.SELECTOR_ARTICLE_LIST).hide();
                 $(NewsView.SELECTOR_ARTICLE_DESTINATION).show();
             } else {

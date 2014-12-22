@@ -19,7 +19,7 @@ define(function(require, exports, module) {
     var app = module.exports = new Backbone.Model();
 
     // The root path to run the application through.
-    app.root = "/www_dev/";
+    app.root = "/";
     // アプリの設定情報を保持
     app.config = config;
 
