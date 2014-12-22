@@ -1,8 +1,6 @@
 define(function (require, exports, module) {
     "use strict";
 
-    var FileAPIUtil = require("modules/util/FileAPIUtil");
-
     /**
      * PIOImageを扱うクラス
      * @class
@@ -14,7 +12,7 @@ define(function (require, exports, module) {
     /**
      * キャッシュ用テーブル
      */
-    P._cacheTable = {};
+    P._binaryTable = {};
     
     /**
      * sucessFn関数に渡された仮引数をkeyをキーにキャッシュする
@@ -24,9 +22,9 @@ define(function (require, exports, module) {
      */
     P._memoize = function (key, successFn) {
         return function (res) {
-            var cached = P._cacheTable[key] = res;
+            P._binaryTable[key] = res;
 
-            successFn.call(this, cached);
+            successFn.call(this, res);
         };
     };
 
@@ -39,53 +37,10 @@ define(function (require, exports, module) {
     P.getBinaryWithCache = function (col, imageUrl, opt) {
         opt = opt || {};
 
-        var storedBinary = P._cacheTable[imageUrl];
+        var storedBinary = P._binaryTable[imageUrl];
 
         if (!storedBinary) {
             opt.success = P._memoize(imageUrl, opt.success);
-
-            return col.getBinary(imageUrl, opt);
-        }
-
-        if (opt.success) {
-            setTimeout(function () {
-                opt.success(storedBinary);
-            }, 0);
-        }
-    };
-
-    /**
-     * バイナリをBlobURLに変換する
-     * @param {ArrayBuffer} binary
-     * @return {String}
-     */
-    P._convertBinaryToUrl = function (binary) {
-        var arrayBufferView = new Uint8Array(binary);
-        var blob = new Blob([
-            arrayBufferView
-        ], {
-            type : "image/jpg"
-        });
-        var url = FileAPIUtil.createObjectURL(blob);
-
-        return url;
-    };
-
-    /**
-     * BlobURLをキャッシュから取得する。キャッシュになければサーバーから取得する
-     * @param {dcc.DcCollection} col
-     * @param {String} imageUrl
-     * @param {Object} opt
-     */
-    P.getUrlWithCache = function (col, imageUrl, opt) {
-        opt = opt || {};
-
-        var storedBinary = P._cacheTable[imageUrl];
-
-        if (!storedBinary) {
-            // サーバーから取得したバイナリをBlobURLに変換してからメモ化している
-            var memoized = P._memoize(imageUrl, opt.success);
-            opt.success = _.compose(memoized, P._convertBinaryToUrl);
 
             return col.getBinary(imageUrl, opt);
         }

@@ -143,7 +143,14 @@ define(function(require, exports, module) {
         showPIOImages : function(imgElementSelector, imgArray, isExpansion, saveFunc) {
             var $articleImage = $(this.el).find(imgElementSelector);
 
-            var onGetUrl = $.proxy(function(url, item) {
+            var onGetBinary = $.proxy(function(binary, item) {
+                var arrayBufferView = new Uint8Array(binary);
+                var blob = new Blob([
+                    arrayBufferView
+                ], {
+                    type : "image/jpg"
+                });
+                var url = FileAPIUtil.createObjectURL(blob);
 
                 var $targetElem = $articleImage.eq(item.imageIndex - 1);
 
@@ -172,8 +179,8 @@ define(function(require, exports, module) {
                             }
                         });
                     }
-                }, this, url));
-
+                    window.URL.revokeObjectURL($(this).attr("src"));
+                }, this, url, blob));
                 $targetElem.attr("src", url);
             }, this);
             
@@ -183,9 +190,9 @@ define(function(require, exports, module) {
             
             _.each(imgArray,$.proxy(function (item) {
                 try {
-                    PIOImage.getUrlWithCache(app.box.col("dav"), item.imageUrl, {
-                        success : function(url) {
-                            onGetUrl(url, item);
+                    PIOImage.getBinaryWithCache(app.box.col("dav"), item.imageUrl, {
+                        success : function(binary) {
+                            onGetBinary(binary,item);
                         },
 
                         error: function (resp) {
