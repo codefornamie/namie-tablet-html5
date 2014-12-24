@@ -20,6 +20,14 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/news/news/gridListItem"),
 
         /**
+         * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         * @memberof GridListItemView#
+         */
+        beforeRendered : function() {
+            this.$el.addClass("grid-list-item-div");
+        },
+
+        /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
@@ -35,6 +43,7 @@ define(function(require, exports, module) {
             // 画像URLがある場合は、画像読み込みに失敗したら画像のエリアをつめる
             if (imageType === Code.IMAGE_TYPE_NONE) {
                 this.$el.find(".grid-list__item").addClass("is-no-image");
+                self.$el.trigger("imageError");
             } else {
                 this.$el.find(".articleImage")
                 .on("center", function () {
@@ -59,6 +68,10 @@ define(function(require, exports, module) {
                 })
                 .on("error", function() {
                     self.$el.find(".grid-list__item").addClass("is-no-image");
+
+                    // 画像読み込み失敗によってレイアウトが変化することを
+                    // 親のviewに伝えるため、イベントをトリガする
+                    self.$el.trigger("imageError");
                 });
             }
 

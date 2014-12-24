@@ -7,24 +7,27 @@ define(function(require, exports, module) {
     /**
      *  バックナンバーのアイテムのView
      *
-     *  @class
+     *  @class バックナンバーのアイテムのView
      *  @exports BacknumberListItemView
      *  @constructor
      */
     var BacknumberListItemView = AbstractView.extend({
         /**
          *  テンプレートファイル
+         *  @memberOf BacknumberListItemView#
          */
         template : require("ldsh!templates/{mode}/backnumber/backnumberListItem"),
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         *  @memberOf BacknumberListItemView#
          */
         beforeRendered : function() {
         },
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         *  @memberOf BacknumberListItemView#
          */
         afterRendered : function() {
             var self = this;
@@ -44,6 +47,7 @@ define(function(require, exports, module) {
 
         /**
          *  初期化処理
+         *  @memberOf BacknumberListItemView#
          */
         initialize : function() {
             console.assert(this.model, "model should be specified");
@@ -61,6 +65,7 @@ define(function(require, exports, module) {
          * pushStateに変更する
          *
          * @param {Event} evt
+         * @memberOf BacknumberListItemView#
          */
         onClickAnchor: function (evt) {
             var $target = $(evt.currentTarget);

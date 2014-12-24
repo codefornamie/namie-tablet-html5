@@ -166,6 +166,8 @@ define(function(require, exports, module) {
             var self = this;
 
             this.articleCollection.fetch({
+                cache : true,
+
                 success : function() {
                     self.loadFavorite(callback);
                 },
@@ -186,6 +188,8 @@ define(function(require, exports, module) {
             ];
 
             this.favoriteCollection.fetch({
+                cache : true,
+
                 success : function() {
                     callback();
                 },
@@ -204,6 +208,8 @@ define(function(require, exports, module) {
         loadEvents : function(callback) {
             this.eventsCollection.reset();
             this.eventsCollection.fetch({
+                cache : true,
+
                 success : function() {
                     callback();
                 },
@@ -220,6 +226,8 @@ define(function(require, exports, module) {
          */
         loadRecommend : function(callback) {
             this.recommendCollection.fetch({
+                cache : true,
+
                 success : function() {
                     callback();
                 },
@@ -406,6 +414,12 @@ define(function(require, exports, module) {
                 break;
             }
 
+            // 既にレンダリングされている要素をクリアする
+            var dest = this.getView(NewsView.SELECTOR_ARTICLE_DESTINATION);
+            if (dest) {
+                dest.remove();
+            }
+
             this.insertView(NewsView.SELECTOR_ARTICLE_DESTINATION, new ListItemView({
                 model : model,
                 template : template
@@ -453,7 +467,8 @@ define(function(require, exports, module) {
          * @memberof NewsView#
          */
         onRoute : function(route) {
-            if (route === "showArticle") {
+            if (route === "settings") {
+            } else if (route === "showArticle") {
                 $(NewsView.SELECTOR_ARTICLE_LIST).hide();
                 $(NewsView.SELECTOR_ARTICLE_DESTINATION).show();
             } else {

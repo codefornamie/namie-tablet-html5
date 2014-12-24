@@ -16,13 +16,15 @@ define(function(require, exports, module) {
          * 初期化処理
          * @param {Object} attr
          * @param {Object} param
+         * @memberOf DojoEditionModel#
          */
         initialize: function (attr, param) {
         },
 
         /**
          * 視聴済みコンテンツのモデルを返す
-         * @return {Array}
+         * @return {Array} 視聴済コンテンツのモデルの配列
+         * @memberOf DojoEditionModel#
          */
         getWatchedModels : function() {
             // TODO this.contentCollectionから実際の視聴済みコンテンツを返す

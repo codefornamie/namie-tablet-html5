@@ -11,6 +11,11 @@ define(function(require, exports, module) {
      * @constructor
      */
     var Or = LogicalOperatorBase.extend({
+        /**
+         * 初期化処理を行う
+         * @param {Object} operators
+         * @memberof Or#
+         */
         init : function(operators) {
             this._super(operators);
         }
@@ -18,7 +23,8 @@ define(function(require, exports, module) {
     /**
      * or演算子を文字列として返却する。
      * 
-     * @returns {String} and演算子
+     * @returns {String} or演算子
+     * @memberof Or#
      */
     Or.prototype.operator = function() {
         return " or ";

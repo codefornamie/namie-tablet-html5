@@ -4,6 +4,8 @@ define(function(require, exports, module) {
     var app = require("app");
     /**
      * 汎用ユーティリティクラス
+     * @class 汎用ユーティリティクラス
+     * @constructor
      */
     var CommonUtil = function() {
 
@@ -11,6 +13,7 @@ define(function(require, exports, module) {
     /**
      * 文字列をコンテンツに表示できる形に置換する
      *
+     * @memberOf CommonUtil#
      * @param {String}
      *            str 対象となる文字列
      * @return {String} 置換された文字列

@@ -29,7 +29,9 @@ require.config({
         "moment" : "../bower_components/moment/min/moment.min",
         "log4javascript": "../lib/log4javascript/log4javascript_uncompressed",
         "colorbox" : "../bower_components/jquery-colorbox/jquery.colorbox",
-        "jquery-steps": "../bower_components/jquery-steps/build/jquery.steps.min"
+        "jquery-steps": "../bower_components/jquery-steps/build/jquery.steps.min",
+        "masonry": "../bower_components/masonry/dist/masonry.pkgd",
+        "backbone-fetch-cache": "../bower_components/backbone-fetch-cache/backbone.fetch-cache"
     },
 
     deps : [ "main" ],
@@ -56,6 +58,7 @@ require.config({
         "foundation-calendar": ["date-helpers", "string-helpers", "foundation"],
         "jquery-sortable" : [ "jquery" ],
         "colorbox" : [ "jquery" ],
-        "jquery-steps" : [ "jquery" ]
+        "jquery-steps" : [ "jquery" ],
+        "backbone-fetch-cache" : [ "backbone" ]
     }
 });

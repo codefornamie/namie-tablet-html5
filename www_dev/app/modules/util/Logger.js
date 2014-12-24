@@ -1,14 +1,35 @@
 define(function(require, exports, module) {
     "use strict";
 
+    /**
+     * ロガー
+     * @class ロガー
+     * @constructor
+     */
     var Logger = function() {
     };
+    
+    /**
+     * INFOログ出力
+     * @memberOf Logger#
+     * @param {String} メッセージ
+     */
     Logger.info = function(msg) {
         console.log(Logger.getDateString() + " " + msg);
     };
+    /**
+     * DEBUGログ出力
+     * @memberOf Logger#
+     * @param {String} メッセージ
+     */
     Logger.debug = function(msg) {
         console.log(Logger.getDateString() + " " + msg);
     };
+    /**
+     * 現在の日付文字列の生成
+     * @memberOf Logger#
+     * @return 現在の日付文字列
+     */
     Logger.getDateString = function() {
         var now = new Date();
         var y = now.getFullYear();

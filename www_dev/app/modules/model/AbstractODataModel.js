@@ -15,22 +15,27 @@ define(function(require, exports, module) {
     var AbstractODataModel = AbstractModel.extend({
         /**
          * idとして使用するattribute中のフィールド
+         * @memberof AbstractODataModel#
          */
         idAttribute : "__id",
         /**
          * セルID
+         * @memberof AbstractODataModel#
          */
         cell : null,
         /**
          * Box名
+         * @memberof AbstractODataModel#
          */
         box : null,
         /**
          * ODataCollection名
+         * @memberof AbstractODataModel#
          */
         odata : null,
         /**
          * 操作対象のEntitySet名
+         * @memberof AbstractODataModel#
          */
         entity : null,
 
@@ -43,6 +48,7 @@ define(function(require, exports, module) {
          *            model モデル
          * @param {Object}
          *            options オプション情報
+         * @memberof AbstractODataModel#
          */
         sync : function(method, model, options) {
             Log.info("AbstractODataModel sync");
@@ -115,6 +121,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberof AbstractODataModel#
          */
         create : function(method, model, options, complete) {
             Log.info("AbstractODataModel create");
@@ -139,6 +146,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberof AbstractODataModel#
          */
         update : function(method, model, options, complete) {
             Log.info("AbstractODataModel update");
@@ -163,6 +171,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberof AbstractODataModel#
          */
         del : function(method, model, options, complete) {
             Log.info("AbstractODataModel delete");
@@ -187,6 +196,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberof AbstractODataModel#
          */
         retrieve : function(method, model, options, complete) {
             Log.info("AbstractODataModel retrieve");
@@ -202,8 +212,10 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスがparse処理を行う場合、parseODataメソッドをオーバライドして行う。
          * </p>
-         *
+         * @param {Object} response レスポンス情報
+         * @param {Object} options オプション情報
          * @return {Object} パース後の情報
+         * @memberof AbstractODataModel#
          */
         parseResponse : function(response, options) {
             //Log.info("AbstractODataModel parseResponse");
@@ -219,8 +231,10 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスは、本メソッドをオーバライドして、取得した情報のparse処理を実装する。
          * </p>
-         *
+         * @param {Object} response レスポンス情報
+         * @param {Object} options オプション情報
          * @return {Object} パース後の情報
+         * @memberof AbstractODataModel#
          */
         parseOData : function(response, options) {
             //Log.info("AbstractODataModel parseOData");
@@ -230,6 +244,7 @@ define(function(require, exports, module) {
          * PCSへの永続化データを生成する。
          *
          * @return {Object} JSON オブジェクト
+         * @memberof AbstractODataModel#
          */
         getSaveData : function() {
             Log.info("AbstractODataModel getSaveData");
@@ -257,6 +272,8 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスは、本メソッドをオーバライドして、 永続化するデータを生成する処理を実装する。
          * </p>
+         * @param {Object} saveData 永続化データ
+         * @memberof AbstractODataModel#
          */
         makeSaveData : function(saveData) {
 

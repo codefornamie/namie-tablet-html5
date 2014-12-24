@@ -7,6 +7,9 @@ define(function(require, exports, module) {
 
     /**
      * 放射線量データのコレクションクラス
+     * @class 放射線量データのコレクションクラス
+     * @exports RadiationCollection
+     * @constructor
      */
     var RadiationCollection = AbstractODataCollection.extend({
         model : RadiationModel,
@@ -16,6 +19,14 @@ define(function(require, exports, module) {
             orderby : "dateTime desc",
             filter : "station eq '浪江町役場'"
         },
+        /**
+         * 配列をマップに変換する。
+         * 
+         * @param {Object} レスポンス情報
+         * @param {Object} オプション
+         * @return {Objecy} レスポンス情報
+         * @memberof RadiationCollection#
+         */
         parseOData: function (response, options) {
             return response;
         }

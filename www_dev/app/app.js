@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var Backbone = require("backbone");
     var Layout = require("layoutmanager");
-    var dc1 = require("dc1-client");
+    var dcc = window.dcc = require("dc1-client");
     var jqueryvalidation = require("jqueryvalidation");
     var messageja = require("messageja");
     var nehan = require("jquerynehan");
@@ -14,6 +14,25 @@ define(function(require, exports, module) {
     var CustomHttpClient = require("modules/CustomHttpClient");
     var PcsManager = require("modules/PcsManager");
     var Logger = require("modules/util/logging/Logger");
+
+    require("backbone-fetch-cache");
+
+    /**
+     * backbone-fetch-cacheの設定
+     */
+    // fetch結果をlocalStorageにはキャッシュしない
+    Backbone.fetchCache.localStorage = false;
+
+    // キャッシュのキーを生成するメソッド
+    Backbone.fetchCache.getCacheKey = function(instance, options) {
+        return JSON.stringify([
+            instance.entity,
+            instance.odata,
+            instance.box,
+            instance.cell,
+            instance.condition
+        ]);
+    };
 
     // グローバルに利用できるModel
     var app = module.exports = new Backbone.Model();

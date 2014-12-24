@@ -334,8 +334,10 @@ define(function(require, exports, module) {
             // DojoEditionViewに表示中のModelを更新する
             var dojoEditionView = this.layout.getView(DojoLayout.SELECTOR_EDITION);
             var currentEditionModel = this.dojoEditionCollection.getCurrentEdition();
-            this.currentEditionModel.set(currentEditionModel.toJSON());
-            dojoEditionView.model.set(currentEditionModel.toJSON());
+            if (currentEditionModel) {
+                this.currentEditionModel.set(currentEditionModel.toJSON());
+                dojoEditionView.model.set(currentEditionModel.toJSON());
+            }
 
             // 3. 各子ビューをレンダリングする
             this.layout.render();

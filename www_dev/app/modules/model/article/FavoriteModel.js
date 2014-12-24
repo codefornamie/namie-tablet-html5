@@ -16,8 +16,10 @@ define(function(require, exports, module) {
         entity : "favorite",
         /**
          * 取得したOData情報のparse処理を行う。
-         * 
+         * @param {Object} response レスポンス情報
+         * @param {Object} options オプション情報
          * @return {Object} パース後の情報
+         * @memberof FavoriteModel#
          */
         parseOData : function(response, options) {
             response.dispSite = CommonUtil.sanitizing(response.site);
@@ -26,6 +28,8 @@ define(function(require, exports, module) {
         },
         /**
          * モデル固有の永続化データを生成する。
+         * @param {Object} saveData 永続化データ
+         * @memberof FavoriteModel#
          */
         makeSaveData : function(saveData) {
             saveData.source = this.get("source");

@@ -14,15 +14,33 @@ define(function(require, exports, module) {
     var IsNull = require("modules/util/filter/IsNull");
 
     /**
-     * 記事情報のコレクションクラス
+     * 記事情報のコレクションクラス。
+     * 
+     * @class 記事情報のコレクションクラス
+     * @exports ArticleCollection
+     * @constructor
      */
     var ArticleCollection = AbstractODataCollection.extend({
         model : ArticleModel,
+        /**
+         * 操作対象のEntitySet名
+         * @memberof ArticleCollection#
+         */
         entity : "article",
+        /**
+         * 検索条件
+         * @memberof ArticleCollection#
+         */
         condition : {
             top : 100,
             orderby : "createdAt desc"
         },
+        /**
+         * レスポンス情報のパースを行う。
+         * @param {Array} レスポンス情報の配列
+         * @param {Object} オプション
+         * @memberof ArticleCollection#
+         */
         parseOData : function(response, options) {
             _.each(response, function(res) {
                 res.dispCreatedAt = DateUtil.formatDate(new Date(res.createdAt), "yyyy年MM月dd日 HH時mm分");
@@ -48,17 +66,20 @@ define(function(require, exports, module) {
         /**
          * 記事の検索条件を指定する。
          * @param {Object} condition 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @memberof ArticleCollection#
          */
         setSearchCondition : function(condition) {
             var targetDate = condition.targetDate;
             var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
 
             this.condition.filters = [
-                    new Or([
-                            new Equal("publishedAt", dateString), new And([
-                                    new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
-                            ])
-                    ]), new IsNull("isDepublish")
+                new And([
+                        new Or([
+                                new Equal("publishedAt", dateString), new And([
+                                        new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
+                                ])
+                        ]), new IsNull("isDepublish")
+                ])
             ];
         }
     });

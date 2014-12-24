@@ -1073,14 +1073,17 @@ main {
 }
 
 #cboxCloseButton {
-    top:0px;
-    float:right;
+    position: absolute;
+    top:30px;
+    right: 30px;
+    z-index: 10000;
 }
 
 #cboxSaveButton {
-    top:0px;
-    float:right;
-    margin-right:5px;
+    position: absolute;
+    top:30px;
+    right: 130px;
+    z-index: 10000;
 }
 
 div.nehan-block.nehan-body {

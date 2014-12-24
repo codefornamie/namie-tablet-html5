@@ -69,8 +69,10 @@ echo $RES
 # メイン
 #====================================================#
 if [ $# -ne 3 ]; then
-	echo usage: $0 env_name src_dir token
-	exit 1
+    if [ -z "${bamboo_UNIT_USER_NAME}" ]; then
+	    echo usage: $0 env_name src_dir token
+	    exit 1
+	fi
 fi
 PGHOME="`dirname $0`"
 CONF_FILE=$PGHOME/deploy.conf
@@ -99,6 +101,14 @@ TMPMAP=/tmp/.$$.map
 cat $CONF_FILE | grep -e "^$ENV\.[^.]*=" | sed -e "s/^$ENV\.//" > $TMPMAP
 . $TMPMAP
 rm $TMPMAP
+
+if [ -n "${bamboo_UNIT_USER_NAME}" ]; then
+    echo "start authenticate unituser."
+    echo "grant_type=password&username=${bamboo_UNIT_USER_NAME}&password=****&dc_target=${base_url}"
+    RESP=`curl -X POST "${base_url}/servicemanager/__auth" -d "grant_type=password&username=${bamboo_UNIT_USER_NAME}&password=${bamboo_UNIT_USER_PASSWORD}&dc_target=${base_url}" -i -k -s`
+    TOKEN=`echo $RESP | sed -e 's/^.*access_token":"\(.*\)","refresh.*$/\1/'`
+    echo "get unit user token."
+fi
 
 COL_URL="`echo $dav_url | sed -e 's|/$||'`"
 echo $COL_URL

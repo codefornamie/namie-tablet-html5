@@ -4,7 +4,7 @@ define(function(require) {
     var app = require("app");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var IsNull = require("modules/util/filter/IsNull");
-    var Or = require("modules/util/filter/Or");
+    var And = require("modules/util/filter/And");
 
     app.noRendering = true;
 
@@ -21,8 +21,7 @@ define(function(require) {
                 targetDate: dummyTargetDate
             });
 
-            assert.ok(col.condition.filters[0] instanceof Or);
-            assert.ok(col.condition.filters[1] instanceof IsNull);
+            assert.ok(col.condition.filters[0] instanceof And);
 
             done();
         });

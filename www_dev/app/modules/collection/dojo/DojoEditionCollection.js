@@ -8,7 +8,7 @@ define(function(require, exports, module) {
     /**
      * 道場の◯◯編のコレクションクラス
      * 
-     * @class
+     * @class 道場の◯◯編のコレクションクラス
      * @exports DojoEditionCollection
      * @constructor
      */
@@ -17,18 +17,21 @@ define(function(require, exports, module) {
         
         /**
          * 現在表示中の edition のインデックス
+         * @memberOf DojoEditionCollection#
          */
-        _currentEditionIndex: 0,
+        _currentEditionIndex: 1,
         
         /**
          * 初期化処理
+         * @memberOf DojoEditionCollection#
          */
         initialize: function () {
         },
 
         /**
          * 現在表示中の DojoEditionModel を返す
-         * @return {DojoEditionModel}
+         * @memberOf DojoEditionCollection#
+         * @return {DojoEditionModel} 道場編毎モデル
          */
         getCurrentEdition: function () {
             var model = this.models[0];
@@ -41,6 +44,7 @@ define(function(require, exports, module) {
         /**
          * 表示する edition のインデックスを変更する
          * @param {Number} index
+         * @memberOf DojoEditionCollection#
          */
         setEditionIndex: function (index) {
             this._currentEditionIndex = index || 0;

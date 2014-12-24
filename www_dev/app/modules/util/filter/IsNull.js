@@ -12,6 +12,11 @@ define(function(require, exports, module) {
      * @constructor
      */
     var IsNull = Equal.extend({
+        /**
+         * 初期化処理を行う
+         * @param {Object} key eq演算子のキー
+         * @memberof IsNull#
+         */
         init : function(key) {
             this._super(key, null);
         }

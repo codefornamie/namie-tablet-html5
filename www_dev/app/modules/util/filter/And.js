@@ -19,6 +19,7 @@ define(function(require, exports, module) {
      * and演算子を文字列として返却する。
      * 
      * @returns {String} and演算子
+     * @memberOf And#
      */
     And.prototype.operator = function() {
         return " and ";
