@@ -23,6 +23,7 @@ define(function(require, exports, module) {
             if (!options) {
                 options = {};
             }
+            var def = $.Deferred();
 
             gapi.client.request({
                 path : "/youtube/v3/search",
@@ -37,6 +38,7 @@ define(function(require, exports, module) {
                 callback : $.proxy(function(res) {
 
                     if (res.error) {
+                        def.reject(res);
                         if (options.error) {
                             options.error(res);
                         }
@@ -47,8 +49,12 @@ define(function(require, exports, module) {
                     if (options.complete) {
                         options.complete(res.error, model, res);
                     }
+                    if (def.state() === "pending") {
+                        def.resolve(res);
+                    }
                 }, this)
             });
+            return def.promise();
         },
         /**
          * レスポンスのパース処理を行う

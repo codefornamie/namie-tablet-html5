@@ -19,7 +19,7 @@ define(function(require, exports, module) {
          * 現在表示中の edition のインデックス
          * @memberOf DojoEditionCollection#
          */
-        _currentEditionIndex: 1,
+        _currentEditionIndex: 0,
         
         /**
          * 初期化処理
