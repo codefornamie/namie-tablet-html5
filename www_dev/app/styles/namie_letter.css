@@ -1,0 +1,477 @@
+/**
+ *  町民投稿アプリCSS
+ */
+/**
+ *  ----------
+ *  1. Base
+ *  ----------
+ */
+.page-letter {
+    background-color: #fbfaf4;
+}
+
+.page-letter .header {
+    display: block;
+    background-image: none;
+    height: auto;
+}
+
+.page-letter .header .top-bar {
+    background: #43c1d8;
+    height: 55px;
+}
+
+.page-letter .top-bar .name h1 {
+    line-height: 55px;
+}
+
+.is-subpage .page-letter .top-bar .name h1 {
+    padding-left: 100px;
+}
+
+.page-letter .global-nav {
+    display: block;
+    position: relative;
+    height: 0;
+    background: none;
+    z-index: 30;
+}
+
+.page-letter .global-nav__menu {
+    position: relative;
+    top: -55px;
+    display: none;
+}
+
+.is-subpage .page-letter .global-nav__menu {
+    display: block;
+}
+
+.page-letter .contents-wrapper {
+    padding-top: 55px;
+}
+
+.page-letter .contents>div {
+    height: auto;
+    overflow: auto;
+}
+
+.page-letter h2 {
+    color: rgb(90, 86, 60);
+    font-size: 2rem;
+    margin: 20px 0 15px 0;
+    text-align: center;
+    line-height: 1;
+}
+
+.page-letter .button {
+    display: inline-block;
+    font-size: 1.4rem;
+    margin: 0 20px 10px 0;
+    padding: 0.85rem 1.25rem;
+    line-height: 1;
+}
+
+/**
+ *  ----------
+ *  2. Project
+ *  ----------
+ */
+.page-letter .contents__primary {
+    width: 100%;
+    margin: auto;
+    padding: 0 30px;
+}
+
+.page-letter .contents__primary h2 {
+    color: rgb(90, 87, 56);
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    text-align: left;
+}
+
+.page-letter .contents__secondary {
+    height: auto;
+    text-align: center;
+    padding: 0 30px;
+}
+
+.page-letter .contents__secondary .row {
+    width: 100%;
+    max-width: 100%;
+}
+
+.page-letter .contents__secondary .letter-jumbotron {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 30px auto;
+    padding: 45px 0 50px;
+    text-align: center;
+}
+
+.page-letter .contents__secondary .letter-jumbotron p {
+    color: rgb(66, 193, 216);
+    letter-spacing: 1.4;
+    font-size: 1.6rem;
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+
+.page-letter .contents__secondary .button--letter-new {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    padding: 15px 80px;
+}
+
+.page-letter .letter-list {
+    margin: 20px 0 0;
+}
+
+.page-letter .post {
+    box-sizing: border-box;
+    margin: 20px auto;
+    background: #e8e8d0;
+    position: relative;
+    padding: 0;
+    width: 100%;
+    color: rgb(90, 87, 56);
+    text-align: left;
+}
+
+/** 画像が無い場合がないためコメントアウト
+.page-letter .post.is-no-image .row>.columns--body {
+    width: 100%;
+}
+
+.page-letter .post.is-no-image .row>.columns--thumbnail {
+    display: none;
+}
+**/
+
+.page-letter .post .row {
+    display: table;
+    width: 100%;
+    max-width: 100%;
+}
+
+.page-letter .post .row>.columns {
+    display: table-cell;
+    float: none;
+    vertical-align: top;
+}
+
+.page-letter .columns--date {
+    background: rgb(66, 193, 216);
+    color: white;
+}
+
+.page-letter .date-area {
+    color: white;
+    text-align: center;
+    line-height: 1;
+    position: relative;
+    margin-top: 40px;
+}
+
+.page-letter .date--year {
+    font-size: 1.3rem;
+}
+
+.page-letter .date--date {
+    font-size: 2.1rem;
+    margin: 60px 0;
+}
+
+.page-letter .date--date::before {
+    content: "";
+    width: 110px;
+    border-top: 1px solid white;
+    display: block;
+    position: absolute;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    top: 50%;
+    left: 50%;
+    margin-left: -55px;
+}
+
+.page-letter .date--month {
+    position: relative;
+    top: -25px;
+    font-size: 2.1rem;
+    font-weight: bold;
+}
+
+.page-letter .date--day {
+    position: relative;
+    top: 25px;
+    font-size: 2.1rem;
+    font-weight: bold;
+}
+
+.page-letter .date--weekday {
+    font-size: 1.3rem;
+}
+
+.page-letter .columns--body {
+    background: white;
+    padding: 40px;
+}
+
+.page-letter .columns--body h4 {
+    color: rgb(167, 110, 0);
+    font-weight: bold;
+    font-size: 1.6rem;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.page-letter .columns--body p {
+    color: #5a563c;
+    font-size: 1.4rem;
+    margin: 2rem 0;
+    line-height: 1.6;
+}
+
+.page-letter .columns--body .post-action {
+    text-align: left;
+}
+
+.page-letter .columns--thumbnail {
+    background: #e8e8d0;
+    padding: 35px 25px 35px 30px;
+}
+
+/**
+ *  ウィザード
+ */
+.letter-wizard {
+    position: relative;
+    margin-top: 10px;
+}
+
+.letter-wizard-pages {
+    margin: 0 100px;
+}
+
+.letter-wizard-pages .preview-file {
+    padding-bottom: 10px;
+    float: right;
+    max-height: 400px;
+    display: none;
+}
+
+.letter-wizard ul[role="tablist"] {
+    margin: 0;
+    list-style: none;
+}
+
+.letter-wizard ul[role="tablist"] a {
+    color: white;
+}
+
+.letter-wizard li[role="tab"] {
+    float: left;
+    width: 25%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 1.3rem;
+    padding-left: 5px;
+    padding-right: 20px;
+    position: relative;
+}
+
+.letter-wizard li[role="tab"] .number {
+    display: none;
+}
+
+.letter-wizard li[role="tab"]>a {
+    background: rgb(214, 209, 178);
+    display: block;
+    position: relative;
+    outline: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.letter-wizard li[role="tab"]:first-child {
+    padding-left: 0;
+}
+
+.letter-wizard li[role="tab"].current>a {
+    background: rgb(66, 193, 216);
+}
+
+.letter-wizard li[role="tab"]::after {
+    content: "";
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-left-color: rgb(214, 209, 178);
+    position: absolute;
+    top: 0;
+    right: -20px;
+    display: block;
+}
+
+.letter-wizard li[role="tab"].current::after {
+    border-left-color: rgb(66, 193, 216);
+}
+
+.letter-wizard li[role="tab"] .current-info {
+    display: none;
+}
+
+.letter-wizard .content {
+    border: 3px solid rgb(234, 231, 210);
+    background: white;
+    display: block;
+    margin: 10px 0;
+    height: 520px;
+    overflow : auto;
+    position: relative;
+    width: auto;
+    overflow: auto;
+}
+
+.letter-wizard h3 {
+    position: absolute;
+    left: -999em;
+}
+
+.letter-wizard .body {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding: 25px 50px;
+}
+
+.letter-wizard h4 {
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    color: rgb(90, 86, 60);
+}
+
+.letter-wizard ul[role="menu"] {
+    list-style: none;
+    margin: 0 0 2rem 0;
+    position: relative;
+}
+
+.letter-wizard ul[role="menu"] li {
+    display: inline-block;
+}
+
+.letter-wizard ul[role="menu"] li.disabled {
+    display: none;
+}
+
+.letter-wizard ul[role="menu"] li>a {
+    font-size: 1.4rem;
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    line-height: 1;
+}
+
+.letter-wizard ul[role="menu"] a[href="#next"],
+.letter-wizard ul[role="menu"] a[href="#finish"]
+    {
+    position: absolute;
+    width: 280px;
+    top: 0;
+    left: 50%;
+    margin-left: -140px;
+}
+
+.letter-wizard .body form {
+    margin-top: 40px;
+}
+
+.letter-wizard .body form .columns {
+    padding: 0;
+}
+
+.letter-wizard .body table {
+    border: none;
+    color: rgb(90, 86, 60);
+    margin-top: 30px;
+}
+
+.letter-wizard .body table tr,
+.letter-wizard .body table th,
+    .letter-wizard .body table td {
+    background: none;
+}
+
+.letter-wizard .body table th {
+    padding: 0 1.2rem 0 0;
+    text-align: right;
+}
+
+.letter-wizard .body table td {
+    background: none;
+    font-size: 1.33rem;
+    color: rgb(90, 86, 60);
+    line-height: 1.4;
+}
+
+/**
+ *  編集画面
+ */
+.letter-edit {
+    margin-top: 30px;
+}
+
+.letter-edit-form {
+    margin: 30px;
+    padding: 75px 5% 100px;
+}
+
+/**
+ *  ----------
+ *  3. Cosmetic
+ *  ----------
+ */
+/**
+ *  汎用セクション
+ */
+.letter-section {
+    border: 3px solid #e8e8d0;
+    background: white;
+}
+
+/**
+ *  フォーム
+ */
+.letter-form {
+    margin-bottom: 30px;
+}
+
+.letter-form label.error {
+    font-size: 1.0rem;
+    margin: 10px 0;
+}
+
+.letter-form label:not(.error) {
+    font-size: 1.6rem;
+    color: rgb(90, 86, 61);
+    margin: 15px 0;
+    font-weight: bold;
+}
+
+.letter-form label.is-nowrap {
+    white-space: nowrap;
+}
+
+.letter-form input,
+.letter-form textarea {
+    padding: 20px;
+    font-size: 1.3rem;
+    background: rgb(247, 247, 247);
+    height: auto;
+    line-height: 1.4;
+    color: rgb(90, 86, 60);
+}

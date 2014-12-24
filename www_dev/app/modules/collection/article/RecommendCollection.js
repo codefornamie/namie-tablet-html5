@@ -21,7 +21,15 @@ define(function(require, exports, module) {
      */
     var RecommendCollection = AbstractODataCollection.extend({
         model : RecommendModel,
+        /**
+         * 操作対象のEntitySet名
+         * @memberof RecommendCollection#
+         */
         entity : "recommend",
+        /**
+         * 検索条件
+         * @memberof RecommendCollection#
+         */
         condition : {
             top : 10,
         },
@@ -29,6 +37,7 @@ define(function(require, exports, module) {
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @memberof RecommendCollection#
          */
         setSearchCondition : function(condition) {
             var targetDate = condition.targetDate;

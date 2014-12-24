@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var NewsView = require("modules/view/news/NewsView");
-    
+
     /**
      * バックナンバー機能での記事一覧・詳細のメインとなる画面のViewクラスを作成する。
      * @class バックナンバー機能での記事一覧・詳細のメインとなる画面のViewクラス
@@ -14,7 +14,8 @@ define(function(require, exports, module) {
     var BacknumberDateNewsView = NewsView.extend({
         /**
          * Google Analyticsでページビューを記録する
-        */
+         * @memberOf BacknumberDateNewsView#
+         */
         trackPageView : function() {
             app.ga.trackPageView("/BacknumberDateNewsView", "バックナンバーニュース");
         }

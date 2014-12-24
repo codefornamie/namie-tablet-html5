@@ -30,22 +30,34 @@ define(function(require, exports, module) {
          * @memberof TopView#
          */
         afterRendered : function() {
-            var newsView = new OpeNewsView();
             // カレンダー表示
             var calendar = this.$el.find("[data-date]");
+            var targetDate;
+            if (this.targetDate) {
+                targetDate = this.targetDate;
+            } else {
+                var date = new Date();
+                targetDate = date.format("%Y-%m-%d");
+            }
+            var newsView = new OpeNewsView({targetDate:targetDate});
+            calendar.val(targetDate);
             calendar.fcdp({
                 fixed : true,
-                dateSelector : true
+                dateSelector : true,
             });
             calendar.bind('dateChange', function(evt, opts) {
                 console.info('dateChange triggered');
                 var targetDate = new Date(evt.target.value);
                 newsView.setDate(targetDate);
+
+                targetDate = targetDate.format("%Y-%m-%d");
+                newsView.targetDate = targetDate;
             });
 
             // 記事一覧を表示
             this.setView("#opeNewsList", newsView).render();
-            newsView.setDate(new Date());
+            newsView.setDate(this.targetDate ? new Date(this.targetDate) : new Date());
+            $("[data-sequence-register-button]").show();
         },
     });
 

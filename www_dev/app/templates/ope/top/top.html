@@ -10,13 +10,13 @@
 <aside id='contents__secondary'
     class="contents__secondary columns large-3">
     <input type="text" data-date data-fixed />
-    <div>
-        <input id="eventCalendar" type="text" data-date-time />
-    </div>
 
     <div class="sidebar">
         <ul id='sidebar__list' class='sidebar__list'></ul>
     </div>
+    <button data-sequence-register-button class="button" style="display:none">並び順保存</button>
+    <label id="sequenceConfirm" style="display:none; color:red;">並び順が変更されています。
+    並び順保存ボタンをクリックして保存してください。</label>
 </aside>
 
 <div id='contents__primary' class="contents__primary columns large-9 scroller"

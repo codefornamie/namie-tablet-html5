@@ -21,7 +21,7 @@ define(function(require, exports, module) {
             "click #loginButton" : "onClickLoginButton"
         },
         beforeRendered : function() {
-            setTimeout($.proxy(this.onTimeout, this), 500);
+            setTimeout($.proxy(this.onTimeout, this), 1000);
         },
 
         afterRendered : function() {
@@ -53,6 +53,9 @@ define(function(require, exports, module) {
                     return;
                 }
                 Log.info("pcsManager.ready success skip login view ");
+                if(!this.model.get("loginId")){
+                    this.model.set("loginId", app.loginId);
+                }
                 this.model.login($.proxy(this.onLogin, this));
             }, this));
         },

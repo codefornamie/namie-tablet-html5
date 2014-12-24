@@ -20,6 +20,7 @@ define(function(require, exports, module) {
     /**
      * この演算子が表現する式を生成する。
      * 
+     * @memberOf ComparisonOperatorBase#
      * @return {String} 生成した式
      */
     ComparisonOperatorBase.prototype.expression = function() {
@@ -29,6 +30,7 @@ define(function(require, exports, module) {
     /**
      * 指定された演算子が表現する式を生成する。
      * 
+     * @memberOf ComparisonOperatorBase#
      * @param {Filter}
      *            operator 演算子クラスのインスタンス。または、演算子クラスのインスタンスの配列。
      * @return {String} 式
@@ -52,6 +54,7 @@ define(function(require, exports, module) {
      * サブクラスは、このメソッドをオーバライドし、サブクラスの演算子固有の式の作成処理を実装できる。
      * </p>
      * 
+     * @memberOf ComparisonOperatorBase#
      * @param {Array}
      *            operator 演算子クラスのインスタンス。または、演算子クラスのインスタンスの配列。
      * @return {String} 生成した式

@@ -102,7 +102,8 @@ define(function(require, exports, module) {
             $("#articleRegistPage").hide();
             this.setView("#articleRegistConfirmWrapperPage", new OpeArticleRegistConfirmView({
                 model : this.model,
-                recommendArticle : this.recommendArticle
+                recommendArticle : this.recommendArticle,
+                publishedAt : this.model.get("publishedAt")
             })).render();
             $("#contents__primary").scrollTop(0);
         },
@@ -127,6 +128,16 @@ define(function(require, exports, module) {
             }
             return null;
         },
+        /**
+         * キャンセルボタン押下時のコールバック関数
+         */
+        onClickArticleCancelButton : function() {
+            if (this.backFunction) {
+                this.backFunction();
+            } else {
+                app.router.go("ope-top", this.targetDate);
+            }
+        }
     });
     module.exports = OpeArticleRegistView;
 });

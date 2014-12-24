@@ -16,6 +16,14 @@ define(function(require, exports, module) {
      * @constructor
      */
     var BetweenDayPeriod = Filter.extend({
+        /**
+         * 初期化処理を行う
+         * @param {String} key 
+         * @param {String} from 
+         * @param {String} to 
+         * @param {String} dayFormat 
+         * @memberof BetweenDayPeriod#
+         */
         init : function(key, from, to, dayFormat) {
             if (!dayFormat) {
                 dayFormat = "yyyy-MM-dd";
@@ -31,6 +39,7 @@ define(function(require, exports, module) {
      * 日付の範囲検索を行う式を生成する。
      * 
      * @returns {String} 生成した式
+     * @memberof BetweenDayPeriod#
      */
     BetweenDayPeriod.prototype.expression = function() {
         var ge = new Ge(this.key, this.from);

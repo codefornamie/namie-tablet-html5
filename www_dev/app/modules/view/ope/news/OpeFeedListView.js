@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var FeedListView = require("modules/view/news/FeedListView");
     var jquerySortable = require("jquery-sortable");
+    var vexDialog = require("vexDialog");
 
     /**
      * 運用管理ツールの記事一覧テーブルのViewクラスを作成する。
@@ -12,7 +13,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var OpeFeedListView = FeedListView.extend({
-        events: {
+        events : {
             "click .feedListItem" : "onClickFeedListItem",
             "onRecommendFetch .today-recommend-radio" : "onRecommendFetch"
         },
@@ -22,28 +23,31 @@ define(function(require, exports, module) {
                 items : 'tr',
                 forcePlaceholderSize : true,
                 handle : '.handle'
-            });
+            }).bind("sortupdate", $.proxy(this.onSortUpdate,this));
             this.recommendArticle = this.collection.find($.proxy(function(model) {
                 return model.get("isRecommend");
-            },this));
+            }, this));
+            $("#sequenceConfirm").hide();
+            $("[data-sequence-register-button]").unbind("click");
+            $("[data-sequence-register-button]").bind("click", $.proxy(this.onClickSequenceRegist, this));
         },
         /**
          * おすすめ記事登録処理後のコールバック関数処理
-         * 
+         * @memberOf OpeFeedListView#
          * @param {event} フェッチ後イベント
          * @param {ArticleModel} おすすめ情報を保存した記事情報
          */
-        onRecommendFetch: function(event, recommendedModel) {
+        onRecommendFetch : function(event, recommendedModel) {
             if (this.recommendArticle) {
-                this.recommendArticle.set("isRecommend",null);
-                this.recommendArticle.save(null,{
-                    success:$.proxy(function(){
+                this.recommendArticle.set("isRecommend", null);
+                this.recommendArticle.save(null, {
+                    success : $.proxy(function() {
                         this.onUnRecommendSave(recommendedModel);
-                    },this),
-                    error:$.proxy(function () {
+                    }, this),
+                    error : $.proxy(function() {
                         alert("おすすめ記事情報の保存に失敗しました");
                         this.hideLoading();
-                    },this)
+                    }, this)
                 });
             } else {
                 this.hideLoading();
@@ -52,17 +56,99 @@ define(function(require, exports, module) {
         },
         /**
          * おすすめ記事削除処理後のコールバック関数処理
-         * 
+         * @memberOf OpeFeedListView#
          * @param {ArticleModel} おすすめ情報を保存した記事情報
          */
-        onUnRecommendSave: function(recommendedModel) {
+        onUnRecommendSave : function(recommendedModel) {
             this.recommendArticle.fetch({
-                success:$.proxy(function() {
+                success : $.proxy(function() {
                     this.hideLoading();
                     this.recommendArticle = recommendedModel;
-                },this)
+                }, this)
             });
         },
+        /**
+         * 並び順設定ボタンが押下された際のコールバック関数
+         * @memberOf OpeFeedListView#
+         */
+        onClickSequenceRegist : function() {
+            this.showLoading();
+            $("#sequenceConfirm").hide();
+            var saveModels = [];
+            // ListItemView取得
+            var itemViews = this.getViews("#feedList").value();
+            _.each(itemViews, function(itemView) {
+                var sequence = itemView.$el.index().toString();
+                if (itemView.model.get("sequence") !== sequence) {
+                    // 並び順に変更がないものは保存対象としない
+                    itemView.model.set("sequence", itemView.$el.index().toString());
+                    saveModels.push(itemView.model);
+                }
+            });
+            var onSaveFunction = $.proxy(function() {
+                if (saveModels.length <= 0) {
+                    // 並び順が代わっていないようなら処理を行わない
+                    this.hideLoading();
+                } else {
+                    // リクエスト過多にならないように、最大５パラで保存処理を実行する
+                    this.saveSequence(saveModels.splice(0, 5), onSaveFunction);
+                }
+            }, this);
+            this.saveSequence(saveModels.splice(0, 5), onSaveFunction);
+        },
+        /**
+         * 並び順保存処理
+         * @memberOf OpeFeedListView#
+         * @param {Array} models 記事情報の配列
+         * @param {Function} callback 情報保存後のコールバック関数
+         */
+        saveSequence : function(models, callback) {
+            if (!models || models.length === 0) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("並び順を変更してから保存ボタンを押してください。");
+                this.hideLoading();
+                return;
+            }
+            var modelsLength = models.length;
+            var currentCount = 0;
+
+            _.each(models, $.proxy(function(model) {
+                model.save(null, {
+                    success : $.proxy(function() {
+                        currentCount++;
+                        if (currentCount >= modelsLength) {
+                            // 全ての保存処理が終わったタイミングでコールバックを呼ぶ
+                            callback();
+                        }
+                    }, this),
+                    error : $.proxy(function() {
+                        this.hideLoading();
+                        vexDialog.defaultOptions.className = 'vex-theme-default';
+                        vexDialog.alert("並び順の保存に失敗しました。");
+                        app.logger.error("並び順の保存に失敗しました。");
+                    }, this)
+                });
+            }, this));
+        },
+        /**
+         * @memberOf OpeFeedListView#
+         * @param {Event} ev ソートイベント
+         * @param {Element} elem 移動した要素
+         */
+        onSortUpdate : function(ev, elem) {
+            var sortArr = [];
+            // ListItemView取得
+            var itemViews = this.getViews("#feedList").value();
+            _.each(itemViews, function(itemView) {
+                var sequence = itemView.$el.index().toString();
+                if (itemView.model.get("sequence") !== sequence) {
+                    sortArr.push(itemView);
+                }
+            });
+            if (sortArr.length > 0) {
+                $("#sequenceConfirm").show();
+            }
+        }
     });
 
     module.exports = OpeFeedListView;

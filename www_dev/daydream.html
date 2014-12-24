@@ -7,6 +7,9 @@
     content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 <link rel="stylesheet" href="bower_components/animate.css/animate.css">
 <script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="lib/dao/dc1-client.js"></script>
+<script src="bower_components/requirejs/require.js"></script>
+
 </head>
 
 <style>
@@ -14,56 +17,407 @@
     -vendor-animation-duration: 5s;
     -vendor-animation-delay: 1s;
     -vendor-animation-iteration-count: infinite;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#message {
+    padding: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 30%;
+    margin-left: -25%;
+    margin-top: -15%;
+    adisplay: relative;
+    display: none;
+    background-color: #ffff00;
+    z-index: 100;
+    vertical-align: middle;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
+}
+
+#icon {
+
+}
+
+#msg {
+    line-height: 1.1em;
+    vertical-align: middle;
+    font-size: 70px;
+    color: #000000;
+    font-weight: bold;
 }
 </style>
 <script>
+    /** Personium URL. */
+    var _base = "";
+    /** Personium Cell. */
+    var _cellName = "";
+    /** インデックス。 */
+    var _index = 0;
+    /** Personiumアクセスライブラリ。 */
+    var _dc = null;
+    /** アクセストークン。 */
+    var _token = "";
+    /** PersoniumのCollectionオブジェクト。 */
+    var _collectonObj;
+    /** 表示対象のファイル一覧。 */
+    var _fileList = [];
+    /** 画像インターバル中のインターバルＩＤ。*/
+    var _slideInterval = null;
+    /** 画像の表示間隔。 */
+    var _slideTime = 30 * 1000; // 30秒
+    /** 画像インターバル中のインターバルＩＤ。*/
+    var _updateInterval = null;
+    /** 画像の表示間隔。 */
+    var _updateTime = 50 * 60 * 1000; // 50分
+    /** 負荷分散用の間隔。 */
+    var _distributionTime = 5;
+    /** 負荷分散時のタイマーで利用するタイマーID. */
+    var _distributionTimerID = null;
+    /** 画像データのキャッシュ。 */
+    var _cache = {};
+    /** 発行時刻。 */
+    var _publishTime = new Date();
+    /** 新着記事有無フラグ。 */
+    var _hasRecentAtricle = false;
+    /** appConfig。 */
+    var _conf = null;
 
-    var images = [
-"10411974_745593568858423_3338845195879494958_n.jpg",
-"10841998_745593565525090_3002790559317490279_o.jpg",
-"1499676_720510028037494_821496066096814829_n.jpg",
-"20141122002je.jpg",
-"20141202 (2).JPG",
-"20141202 (4).JPG",
-"slide11.JPG",
-"slide12.JPG",
-"slide13.JPG",
-"slide14.JPG",
-"slide29.JPG",
-"slide36.JPG",
-"slide45.JPG",
-"slide46.JPG",
-"slide6.JPG",
-"slide7.JPG",
-"slide8.JPG",
-"slide9.JPG"
-    ];
-    var index = 1;
-    var interval = 2000;
-    function showImages() {
-        if (index >= images.length) {
-            index = 0;
+    /** デバッグモード。 */
+    // TODO: 関連処理はすべて削除する予定
+    var _debug = false;
+    var _debug_pubdate = ""
+    var _debug_pubHours = 11;
+    var _debug_pubMinutes = 15;
+
+    require.config({
+        paths : {
+            'conf' : 'app/resources/appConfig'
         }
+    });
 
-        $("#slideImage").addClass("animated fadeOut");
-        setTimeout(function() {
-            $("#container").children().remove();
+    /**
+     * 初期処理。jQueryの準備が出来た後に最初の処理を行う。
+     */
+    $(document).ready(function() {
+        require([
+            'conf'
+        ], function(config) {
+            _base = config.basic.baseUrl;
+            _cellName = config.basic.cellId;
+            init();
+        });
+    });
 
-            var imgElement = '<img id="slideImage" src="app/img/slideshow/' + images[index++] +
-                    '" style="width: 100%; height: 100%;" class="animated fadeIn" />';
-            $("#container").append(imgElement);
-        }, interval);
+    /**
+     * 初期処理
+     */
+    function init() {
+        _dc = new dcc.DcContext(_base);
+        _publishTime.setHours(0);
+        _publishTime.setMinutes(0, 0, 0);
+        $("body").on("touchstart", function() {
+            log("touchstart");
+            appJsInterface.closeDreamService();
+        });
+        $("#message").on("touchstart", function() {
+            var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
+            if (_debug) {
+                pub = _debug_pubdate;
+            }
+            // 同じ日に２度と表示されないようにフラグを立てる
+            log("localStorage.getItem(" + pub + ") : " + localStorage.getItem(pub));
+            localStorage.clear();
+            localStorage.setItem(pub, true);
+            log("localStorage.getItem(" + pub + ") : " + localStorage.getItem(pub));
+            // 新聞アプリを起動
+            window.location.href = "namie-news://"
+            // メッセージを消す
+            $("#message").fadeOut("slow");
+            // 親要素へバブルさせない
+            return false;
+        });
+        // Java呼び出し(トークン取得)
+        callJava();
 
+        // 以降は一定時間毎に対象画像を再取得する
+        _updateInterval = setInterval(function() {
+            // Java呼び出し(トークン再取得)
+            callJava();
+        }, _updateTime);
     }
 
-    $(document).ready(function() {
+    /**
+     * Javaのメソッドを呼び出し、AccountManagerからトークンの取得を行う。処理後、「window.javaToJs」が呼び出される。
+     */
+    function callJava() {
+        log("start refreshSlideShow method");
+        appJsInterface.jsToJava();
+    }
 
-        setInterval("showImages()", 12000);
-    });
+    /**
+     * デバッグ用。
+     */
+    function log(msg) {
+        if (_debug) {
+            //$("<div>").text(msg).prependTo($("#container"));
+        }
+        console.log(msg);
+    }
+
+    /**
+     * Javaから呼び出されるI/F。スライドショーのデータ入れ替えを行う。
+     * @param {String} token Personiumアクセストークン
+     */
+    window.javaToJs = function(token) {
+        log("start refreshJavaToJs");
+        if (!token) {
+            return;
+        }
+        _token = token;
+        refresh();
+    }
+
+    /**
+     * 対象画像をPersoniumから再取得。
+     */
+    function refresh() {
+        log("start refresh ");
+        _fileList = getFileList();
+        updateAtricleInfo();
+        startSlideShow();
+    }
+
+    /**
+     * Personiumに保存されている設定情報を読み込み。
+     */
+    function updateAtricleInfo() {
+        log("start updateConfigure");
+        var conf = _odataObj.entitySet("configuration").retrieveAsResponse("PUBLISH_TIME");
+        if ((conf) && (conf.body) && (conf.body.value)) {
+            log(conf.body.value);
+            var ar = conf.body.value.split(":");
+            if (ar.length > 0) {
+                _publishTime.setHours(ar[0]);
+                _publishTime.setMinutes(ar[1]);
+                if (_debug) {
+                    _publishTime.setHours(_debug_pubHours);
+                    _publishTime.setMinutes(_debug_pubMinutes);
+                }
+            }
+        }
+        var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
+        if (_debug) {
+            pub = _debug_pubdate;
+        }
+        log("search arcile start : " + pub);
+        var ret = _odataObj.entitySet("article").query().top(0).filter(
+                "publishedAt eq '" + pub + "' and isDepublish eq null").run();
+        if (ret.length > 0) {
+            _hasRecentAtricle = true;
+        } else {
+            _hasRecentAtricle = false;
+        }
+        log("search article end : " + ret.length);
+    }
+
+    /**
+     * 対象のファイル一覧を取得する。
+     * @return {Array} ファイル名の配列
+     */
+    function getFileList() {
+        log("start getFileList");
+        var list = [];
+        try {
+            log("start refresh method");
+            var cellObj = _dc.withToken(_token).cell(_cellName);
+            _odataObj = cellObj.box("data").odata("odata");
+            _collectonObj = cellObj.box("data").col("dav").col("slideshow");
+        } catch (e) {
+            log("Personium certificate failure : " + e);
+        }
+        try {
+            var ret = _odataObj.entitySet("slideshow").query().filter("published eq '1'").run();
+            log("slideshow target file length : " + ret.length);
+            for (var i = 0; i < ret.length; i++) {
+                list.push(ret[i].filename);
+            }
+        } catch (e) {
+            log("Personium odata failure : " + e);
+        }
+        return list;
+    }
+
+    /**
+     *　スライドショー開始。
+     */
+    function startSlideShow() {
+        log("start startSlideShow");
+        // 最初の１枚は待たずに表示
+        showImage(getNextImage());
+
+        // すでにスライドショーが動作している場合は、インターバルを一旦解除する。
+        if (_slideInterval) {
+            log("clear interval for slideshow");
+            clearInterval(_slideInterval);
+            _slideInterval = null;
+        }
+
+        // 以降は定期的に更新する
+        _slideInterval = setInterval(function() {
+            showImage(getNextImage());
+        }, _slideTime);
+    }
+
+    /**
+     * 次に表示する画像を取得。
+     * @return {String} 画像のファイル名
+     */
+    function getNextImage() {
+        log("start getNextImage / fileList.length :  " + _fileList.length + " / _index : " + _index);
+        if ((_index + 1) >= _fileList.length) {
+            _index = 0;
+        }
+        var fileName = _fileList[_index];
+        _index += 1;
+        return fileName;
+    }
+
+    /**
+     * 画像のバイナリを取得。キャッシュにあれば再利用する。
+     * @param {String} fname ファイル名
+     * @param {Function} callback コールバック
+     */
+    function getImageBinary(fname, callback) {
+        log("start getImageBinary");
+        if (_cache[fname]) {
+            log("use cache");
+            callback(_cache[fname]);
+            return;
+        }
+        try {
+            _collectonObj.getBinary(fname, {
+                success : function(binary) {
+                    _cache[fname] = binary;
+                    callback(binary);
+                },
+                error : function(e) {
+                    log("personium request failure : " + e);
+                }
+            });
+        } catch (e) {
+            log("Personium load file failure : " + e);
+            callback(null);
+        }
+    }
+
+    /**
+     * 発行時刻と、記事の有無をチェック。
+     * @param {Function} callback 記事があった場合に呼び出すコールバック
+     */
+    function checkRecentArticle(callback) {
+        log("start checkRecentArticle");
+        var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
+        var now = new Date();
+        var distTime = new Date(_publishTime.getTime() + (_distributionTime * 60 * 1000));
+        log("checkRecentArticle now : " + now);
+        log("checkRecentArticle publishTime : " + _publishTime);
+        log("checkRecentArticle distTime : " + distTime);
+        log("_hasRecentAtricle : " + _hasRecentAtricle);
+        log("localStorage(" + pub + ") : " + localStorage.getItem(pub));
+
+        if ((_hasRecentAtricle) && (!localStorage.getItem(pub)) && (now > _publishTime)) {
+            log("popup");
+            if (now < distTime) {
+                // 数分間の負荷分散を行う
+                callback.distribution();
+            } else if (now > distTime) {
+                // リアルタイムにポップアップ表示
+                callback.realtime();
+            }
+        }
+    }
+
+    /**
+     * ポップアップ表示。
+     */
+    function showPopup() {
+        log("show popup message");
+        var msg = (_publishTime.getMonth() + 1) + "月" + _publishTime.getDate() + "日版のなみえ新聞が発行されました";
+        $("#msg").text(msg);
+        $("#message").fadeIn("slow");
+    }
+
+    /**
+     * １つの画像の表示を行う。
+     * @param {String} fname 表示する画像のファイル名
+     */
+    function showImage(fname) {
+        log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        log("start showImage : " + fname);
+        checkRecentArticle({
+            hidden : function() {
+                $("#message").hide();
+            },
+            realtime : function() {
+                if (!_distributionTimerID) {
+                    // ポップアップタイマーがセットされていなければ実行
+                    showPopup();
+                }
+            },
+            distribution : function() {
+                if (_distributionTimerID) {
+                    // すでに遅延用のタイマーをセットされていれば、表示処理は行わない。
+                    log("skip popup");
+                    return;
+                }
+                // サーバー負荷を軽減させるため、同じ条件でも、数分間でバラつかせる。
+                var displayTime = Math.floor(Math.random() * _distributionTime);
+                log("★　hits recent article. displayTime after " + displayTime + " minutes ");
+                _distributionTimerID = setTimeout(function() {
+                    showPopup();
+                    _distributionTimerID = null;
+                }, displayTime * 60 * 1000);
+            }
+        });
+        getImageBinary(fname, function(binary) {
+            if (!binary) {
+                log("failure binary null");
+                return;
+            }
+            log("start onGetBinary");
+            var arrayBufferView = new Uint8Array(binary);
+            var blob = new Blob([
+                arrayBufferView
+            ], {
+                type : "image/jpg"
+            });
+            var url = window.URL.createObjectURL(blob);
+            $("#slideImage").addClass("animated fadeOut");
+            setTimeout(function() {
+                $("#slideImage").remove();
+                var img = $("<img id='slideImage'>").attr("src", url).data("blob", blob);
+                img.prependTo($("#container")).addClass("animated fadeIn");
+                log("end onGetBinary");
+            }, 2000);
+        });
+    }
 </script>
 <body>
-    <div id="container">
-        <img id="slideImage" src="app/img/slideshow/slide9.JPG" style="width: 100%; height: 100%;" class="animated fadeIn" />
+    <div id="container" style="font-size: 1.5em;"></div>
+    <div id="message">
+        <div>
+            <img id="icon" src="app/img/img-character01.png" />
+        </div>
+        <div id="msg"></div>
     </div>
 </body>
 </html>

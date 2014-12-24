@@ -42,10 +42,6 @@ define(function(require, exports, module) {
     var NewsView = AbstractView.extend({
 
         template : require("ldsh!templates/{mode}/news/news"),
-        templateMap : {
-            news : require("ldsh!templates/news/news/news"),
-            ope : require("ldsh!templates/ope/news/news")
-        },
         model : new ArticleModel(),
         fetchCounter : 0,
         articleCollection : new ArticleCollection(),
@@ -79,7 +75,7 @@ define(function(require, exports, module) {
             this.searchArticles();
             this.initEvents();
         },
-        
+
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
@@ -170,6 +166,8 @@ define(function(require, exports, module) {
             var self = this;
 
             this.articleCollection.fetch({
+                cache : true,
+
                 success : function() {
                     self.loadFavorite(callback);
                 },
@@ -190,6 +188,8 @@ define(function(require, exports, module) {
             ];
 
             this.favoriteCollection.fetch({
+                cache : true,
+
                 success : function() {
                     callback();
                 },
@@ -208,6 +208,8 @@ define(function(require, exports, module) {
         loadEvents : function(callback) {
             this.eventsCollection.reset();
             this.eventsCollection.fetch({
+                cache : true,
+
                 success : function() {
                     callback();
                 },
@@ -224,6 +226,8 @@ define(function(require, exports, module) {
          */
         loadRecommend : function(callback) {
             this.recommendCollection.fetch({
+                cache : true,
+
                 success : function() {
                     callback();
                 },
@@ -305,7 +309,7 @@ define(function(require, exports, module) {
          * 記事一覧Viewを表示する要素のセレクタ
          * @memberof NewsView#
          */
-        feedListElement: "#contents__top",
+        feedListElement : "#contents__top",
         /**
          * 左ペインの記事一覧メニューを表示する。
          * @memberof NewsView#
@@ -315,7 +319,7 @@ define(function(require, exports, module) {
             gridListView.collection = this.newsCollection;
 
             this.removeView(this.gridListElement);
-            
+
             this.setView(this.feedListElement, gridListView);
             gridListView.render();
 
@@ -357,18 +361,16 @@ define(function(require, exports, module) {
         },
 
         /**
-         * 指定されたarticleIdの記事までスクロール
+         * News一覧の各Gridがクリックされたときの動作
          * 
          * @param {jQuery.Event} ev
          * @param {Object} param
          * @memberof NewsView#
          */
         onClickGridItem : function(ev, param) {
-            if (!this.preview) {
-                var articleId = $(ev.currentTarget).attr("data-article-id");
-                app.newsView = this;
-                app.router.go("article", articleId);
-            }
+            var articleId = $(ev.currentTarget).attr("data-article-id");
+            app.newsView = this;
+            app.router.go("article", articleId);
         },
 
         /**
@@ -402,10 +404,20 @@ define(function(require, exports, module) {
                 template = require("ldsh!templates/{mode}/news/youTubeListItem");
                 ListItemView = YouTubeListItemView;
                 break;
+            case "6": // 町民投稿
+                template = require("ldsh!templates/{mode}/news/letterDetail");
+                ListItemView = EventListItemView;
+                break;
             default:
                 template = require("ldsh!templates/{mode}/news/eventsDetail");
                 ListItemView = EventListItemView;
                 break;
+            }
+
+            // 既にレンダリングされている要素をクリアする
+            var dest = this.getView(NewsView.SELECTOR_ARTICLE_DESTINATION);
+            if (dest) {
+                dest.remove();
             }
 
             this.insertView(NewsView.SELECTOR_ARTICLE_DESTINATION, new ListItemView({
@@ -414,12 +426,16 @@ define(function(require, exports, module) {
             })).render();
             $("#contents__secondary").hide();
             $("#contents__primary").show();
+
+            // TODO 各記事のviewで行いたい
+            $("#snap-content").scrollTop(0);
+            $(".backnumber-scroll-container").scrollTop(0);
         },
 
         /**
          * 初期スクロール位置が指定されている場合、スクロールする
          */
-        initScrollTop: function () {
+        initScrollTop : function() {
             if (this.initialScrollTop) {
                 this.setScrollTop(this.initialScrollTop);
             }
@@ -429,7 +445,7 @@ define(function(require, exports, module) {
          * 記事一覧の現在のスクロール位置を設定する
          * @param {Number} scrollTop
          */
-        setScrollTop: function (scrollTop) {
+        setScrollTop : function(scrollTop) {
             var $container = this.$el.find("#contents__top");
 
             $container.scrollTop(scrollTop);
@@ -439,7 +455,7 @@ define(function(require, exports, module) {
          * 記事一覧の現在のスクロール位置を取得する
          * @return {Number}
          */
-        getScrollTop: function () {
+        getScrollTop : function() {
             var $container = this.$el.find("#contents__top");
             var scrollTop = $container.scrollTop();
 
@@ -451,13 +467,34 @@ define(function(require, exports, module) {
          * @memberof NewsView#
          */
         onRoute : function(route) {
-            if (route === "showArticle") {
+            if (route === "settings") {
+            } else if (route === "showArticle") {
                 $(NewsView.SELECTOR_ARTICLE_LIST).hide();
                 $(NewsView.SELECTOR_ARTICLE_DESTINATION).show();
             } else {
                 $(NewsView.SELECTOR_ARTICLE_LIST).show();
                 $(NewsView.SELECTOR_ARTICLE_DESTINATION).hide();
             }
+
+            $("#main").removeClass("is-top");
+            $("#main").removeClass("is-article");
+            $("#main").removeClass("is-backnumber");
+
+            if (route === "top") {
+                $("#main").addClass("is-top");
+            } else if (route === "showArticle") {
+                $("#main").addClass("is-article");
+            } else if (route === "backnumber") {
+                $("#main").addClass("is-backnumber");
+            }
+        },
+
+        /**
+         * ビューが破棄される時に呼ばれる
+         */
+        cleanup : function() {
+            $("#main").removeClass("is-top");
+            $("#main").removeClass("is-article");
         },
 
         /**

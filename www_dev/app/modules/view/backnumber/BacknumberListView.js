@@ -16,23 +16,27 @@ define(function(require, exports, module) {
     var BacknumberListView = AbstractView.extend({
         /**
          * テンプレートファイル
+         * @memberOf BacknumberListView#
          */
         template : require("ldsh!templates/{mode}/backnumber/backnumberList"),
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         * @memberOf BacknumberListView#
          */
         beforeRendered : function() {
         },
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * @memberOf BacknumberListView#
          */
         afterRendered : function() {
         },
 
         /**
          * 初期化処理
+         * @memberOf BacknumberListView#
          */
         initialize : function() {
             console.assert(this.collection, "Should have Collection");
@@ -53,6 +57,7 @@ define(function(require, exports, module) {
         
         /**
          * 要素をクリアする
+         * @memberOf BacknumberListView#
          */
         clear: function () {
             this.views.length = 0;
@@ -62,6 +67,7 @@ define(function(require, exports, module) {
         /**
          * BacknumberModelが追加されたら呼ばれる
          * @param {Backnumber.Model} model
+         * @memberOf BacknumberListView#
          */
         onAddModel: function (model) {
             this.views.push(new BacknumberListItemView({
@@ -71,6 +77,7 @@ define(function(require, exports, module) {
         
         /**
          * collectionが揃ったら呼ばれる
+         * @memberOf BacknumberListView#
          */
         onSyncModel: function () {
             var self = this;
@@ -84,6 +91,7 @@ define(function(require, exports, module) {
         
         /**
          * 読み込みが始まったら呼ばれる
+         * @memberOf BacknumberListView#
          */
         onStartLoading: function () {
             this.showLoading();
@@ -91,6 +99,7 @@ define(function(require, exports, module) {
 
         /**
          * 読み込みが終わったら呼ばれる
+         * @memberOf BacknumberListView#
          */
         onFinishLoading: function () {
             $('#backnumber').scrollTop(0);

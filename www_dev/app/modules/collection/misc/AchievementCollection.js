@@ -8,13 +8,21 @@ define(function(require, exports, module) {
     /**
      * 達成情報のコレクションクラス
      * 
-     * @class
+     * @class 達成情報のコレクションクラス
      * @exports AchievementCollection
      * @constructor
      */
     var AchievementCollection = AbstractODataCollection.extend({
         model : AchievementModel,
+        /**
+         * 操作対象のEntitySet名
+         * @memberof AchievementCollection#
+         */
         entity : "achievement",
+        /**
+         * 検索条件
+         * @memberof AchievementCollection#
+         */
         condition : {
             top : 100,
         },

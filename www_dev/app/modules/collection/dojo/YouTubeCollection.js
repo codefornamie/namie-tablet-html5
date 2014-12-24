@@ -14,11 +14,16 @@ define(function(require, exports, module) {
      */
     var YouTubeCollection = AbstractCollection.extend({
         model : YouTubeModel,
+        /**
+         * 操作対象のチャンネルID
+         * @memberof YouTubeCollection#
+         */
         channelId : null,
         sync : function(method, model, options) {
             if (!options) {
                 options = {};
             }
+            var def = $.Deferred();
 
             gapi.client.request({
                 path : "/youtube/v3/search",
@@ -33,6 +38,7 @@ define(function(require, exports, module) {
                 callback : $.proxy(function(res) {
 
                     if (res.error) {
+                        def.reject(res);
                         if (options.error) {
                             options.error(res);
                         }
@@ -43,11 +49,18 @@ define(function(require, exports, module) {
                     if (options.complete) {
                         options.complete(res.error, model, res);
                     }
+                    if (def.state() === "pending") {
+                        def.resolve(res);
+                    }
                 }, this)
             });
+            return def.promise();
         },
         /**
-         * 検索してきた情報をパースする
+         * レスポンスのパース処理を行う
+         * @param {Object} レスポンス情報
+         * @param {Object} オプション
+         * @return {Object} レスポンス情報のitemオブジェクト
          * @memberof YouTubeCollection#
          */
         parse : function(response, options) {

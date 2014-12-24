@@ -47,7 +47,7 @@ define(function(require, exports, module) {
          */
         onClickCompleteLesson: function () {
             vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.buttons.YES.text = "取消";
+            vexDialog.buttons.YES.text = "OK";
             vexDialog.alert("この操作を習得しました！！");
             if (this.dojoContentModel.achievementModels) {
                 var solvedAchievement = _.find(this.dojoContentModel.achievementModels,function(achievement) {
@@ -88,7 +88,7 @@ define(function(require, exports, module) {
          */
         onClickUncompleteLesson: function () {
             vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.buttons.YES.text = "はい";
+            vexDialog.buttons.YES.text = "OK";
             vexDialog.alert("習得できるように頑張りましょう！");
         },
 

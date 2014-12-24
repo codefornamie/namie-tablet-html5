@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var NewsView = require("modules/view/news/NewsView");
     var OpeFeedListView = require("modules/view/ope/news/OpeFeedListView");
     var OpeFeedListItemView = require("modules/view/ope/news/OpeFeedListItemView");
+    var OpeNewsPreviewView = require("modules/view/ope/news/OpeNewsPreviewView");
+
     var Equal = require("modules/util/filter/Equal");
     /**
      * 運用管理アプリの記事一覧画面を表示するためのViewクラスを作成する。
@@ -26,7 +28,9 @@ define(function(require, exports, module) {
          * @memberof OpeNewsView#
          */
         events : {
-            "click [data-article-register-button]" : "onClickArticleRegisterButton"
+            "click [data-article-register-button]" : "onClickArticleRegisterButton",
+            "click [data-article-preview-button]" : "onClickArticlePreviewButton",
+            "click [ope-preview-back-button]" : "onClickOpePreviewBackButton"
         },
         
         /**
@@ -52,6 +56,8 @@ define(function(require, exports, module) {
          * @param {Date} targetDate 表示する日付。
          */
         setDate : function(targetDate) {
+            this.closePreview();
+            
             this.$el.find("#targetDate").text(
                     DateUtil.formatDate(targetDate, "yyyy年MM月dd日") + app.config.PUBLISH_TIME);
 
@@ -59,11 +65,8 @@ define(function(require, exports, module) {
                 targetDate : targetDate
             });
             this.searchArticles();
-            $("#articlePreview").colorbox({
-                "href" : "redirect?mode=news&loginId=namie01&preview=true&targetDate=" + DateUtil.formatDate(targetDate, "yyyy-MM-dd") + "&accessToken=" + app.accessor.accessToken, 
-                iframe : true, width : "80%", height : "90%"});
         },
-
+        
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
@@ -73,8 +76,8 @@ define(function(require, exports, module) {
             var targetDate = condition.targetDate;
             var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
             this.articleCollection.condition.filters = [
-                                                        new Equal("publishedAt", dateString)
-                                                                ];
+                new Equal("publishedAt", dateString)
+            ];
         },
         /**
          * 左ペインの記事一覧メニューを表示する。
@@ -105,6 +108,7 @@ define(function(require, exports, module) {
                 this.notFoundMessage.hide("slow");
             }
             var listView = new OpeFeedListView();
+            listView.targetDate = this.targetDate;
             listView.setFeedListItemViewClass(OpeFeedListItemView);
             return listView;
         },
@@ -121,8 +125,37 @@ define(function(require, exports, module) {
          *  @memberof OpeNewsView#
          */
         onClickArticleRegisterButton: function () {
-            app.router.opeArticleRegist();
+            $("[data-sequence-register-button]").hide();
+            $("#sequenceConfirm").hide();
+            app.router.opeArticleRegist({targetDate : this.targetDate});
         },
+        /**
+         *  プレビュー表示ボタン押下時に呼び出されるコールバック関数
+         *  @memberof OpeNewsView#
+         */
+        onClickArticlePreviewButton: function () {
+            $("#opeNewsHolder").hide();
+            this.setView("#article_list_preview", new OpeNewsPreviewView({targetDate: this.targetDate})).render();
+            $("#opePreviewHolder").show();
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         *  戻るボタン押下時に呼び出されるコールバック関数
+         *  @memberof OpeNewsView#
+         */
+        onClickOpePreviewBackButton: function () {
+            this.closePreview();
+        },
+        /**
+         *  プレビュー表示を閉じる
+         *  @memberof OpeNewsView#
+         */
+        closePreview: function () {
+            $("#opePreviewHolder").hide();
+            $("#article_list_preview").empty();
+            $("#opeNewsHolder").show();
+            $("#contents__primary").scrollTop(0);
+        }
     });
 
     module.exports = OpeNewsView;

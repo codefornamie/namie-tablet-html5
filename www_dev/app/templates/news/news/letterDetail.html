@@ -1,0 +1,59 @@
+<article
+    class='post post--other'
+    id="<%= model.get('__id') %>"
+>
+    <section class='post__body'>
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="post-header">
+                    <div class="post-header__site">
+                        <div class="post-label">
+                            <div
+                                class="article-label article-label--<%= model.getSiteType() %> left"
+                            >
+                                <span class='article-label__text'>
+                                    <%= model.get("dispSite") %>
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="tagListArea"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">本文</div>
+                </div>
+                <div class="large-11 large-centered columns">
+                    <%=model.get("dispDescription")%>
+                </div>
+
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">画像</div>
+                </div>
+                <div class="large-11 large-centered columns">
+                    <div class="eventFile">
+                        <div class="eventFileImage">
+                            <img class="articleDetailImage">
+                        </div>
+                        <%=model.get("imageComment")%>
+                    </div>
+                </div>
+
+                <div class="large-12 columns">
+                    <div class="eventColumnsHeader">ニックネーム</div>
+                </div>
+
+                <div class="large-11 large-centered columns end">
+                    <%=model.get("nickname")%>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class='post__footer'>
+    </section>
+</article>

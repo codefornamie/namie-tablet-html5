@@ -9,5 +9,6 @@ module.exports = ->
         {src: "lib/**", dest: "../www/"}
         {src: "app/img/**", dest: "../www/"}
         {src: "app/styles/**", dest: "../www/"},
-        {src: "daydream.html", dest: "../www/"}
+        {src: "daydream.html", dest: "../www/"},
+        {src: "app/resources/**", dest: "../www/"}
       ]

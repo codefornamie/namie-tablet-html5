@@ -31,6 +31,7 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             $("#snap-content").scrollTop(0);
+            $(".backnumber-scroll-container").scrollTop(0);
 
             this.showImage();
         },

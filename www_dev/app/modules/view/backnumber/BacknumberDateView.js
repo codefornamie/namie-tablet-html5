@@ -10,13 +10,14 @@ define(function(require, exports, module) {
     /**
      *  バックナンバーページで見る各日付の記事のView
      *
-     *  @class
+     *  @class バックナンバーページで見る各日付の記事のViewクラス
      *  @exports BacknumberDateView
      *  @constructor
      */
     var BacknumberDateView = AbstractView.extend({
         /**
          *  テンプレートファイル
+         * @memberOf BacknumberDateView#
          */
         template : require("ldsh!templates/{mode}/backnumber/backnumberDate"),
         date : null,
@@ -24,13 +25,15 @@ define(function(require, exports, module) {
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         * @memberOf BacknumberDateView#
          */
         beforeRendered : function() {
             this.showNewsView();
         },
 
         /**
-         *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * @memberOf BacknumberDateView#
          */
         afterRendered : function() {
             app.ga.trackPageView("BackNoList","新聞アプリ/バックナンバー記事一覧ページ");
@@ -40,6 +43,8 @@ define(function(require, exports, module) {
 
         /**
          *  初期化処理
+         * @param {Object} options 初期化処理オブション情報
+         * @memberOf BacknumberDateView#
          */
         initialize : function(options) {
             console.assert(options && options.date, 'Please pass the date value');
@@ -66,6 +71,8 @@ define(function(require, exports, module) {
                     replace: false
                 });
             }
+
+            $("#main").addClass("is-backnumber-date");
         },
 
         events : {
@@ -76,8 +83,8 @@ define(function(require, exports, module) {
 
         /**
          *  一覧から探すボタンを押したら呼ばれる
-         *
-         *  @param {Event} evt
+         *  @param {Event} evt クリックイベント
+         * @memberOf BacknumberDateView#
          */
         onClickBackToList : function(evt) {
             app.router.go("backnumber");
@@ -86,8 +93,8 @@ define(function(require, exports, module) {
 
         /**
          *  前の日へ戻るボタンを押したら呼ばれる
-         *
-         *  @param {Event} evt
+         *  @param {Event} evt クリックイベント
+         * @memberOf BacknumberDateView#
          */
         onClickDayPrev : function(evt) {
             var dateParam = DateUtil.formatDate(DateUtil.addDay(this.date, -1), "yyyy-MM-dd");
@@ -99,8 +106,8 @@ define(function(require, exports, module) {
 
         /**
          *  次の日へ進むボタンを押したら呼ばれる
-         *
-         *  @param {Event} evt
+         *  @param {Event} evt クリックイベント
+         * @memberOf BacknumberDateView#
          */
         onClickDayNext : function(evt) {
             var dateParam = DateUtil.formatDate(DateUtil.addDay(this.date, 1), "yyyy-MM-dd");
@@ -112,6 +119,7 @@ define(function(require, exports, module) {
 
         /**
          *  記事一覧画面を表示する
+         * @memberOf BacknumberDateView#
          */
         showNewsView : function() {
             console.assert(this.date, 'date shoud be specified');
@@ -124,6 +132,7 @@ define(function(require, exports, module) {
 
         /**
          *  日付の表示を更新する
+         * @memberOf BacknumberDateView#
          */
         updateDateLabel : function() {
             $(".backnumber-nav__month .date--year").html(DateUtil.formatDate(this.date, "yyyy"));
@@ -135,7 +144,15 @@ define(function(require, exports, module) {
             if (DateUtil.formatDate(this.date, "yyyy-MM-dd") == DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd")) {
                 $("[data-backnumber-day-next]").css("visibility", "hidden");
             }
-        }
+        },
+
+        /**
+         * ビューが破棄される時に呼ばれる
+         * @memberOf BacknumberDateView#
+         */
+        cleanup: function () {
+            $("#main").removeClass("is-backnumber-date");
+        },
     });
     module.exports = BacknumberDateView;
 });

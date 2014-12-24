@@ -11,6 +11,13 @@ define(function(require, exports, module) {
      * @constructor
      */
     var Le = ComparisonOperatorBase.extend({
+        /**
+         * 初期化処理を行う
+         * @param {Object} key $filterクエリのキー
+         * @param {Object} value $filterクエリの値
+         * @param {Object} isThan ltクエリまたはleクエリを指定するかの真偽値
+         * @memberof Le#
+         */
         init : function(key, value, isThan) {
             this.key = key;
             this.value = value;

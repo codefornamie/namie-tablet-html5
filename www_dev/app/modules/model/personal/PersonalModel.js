@@ -14,6 +14,8 @@ define(function(require, exports, module) {
         entity : "personal",
         /**
          * モデル固有の永続化データを生成する。
+         * @param {Object} saveData 永続化データ
+         * @memberof PersonalModel#
          */
         makeSaveData : function(saveData) {
             saveData.loginId = this.get("loginId");

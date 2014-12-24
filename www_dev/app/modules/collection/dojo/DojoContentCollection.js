@@ -12,19 +12,42 @@ define(function(require, exports, module) {
     /**
      * 道場のコンテンツのコレクションクラス
      * 
-     * @class
+     * @class 道場のコンテンツのコレクションクラス
      * @exports DojoContentCollection
      * @constructor
      */
     var DojoContentCollection = AbstractODataCollection.extend({
         model : DojoContentModel,
+        /**
+         * 操作対象のEntitySet名
+         * @memberof DojoContentCollection#
+         */
         entity : "dojo_movie",
+        /**
+         * 検索条件
+         * @memberof DojoContentCollection#
+         */
         condition : {
             top : 100,
             orderby : "sequence desc"
         },
+        /**
+         * youtubeCollection
+         * @memberof DojoContentCollection#
+         */
         youtubeCollection: null,
+        /**
+         * achievementCollection
+         * @memberof DojoContentCollection#
+         */
         achievementCollection: null,
+        /**
+         * レスポンス情報のパースを行う。
+         * @memberOf DojoContentCollection#
+         * @param {Array} レスポンス情報の配列
+         * @param {Object} オプション
+         * @returns DojoContentCollection
+         */
         parseOData : function(response, options) {
             if (!this.youtubeCollection) {
                 return response;
@@ -55,7 +78,11 @@ define(function(require, exports, module) {
 
             this.each(function (model) {
                 // この model を入れる先の DojoEditionModel を決定する
+                /* 本来の処理
                 var editionKey = model.get("category");
+                */
+                // 編を固定
+                var editionKey = "タブレットの使い方";
                 var editionModel = editionCollection.findWhere({
                     editionKey: editionKey
                 });

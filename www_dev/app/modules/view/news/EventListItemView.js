@@ -65,7 +65,7 @@ define(function(require, exports, module) {
                     $($(this.el).find(".eventFileImage img")[i - 1]).parent().parent().hide();
                 }
             }
-            this.showPIOImages(".eventFileImage img", imgArray);
+            this.showPIOImages(".eventFileImage img", imgArray, true, $.proxy(this.onClickImage, this));
         },
     });
     module.exports = EventListItemView;

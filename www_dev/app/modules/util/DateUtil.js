@@ -1,6 +1,11 @@
 define(function(require, exports, module) {
     "use strict";
 
+    /**
+     * 日付ユーティリティ
+     * @class 日付ユーティリティ
+     * @constructor
+     */
     var DateUtil = function() {
 
     };
@@ -8,6 +13,7 @@ define(function(require, exports, module) {
      * Dateオブジェクトを、指定された文字列フォーマットに変換する。
      * @param {Date} date 日付情報
      * @param {String} format 日付フォーマット
+     * @memberof DateUtil#
      */
     DateUtil.formatDate = function(date, format) {
 
@@ -21,6 +27,13 @@ define(function(require, exports, module) {
         var rep;
 
         var yobi = new Array('日', '月', '火', '水', '木', '金', '土');
+
+        f = 'ggge';
+        if (result.indexOf(f) > -1) {
+            var japaneseDate = new Intl.DateTimeFormat("ja-JP-u-ca-japanese").format(date);
+            rep = japaneseDate.substring(0, japaneseDate.indexOf(("/")));
+            result = result.replace(/ggge/, rep);
+        }
 
         f = 'yyyy';
         if (result.indexOf(f) > -1) {
@@ -73,9 +86,22 @@ define(function(require, exports, module) {
         return result;
 
     };
+    /**
+     * ゼロ埋めを行う
+     * @memberof DateUtil#
+     * @param {Number} value ゼロ埋め後に加える値
+     * @param {Number} length length
+     */
     DateUtil.zeroPadding = function(value, length) {
         return new Array(length - ('' + value).length + 1).join('0') + value;
     };
+    /**
+     * Dateオブジェクトを生成する
+     * @memberof DateUtil#
+     * @param {Number} date 時間
+     * @param {Number} days 日付
+     * @return Dateオブジェクト
+     */
     DateUtil.addDay = function(date, days) {
         var dayTime = 1000 * 60 * 60 * 24 * days;
         return new Date(date.getTime() + dayTime);

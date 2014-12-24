@@ -85,6 +85,10 @@
 /**
  *
  */
+.dojo-tab-container {
+    display: none;
+}
+
 .dojo-tab {
     display: flex;
     list-style: none;
@@ -133,6 +137,13 @@
 /**
  *  動画コンテンツ一覧
  */
+.dojo-level-title {
+    color: white;
+    margin: 20px 40px;
+    font-weight: bold;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
 .dojo-list {
     display: -webkit-flex;
     display: flex;

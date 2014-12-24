@@ -22,13 +22,22 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスは、本メソッドをオーバライドして、取得した情報のparse処理を実装する。
          * </p>
-         *
+         * @param {Object} response レスポンス情報
+         * @param {Object} options オプション情報
          * @return {Object} パース後の情報
+         * @memberof ArticleModel#
          */
         parseOData : function(response, options) {
             response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt), "yyyy年MM月dd日 HH時mm分");
             response.dispUpdatedAt = DateUtil.formatDate(new Date(response.updatedAt), "yyyy年MM月dd日 HH時mm分");
             response.dispSite = CommonUtil.sanitizing(response.site);
+            if (!response.title && response.description) {
+                // おたよりなどのタイトルがないものは本文の先頭10文字をタイトルとする
+                response.title = response.description.substr(0,10);
+                if (response.description.length > 10) {
+                    response.title += "...";
+                }
+            }
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.dispPlace = CommonUtil.sanitizing(response.place);
             response.dispDescription = CommonUtil.sanitizing(response.description);
@@ -61,7 +70,7 @@ define(function(require, exports, module) {
             } else {
                 response.dispDescriptionSummary = response.dispDescription;
             }
-
+            
             return response;
         },
         /**
@@ -69,6 +78,8 @@ define(function(require, exports, module) {
          * <p>
          * サブクラスは、本メソッドをオーバライドして、 永続化するデータを生成する処理を実装する。
          * </p>
+         * @param {Object} saveData 永続化データ
+         * @memberof ArticleModel#
          */
         makeSaveData : function(saveData) {
             saveData.parent = this.get("parent");
@@ -105,6 +116,10 @@ define(function(require, exports, module) {
 
             saveData.isRecommend = this.get("isRecommend");
             saveData.isDepublish = this.get("isDepublish");
+
+            saveData.nickname = this.get("nickname");
+
+            saveData.sequence = this.get("sequence");
             // タグ文字列の生成
             var tags = "";
             if (this.get("tagsArray") && this.get("tagsArray").length) {
@@ -121,8 +136,8 @@ define(function(require, exports, module) {
 
         /**
          * 「掲載中」などのイベントのステータス文字列を返す
-         *
-         * @return {String}
+         * @return {String} イベントのステータス文字
+         * @memberof ArticleModel#
          */
         getStatusString : function() {
             if (this.get("isDepublish")) {
@@ -139,8 +154,8 @@ define(function(require, exports, module) {
 
         /**
          * 掲載期間の文字列を返す
-         *
          * @return {String}
+         * @memberof ArticleModel#
          */
         getPubDateString : function() {
             var pubDateString = DateUtil.formatDate(new Date(this.get("publishedAt")), "yyyy年MM月dd日(ddd)");
@@ -154,8 +169,8 @@ define(function(require, exports, module) {
 
         /**
          * 更新日の文字列を返す
-         *
          * @return {String}
+         * @memberof ArticleModel#
          */
         getUpdatedString : function() {
             var updatedString = DateUtil.formatDate(new Date(this.get("updatedAt")), "yyyy年MM月dd日(ddd)");
@@ -167,8 +182,8 @@ define(function(require, exports, module) {
 
         /**
          * 日付文字列を返す
-         *
          * @return {String}
+         * @memberof ArticleModel#
          */
         getDateString : function() {
             // 日時
@@ -203,7 +218,7 @@ define(function(require, exports, module) {
         /**
          * 画像タイプを判定する
          * @return {Number} Code.IMAGE_TYPE_* を返す
-         * @memberof ArticleModel
+         * @memberof ArticleModel#
          */
         getImageType: function () {
             if (this.isPIOImage()) {
