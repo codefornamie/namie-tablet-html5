@@ -34,6 +34,33 @@
     padding: 5px;
 }
 
+.grid-list-footer {
+    border-top: 3px solid #e8e8d0;
+    padding: 20px;
+    background: white;
+    font-size: 0.8rem;
+}
+
+.grid-list-footer small {
+    font-size: 0.7rem;
+    vertical-align: middle;
+}
+
+.grid-list-footer .grid-list-footer__logo {
+    margin-right: 20px;
+    height: 20px;
+}
+
+.grid-list-footer .grid-list-footer__logo--minpo {
+    display: inline-block;
+    background-image: url(../../app/img/img-logo-minpo.png);
+    width: 124px;
+    height: 20px;
+    background-size: 100%;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+}
+
 .grid-list__item {
     box-sizing: border-box;
     width: 100%;
