@@ -26,7 +26,28 @@
         
         <div id="dojo-lesson__content" class="dojo-lesson__content">
         </div>
-        
+        <div class="row">
+            <div class="columns large-3">
+                <button class="button expand" data-play-movie style="margin-top: 8px;">
+                    動画再生</button>
+            </div>
+
+            <div class="columns large-3">
+                <button class="button expand" data-pause-movie style="margin-top: 8px;">
+                    動画一時停止</button>
+            </div>
+            <div class="columns large-1">
+                音量<span id="volumeOutput">50</span>
+            </div>
+            <div class="columns large-5">
+                <div class="range-slider radius" data-slider>
+                    <span class="range-slider-handle" role="slider" tabindex="0"></span>
+                    <span class="range-slider-active-segment"></span>
+                    <input type="hidden">
+                </div>
+            </div>
+        </div>
+
         <div class="dojo-lesson__completion">
             <p>
                 この操作はできるようになりましたか？

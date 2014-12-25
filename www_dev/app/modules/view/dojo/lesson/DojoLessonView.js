@@ -37,36 +37,36 @@ define(function(require, exports, module) {
         /**
          * イベント一覧
          */
-        events: {
-            "click [data-complete-lesson]": "onClickCompleteLesson",
-            "click [data-uncomplete-lesson]": "onClickUncompleteLesson",
+        events : {
+            "click [data-complete-lesson]" : "onClickCompleteLesson",
+            "click [data-uncomplete-lesson]" : "onClickUncompleteLesson",
         },
         /**
          * はいボタンを押したら呼ばれる
          * @memberof DojoLessonLayout#
          */
-        onClickCompleteLesson: function () {
+        onClickCompleteLesson : function() {
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.buttons.YES.text = "OK";
             vexDialog.alert("この操作を習得しました！！");
             if (this.dojoContentModel.achievementModels) {
-                var solvedAchievement = _.find(this.dojoContentModel.achievementModels,function(achievement) {
+                var solvedAchievement = _.find(this.dojoContentModel.achievementModels, function(achievement) {
                     return achievement.get("type") === "dojo_solved";
                 });
                 if (solvedAchievement) {
                     return;
                 }
             }
-            $("[data-complete-lesson]").attr("disabled","disabled");
+            $("[data-complete-lesson]").attr("disabled", "disabled");
             var achievementModel = new AchievementModel();
             achievementModel.set("type", "dojo_solved");
             achievementModel.set("action", this.dojoContentModel.get("videoId"));
             achievementModel.set("count", "1");
             achievementModel.set("lastActionDate", new Date().toISOString());
-            achievementModel.save(null,{
-                success:$.proxy(function(){
+            achievementModel.save(null, {
+                success : $.proxy(function() {
                     this.onSaveAchievement(achievementModel);
-                },this)
+                }, this)
             });
         },
         /**
@@ -74,7 +74,7 @@ define(function(require, exports, module) {
          * @memberof DojoLessonLayout#
          * @param {AchievementModel} 新規保存後の達成状況情報
          */
-        onSaveAchievement: function(achievementModel) {
+        onSaveAchievement : function(achievementModel) {
             if (!this.dojoContentModel.achievementModels) {
                 this.dojoContentModel.achievementModels = [];
             }
@@ -86,7 +86,7 @@ define(function(require, exports, module) {
          * いいえボタンを押したら呼ばれる
          * @memberof DojoLessonLayout#
          */
-        onClickUncompleteLesson: function () {
+        onClickUncompleteLesson : function() {
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.buttons.YES.text = "OK";
             vexDialog.alert("習得できるように頑張りましょう！");
@@ -129,13 +129,13 @@ define(function(require, exports, module) {
                             this.player.removeEventListener("onReady");
                             gapi.client.load('youtube', 'v3', $.proxy(this.onLoadYoutubePlayer, this));
                         }, this),
-                        "onStateChange": $.proxy(function(event) {
+                        "onStateChange" : $.proxy(function(event) {
                             app.logger.debug("Youtube state change. state=" + event.data);
                             if (event.data === YT.PlayerState.ENDED) {
                                 // 動画終了時に習得済みとする
                                 this.onClickCompleteLesson();
                             }
-                        },this)
+                        }, this)
                     }
                 });
             }
@@ -149,7 +149,46 @@ define(function(require, exports, module) {
                 return;
             }
             this.player.cueVideoById(this.dojoContentModel.get("videoId"));
+            this.setOperationEvent();
         },
+        /**
+         * 動画操作用のイベントを設定する
+         * @memberOf DojoLessonLayout#
+         */
+        setOperationEvent : function() {
+            var self = this;
+            // 再生の設定
+            $("[data-play-movie]").click(function() {
+                self.player.playVideo();
+            });
+            // 一時停止の設定
+            $("[data-pause-movie]").click(function() {
+                self.player.pauseVideo();
+            });
+            // 音量の設定
+            $(this.el).foundation('slider', 'reflow');
+            $("[data-slider]").on("change.fndtn.slider", function() {
+                var volume = $(this).attr('data-slider');
+                $("#volumeOutput").text(volume.toString());
+                self.player.setVolume(volume);
+            });
+        },
+        /**
+         * Viewが破棄された際に呼び出されるコールバック関数。
+         * <p>
+         * YouTube動画プレイヤーのインスタンスを破棄する。
+         * </p>
+         */
+        cleanup : function() {
+            try {
+                $("[data-play-movie]").unbind("click");
+                $("[data-pause-movie]").unbind("click");
+                $("[data-slider]").unbind("change.fndtn.slider");
+                this.player.destroy();
+            } catch (e) {
+                app.logger.debug(e);
+            }
+        }
     }, {
         /**
          * 関連コンテンツのセレクタ

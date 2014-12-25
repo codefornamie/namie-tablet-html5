@@ -80,8 +80,30 @@ define(function(require, exports, module) {
          */
         onLoadYoutubePlayer : function() {
             this.setVideo(this.model);
+            this.setOperationEvent();
         },
-
+        /**
+         * 動画操作用のイベントを設定する
+         * @memberOf YouTubeListItemView#
+         */
+        setOperationEvent : function() {
+            var self = this;
+            // 再生の設定
+            $("[data-play-movie]").click(function() {
+                self.player.playVideo();
+            });
+            // 一時停止の設定
+            $("[data-pause-movie]").click(function() {
+                self.player.pauseVideo();
+            });
+            // 音量の設定
+            $(this.el).foundation('slider', 'reflow');
+            $("[data-slider]").on("change.fndtn.slider", function() {
+                var volume = $(this).attr('data-slider');
+                $("#volumeOutput").text(volume.toString());
+                self.player.setVolume(volume);
+            });
+        },
         /**
          * このViewで表示するYouTube動画をYouTube動画プレイヤーに設定する。
          */
@@ -102,6 +124,9 @@ define(function(require, exports, module) {
          */
         cleanup : function() {
             try {
+                $("[data-play-movie]").unbind("click");
+                $("[data-pause-movie]").unbind("click");
+                $("[data-slider]").unbind("change.fndtn.slider");
                 this.player.destroy();
             } catch (e) {
                 app.logger.debug(e);

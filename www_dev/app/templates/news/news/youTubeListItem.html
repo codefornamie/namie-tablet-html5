@@ -28,6 +28,26 @@
                     <div class="article-detail__image-area--inner">
                         <div id='youtubePlayer-<%= model.get("link") %>' style="max-width: 100%;"></div>
                     </div>
+                        <div class="row">
+                            <div class="columns large-3">
+                                <button class="button expand" data-play-movie style="margin-top: 8px;">
+                                    動画再生</button>
+                            </div>
+                
+                            <div class="columns large-3">
+                                <button class="button expand" data-pause-movie style="margin-top: 8px;">
+                                    動画一時停止</button>
+                            </div>
+                            <div class="columns large-1" style="font-size: 0.8em;">
+                                音量<span id="volumeOutput">50</span>
+                            </div>
+                            <div class="columns large-5">
+                                <div class="range-slider radius" data-slider>
+                                    <span class="range-slider-handle" role="slider" tabindex="0"></span>
+                                    <span class="range-slider-active-segment"></span>
+                                    <input type="hidden">
+                                </div>
+                            </div>
                 </div>
                 <%= model.get("description") %>
             </div>
