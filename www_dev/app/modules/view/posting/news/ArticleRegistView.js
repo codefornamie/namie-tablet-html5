@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var DateUtil = require("modules/util/DateUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
+    var CommonUtil = require("modules/util/CommonUtil");
     var Code = require("modules/util/Code");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var vexDialog = require("vexDialog");
@@ -293,6 +294,7 @@ define(function(require, exports, module) {
              * @return {String}
              */
             var generateFileName = function(fileName) {
+                fileName = CommonUtil.blankTrim(fileName);
                 var preName = fileName.substr(0, fileName.lastIndexOf("."));
                 var suffName = fileName.substr(fileName.lastIndexOf("."));
 

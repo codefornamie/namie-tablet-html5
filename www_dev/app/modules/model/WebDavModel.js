@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractModel = require("modules/model/AbstractModel");
     var Log = require("modules/util/Logger");
+    var PIOImage = require("modules/util/PIOImage");
     /**
      * WevDavにアクセスするモデル。
      * 
@@ -32,6 +33,8 @@ define(function(require, exports, module) {
          */
         sync : function(method, model, options) {
             Log.info("WebDavModel sync");
+            var def = $.Deferred();
+
             if (!options) {
                 options = {};
             }
@@ -46,12 +49,16 @@ define(function(require, exports, module) {
                     if (options.error) {
                         options.error(res);
                     }
+                    def.reject(res);
                 } else if (options.success) {
                     options.success(res);
                 }
 
                 if (options.complete) {
-                    options.complete(res, model, json);
+                    options.complete(res, model);
+                }
+                if (def.state() === "pending") {
+                    def.resolve(res);
                 }
             };
             Log.info("Request personium. method : " + method);
@@ -74,6 +81,7 @@ define(function(require, exports, module) {
                 Log.info("Personium Exception : " + e);
                 app.router.go("login");
             }
+            return def.promise();
         },
         /**
          * PCS Davの登録処理を行う。
@@ -114,27 +122,6 @@ define(function(require, exports, module) {
                     complete(e);
                 }, this)
             });
-                    
-//            dav.put(image.fileName, {
-//                body : image.data,
-//                headers : {
-//                    "Content-Type" : this.get("contentType"),
-//                    "If-Match" : "*"
-//                },
-//                success : $.proxy(function(e){
-//                    complete(e);
-//                }, this),
-//                error: $.proxy(function(e){
-//                    complete(e);
-//                }, this)
-//            });
-//            
-//            this.entityset.createAsResponse(this.getSaveData(), {
-//                complete : function(response) {
-//                    Log.info("WebDavModel create complete");
-//                    complete(response);
-//                }
-//            });
         },
         /**
          * PCS Davの更新処理を行う。
@@ -190,11 +177,11 @@ define(function(require, exports, module) {
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
          */
         retrieve : function(method, model, options, complete) {
-            this.dav.getBinary(this.id, {
-                success : $.proxy(function(e){
-                    complete(e);
+            PIOImage.getBinaryWithCache(this.dav, this.id, {
+                success : $.proxy(function(binary) {
+                    complete(binary);
                 }, this),
-                error: $.proxy(function(e){
+                error : $.proxy(function(e) {
                     complete(e);
                 }, this)
             });

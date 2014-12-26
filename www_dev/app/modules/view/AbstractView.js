@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var WebDavModel = require("modules/model/WebDavModel");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var CommonUtil = require("modules/util/CommonUtil");
     var colorbox = require("colorbox");
 
     /**
@@ -220,6 +221,7 @@ define(function(require, exports, module) {
          * @return {String} 生成したファイルパス名
          */
         generateFileName : function(fileName) {
+            fileName = CommonUtil.blankTrim(fileName);
             var preName = fileName.substr(0, fileName.lastIndexOf("."));
             var suffName = fileName.substr(fileName.lastIndexOf("."));
 
