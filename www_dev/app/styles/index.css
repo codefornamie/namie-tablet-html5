@@ -14,6 +14,7 @@
 /*-- Application stylesheets. -----------------------------------------------*/
 
 @import "namie_common.css";
+@import "namie_global_nav.css";
 @import "namie_grid.css";
 @import "namie_dojo.css";
 @import "namie_letter.css";

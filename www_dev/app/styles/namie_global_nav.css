@@ -1,0 +1,362 @@
+/**
+ * グローバルナビCSS
+ */
+/**
+ *  ----------
+ *  1. Base
+ *  ----------
+ */
+.global-nav {
+    height: 54px;
+    position: relative;
+    z-index: 60;
+    background: #53c0d3;
+}
+
+.global-nav nav {
+}
+
+/**
+ *  global-navの子要素
+ */
+[class^=global-nav__] {
+    position: relative;
+    box-sizing: content-box;
+    display: inline-block;
+    height: 54px;
+    line-height: 54px;
+    vertical-align: middle;
+    float: left;
+}
+
+.global-nav nav section::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.global-nav .button {
+    padding: 0 15px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0;
+    font-size: 1rem;
+}
+.global-nav .button[data-drawer-opener] {
+    position: absolute;
+    padding: 0 15px;
+    height: auto;
+    line-height: normal;
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+/**
+ *  global-navの子要素の共通の中身
+ */
+.nav-content {
+    height: 100%;
+}
+
+.nav-content::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+/**
+ *  global-nav__menu
+ *  メニューボタンのエリア
+ */
+.global-nav__menu {
+    width: 7%;
+    background: #44bbcf;
+}
+
+.global-nav__menu .button {
+    font-size: 20px;
+}
+
+.global-nav__menu .button span {
+    text-decoration: underline;
+}
+
+.global-nav__menu a[data-back-home] {
+    display: block;
+    width: 100%;
+    height: 54px;
+    background-image: url(../../app/img/img-btn-back.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+}
+
+.posting__global-nav__menu {
+    width: 100%;
+}
+
+/**
+ *  global-nav__title
+ *  タイトルロゴのエリア
+ */
+.global-nav__title {
+    width: 25%;
+    background-color: #78d0df;
+    background-image: url(../../app/img/img-title-logo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: auto 100%;
+}
+
+/**
+ *  global-nav__info
+ *  情報のエリア
+ */
+.global-nav__info {
+    width: 16.0%;
+}
+
+/**
+ *  global-nav__date
+ *  日付のエリア
+ */
+.global-nav__date {
+    width: 43%;
+    text-align: center;
+    color: #fff;
+}
+.global-nav__date.no-backbutton {
+    width: 50%;
+}
+
+.global-nav__date .nav-content {
+    font-size: 36px;
+}
+
+.date-area {
+    line-height: 54px;
+    font-size: 0;
+}
+
+/* year */
+.date-area__year {
+    display: inline-block;
+}
+
+.date-area__year .date--year {
+    font-size: 30px;
+    display: inline-block;
+    transform: scale(0.8, 1);
+}
+
+.date-area__year .date--unit {
+    font-size: 26px;
+    margin-left: -5px;
+}
+
+/* date */
+.date-area__date {
+    display: inline-block;
+}
+
+.date-area__date .date--month {
+    font-size: 40px;
+    display: inline-block;
+    transform: scale(0.8, 1);
+}
+
+.date-area__date .date--day {
+    font-size: 40px;
+    display: inline-block;
+    transform: scale(0.8, 1);
+}
+
+.date-area__date .date--unit {
+    font-size: 26px;
+    margin-left: -5px;
+}
+
+/* weekday */
+.date-area__weekday {
+    display: inline-block;
+}
+
+.date-area__weekday .date--paren {
+    font-size: 26px;
+}
+
+.date-area__weekday .date--weekday {
+    font-size: 36px;
+}
+
+.date-area__weekday .date--weekday-unit {
+    font-size: 36px;
+}
+
+@media only screen and (orientation:portrait) {
+    .date-area__weekday .date--weekday-unit {
+        display: none;
+    }
+}
+
+/* date and weekday */
+.date-area__date-weekday {
+    display: block;
+    white-space: nowrap;
+}
+
+/* others */
+.date-area__span {
+    display: inline-block;
+    font-size: 30px;
+}
+
+/**
+ *  global-nav__menubutton
+ *  メニューボタンリスト
+ */
+.global-nav__menubutton {
+    width: 25%;
+    text-align: center;
+    background: #78d0df;
+}
+
+.global-nav__menubutton ul {
+    margin: 0;
+}
+
+.global-nav__menubutton ul li {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 6px;
+    line-height: 54px;
+    width: 20%;
+}
+
+.global-nav__menubutton .button {
+    background: transparent;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    font-size: 36px;
+    
+}
+
+/**
+ *  global-nav__font
+ *  フォントサイズ指定
+ */
+.global-nav__font {
+    display: none;
+
+    width: 30%;
+    text-align: right;
+}
+
+.global-nav__font ul {
+    font-size: 0;
+    list-style: none;
+    margin: 8px 6px 0 0;
+    display: inline-block;
+    background-image: url(../../app/img/img-header-fontsize-middle.png);
+    background-size: auto 100%;
+    height: 55px;
+}
+
+.global-nav__font ul::before {
+    content: '';
+    display: inline-block;
+    background-image: url(../../app/img/img-header-fontsize-left.png);
+    background-size: 100%;
+    width: 6px;
+    height: 55px;
+    position: relative;
+    left: -6px;
+}
+
+.global-nav__font ul::after {
+    content: '';
+    display: inline-block;
+    background-image: url(../../app/img/img-header-fontsize-right.png);
+    background-size: 100%;
+    width: 6px;
+    height: 55px;
+    position: relative;
+    right: -6px;
+}
+
+.global-nav__font ul li {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 8px;
+}
+
+.global-nav__font .button {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    padding: 0;
+    margin: 0;
+    text-decoration: underline;
+    font-size: 20px;
+    margin: 0 3px;
+}
+
+/**
+ *  モーダルカレンダー
+ */
+.modal-calendar-overlay {
+    background: rgba(0, 0, 0, 0.2);
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.modal-calendar {
+    bottom: 0;
+    height: 80%;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 80%;
+}
+
+#modal-calendar .rd-container {
+    display: block !important;
+}
+
+#modal-calendar .rd-back,
+#modal-calendar .rd-next {
+    color: inherit;
+    background: none;
+}
+
+#modal-calendar .rd-month {
+    display: block;
+}
+
+#modal-calendar .rd-days {
+    width: 100%;
+}
+
+#modal-calendar .rd-day-head {
+    text-align: center;
+}
+
+/**
+ *  ----------
+ *  2. Project
+ *  ----------
+ */
+/**
+ *  ----------
+ *  3. Cosmetic
+ *  ----------
+ */

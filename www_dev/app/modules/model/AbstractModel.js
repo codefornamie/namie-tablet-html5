@@ -16,8 +16,28 @@ define(function(require, exports, module) {
         },
         parseResponse : function(response, options) {
             return response;
-        }
+        },
     });
 
+    /**
+     * createNewIdで使用するシーケンス。
+     */
+    AbstractModel.idSeq = 0;
+
+    /**
+     * 新規にIDを生成する。
+     * <p>
+     * __idに設定するためにidを生成する。<br>
+     * 指定された日付データをもとにして、"YYYYMMDDJJNNSSQQQ + シーケンス番号"
+     * のフォーマットでIDを生成する。<br>
+     * シーケンス番号は、アプリケーションが起動してから、このメソッドが呼び出されるたびにインクリメントされる。
+     * </p>
+     * @memberOf AbstractModel# 
+     * @return {String} ID
+     */
+    AbstractModel.createNewId = function() {
+        return moment().format('YYYYMMDDHHmmssSSS') + (AbstractModel.idSeq++);
+    };
+    
     module.exports = AbstractModel;
 });

@@ -24,7 +24,20 @@ define(function(require, exports, module) {
         } else {
             return str;
         }
-
+    };
+    /**
+     * 文字列の半角スペースを削除する。。
+     *
+     * @param {String}
+     *            str 文字列
+     * @return {String} 半角スペースを削除した文字列
+     * @memberOf CommonUtil#
+     */
+    CommonUtil.blankTrim = function (str){
+        if (str && typeof str === "string") {
+            return str.replace(/ /g, "");
+        }
+        return str;
     };
 
     module.exports = CommonUtil;
