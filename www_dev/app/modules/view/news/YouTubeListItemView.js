@@ -61,7 +61,14 @@ define(function(require, exports, module) {
                             'controls' : 1
                         },
                         events : {
-                            "onReady" : $.proxy(this.onSetYouTubePlayer, this)
+                            "onReady" : $.proxy(this.onSetYouTubePlayer, this),
+                            "onStateChange" : $.proxy(function(event) {
+                                app.logger.debug("Youtube state change. state=" + event.data);
+                                if (event.data === YT.PlayerState.PLAYING) {
+                                    // 動画開始されたら動画再生ボタンを表示
+                                    $("[data-play-movie]").show();
+                                }
+                            }, this)
                         }
                     });
                 }
@@ -80,8 +87,23 @@ define(function(require, exports, module) {
          */
         onLoadYoutubePlayer : function() {
             this.setVideo(this.model);
+            this.setOperationEvent();
         },
-
+        /**
+         * 動画操作用のイベントを設定する
+         * @memberOf YouTubeListItemView#
+         */
+        setOperationEvent : function() {
+            var self = this;
+            // 再生の設定
+            $("[data-play-movie]").click(function() {
+                self.player.playVideo();
+            });
+            // 一時停止の設定
+            $("[data-pause-movie]").click(function() {
+                self.player.pauseVideo();
+            });
+        },
         /**
          * このViewで表示するYouTube動画をYouTube動画プレイヤーに設定する。
          */
@@ -102,6 +124,9 @@ define(function(require, exports, module) {
          */
         cleanup : function() {
             try {
+                $("[data-play-movie]").unbind("click");
+                $("[data-pause-movie]").unbind("click");
+                $("[data-slider]").unbind("change.fndtn.slider");
                 this.player.destroy();
             } catch (e) {
                 app.logger.debug(e);
