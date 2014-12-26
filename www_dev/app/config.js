@@ -31,7 +31,9 @@ require.config({
         "colorbox" : "../bower_components/jquery-colorbox/jquery.colorbox",
         "jquery-steps": "../bower_components/jquery-steps/build/jquery.steps.min",
         "masonry": "../bower_components/masonry/dist/masonry.pkgd",
-        "backbone-fetch-cache": "../bower_components/backbone-fetch-cache/backbone.fetch-cache"
+        "backbone-fetch-cache": "../bower_components/backbone-fetch-cache/backbone.fetch-cache",
+        "rome" : "../bower_components/rome/dist/rome.standalone",
+        "moment/locale/ja" : "../bower_components/moment/locale/ja"
     },
 
     deps : [ "main" ],
@@ -59,6 +61,8 @@ require.config({
         "jquery-sortable" : [ "jquery" ],
         "colorbox" : [ "jquery" ],
         "jquery-steps" : [ "jquery" ],
-        "backbone-fetch-cache" : [ "backbone" ]
+        "backbone-fetch-cache" : [ "backbone" ],
+        "rome" : [ "moment" ],
+        "moment/locale/ja" : [ "moment" ]
     }
 });

@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var DateUtil = require("modules/util/DateUtil");
     var AbstractView = require("modules/view/AbstractView");
+    var ModalCalendarView = require("modules/view/news/common/ModalCalendarView");
     var PersonalModel = require("modules/model/personal/PersonalModel");
     var Snap = require("snap");
 
@@ -99,7 +100,8 @@ define(function(require, exports, module) {
             'click .global-nav__menubutton a': 'onClickMenuButton',
             'click #help' : 'onClickHelp',
             'click #backno' : 'onClickBackno',
-            'click #setting' : 'onClickSetting'
+            'click #setting' : 'onClickSetting',
+            "click #calendar" : "onClickCalendar"
         },
 
 
@@ -232,6 +234,20 @@ define(function(require, exports, module) {
         },
 
         /**
+         * カレンダーがクリックされたら呼ばれる
+         * @memberof GlobalNavView#
+         */
+        onClickCalendar : function (evt) {
+            var modalCalendarView = new ModalCalendarView();
+
+            this.setView(GlobalNavView.SELECTOR_MODAL_CALENDAR, modalCalendarView);
+            this.listenTo(modalCalendarView, "closeModalCalendar", function () {
+                modalCalendarView.remove();
+            });
+            modalCalendarView.render();
+        },
+
+        /**
          * ルーティングによって呼ばれる
          *
          * @param {Event} ev
@@ -239,6 +255,11 @@ define(function(require, exports, module) {
         onRoute: function (ev) {
             app.logger.debug(ev);
         }
+    }, {
+        /**
+         * modal-calendarを挿入する部分のセレクタ
+         */
+        SELECTOR_MODAL_CALENDAR: "#modal-calendar-container"
     });
 
     module.exports = GlobalNavView;
