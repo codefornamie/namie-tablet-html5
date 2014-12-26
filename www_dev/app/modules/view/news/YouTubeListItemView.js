@@ -61,7 +61,14 @@ define(function(require, exports, module) {
                             'controls' : 1
                         },
                         events : {
-                            "onReady" : $.proxy(this.onSetYouTubePlayer, this)
+                            "onReady" : $.proxy(this.onSetYouTubePlayer, this),
+                            "onStateChange" : $.proxy(function(event) {
+                                app.logger.debug("Youtube state change. state=" + event.data);
+                                if (event.data === YT.PlayerState.PLAYING) {
+                                    // 動画開始されたら動画再生ボタンを表示
+                                    $("[data-play-movie]").show();
+                                }
+                            }, this)
                         }
                     });
                 }

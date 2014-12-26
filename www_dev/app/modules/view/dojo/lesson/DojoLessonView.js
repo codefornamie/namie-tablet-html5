@@ -131,6 +131,10 @@ define(function(require, exports, module) {
                         }, this),
                         "onStateChange" : $.proxy(function(event) {
                             app.logger.debug("Youtube state change. state=" + event.data);
+                            if (event.data === YT.PlayerState.PLAYING) {
+                                // 動画開始されたら動画再生ボタンを表示
+                                $("[data-play-movie]").show();
+                            }
                             if (event.data === YT.PlayerState.ENDED) {
                                 // 動画終了時に習得済みとする
                                 this.onClickCompleteLesson();
