@@ -328,9 +328,26 @@
     width: 80%;
 }
 
-.date-picker .header {
+#modal-calendar .rd-container {
+    display: block !important;
+}
+
+#modal-calendar .rd-back,
+#modal-calendar .rd-next {
+    color: inherit;
+    background: none;
+}
+
+#modal-calendar .rd-month {
     display: block;
-    height: 100%;
+}
+
+#modal-calendar .rd-days {
+    width: 100%;
+}
+
+#modal-calendar .rd-day-head {
+    text-align: center;
 }
 
 /**

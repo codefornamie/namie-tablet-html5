@@ -3,8 +3,11 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var moment = require("moment");
+    var rome = require("rome");
     var foundationCalendar = require("foundation-calendar");
     var AbstractView = require("modules/view/AbstractView");
+
+    require("moment/locale/ja");
 
     /**
      * @class
@@ -32,23 +35,7 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             // カレンダー表示
-            var calendar = this.$el.find("[data-modal-calendar]");
-            var targetDate = moment().format("YYYY-MM-DD");
-
-            calendar.val(targetDate);
-            calendar.fcdp({
-                fixed : true,
-                dateSelector : true,
-            });
-
-            // calendar.bind('dateChange', function(evt, opts) {
-            // console.info('dateChange triggered');
-            // var targetDate = new Date(evt.target.value);
-            // newsView.setDate(targetDate);
-
-            // targetDate = targetDate.format("%Y-%m-%d");
-            // newsView.targetDate = targetDate;
-            // });
+            var calendar = rome($("[data-modal-calendar]")[0]);
         },
 
         /**
@@ -64,6 +51,7 @@ define(function(require, exports, module) {
          * @memberof ModalCalendarView#
          */
         initialize : function() {
+            moment.locale("ja");
         },
 
         /**
@@ -73,7 +61,7 @@ define(function(require, exports, module) {
          */
         onClickOverlay : function (ev) {
             // オーバーレイの背景部分をタップした場合のみ処理する
-            if (!$(ev.currentTarget).is("#modal-calendar-overlay")) {
+            if (!$(ev.target).is("#modal-calendar-overlay")) {
                 return;
             }
 
