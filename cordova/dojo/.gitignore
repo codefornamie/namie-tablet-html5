@@ -1,0 +1,28 @@
+# Android
+platforms/android/assets/www
+platforms/android/bin/
+platforms/android/gen/
+platforms/android/ant-build/
+platforms/android/ant-gen/
+platforms/android/CordovaLib/ant-build/
+platforms/android/CordovaLib/ant-gen/
+platforms/android/CordovaLib/bin/
+platforms/android/res/xml/config.xml
+platforms/android/cordova/.*/
+platforms/android/out/*
+platforms/browser
+/www
+/www/*
+www_dev/node_modules/
+www_dev/bower_components/
+www_dev/test/coverage/
+www_dev/reports/
+plugins/*/.fetch.json
+plugins/browser.json
+!.gitkeep
+
+# vim
+.*.sw*
+www_dev/mode.json
+.DS_Store
+npm-debug.log

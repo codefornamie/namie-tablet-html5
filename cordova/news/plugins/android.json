@@ -1,0 +1,101 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "res/xml/config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"MediaScanPlugin\"><param name=\"android-package\" value=\"jp.fukushima.namie.town.MediaScanPlugin.MediaScanPlugin\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"File\"><param name=\"android-package\" value=\"org.apache.cordova.file.FileUtils\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"FileTransfer\"><param name=\"android-package\" value=\"org.apache.cordova.filetransfer.FileTransfer\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Toast\"><param name=\"android-package\" value=\"nl.xservices.plugins.Toast\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"AccountManager\"><param name=\"android-package\" value=\"jp.fukushima.namie.town.PcsAccountManagerPlugin.AccountManagerPlugin\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "AndroidManifest.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+                            "count": 2
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.MANAGE_ACCOUNTS\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.AUTHENTICATE_ACCOUNTS\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.USE_CREDENTIALS\" />",
+                            "count": 1
+                        }
+                    ],
+                    "/manifest/application/": [
+                        {
+                            "xml": "<service android:exported=\"false\" android:name=\"jp.fukushima.namie.town.PcsAccountManagerPlugin.AuthenticatorService\"><intent-filter><action android:name=\"android.accounts.AccountAuthenticator\" /></intent-filter><meta-data android:name=\"android.accounts.AccountAuthenticator\" android:resource=\"@xml/authenticator\" /></service>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<activity android:exported=\"true\" android:label=\"@string/app_name\" android:name=\"jp.fukushima.namie.town.PcsAccountManagerPlugin.LoginActivity\"></activity>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "res/values/strings.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<string name=\"account_label\">なみえタブレット</string>",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "jp.fukushima.namie.town.MediaScanPlugin": {
+            "PACKAGE_NAME": "jp.fukushima.namie.town"
+        },
+        "org.apache.cordova.file-transfer": {
+            "PACKAGE_NAME": "jp.fukushima.namie.town"
+        },
+        "nl.x-services.plugins.toast": {
+            "PACKAGE_NAME": "jp.fukushima.namie.town"
+        },
+        "jp.fukushima.namie.town.PcsAccountManagerPlugin": {
+            "PACKAGE_NAME": "jp.fukushima.namie.town.news"
+        }
+    },
+    "dependent_plugins": {
+        "org.apache.cordova.file": {
+            "PACKAGE_NAME": "jp.fukushima.namie.town"
+        }
+    }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="style_btn_newspaper">
+        <item name="android:background">@drawable/button_newspaper</item>
+    </style>
+    <style name="style_btn_post">
+        <item name="android:background">@drawable/button_post</item>
+    </style>
+    <style name="style_btn_dojo">
+        <item name="android:background">@drawable/button_dojo</item>
+    </style>
+    <style name="style_btn_news">
+        <item name="android:background">@drawable/button_news</item>
+    </style>
+</resources>
