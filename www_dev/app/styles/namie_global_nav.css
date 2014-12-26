@@ -9,7 +9,7 @@
 .global-nav {
     height: 54px;
     position: relative;
-    z-index: 10;
+    z-index: 60;
     background: #53c0d3;
 }
 
