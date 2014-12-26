@@ -2,8 +2,9 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var PIOImage = require("modules/util/PIOImage");
+    var WebDavModel = require("modules/model/WebDavModel");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var CommonUtil = require("modules/util/CommonUtil");
     var colorbox = require("colorbox");
 
     /**
@@ -191,20 +192,50 @@ define(function(require, exports, module) {
             
             _.each(imgArray,$.proxy(function (item) {
                 try {
-                    PIOImage.getBinaryWithCache(app.box.col("dav"), item.imageUrl, {
-                        success : function(binary) {
-                            onGetBinary(binary,item);
-                        },
+                    if(item.imageUrl){
+                        var davModel = new WebDavModel();
+                        var path = this.model.get("imagePath");
+                        path = path ? path + "/" : "";
+                        davModel.id = path + item.imageUrl;
+                        davModel.fetch({
+                            success : function(model, binary) {
+                                onGetBinary(binary,item);
+                            },
 
-                        error: function (resp) {
-                            onError(resp, item);
-                        }
-                    });
+                            error: function (resp) {
+                                onError(resp, item);
+                            }
+                        });
+                    }
                 } catch (e) {
                     console.error(e);
                     onError(e, item);
                 }
             },this));
+        },
+        /**
+         * ファイル名を元に、ユニークなID付きのファイル名を生成する
+         * 
+         * @memberof AbstractView#
+         * @param {String} fileName ファイル名
+         * @return {String} 生成したファイルパス名
+         */
+        generateFileName : function(fileName) {
+            fileName = CommonUtil.blankTrim(fileName);
+            var preName = fileName.substr(0, fileName.lastIndexOf("."));
+            var suffName = fileName.substr(fileName.lastIndexOf("."));
+
+            return preName + "_" + new Date().getTime() + _.uniqueId("") + suffName;
+        },
+        /**
+         * ファイル名を元に、ユニークなID付きのファイル名を生成する
+         * 
+         * @memberof AbstractView#
+         * @param {String} fileName ファイル名
+         * @return {String} 生成したファイルパス名
+         */
+        generateFilePath : function() {
+            return moment().format("YYYY-MM-DD") + "/" + this.model.id;
         }
     });
 

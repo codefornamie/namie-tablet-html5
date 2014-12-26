@@ -4,7 +4,10 @@ define(function(require, exports, module) {
     require("jquery-steps");
 
     var app = require("app");
+    var AbstractModel = require("modules/model/AbstractModel");
     var ArticleModel = require("modules/model/article/ArticleModel");
+    var WebDavModel = require("modules/model/WebDavModel");
+    
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
@@ -242,19 +245,6 @@ define(function(require, exports, module) {
             $("#letterPicture").attr("src", $("#previewFile").attr("src"));
         },
         /**
-         * ファイル名を元に、ユニークなID付きのファイル名を生成する
-         * 
-         * @memberof LetterWizardView#
-         * @param {String} fileName ファイル名
-         * @return {String} 生成したファイルパス名
-         */
-        generateFileName : function(fileName) {
-            var preName = fileName.substr(0, fileName.lastIndexOf("."));
-            var suffName = fileName.substr(fileName.lastIndexOf("."));
-
-            return preName + "_" + new Date().getTime() + _.uniqueId("") + suffName;
-        },
-        /**
          * 削除ボタン押下時のハンドラ
          * @memberof LetterWizardView#
          */
@@ -271,21 +261,31 @@ define(function(require, exports, module) {
          * @memberof LetterWizardView#
          */
         saveLetterPicture : function() {
-            app.box.col("dav").put(this.model.get("imageUrl"), {
-                body : this.file.data,
-                headers : {
-                    "Content-Type" : this.file.type,
-                    "If-Match" : "*"
-                },
-                success : $.proxy(function(e) {
-                    this.saveModel();
-                }, this),
-                error : $.proxy(function(e) {
-                    this.hideLoading();
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert("保存に失敗しました。");
-                    app.logger.error("保存に失敗しました。");
-                }, this)
+            if(!this.model.get("__id")){
+                this.model.id = AbstractModel.createNewId();
+            }
+            
+            if(!this.model.get("imagePath")){
+                this.model.set("imagePath", this.generateFilePath());
+            }
+
+            var davModel = new WebDavModel();
+            davModel.set("path", this.model.get("imagePath"));
+            davModel.set("fileName", this.model.get("imageUrl"));
+            
+            davModel.set("data", this.file.data);
+            davModel.set("contentType", this.file.type);
+            
+            davModel.save(null, {
+              success : $.proxy(function(e) {
+              this.saveModel();
+              }, this),
+              error : $.proxy(function(e) {
+                  this.hideLoading();
+                  vexDialog.defaultOptions.className = 'vex-theme-default';
+                  vexDialog.alert("保存に失敗しました。");
+                  app.logger.error("保存に失敗しました。");
+              }, this)
             });
         },
         /**
