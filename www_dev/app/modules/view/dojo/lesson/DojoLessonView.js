@@ -169,13 +169,6 @@ define(function(require, exports, module) {
             $("[data-pause-movie]").click(function() {
                 self.player.pauseVideo();
             });
-            // 音量の設定
-            $(this.el).foundation('slider', 'reflow');
-            $("[data-slider]").on("change.fndtn.slider", function() {
-                var volume = $(this).attr('data-slider');
-                $("#volumeOutput").text(volume.toString());
-                self.player.setVolume(volume);
-            });
         },
         /**
          * Viewが破棄された際に呼び出されるコールバック関数。

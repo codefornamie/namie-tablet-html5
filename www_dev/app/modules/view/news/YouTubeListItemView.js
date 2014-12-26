@@ -103,13 +103,6 @@ define(function(require, exports, module) {
             $("[data-pause-movie]").click(function() {
                 self.player.pauseVideo();
             });
-            // 音量の設定
-            $(this.el).foundation('slider', 'reflow');
-            $("[data-slider]").on("change.fndtn.slider", function() {
-                var volume = $(this).attr('data-slider');
-                $("#volumeOutput").text(volume.toString());
-                self.player.setVolume(volume);
-            });
         },
         /**
          * このViewで表示するYouTube動画をYouTube動画プレイヤーに設定する。
