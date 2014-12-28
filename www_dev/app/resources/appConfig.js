@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     module.exports = {
         "basic" : {
-            "baseUrl" : "https://fj.baas.jp.fujitsu.com/",
+            "baseUrl" : "https://test.namie-tablet.org/",
             "cellId" : "kizuna01",
             "boxName" : "data",
             "odataName" : "odata",
