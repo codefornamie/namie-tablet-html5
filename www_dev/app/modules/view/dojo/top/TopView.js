@@ -126,21 +126,21 @@ define(function(require, exports, module) {
          * <p>
          * 記事一覧の表示処理を開始する。
          * </p>
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         beforeRendered : function() {
         },
 
         /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         afterRendered : function() {
         },
 
         /**
          * 初期化
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         initialize : function() {
             // ローディングを開始
@@ -160,7 +160,7 @@ define(function(require, exports, module) {
 
         /**
          * collectionを初期化する
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         initCollection: function () {
             this.dojoContentCollection = new DojoContentCollection();
@@ -169,7 +169,7 @@ define(function(require, exports, module) {
 
         /**
          * layoutを初期化する
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         initLayout: function () {
             // TopViewでDojoContentCollectionの変更を監視して
@@ -193,7 +193,7 @@ define(function(require, exports, module) {
         
         /**
          * イベントを初期化する
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         initEvents : function() {
             this.listenTo(this.dojoContentCollection, "sync", this.onSyncDojoContent);
@@ -203,7 +203,7 @@ define(function(require, exports, module) {
         /**
          * youtubeライブラリを読み込む
          * 
-         * @memberof TopView#
+         * @memberOf TopView#
          * @param {Function} callback
          */
         loadYouTubeLibrary : function(callback) {
@@ -246,7 +246,7 @@ define(function(require, exports, module) {
         /**
          * 道場動画の検索を実施
          * 
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         searchDojoMovieList : function() {
             this.youtubeCollection = new YouTubeCollection();
@@ -265,7 +265,7 @@ define(function(require, exports, module) {
         /**
          * 道場情報の検索処理を開始する。
          * 
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         searchDojoInfo : function() {
             // 現在保持しているデータをクリア
@@ -283,7 +283,7 @@ define(function(require, exports, module) {
         /**
          * 達成情報の検索処理を開始する。
          * 
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         searchAchievement : function() {
             // 達成情報を自身の情報のみに絞り込んで検索実施
@@ -302,7 +302,7 @@ define(function(require, exports, module) {
         /**
          * 道場情報の検索処理が終了した場合に呼ばれるコールバック関数。
          * 
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         onSearchAchievement : function() {
             // 動画と達成情報の連結を行う
@@ -345,7 +345,7 @@ define(function(require, exports, module) {
 
         /**
          * 道場コンテンツが更新されたら呼ばれる
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         onSyncDojoContent : function() {
             // DojoContentCollection から DojoEditionCollection を生成する

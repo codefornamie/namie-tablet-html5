@@ -13,20 +13,20 @@ define(function(require, exports, module) {
      */
     var LetterEditView = AbstractView.extend({
         /**
-         * @memberof LetterEditView#
+         * @memberOf LetterEditView#
          */
         template : require("ldsh!templates/{mode}/edit/letterEdit"),
 
         /**
          * Layoutがレンダリングされたら呼ばれる
-         * @memberof LetterEditView#
+         * @memberOf LetterEditView#
          */
         afterRendered : function() {
         },
 
         /**
          * イベント一覧
-         * @memberof LetterEditView#
+         * @memberOf LetterEditView#
          */
         events : {
             "click [data-update-letter]" : "onClickUpdateLetter"
@@ -34,7 +34,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化する
-         * @memberof LetterEditView#
+         * @memberOf LetterEditView#
          */
         initialize : function() {
         },
@@ -42,7 +42,7 @@ define(function(require, exports, module) {
         /**
          * 更新するボタンが押された後に呼ばれる
          * @param {Event} ev
-         * @memberof LetterEditView#
+         * @memberOf LetterEditView#
          */
         onClickUpdateLetter : function(ev) {
             alert("更新しました(DUMMY)");

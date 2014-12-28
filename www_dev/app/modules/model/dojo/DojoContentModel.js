@@ -17,7 +17,7 @@ define(function(require, exports, module) {
         /**
          * 取得したOData情報のparse処理を行う。
          * 
-         * @memberof DojoContentModel#
+         * @memberOf DojoContentModel#
          * @param {Object} response HTTPレスポンス
          * @param {Object} options オプション
          * @return {Object} パース後の情報
@@ -29,14 +29,14 @@ define(function(require, exports, module) {
          * モデル固有の永続化データを生成する。
          * 
          * @param {Object} saveData 保存デー
-         * @memberof DojoContentModel#
+         * @memberOf DojoContentModel#
          */
         makeSaveData : function(saveData) {
         },
         /**
          * コンテンツの習得状態を文字列で返す ("solved" or "unsolved")
          * 
-         * @memberof DojoContentModel#
+         * @memberOf DojoContentModel#
          * @return {String}
          */
         getSolvedState : function() {
@@ -52,7 +52,7 @@ define(function(require, exports, module) {
         /**
          * コンテンツの視聴状態を文字列で返す ("watched" or "unwatched")
          * 
-         * @memberof DojoContentModel#
+         * @memberOf DojoContentModel#
          * @return {String}
          */
         getWatchedState : function() {

@@ -25,7 +25,7 @@ define(function(require, exports, module) {
          * @param {Object} レスポンス情報
          * @param {Object} オプション
          * @return {Objecy} レスポンス情報
-         * @memberof RadiationCollection#
+         * @memberOf RadiationCollection#
          */
         parseOData: function (response, options) {
             return response;

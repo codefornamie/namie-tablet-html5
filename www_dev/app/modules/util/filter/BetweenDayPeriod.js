@@ -22,7 +22,7 @@ define(function(require, exports, module) {
          * @param {String} from 
          * @param {String} to 
          * @param {String} dayFormat 
-         * @memberof BetweenDayPeriod#
+         * @memberOf BetweenDayPeriod#
          */
         init : function(key, from, to, dayFormat) {
             if (!dayFormat) {
@@ -39,7 +39,7 @@ define(function(require, exports, module) {
      * 日付の範囲検索を行う式を生成する。
      * 
      * @returns {String} 生成した式
-     * @memberof BetweenDayPeriod#
+     * @memberOf BetweenDayPeriod#
      */
     BetweenDayPeriod.prototype.expression = function() {
         var ge = new Ge(this.key, this.from);

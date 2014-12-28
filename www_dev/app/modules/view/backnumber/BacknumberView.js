@@ -132,7 +132,7 @@ define(function(require, exports, module) {
         /**
          * ルーティングしたら呼ばれる
          * @param {String} route
-         * @memberof BacknumberView#
+         * @memberOf BacknumberView#
          */
         onRoute: function (route) {
             $("#main").removeClass("is-backnumber");
@@ -144,7 +144,7 @@ define(function(require, exports, module) {
 
         /**
          * ビューが破棄される時に呼ばれる
-         * @memberof BacknumberView#
+         * @memberOf BacknumberView#
          */
         cleanup: function () {
             $("#main").removeClass("is-backnumber");

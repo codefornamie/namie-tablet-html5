@@ -16,7 +16,7 @@ define(function(require, exports, module) {
         model : YouTubeModel,
         /**
          * 操作対象のチャンネルID
-         * @memberof YouTubeCollection#
+         * @memberOf YouTubeCollection#
          */
         channelId : null,
         sync : function(method, model, options) {
@@ -61,7 +61,7 @@ define(function(require, exports, module) {
          * @param {Object} レスポンス情報
          * @param {Object} オプション
          * @return {Object} レスポンス情報のitemオブジェクト
-         * @memberof YouTubeCollection#
+         * @memberOf YouTubeCollection#
          */
         parse : function(response, options) {
             return response.items;

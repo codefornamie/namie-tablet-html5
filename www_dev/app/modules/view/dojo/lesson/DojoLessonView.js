@@ -43,7 +43,7 @@ define(function(require, exports, module) {
         },
         /**
          * はいボタンを押したら呼ばれる
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
          */
         onClickCompleteLesson : function() {
             vexDialog.defaultOptions.className = 'vex-theme-default';
@@ -71,7 +71,7 @@ define(function(require, exports, module) {
         },
         /**
          * 達成状況情報保存後のコールバック関数
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
          * @param {AchievementModel} 新規保存後の達成状況情報
          */
         onSaveAchievement : function(achievementModel) {
@@ -84,7 +84,7 @@ define(function(require, exports, module) {
 
         /**
          * いいえボタンを押したら呼ばれる
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
          */
         onClickUncompleteLesson : function() {
             vexDialog.defaultOptions.className = 'vex-theme-default';
@@ -114,7 +114,7 @@ define(function(require, exports, module) {
         },
         /**
          * YouTube動画プレイヤーの設定を行う。
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
          */
         setYouTubePlayer : function() {
             if (YT.Player) {
@@ -146,7 +146,7 @@ define(function(require, exports, module) {
         },
         /**
          * このViewで表示するYouTube動画をYouTube動画プレイヤーに設定する。
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
          */
         onLoadYoutubePlayer : function() {
             if (!this.player) {
@@ -203,7 +203,7 @@ define(function(require, exports, module) {
     var DojoLessonView = AbstractView.extend({
         /**
          * 初期化
-         * @memberof DojoLessonView#
+         * @memberOf DojoLessonView#
          * @param {Object} param
          */
         initialize : function(param) {

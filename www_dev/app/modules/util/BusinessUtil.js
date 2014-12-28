@@ -8,7 +8,7 @@ define(function(require, exports, module) {
 
     /**
      * 業務ユーティリティクラス
-     * @memberof BusinessUtil#
+     * @memberOf BusinessUtil#
      */
     var BusinessUtil = function() {
 
@@ -18,7 +18,7 @@ define(function(require, exports, module) {
      * 現在発行中の新聞の日付を返す。
      * @memberOf BusinessUtil#
      * @return {Date} 現在発行中の新聞の日付(最後に新聞を発行した日時)
-     * @memberof BusinessUtil#
+     * @memberOf BusinessUtil#
      */
     BusinessUtil.getCurrentPublishDate = function() {
         var publishDate = new Date();
@@ -30,7 +30,7 @@ define(function(require, exports, module) {
     };
     /**
      * 休刊日を加味した配信日計算を行う
-     * @memberof BusinessUtil#
+     * @memberOf BusinessUtil#
      * @param {ArticleCollection} articleCollection 記事情報コレクション：インポートしてしまうとループが発生してしまうため、
      * 引数でインスタンスをもらう
      * @param {Function} callback 休刊日を加味した配信日計算後の処理

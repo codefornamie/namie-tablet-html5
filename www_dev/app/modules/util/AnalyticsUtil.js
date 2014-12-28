@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 
     /**
      * コンストラクタ。
-     * @memberof AnalyticsUtil#
+     * @memberOf AnalyticsUtil#
      */
     var AnalyticsUtil = function() {
         this.ga = null;
@@ -12,7 +12,7 @@ define(function(require, exports, module) {
 
     /**
      * 初期化。
-     * @memberof AnalyticsUtil#
+     * @memberOf AnalyticsUtil#
      */
     AnalyticsUtil.initialize = function(app) {
         this.ga = window.ga_storage;
@@ -24,7 +24,7 @@ define(function(require, exports, module) {
      * ページビュートラッキング。
      * @param {String} path ページのパス（例: "/top"）
      * @param {String} title ページタイトル（例: "TOPページ"）
-     * @memberof AnalyticsUtil#
+     * @memberOf AnalyticsUtil#
      */
     AnalyticsUtil.trackPageView = function(path, title) {
         this.ga._trackPageview(path, title);
@@ -40,7 +40,7 @@ define(function(require, exports, module) {
      * @param {String} action 具体的な操作の名称
      * @param {String} label イベントを区別するラベル（省略可）
      * @param {String} value イベントの数値データ（省略可）
-     * @memberof AnalyticsUtil#
+     * @memberOf AnalyticsUtil#
      */
     AnalyticsUtil.trackEvent = function(category, action, label, value) {
         this.ga._trackEvent(category, action, label, value);

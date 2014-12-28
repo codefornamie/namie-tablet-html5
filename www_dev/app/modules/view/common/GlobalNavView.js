@@ -235,7 +235,7 @@ define(function(require, exports, module) {
 
         /**
          * カレンダーがクリックされたら呼ばれる
-         * @memberof GlobalNavView#
+         * @memberOf GlobalNavView#
          */
         onClickCalendar : function (evt) {
             var modalCalendarView = new ModalCalendarView();

@@ -17,13 +17,13 @@ define(function(require, exports, module) {
     var ModalCalendarView = AbstractView.extend({
         /**
          * テンプレート
-         * @memberof ModalCalendarView#
+         * @memberOf ModalCalendarView#
          */
         template : require("ldsh!templates/news/common/modal-calendar"),
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
-         * @memberof ModalCalendarView#
+         * @memberOf ModalCalendarView#
          */
         beforeRendered : function() {
             this.$el.foundation("calendar", "reflow");
@@ -31,7 +31,7 @@ define(function(require, exports, module) {
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
-         * @memberof ModalCalendarView#
+         * @memberOf ModalCalendarView#
          */
         afterRendered : function() {
             // カレンダー表示
@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
         /**
          * イベント
-         * @memberof ModalCalendarView#
+         * @memberOf ModalCalendarView#
          */
         events : {
             "click #modal-calendar-overlay" : "onClickOverlay"
@@ -48,7 +48,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化処理
-         * @memberof ModalCalendarView#
+         * @memberOf ModalCalendarView#
          */
         initialize : function() {
             moment.locale("ja");
@@ -56,7 +56,7 @@ define(function(require, exports, module) {
 
         /**
          * オーバレイをクリックした時に呼ばれる
-         * @memberof ModalCalendarView#
+         * @memberOf ModalCalendarView#
          * @param {Event} ev
          */
         onClickOverlay : function (ev) {

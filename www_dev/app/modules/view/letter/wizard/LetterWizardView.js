@@ -25,17 +25,17 @@ define(function(require, exports, module) {
     var LetterWizardView = ArticleRegistFileItemView.extend({
         /**
          * テンプレート
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         template : require("ldsh!templates/{mode}/wizard/letterWizard"),
         /**
          * このクラスのモデル
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         model : new ArticleModel(),
         /**
          * Layoutがレンダリングされたら呼ばれる
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         afterRendered : function() {
             this.prepareValidate();
@@ -65,7 +65,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化する
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         initialize : function() {
             this.initEvents();
@@ -76,7 +76,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
@@ -85,7 +85,7 @@ define(function(require, exports, module) {
         /**
          * ウィザード内の指定のページヘ移動する
          * @param {Number} expectedStep
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         moveTo : function(expectedStep) {
             expectedStep = +expectedStep;
@@ -126,7 +126,7 @@ define(function(require, exports, module) {
          * ルーティング時に呼ばれる
          * @param {String} route
          * @param {Array} params
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         onRoute : function(route, params) {
             var queryString = params[1];
@@ -144,7 +144,7 @@ define(function(require, exports, module) {
          * @param {Number} currentIndex
          * @param {Number} newIndex
          * @return {Boolean} trueならば実際の移動を許可する
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         onStepChanging : function(ev, currentIndex, newIndex) {
             if (this.form.valid()) {
@@ -176,7 +176,7 @@ define(function(require, exports, module) {
          * @param {Event} ev
          * @param {Number} currentIndex
          * @return {Boolean} trueならば実際の移動を許可する
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         onFinishing : function(ev, currentIndex) {
             return this.form.valid();
@@ -186,7 +186,7 @@ define(function(require, exports, module) {
          * ウィザードを終了した後に呼ばれる
          * @param {Event} ev
          * @param {Number} currentIndex
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         onFinished : function(ev, currentIndex) {
             this.showLoading();
@@ -195,7 +195,7 @@ define(function(require, exports, module) {
         },
         /**
          * バリデータの初期化処理を行う
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         prepareValidate : function() {
             this.form = $("#letter-form");
@@ -210,7 +210,7 @@ define(function(require, exports, module) {
         },
         /**
          * 確認画面にインプットデータをセットする関数
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         setConfirmLabel : function() {
             $("#confirmTitle").text($("#letter-wizard-form__title").val());
@@ -219,7 +219,7 @@ define(function(require, exports, module) {
         },
         /**
          * モデルにデータをセットする関数
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         setInputValue : function() {
             this.model.set("type", "6");
@@ -236,7 +236,7 @@ define(function(require, exports, module) {
         },
         /**
          * ファイル読み込み後に行う拡張処理
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          * @param {Event} ファイルロードイベント
          */
         onLoadFileExtend : function(ev, file) {
@@ -246,7 +246,7 @@ define(function(require, exports, module) {
         },
         /**
          * 削除ボタン押下時のハンドラ
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         onClickFileDeleteButton : function() {
             // fileインプットと画像プレビューのリセット
@@ -258,7 +258,7 @@ define(function(require, exports, module) {
         },
         /**
          * 添付された画像をdavへ登録する
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         saveLetterPicture : function() {
             if(!this.model.get("__id")){
@@ -290,7 +290,7 @@ define(function(require, exports, module) {
         },
         /**
          * Modelの保存
-         * @memberof LetterWizardView#
+         * @memberOf LetterWizardView#
          */
         saveModel : function(){
             this.model.save(null, {

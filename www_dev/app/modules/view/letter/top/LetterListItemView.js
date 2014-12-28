@@ -21,7 +21,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
-         * @memberof LetterListItemView#
+         * @memberOf LetterListItemView#
          */
         afterRendered : function() {
             if(this.model.get("imageUrl")){
@@ -55,7 +55,7 @@ define(function(require, exports, module) {
         /**
          * aタグがクリックされたら呼ばれる
          * @override
-         * @memberof LetterListItemView#
+         * @memberOf LetterListItemView#
          */
         onClickAnchorTag: function (e) {
             e.preventDefault();

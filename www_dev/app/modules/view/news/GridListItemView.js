@@ -21,7 +21,7 @@ define(function(require, exports, module) {
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
-         * @memberof GridListItemView#
+         * @memberOf GridListItemView#
          */
         beforeRendered : function() {
             this.$el.addClass("grid-list-item-div");
@@ -32,7 +32,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
-         * @memberof GridListItemView#
+         * @memberOf GridListItemView#
          */
         afterRendered : function() {
             var self = this;
@@ -80,7 +80,7 @@ define(function(require, exports, module) {
 
         /**
          * viewが破棄される時に呼ばれる
-         * @memberof GridListItemView#
+         * @memberOf GridListItemView#
          */
         cleanup: function () {
             var eventId = "ev-" + this.cid;

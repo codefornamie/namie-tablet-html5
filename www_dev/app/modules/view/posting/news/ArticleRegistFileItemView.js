@@ -133,7 +133,7 @@ define(function(require, exports, module) {
         },
         /**
          * ファイル読み込み後に行う拡張処理
-         * @memberof ArticleRegistFileItemView#
+         * @memberOf ArticleRegistFileItemView#
          * @param {Event} ファイルロードイベント
          */
         onLoadFileExtend : function(ev) {

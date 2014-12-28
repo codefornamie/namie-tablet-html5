@@ -25,7 +25,7 @@ define(function(require, exports, module) {
          * @param {Object} response レスポンス情報
          * @param {Object} options オプション情報
          * @return {Object} パース後の情報
-         * @memberof ArticleModel#
+         * @memberOf ArticleModel#
          */
         parseOData : function(response, options) {
             response.dispCreatedAt = DateUtil.formatDate(new Date(response.createdAt), "yyyy年MM月dd日 HH時mm分");
@@ -79,7 +79,7 @@ define(function(require, exports, module) {
          * サブクラスは、本メソッドをオーバライドして、 永続化するデータを生成する処理を実装する。
          * </p>
          * @param {Object} saveData 永続化データ
-         * @memberof ArticleModel#
+         * @memberOf ArticleModel#
          */
         makeSaveData : function(saveData) {
             saveData.parent = this.get("parent");
@@ -138,7 +138,7 @@ define(function(require, exports, module) {
         /**
          * 「掲載中」などのイベントのステータス文字列を返す
          * @return {String} イベントのステータス文字
-         * @memberof ArticleModel#
+         * @memberOf ArticleModel#
          */
         getStatusString : function() {
             if (this.get("isDepublish")) {
@@ -156,7 +156,7 @@ define(function(require, exports, module) {
         /**
          * 掲載期間の文字列を返す
          * @return {String}
-         * @memberof ArticleModel#
+         * @memberOf ArticleModel#
          */
         getPubDateString : function() {
             var pubDateString = DateUtil.formatDate(new Date(this.get("publishedAt")), "yyyy年MM月dd日(ddd)");
@@ -171,7 +171,7 @@ define(function(require, exports, module) {
         /**
          * 更新日の文字列を返す
          * @return {String}
-         * @memberof ArticleModel#
+         * @memberOf ArticleModel#
          */
         getUpdatedString : function() {
             var updatedString = DateUtil.formatDate(new Date(this.get("updatedAt")), "yyyy年MM月dd日(ddd)");
@@ -184,7 +184,7 @@ define(function(require, exports, module) {
         /**
          * 日付文字列を返す
          * @return {String}
-         * @memberof ArticleModel#
+         * @memberOf ArticleModel#
          */
         getDateString : function() {
             // 日時
@@ -204,7 +204,7 @@ define(function(require, exports, module) {
         /**
          * この記事の画像がpersonium.ioに保存されている画像かどうかを判定する。
          * @return {Boolean} personium.ioに保存されている画像の場合、<code>true</code>を返す。
-         * @memberof ArticleModel#
+         * @memberOf ArticleModel#
          */
         isPIOImage: function() {
             // 記事タイプが1 or 2 の場合、imageUrlの画像がインターネットの画像
@@ -219,7 +219,7 @@ define(function(require, exports, module) {
         /**
          * 画像タイプを判定する
          * @return {Number} Code.IMAGE_TYPE_* を返す
-         * @memberof ArticleModel#
+         * @memberOf ArticleModel#
          */
         getImageType: function () {
             if (this.isPIOImage()) {

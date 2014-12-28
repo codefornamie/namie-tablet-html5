@@ -60,7 +60,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化処理
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         initialize : function(options) {
             options = options || {};
@@ -88,7 +88,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
@@ -96,7 +96,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事の検索処理を開始する。
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         searchArticles : function() {
             this.trackPageView();
@@ -117,7 +117,7 @@ define(function(require, exports, module) {
         /**
          * youtubeライブラリを読み込む
          * @param {Function} callback
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         loadYouTubeLibrary : function(callback) {
             if (app.gapiLoaded) {
@@ -160,7 +160,7 @@ define(function(require, exports, module) {
         /**
          * articleを読み込む
          * @param {Function} callback
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         loadArticle : function(callback) {
             var self = this;
@@ -203,7 +203,7 @@ define(function(require, exports, module) {
         /**
          * eventsを読み込む
          * @param {Function} callback
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         loadEvents : function(callback) {
             this.eventsCollection.reset();
@@ -222,7 +222,7 @@ define(function(require, exports, module) {
         /**
          * Recommendを読み込む
          * @param {Function} callback
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         loadRecommend : function(callback) {
             this.recommendCollection.fetch({
@@ -241,7 +241,7 @@ define(function(require, exports, module) {
         /**
          * 全ての情報検索完了後のコールバック関数
          * @param {Error|Undefined} err
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         onFetchAll : function(err) {
             if (err) {
@@ -307,12 +307,12 @@ define(function(require, exports, module) {
         },
         /**
          * 記事一覧Viewを表示する要素のセレクタ
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         feedListElement : "#contents__top",
         /**
          * 左ペインの記事一覧メニューを表示する。
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         showGridListView : function() {
             var gridListView = this.createGridListView();
@@ -330,7 +330,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事が見つからなかった場合のメッセージを画面に表示する。
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         showFeetNotFoundMessage : function() {
             this.$el.text("記事情報がありません");
@@ -339,7 +339,7 @@ define(function(require, exports, module) {
         /**
          * 右ペインの記事一覧を表示するViewのインスタンスを作成して返す。
          * @return {GridListView} 生成したGridListViewのインスタンス
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         createGridListView : function() {
             return new GridListView();
@@ -347,7 +347,7 @@ define(function(require, exports, module) {
 
         /**
          * 右ペインの記事一覧を表示する。
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         showArticleListView : function() {
             var articleListView = new ArticleListView();
@@ -365,7 +365,7 @@ define(function(require, exports, module) {
          * 
          * @param {jQuery.Event} ev
          * @param {Object} param
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         onClickGridItem : function(ev, param) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
@@ -376,7 +376,7 @@ define(function(require, exports, module) {
         /**
          * 指定された記事IDの記事を表示する。
          * @param articleId {String} 記事ID
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         showArticle : function(articleId) {
             var model = this.articleCollection.find(function(article) {
@@ -464,7 +464,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事詳細ページ以外では、記事詳細の要素を隠す
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         onRoute : function(route) {
             if (route === "settings") {

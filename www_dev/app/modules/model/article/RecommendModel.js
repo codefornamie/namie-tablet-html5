@@ -18,7 +18,7 @@ define(function(require, exports, module) {
          * @param {Object} response レスポンス情報
          * @param {Object} options オプション情報
          * @return {Object} パース後の情報
-         * @memberof RecommendModel#
+         * @memberOf RecommendModel#
          */
         parseOData : function(response, options) {
             response.isMine = response.userId === app.user.get("__id");
@@ -27,7 +27,7 @@ define(function(require, exports, module) {
         /**
          * モデル固有の永続化データを生成する。
          * @param {Object} saveData 永続化データ
-         * @memberof RecommendModel#
+         * @memberOf RecommendModel#
          */
         makeSaveData : function(saveData) {
             saveData.source = this.get("source");

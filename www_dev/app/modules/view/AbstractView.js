@@ -44,13 +44,13 @@ define(function(require, exports, module) {
          * サブクラスは本メソッドをオーバライドして、
          * 描画前の独自の処理を実装できる。
          * </p>
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         beforeRendered : function() {
         },
         /**
          * 要素の描画処理が完了した際に呼び出される。
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         afterRender : function() {
             this.afterRendered();
@@ -98,7 +98,7 @@ define(function(require, exports, module) {
          * サブクラスは本メソッドをオーバライドして、
          * 描画後の独自の処理を実装できる。
          * </p>
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         afterRendered : function() {
             
@@ -106,7 +106,7 @@ define(function(require, exports, module) {
 
         /**
          * ローディングメッセージを表示する。
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         showLoading : function () {
             $.blockUI({
@@ -124,7 +124,7 @@ define(function(require, exports, module) {
         },
         /**
          * ローディングメッセージを閉じる
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         hideLoading :function () {
             $.unblockUI();
@@ -139,7 +139,7 @@ define(function(require, exports, module) {
          * imageUrl: 画像のDAVのファイルパス<br/>
          * imageIndex: 画像のインデックス<br/>
          * @param {Boolean} isExpansion 画像拡大処理を設定するかどうか<br/>
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         showPIOImages : function(imgElementSelector, imgArray, isExpansion, saveFunc) {
             var $articleImage = $(this.el).find(imgElementSelector);
@@ -216,7 +216,7 @@ define(function(require, exports, module) {
         /**
          * ファイル名を元に、ユニークなID付きのファイル名を生成する
          * 
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          * @param {String} fileName ファイル名
          * @return {String} 生成したファイルパス名
          */
@@ -230,7 +230,7 @@ define(function(require, exports, module) {
         /**
          * ファイル名を元に、ユニークなID付きのファイル名を生成する
          * 
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          * @param {String} fileName ファイル名
          * @return {String} 生成したファイルパス名
          */

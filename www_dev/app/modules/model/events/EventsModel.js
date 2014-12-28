@@ -19,7 +19,7 @@ define(function(require, exports, module) {
          * @param {Object} response レスポンス情報
          * @param {Object} options オプション情報
          * @return {Object} パース後の情報
-         * @memberof EventsModel#
+         * @memberOf EventsModel#
          */
         parseOData : function(response, options) {
             response.isNotArticle = true;
@@ -44,7 +44,7 @@ define(function(require, exports, module) {
          * サブクラスは、本メソッドをオーバライドして、 永続化するデータを生成する処理を実装する。
          * </p>
          * @param {Object} saveData 永続化データ
-         * @memberof EventsModel#
+         * @memberOf EventsModel#
          */
         makeSaveData : function(saveData) {
             if (this.get("eventDate")) {

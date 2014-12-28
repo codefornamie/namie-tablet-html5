@@ -21,7 +21,7 @@ define(function(require, exports, module) {
         /**
          * 配列をマップに変換する。
          * @return {Objecy} 変換されたマップ
-         * @memberof ConfigurationCollection#
+         * @memberOf ConfigurationCollection#
          */
         toMap : function() {
             var map = {};

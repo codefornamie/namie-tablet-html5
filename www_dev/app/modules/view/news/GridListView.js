@@ -18,19 +18,19 @@ define(function(require, exports, module) {
     var GridListView = FeedListView.extend({
         /**
          * 記事リストの要素を選択するためのセレクタ
-         * @memberof GridListView#
+         * @memberOf GridListView#
          */
         listElementSelector : "#grid-list",
 
         /**
          * このViewのテンプレートファイルパス
-         * @memberof GridListView#
+         * @memberOf GridListView#
          */
         template : require("ldsh!templates/news/news/gridList"),
 
         /**
          * このViewのイベント
-         * @memberof GridListView#
+         * @memberOf GridListView#
          */
         events : {
             "click [data-grid-list-item]" : "onClickFeedListItem"
@@ -41,7 +41,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事一覧を表示する処理を行う。
          * </p>
-         * @memberof GridListView#
+         * @memberOf GridListView#
          */
         beforeRendered : function() {
             this.setFeedList();
@@ -49,7 +49,7 @@ define(function(require, exports, module) {
 
         /**
          * Viewの描画処理の後に呼び出されるコールバック関数
-         * @memberof GridListView#
+         * @memberOf GridListView#
          */
         afterRendered : function() {
             if (this.masonry) {
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化処理
-         * @memberof GridListView#
+         * @memberOf GridListView#
          */
         initialize : function() {
             Super.prototype.setFeedListItemViewClass.call(this, GridListItemView);
@@ -77,7 +77,7 @@ define(function(require, exports, module) {
 
         /**
          * イベント処理
-         * @memberof GridListView#
+         * @memberOf GridListView#
          */
         initEvent : function() {
             this.$el.on("imageError", this.onImageError.bind(this));
@@ -87,7 +87,7 @@ define(function(require, exports, module) {
          * 記事リストアイテムをクリックされたときのコールバック関数
          * 
          * @param {Event} ev
-         * @memberof GridListView#
+         * @memberOf GridListView#
          */
         onClickFeedListItem : function(ev) {
         },
@@ -95,7 +95,7 @@ define(function(require, exports, module) {
         /**
          * 子ビューで画像読み込みに失敗したときに呼ばれる
          * 
-         * @memberof GridListView#
+         * @memberOf GridListView#
          */
         onImageError : _.debounce(function() {
             if (this.masonry) {

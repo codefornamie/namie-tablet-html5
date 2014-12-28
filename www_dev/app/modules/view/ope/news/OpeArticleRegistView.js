@@ -17,7 +17,7 @@ define(function(require, exports, module) {
     var OpeArticleRegistView = PostingArticleRegistView.extend({
         /**
          * 編集時にデータを各フォームにセットする
-         * @memberof OpeArticleRegistView#
+         * @memberOf OpeArticleRegistView#
          */
         setData: function () {
             $("#articleRegistTitle").text("記事編集");
@@ -86,7 +86,7 @@ define(function(require, exports, module) {
         },
         /**
          * モデルにデータをセットする関数
-         * @memberof OpeArticleRegistView#
+         * @memberOf OpeArticleRegistView#
          */
         setInputValue : function() {
             PostingArticleRegistView.prototype.setInputValue.apply(this, arguments);
@@ -94,7 +94,7 @@ define(function(require, exports, module) {
         },
         /**
          * バリデーションチェックがOKとなり、登録処理が開始された際に呼び出されるコールバック関数。
-         * @memberof OpeArticleRegistView#
+         * @memberOf OpeArticleRegistView#
          */
         onSubmit : function() {
             // 登録処理を開始する
@@ -109,7 +109,7 @@ define(function(require, exports, module) {
         },
         /**
          * バリデーションチェック
-         * @memberof OpeArticleRegistView#
+         * @memberOf OpeArticleRegistView#
          * @return {String} バリデーションメッセージ
          */
         validate : function() {

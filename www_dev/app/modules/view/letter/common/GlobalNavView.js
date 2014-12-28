@@ -61,7 +61,7 @@ define(function(require, exports, module) {
 
         /**
          * ルーティングした時に呼ばれる
-         * @memberof GlobalNavView#
+         * @memberOf GlobalNavView#
          * @param {String} route
          * @param {Object} params
          */

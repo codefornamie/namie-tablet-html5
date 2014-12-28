@@ -16,7 +16,7 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/{mode}/news/youtubeDetail"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
-         * @memberof OpeYouTubeDetailView#
+         * @memberOf OpeYouTubeDetailView#
          * 
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
@@ -33,7 +33,7 @@ define(function(require, exports, module) {
         },
         /**
          * 編集ボタンをクリックしたら呼ばれる
-         * @memberof OpeYouTubeDetailView#
+         * @memberOf OpeYouTubeDetailView#
          */
         onClickGotoEdit : function() {
             this.showLoading();
@@ -50,7 +50,7 @@ define(function(require, exports, module) {
         },
         /**
          * キャンセルボタンをクリックしたら呼ばれる
-         * @memberof OpeYouTubeDetailView#
+         * @memberOf OpeYouTubeDetailView#
          */
         onClickGotoCancel : function() {
             app.router.go("ope-top" ,this.model.get("publishedAt"));

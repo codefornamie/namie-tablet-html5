@@ -18,13 +18,13 @@ define(function(require, exports, module) {
     var DojoListView = FeedListView.extend({
         /**
          * このViewのテンプレートファイルパス
-         * @memberof DojoListView#
+         * @memberOf DojoListView#
          */
         template : require("ldsh!templates/{mode}/top/dojoList"),
 
         /**
          * 記事一覧を表示する要素のセレクタ
-         * @memberof DojoListView#
+         * @memberOf DojoListView#
          */
         listElementSelector : "#dojo-list",
 
@@ -43,7 +43,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事一覧の表示処理を開始する。
          * </p>
-         * @memberof DojoListView#
+         * @memberOf DojoListView#
          */
         beforeRendered : function() {
             this.extractLevels();
@@ -53,7 +53,7 @@ define(function(require, exports, module) {
 
         /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
-         * @memberof DojoListView#
+         * @memberOf DojoListView#
          */
         afterRendered : function() {
             Super.prototype.afterRendered.call(this);
@@ -61,7 +61,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化
-         * @memberof DojoListView#
+         * @memberOf DojoListView#
          */
         initialize : function() {
             console.assert(this.collection, "DojoListView should have a collection");
@@ -71,7 +71,7 @@ define(function(require, exports, module) {
 
         /**
          * コレクション内のモデルの値から級の一覧を作る
-         * @memberof DojoListView#
+         * @memberOf DojoListView#
          */
         extractLevels : function() {
             var levels = {};
@@ -91,7 +91,7 @@ define(function(require, exports, module) {
 
         /**
          * 取得した動画一覧を描画する
-         * @memberof DojoListView#
+         * @memberOf DojoListView#
          */
         setFeedList : function() {
             var self = this;

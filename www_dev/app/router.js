@@ -115,7 +115,7 @@ define(function(require, exports, module) {
 
         /**
          * 描画目に実行する処理。
-         * @memberof router#
+         * @memberOf router#
          */
         beforeRender : function() {
             this.template = this.templateMap[app.config.basic.mode];
@@ -227,7 +227,7 @@ define(function(require, exports, module) {
          */
         /**
          * Top画面の表示。
-         * @memberof router#
+         * @memberOf router#
          * @param {String} targetDate 日付文字列yyyy-MM-dd
          */
         top : function(date) {

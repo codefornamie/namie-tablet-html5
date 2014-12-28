@@ -15,17 +15,17 @@ define(function(require, exports, module) {
     var FeedListView = AbstractView.extend({
         /**
          * このViewのテンプレートファイルパス
-         * @memberof FeedListView#
+         * @memberOf FeedListView#
          */
         template : require("ldsh!templates/{mode}/news/feedList"),
         /**
          * 記事一覧を表示する要素のセレクタ
-         * @memberof FeedListView#
+         * @memberOf FeedListView#
          */
         listElementSelector: "#feedList",
         /**
          * このViewのイベント
-         * @memberof FeedListView#
+         * @memberOf FeedListView#
          */
         events: {
             "click .feedListItem" : "onClickFeedListItem"
@@ -36,7 +36,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事一覧の表示処理を開始する。
          * </p>
-         * @memberof FeedListView#
+         * @memberOf FeedListView#
          */
         beforeRendered : function() {
             this.setFeedList();
@@ -44,7 +44,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化処理
-         * @memberof FeedListView#
+         * @memberOf FeedListView#
          */
         initialize : function() {
             this.setFeedListItemViewClass(FeedListItemView);
@@ -56,14 +56,14 @@ define(function(require, exports, module) {
          * 本クラスの派生クラスは、このメソッドを利用して、このリストの項目の表示に利用されるViewクラスを指定することができる。
          * </p>
          * @param {Object} Viewクラス
-         * @memberof FeedListView#
+         * @memberOf FeedListView#
          */
         setFeedListItemViewClass: function(itemViewClass) {
             this.feedListItemViewClass = itemViewClass;
         },
         /**
          * 取得した動画一覧を描画する
-         * @memberof FeedListView#
+         * @memberOf FeedListView#
          */
         setFeedList : function() {
             var self = this;
@@ -82,7 +82,7 @@ define(function(require, exports, module) {
          * 記事リストアイテムをクリックされたときのコールバック関数
          * 
          * @param {Event} ev クリックイベント
-         * @memberof FeedListView#
+         * @memberOf FeedListView#
          */
         onClickFeedListItem : function(ev) {
             // クリックされたフィードに対応する記事のスクロール位置取得

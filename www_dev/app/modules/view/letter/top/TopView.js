@@ -22,13 +22,13 @@ define(function(require, exports, module) {
     var LetterTopLayout = Backbone.Layout.extend({
         /**
          * このLayoutのテンプレートファイルパス
-         * @memberof LetterTopLayout#
+         * @memberOf LetterTopLayout#
          */
         template : require("ldsh!templates/{mode}/top/top"),
 
         /**
          * イベント一覧
-         * @memberof LetterTopLayout#
+         * @memberOf LetterTopLayout#
          */
         events : {
             "click a" : "onClickAnchor"
@@ -37,7 +37,7 @@ define(function(require, exports, module) {
         /**
          * 初期化
          * @param {Object} param
-         * @memberof LetterTopLayout#
+         * @memberOf LetterTopLayout#
          */
         initialize : function(param) {
             console.assert(param, "param should be specified");
@@ -48,7 +48,7 @@ define(function(require, exports, module) {
 
         /**
          * 一覧画面を開く
-         * @memberof LetterTopLayout#
+         * @memberOf LetterTopLayout#
          */
         showList : function() {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
@@ -76,7 +76,7 @@ define(function(require, exports, module) {
         /**
          * 編集画面を開く
          * @param {String} id 編集する記事のID
-         * @memberof LetterTopLayout#
+         * @memberOf LetterTopLayout#
          */
         showEdit : function(id) {
             console.assert(_.isString(id), "id should be a string");
@@ -90,7 +90,7 @@ define(function(require, exports, module) {
 
         /**
          * aタグをクリックした際の挙動を ブラウザデフォルトではなく pushStateに変更する
-         * @memberof LetterTopLayout#
+         * @memberOf LetterTopLayout#
          */
         // TODO onClickAnchorメソッドが色々なファイルにコピペされているので、どこかにまとめる
         onClickAnchor : function(evt) {
@@ -136,7 +136,7 @@ define(function(require, exports, module) {
     var LetterTopView = AbstractView.extend({
         /**
          * 初期化
-         * @memberof LetterTopView#
+         * @memberOf LetterTopView#
          * @param {Object} param
          */
         initialize : function(param) {
@@ -147,7 +147,7 @@ define(function(require, exports, module) {
 
         /**
          * コレクションを初期化する
-         * @memberof LetterTopView#
+         * @memberOf LetterTopView#
          */
         initCollection : function() {
             // 直近１ヶ月分を表示する
@@ -169,7 +169,7 @@ define(function(require, exports, module) {
 
         /**
          * layoutを初期化する
-         * @memberof LetterTopView#
+         * @memberOf LetterTopView#
          */
         initLayout : function() {
             this.letterListView = new LetterListView({
@@ -183,7 +183,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
-         * @memberof LetterTopView#
+         * @memberOf LetterTopView#
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
@@ -193,7 +193,7 @@ define(function(require, exports, module) {
 
         /**
          * ルーティングを監視して描画処理を行う
-         * @memberof LetterTopView#
+         * @memberOf LetterTopView#
          * @param {String} route
          * @param {Object} params
          */
@@ -228,7 +228,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事一覧が読み込まれたら呼ばれる
-         * @memberof LetterTopView#
+         * @memberOf LetterTopView#
          */
         onSyncLetter : function() {
             this.layout.render();
@@ -237,7 +237,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事一覧の読み込みに失敗したら呼ばれる
-         * @memberof LetterTopView#
+         * @memberOf LetterTopView#
          */
         onErrorLetter : function() {
             alert("記事一覧の取得に失敗しました");

@@ -21,39 +21,39 @@ define(function(require, exports, module) {
      */
     var LoginModel = Backbone.Model.extend({
         /** ログインID
-         * @memberof LoginModel#
+         * @memberOf LoginModel#
          */
         loginId : null,
         /** パスワード
-         * @memberof LoginModel#
+         * @memberOf LoginModel#
          */
         password : null,
         /** 暗号化済みパスワード
-         * @memberof LoginModel#
+         * @memberOf LoginModel#
          */
         encryptionPassword : null,
         /** ログイン完了後に呼び出されるコールバック関数
-         * @memberof LoginModel#
+         * @memberOf LoginModel#
          */
         onLogin : null,
         /** baseurl
-         * @memberof LoginModel#
+         * @memberOf LoginModel#
          */
         baseUrl : null,
         /** cellId
-         * @memberof LoginModel#
+         * @memberOf LoginModel#
          */
         cellId : null,
         /** box
-         * @memberof LoginModel#
+         * @memberOf LoginModel#
          */
         box : null,
         /** Account Manager
-         * @memberof LoginModel#
+         * @memberOf LoginModel#
          */
         accountManager : null,
         /** package name
-         * @memberof LoginModel#
+         * @memberOf LoginModel#
          */
         packageName : "jp.fukushima.namie.town.Pcs",
 

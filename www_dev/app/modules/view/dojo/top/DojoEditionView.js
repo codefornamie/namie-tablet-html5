@@ -16,7 +16,7 @@ define(function(require, exports, module) {
     var DojoEditionView = AbstractView.extend({
         /**
          * このViewのテンプレートファイルパス
-         * @memberof DojoEditionView#
+         * @memberOf DojoEditionView#
          */
         template : require("ldsh!templates/{mode}/top/dojoEdition"),
 
@@ -25,14 +25,14 @@ define(function(require, exports, module) {
          * <p>
          * 記事一覧の表示処理を開始する。
          * </p>
-         * @memberof DojoEditionView#
+         * @memberOf DojoEditionView#
          */
         beforeRendered : function() {
         },
 
         /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
-         * @memberof DojoEditionView#
+         * @memberOf DojoEditionView#
          */
         afterRendered : function() {
             if (this.model && this.model.get("contentCollection")) {
@@ -48,7 +48,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化
-         * @memberof DojoEditionView#
+         * @memberOf DojoEditionView#
          */
         initialize : function() {
             this.model = new DojoEditionModel();
@@ -57,7 +57,7 @@ define(function(require, exports, module) {
         /**
          * 道場コンテンツの視聴状況を描画する
          * @param {DojoEditionModel} edition
-         * @memberof DojoEditionView#
+         * @memberOf DojoEditionView#
          */
         updateNumberOfContent : function(edition) {
             var collection = edition.get("contentCollection");

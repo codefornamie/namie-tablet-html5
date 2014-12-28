@@ -19,7 +19,7 @@ define(function(require, exports, module) {
         /**
          * モデルの初期値を返す
          * @return {Object} 初期値
-         * @memberof BacknumberModel#
+         * @memberOf BacknumberModel#
          */
         defaults: function () {
             return {
@@ -31,7 +31,7 @@ define(function(require, exports, module) {
          * 初期化処理
          * @param {Object} attr　attr
          * @param {Object} param パラメータ
-         * @memberof BacknumberModel#
+         * @memberOf BacknumberModel#
          */
         initialize: function (attr, param) {
             console.assert(param.date, "Should set param.date");
@@ -43,7 +43,7 @@ define(function(require, exports, module) {
         /**
          * 日付を設定する
          * @param {moment} date
-         * @memberof BacknumberModel#
+         * @memberOf BacknumberModel#
          */
         setDate: function (date) {
             this.date = date;
@@ -51,7 +51,7 @@ define(function(require, exports, module) {
         
         /**
          * このmodelの情報を更新する
-         * @memberof BacknumberModel#
+         * @memberOf BacknumberModel#
          */
         updateArticle: function () {
             var self = this;
@@ -108,7 +108,7 @@ define(function(require, exports, module) {
          * articleを読み込む
          * @param {Backbone.Collection} col
          * @param {Function} callback
-         * @memberof BacknumberModel#
+         * @memberOf BacknumberModel#
          */
         fetchArticleCollection : function(col, callback) {
             col.fetch({
@@ -126,7 +126,7 @@ define(function(require, exports, module) {
         /**
          * createdAtをYYYY-MM-DDの文字列にして返す
          * @return {String} 登録日時
-         * @memberof BacknumberModel#
+         * @memberOf BacknumberModel#
          */
         generateDateString: function () {
             var d = new Date(this.get('createdAt'));
@@ -140,7 +140,7 @@ define(function(require, exports, module) {
          *
          * @param {String} 取得する要素の名前（"year", "month", "day", "weekday"）
          * @return {Object}
-         * @memberof BacknumberModel#
+         * @memberOf BacknumberModel#
          */
         generateDateElementString: function (name) {
             var d = new Date(this.get('createdAt'));

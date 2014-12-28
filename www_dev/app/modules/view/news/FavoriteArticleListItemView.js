@@ -15,14 +15,14 @@ define(function(require, exports, module) {
     var FavoriteArticleListItemView = ArticleListItemView.extend({
         /**
          * 切り抜き情報削除後に呼び出されるコールバック関数。
-         * @memberof FavoriteArticleListItemView#
+         * @memberOf FavoriteArticleListItemView#
          */
         onFavoriteDelete : function() {
             app.router.scrap();
         },
         /**
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
-         * @memberof FavoriteArticleListItemView#
+         * @memberOf FavoriteArticleListItemView#
          */
         showImage : function() {
             var self = this;

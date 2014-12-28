@@ -20,12 +20,12 @@ define(function(require, exports, module) {
     var OpeNewsView = NewsView.extend({
         /**
          * 記事一覧を表示する要素のセレクタ
-         * @memberof OpeNewsView#
+         * @memberOf OpeNewsView#
          */
         feedListElement : '#article_list',
         /**
          * このViewのイベント
-         * @memberof OpeNewsView#
+         * @memberOf OpeNewsView#
          */
         events : {
             "click [data-article-register-button]" : "onClickArticleRegisterButton",
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
         
         /**
          * ビューの初期化を行う。
-         * @memberof OpeNewsView#
+         * @memberOf OpeNewsView#
          * @param {Object} options ビューのオプション
          */
         initialize : function(options) {
@@ -52,7 +52,7 @@ define(function(require, exports, module) {
 
         /**
          * 表示する日付を設定する。
-         * @memberof OpeNewsView#
+         * @memberOf OpeNewsView#
          * @param {Date} targetDate 表示する日付。
          */
         setDate : function(targetDate) {
@@ -70,7 +70,7 @@ define(function(require, exports, module) {
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
-         * @memberof OpeNewsView#
+         * @memberOf OpeNewsView#
          */
         setArticleSearchCondition : function(condition) {
             var targetDate = condition.targetDate;
@@ -81,7 +81,7 @@ define(function(require, exports, module) {
         },
         /**
          * 左ペインの記事一覧メニューを表示する。
-         * @memberof OpeNewsView#
+         * @memberOf OpeNewsView#
          */
         showArticleListView : function() {
             return;
@@ -93,7 +93,7 @@ define(function(require, exports, module) {
          * インスタンスを生成するようにオーバライドする。
          * </p>
          * @return {OpeFeedListView} 生成したOpeFeedListViewのインスタンス
-         * @memberof OpeNewsView#
+         * @memberOf OpeNewsView#
          */
         createGridListView: function() {
             return this.createFeedListView();
@@ -101,7 +101,7 @@ define(function(require, exports, module) {
         /**
          * 記事一覧を表示するViewのインスタンスを作成して返す。
          * @return {FeedListView} 生成したFeedListViewのインスタンス
-         * @memberof OpeNewsView#
+         * @memberOf OpeNewsView#
          */
         createFeedListView : function() {
             if (this.notFoundMessage) {
@@ -114,7 +114,7 @@ define(function(require, exports, module) {
         },
         /**
          * 記事が見つからなかった場合のメッセージを画面に表示する。
-         * @memberof OpeNewsView#
+         * @memberOf OpeNewsView#
          */
         showFeetNotFoundMessage : function() {
             this.notFoundMessage = $('<div data-alert class="alert-box info radius">指定された日付には記事がありません。</div>').insertBefore(
@@ -122,7 +122,7 @@ define(function(require, exports, module) {
         },
         /**
          *  新規記事投稿ボタン押下時に呼び出されるコールバック関数
-         *  @memberof OpeNewsView#
+         *  @memberOf OpeNewsView#
          */
         onClickArticleRegisterButton: function () {
             $("[data-sequence-register-button]").hide();
@@ -131,7 +131,7 @@ define(function(require, exports, module) {
         },
         /**
          *  プレビュー表示ボタン押下時に呼び出されるコールバック関数
-         *  @memberof OpeNewsView#
+         *  @memberOf OpeNewsView#
          */
         onClickArticlePreviewButton: function () {
             $("#opeNewsHolder").hide();
@@ -141,14 +141,14 @@ define(function(require, exports, module) {
         },
         /**
          *  戻るボタン押下時に呼び出されるコールバック関数
-         *  @memberof OpeNewsView#
+         *  @memberOf OpeNewsView#
          */
         onClickOpePreviewBackButton: function () {
             this.closePreview();
         },
         /**
          *  プレビュー表示を閉じる
-         *  @memberof OpeNewsView#
+         *  @memberOf OpeNewsView#
          */
         closePreview: function () {
             $("#opePreviewHolder").hide();

@@ -16,7 +16,7 @@ define(function(require, exports, module) {
     var FeedListItemView = AbstractView.extend({
         /**
          * このViewのテンプレートファイパス
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         template : require("ldsh!templates/{mode}/news/feedListItem"),
 
@@ -25,7 +25,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         afterRendered : function() {
             var self = this;

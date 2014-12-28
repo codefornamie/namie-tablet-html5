@@ -15,7 +15,7 @@ define(function(require, exports, module) {
     var DojoTabView = AbstractView.extend({
         /**
          * このViewのテンプレートファイルパス
-         * @memberof DojoTabView#
+         * @memberOf DojoTabView#
          */
         template : require("ldsh!templates/{mode}/top/dojoTab"),
 
@@ -24,7 +24,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事一覧の表示処理を開始する。
          * </p>
-         * @memberof DojoTabView#
+         * @memberOf DojoTabView#
          */
         beforeRendered : function() {
             // TODO もっと直感的にアクセスできるようにしたい
@@ -45,7 +45,7 @@ define(function(require, exports, module) {
 
         /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
-         * @memberof DojoTabView#
+         * @memberOf DojoTabView#
          */
         afterRendered : function() {
             this.initEvents();
@@ -53,7 +53,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化
-         * @memberof DojoTabView#
+         * @memberOf DojoTabView#
          */
         initialize : function() {
             console.assert(this.collection, "DojoTabView should have a collection");
@@ -61,7 +61,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
-         * @memberof DojoTabView#
+         * @memberOf DojoTabView#
          */
         initEvents : function() {
             this.$el.off("click.DojoTabView");

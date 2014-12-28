@@ -17,7 +17,7 @@ define(function(require, exports, module) {
     var EventListItemView = ArticleListItemView.extend({
         /**
          * このViewを表示する際に利用するアニメーション
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         template : require("ldsh!templates/{mode}/news/eventsDetail"),
         /**
@@ -25,7 +25,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         afterRendered : function() {
             this.showImage();
@@ -46,7 +46,7 @@ define(function(require, exports, module) {
         },
         /**
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         showImage : function() {
             var imgArray = [];

@@ -28,7 +28,7 @@ define(function(require, exports, module) {
          * 
          * @param {jQuery.Event} ev
          * @param {Object} param
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         onClickGridItem : function(ev, param) {
             // プレビューのためクリックを無視するため何もしない
