@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var DojoTabView = require("modules/view/dojo/top/DojoTabView");
     var DojoEditionView = require("modules/view/dojo/top/DojoEditionView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
+    var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
     var YouTubeCollection = require("modules/collection/dojo/YouTubeCollection");
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
@@ -43,10 +44,12 @@ define(function(require, exports, module) {
             console.assert(this.dojoTabView, "DojoLayout should have a DojoTabView");
             console.assert(this.dojoEditionView, "DojoLayout should have a DojoEditionView");
             console.assert(this.dojoLessonView, "DojoLayout should have a DojoLessonView");
+            console.assert(this.dojoIntroductionView, "DojoLayout should have a DojoIntroductionView");
 
             this.dojoTabView = param.dojoTabView;
             this.dojoEditionView = param.dojoEditionView;
             this.dojoLessonView = param.dojoLessonView;
+            this.dojoIntroductionView = param.dojoIntroductionView;
 
             this.hideLesson();
         },
@@ -76,6 +79,14 @@ define(function(require, exports, module) {
             this.removeView(DojoLayout.SELECTOR_LESSON);
             this.setView(DojoLayout.SELECTOR_TAB, this.dojoTabView);
             this.setView(DojoLayout.SELECTOR_EDITION, this.dojoEditionView);
+        },
+
+        /**
+         * 初回説明画面を表示する
+         * @param {Object} param
+         */
+        showIntroduction: function (param) {
+            this.setView(DojoLayout.SELECTOR_INTRODUCTION, this.dojoIntroductionView);
         },
 
         /**
@@ -111,6 +122,11 @@ define(function(require, exports, module) {
          * 一覧のセレクタ
          */
         SELECTOR_EDITION: "#dojo-edition-container",
+
+        /**
+         * 初回説明画面のセレクタ
+         */
+        SELECTOR_INTRODUCTION: "#dojo-introduction-container",
     });
 
     /**
@@ -179,12 +195,14 @@ define(function(require, exports, module) {
             });
             var dojoEditionView = new DojoEditionView();
             var dojoLessonView = new DojoLessonView();
+            var dojoIntroductionView = new DojoIntroductionView();
 
             // layoutを初期化する
             this.layout = new DojoLayout({
                 dojoTabView: dojoTabView,
                 dojoEditionView: dojoEditionView,
-                dojoLessonView: dojoLessonView
+                dojoLessonView: dojoLessonView,
+                dojoIntroductionView: dojoIntroductionView
             });
 
             // 各子ビューをレンダリングする
@@ -320,6 +338,9 @@ define(function(require, exports, module) {
             }
             this.onSyncDojoContent();
             this.hideLoading();
+
+            // TODO: 「どの動画も達成されていない場合」にのみ初回説明画面を表示するよう変更する
+            app.router.navigate("dojo-introduction", true);
         },
         
         /**
@@ -382,6 +403,10 @@ define(function(require, exports, module) {
                     dojoEditionModel: this.currentEditionModel,
                     dojoContentModel: dojoContentModel
                 });
+                break;
+
+            case "dojoIntroduction":
+                this.layout.showIntroduction();
                 break;
 
             default:
