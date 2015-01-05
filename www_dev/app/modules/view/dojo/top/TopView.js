@@ -13,6 +13,7 @@ define(function(require, exports, module) {
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
     var DojoEditionCollection = require("modules/collection/dojo/DojoEditionCollection");
     var AchievementCollection = require("modules/collection/misc/AchievementCollection");
+    var Code = require("modules/util/Code");
     var Equal = require("modules/util/filter/Equal");
     var IsNull = require("modules/util/filter/IsNull");
     
@@ -323,6 +324,8 @@ define(function(require, exports, module) {
          * @memberOf TopView#
          */
         onSearchAchievement : function() {
+            var isSolved = false;
+
             // 動画と達成情報の連結を行う
             if (this.achievementCollection.size() !== 0) {
                 this.achievementCollection.each($.proxy(function(achievement) {
@@ -332,6 +335,10 @@ define(function(require, exports, module) {
                                 dojoContent.achievementModels = [];
                             }
                             dojoContent.achievementModels.push(achievement);
+
+                            if (!isSolved) {
+                                isSolved = dojoContent.getSolvedState() === Code.DOJO_STATUS_SOLVED;
+                            }
                         }
                     },this));
                 },this));
@@ -339,8 +346,10 @@ define(function(require, exports, module) {
             this.onSyncDojoContent();
             this.hideLoading();
 
-            // TODO: 「どの動画も達成されていない場合」にのみ初回説明画面を表示するよう変更する
-            app.router.navigate("dojo-introduction", true);
+            // 「どの動画も達成されていない場合」にのみ初回説明画面を表示する
+            if (!isSolved) {
+                app.router.navigate("dojo-introduction", true);
+            }
         },
         
         /**
