@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 public class NamieWidgetBroadcastReceiver extends BroadcastReceiver {
 
     public static int frame = 0;
+    public static final int PER_FRAME = 16;
+    public static final int SHOW_MESSAGE_FRAME = 14;
     public static int[] images = { R.drawable.img_ukedon_1, R.drawable.img_ukedon_2};
     public static String[] messages = null;
     @Override
@@ -29,7 +32,15 @@ public class NamieWidgetBroadcastReceiver extends BroadcastReceiver {
 
         // キャラの更新処理
         remoteViews.setImageViewResource(R.id.chara, images[frame % images.length]);
-        remoteViews.setTextViewText(R.id.fukidashi, Html.fromHtml(messages[(frame / 10) % messages.length]));
+        // 吹き出し表示更新処理
+        // ・文章更新
+        // ・吹き出し一時非表示処理
+        if ((frame % PER_FRAME < SHOW_MESSAGE_FRAME)) {
+            remoteViews.setTextViewText(R.id.fukidashi, Html.fromHtml(messages[(frame / PER_FRAME) % messages.length]));
+            remoteViews.setViewVisibility(R.id.fukidashi, View.VISIBLE);
+        } else {
+            remoteViews.setViewVisibility(R.id.fukidashi, View.INVISIBLE);
+        }
         setPendingIntents(context, remoteViews);
 
         manager.updateAppWidget(thiswidget, remoteViews);
