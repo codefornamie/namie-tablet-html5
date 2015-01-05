@@ -234,6 +234,9 @@ define(function(require, exports, module) {
             app.logger.debug("It's a top page.");
             var targetDate = app.previewTargetDate ? app.previewTargetDate : date;
             if (targetDate) {
+                // 現在の日付を記録する
+                app.currentDate = targetDate;
+
                 // 日付が設定されているなら描画開始
                 this.layout.showView(new NewsView({
                     targetDate : new Date(targetDate),
