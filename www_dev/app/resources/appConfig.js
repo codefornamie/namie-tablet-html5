@@ -6,7 +6,7 @@ define(function(require, exports, module) {
             "boxName" : "data",
             "odataName" : "odata",
             // view category (ex. news, dojo, letter, posting, ope ..).
-            "mode" : "letter"
+            "mode" : "news"
         },
         "logger" : {
             "enable" : true,
