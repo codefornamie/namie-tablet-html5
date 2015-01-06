@@ -366,7 +366,6 @@ define(function(require, exports, module) {
             if(!this.model.get("__id")){
                 this.model.id = AbstractModel.createNewId();
             }
-            
             if(!this.model.get("imagePath")){
                 this.model.set("imagePath", this.generateFilePath());
             }
@@ -383,7 +382,7 @@ define(function(require, exports, module) {
                 vexDialog.defaultOptions.className = 'vex-theme-default';
                 vexDialog.alert("保存に失敗しました。");
                 app.logger.error("保存に失敗しました。");
-            }, this)
+            }, this);
 
             // 元画像の保存
             var davModel = new WebDavModel();

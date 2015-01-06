@@ -242,7 +242,7 @@ define(function(require, exports, module) {
          * @param blog 元画像。
          * @param callback サムネイル生成後にコールバックされる。
          */
-        makeThmbnail : function(blog, callback){
+        makeThmbnail : function(byteArray, callback){
             var LONG_SIDE_SIZE = 256;
             var canvas = document.createElement('canvas');
             var img = new Image();
@@ -261,8 +261,8 @@ define(function(require, exports, module) {
                         reader.readAsArrayBuffer(blob);
                     }, 'image/jpeg');
                 }
-            }
-            img.src = "data:image/jpeg;base64," + this.encodeBase64(new Uint8Array(blog));
+            };
+            img.src = "data:image/jpeg;base64," + this.encodeBase64(new Uint8Array(byteArray));
         },
         /**
          * base64データをバイナリデータに変換
