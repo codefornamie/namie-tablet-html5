@@ -243,6 +243,7 @@ define(function(require, exports, module) {
          * @param callback サムネイル生成後にコールバックされる。
          */
         makeThmbnail : function(byteArray, callback){
+            // サムネイルの長辺のサイズ
             var LONG_SIDE_SIZE = 256;
             var canvas = document.createElement('canvas');
             var img = new Image();
@@ -259,7 +260,7 @@ define(function(require, exports, module) {
                             callback(e.target.result);
                         };
                         reader.readAsArrayBuffer(blob);
-                    }, 'image/jpeg');
+                    }, 'image/png');
                 }
             };
             img.src = "data:image/jpeg;base64," + this.encodeBase64(new Uint8Array(byteArray));
