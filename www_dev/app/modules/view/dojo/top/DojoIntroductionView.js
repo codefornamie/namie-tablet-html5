@@ -56,11 +56,13 @@ define(function(require, exports, module) {
             ev.preventDefault();
 
             // ダイアログをフェードアウトさせる
-            this.$el.fadeOut(function () {
-                self.remove();
-            });
+            this.$el.find('[data-fade-in]').removeClass('is-ready');
 
-            app.router.back();
+            // CSSトランジションの完了後に閉じる
+            setTimeout(function () {
+                self.remove();
+                app.router.back();
+            }, 300);
         }
     });
 
