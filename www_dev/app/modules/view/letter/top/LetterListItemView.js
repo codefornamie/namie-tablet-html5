@@ -24,11 +24,11 @@ define(function(require, exports, module) {
          * @memberOf LetterListItemView#
          */
         afterRendered : function() {
-            if(this.model.get("imageUrl")){
+            if(this.model.get("imageUrlThmb")){
                 var davModel = new WebDavModel();
                 var path = this.model.get("imagePath");
                 path = path ? path + "/" : "";
-                davModel.id = path + this.model.get("imageUrl");
+                davModel.id = path + this.model.get("imageUrlThmb");
                 davModel.fetch({
                     success : $.proxy(function(model, binary) {
                         app.logger.debug("getBinary()");

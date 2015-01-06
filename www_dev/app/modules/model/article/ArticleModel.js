@@ -12,7 +12,7 @@ define(function(require, exports, module) {
      * 記事情報のモデルクラスを作成する。
      *
      * @class 記事情報のモデルクラス
-     * @exports EventsModel
+     * @exports EvenftsModel
      * @constructor
      */
     var ArticleModel = AbstractODataModel.extend({
@@ -71,6 +71,11 @@ define(function(require, exports, module) {
                 response.dispDescriptionSummary = response.dispDescription;
             }
             
+            // サムネイルがないデータは、本画像をサムネイルとする。
+            response.imageUrlThmb = response.imageUrlThmb || response.imageUrl;
+            response.imageUrlThmb2 = response.imageUrlThmb2 || response.imageUrl2;
+            response.imageUrlThmb3 = response.imageUrlThmb3 || response.imageUrl3;
+            
             return response;
         },
         /**
@@ -108,8 +113,11 @@ define(function(require, exports, module) {
 
             saveData.imagePath = this.get("imagePath");
             saveData.imageUrl = this.get("imageUrl");
+            saveData.imageUrlThmb = this.get("imageUrlThmb");
             saveData.imageUrl2 = this.get("imageUrl2");
+            saveData.imageUrlThmb2 = this.get("imageUrlThmb2");
             saveData.imageUrl3 = this.get("imageUrl3");
+            saveData.imageUrlThmb3 = this.get("imageUrlThmb3");
 
             saveData.imageComment = this.get("imageComment");
             saveData.imageComment2 = this.get("imageComment2");
