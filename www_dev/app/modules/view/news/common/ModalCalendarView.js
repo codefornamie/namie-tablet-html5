@@ -34,8 +34,18 @@ define(function(require, exports, module) {
          * @memberOf ModalCalendarView#
          */
         afterRendered : function() {
+            var self = this;
+
+            if (this.calendar) {
+                this.calendar.destroy();
+            }
+
             // カレンダー表示
-            var calendar = rome($("[data-modal-calendar]")[0]);
+            this.calendar = rome($("[data-modal-calendar]")[0], {
+                time: false,
+                initialValue: moment(app.currentDate)
+            });
+            this.calendar.on("data", this.onChangeDate.bind(this));
         },
 
         /**
@@ -43,7 +53,8 @@ define(function(require, exports, module) {
          * @memberOf ModalCalendarView#
          */
         events : {
-            "click #modal-calendar-overlay" : "onClickOverlay"
+            "click #modal-calendar-overlay" : "onClickOverlay",
+            "click .rd-day-body" : "onClickDate"
         },
 
         /**
@@ -66,6 +77,27 @@ define(function(require, exports, module) {
             }
 
             this.trigger("closeModalCalendar");
+        },
+
+        /**
+         * 日付が変更された後に呼ばれる
+         * @memberOf ModalCalendarView#
+         * @param {moment} date
+         */
+        onChangeDate: function (date) {
+            // onChangeDateでそのままルーティングしてしまうと
+            // 月をめくったタイミングでも画面更新されてしまうので
+            // ひとまず選択した日付を保存しておいて
+            // 日付セルがクリックされた時だけ実際のルーティングを行う
+            this.selectedDate = date;
+        },
+
+        /**
+         * 日付セルがクリックされた後に呼ばれる
+         * @memberOf ModalCalendarView#
+         */
+        onClickDate: function () {
+            app.router.go("top", moment(this.selectedDate).format("YYYY-MM-DD"));
         }
     });
 
