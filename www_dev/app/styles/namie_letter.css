@@ -475,3 +475,9 @@
     line-height: 1.4;
     color: rgb(90, 86, 60);
 }
+
+.gallery-list {
+    list-style: none;
+    width: 90%;
+    margin: auto;
+}

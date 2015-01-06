@@ -212,6 +212,7 @@ define(function(require, exports, module) {
                 break;
 
             case "letterWizard":
+                this.showLoading();
                 var queryString = params[1];
                 var query = app.router.parseQueryString(queryString);
                 var step = query.step;

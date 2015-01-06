@@ -11,26 +11,28 @@
             <section>
                 <h4>画像を選んでください。</h4>
                 <div class="large-12 columns">
-                    <img
+                    <ul id="gallery-list" class='gallery-list'></ul>
+                     <img
                         id="previewFile"
-                        class="preview-file right"
+                        class="preview-file right onPC"
                         data-preview-file
                     ></img>
 
                     <button
                         type="button"
                         id="fileInputButton"
-                        class='button'
+                        class='button onPC'
                     >画像選択</button>
 
                     <input
                         type="file"
                         id="articleFile"
                         style="display: none;"
+                        class="onPC"
                         accept="image/jpeg, image/gif, image/png"
                     >
 
-                    <div>
+                    <div class="onPC">
                         <button
                             type="button"
                             id="fileDeleteButton"
