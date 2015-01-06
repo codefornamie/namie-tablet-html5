@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
     var colorbox = require("colorbox");
+    var canvasToBlob = require("canvas-to-blob");
 
     /**
      * 全てのViewの基底クラスを作成する。
@@ -242,7 +243,8 @@ define(function(require, exports, module) {
          * @param blog 元画像。
          * @param callback サムネイル生成後にコールバックされる。
          */
-        makeThmbnail : function(blog, callback){
+        makeThmbnail : function(byteArray, callback){
+            // サムネイルの長辺のサイズ
             var LONG_SIDE_SIZE = 256;
             var canvas = document.createElement('canvas');
             var img = new Image();
@@ -259,10 +261,10 @@ define(function(require, exports, module) {
                             callback(e.target.result);
                         };
                         reader.readAsArrayBuffer(blob);
-                    }, 'image/jpeg');
+                    }, 'image/png');
                 }
-            }
-            img.src = "data:image/jpeg;base64," + this.encodeBase64(new Uint8Array(blog));
+            };
+            img.src = "data:image/jpeg;base64," + this.encodeBase64(new Uint8Array(byteArray));
         },
         /**
          * base64データをバイナリデータに変換
