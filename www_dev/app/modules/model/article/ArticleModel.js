@@ -72,9 +72,9 @@ define(function(require, exports, module) {
             }
             
             // サムネイルがないデータは、本画像をサムネイルとする。
-            response.imageUrlThmb = response.imageUrlThmb || response.imageUrl;
-            response.imageUrlThmb2 = response.imageUrlThmb2 || response.imageUrl2;
-            response.imageUrlThmb3 = response.imageUrlThmb3 || response.imageUrl3;
+            response.imageThumbUrl = response.imageThumbUrl || response.imageUrl;
+            response.imageThumbUrl2 = response.imageThumbUrl2 || response.imageUrl2;
+            response.imageThumbUrl3 = response.imageThumbUrl3 || response.imageUrl3;
             
             return response;
         },
@@ -113,11 +113,11 @@ define(function(require, exports, module) {
 
             saveData.imagePath = this.get("imagePath");
             saveData.imageUrl = this.get("imageUrl");
-            saveData.imageUrlThmb = this.get("imageUrlThmb");
+            saveData.imageThumbUrl = this.get("imageThumbUrl");
             saveData.imageUrl2 = this.get("imageUrl2");
-            saveData.imageUrlThmb2 = this.get("imageUrlThmb2");
+            saveData.imageThumbUrl2 = this.get("imageThumbUrl2");
             saveData.imageUrl3 = this.get("imageUrl3");
-            saveData.imageUrlThmb3 = this.get("imageUrlThmb3");
+            saveData.imageThumbUrl3 = this.get("imageThumbUrl3");
 
             saveData.imageComment = this.get("imageComment");
             saveData.imageComment2 = this.get("imageComment2");
