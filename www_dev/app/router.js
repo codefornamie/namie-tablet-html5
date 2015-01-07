@@ -198,6 +198,7 @@ define(function(require, exports, module) {
             "dojo/lessons/:id" : "dojoLesson",
 
             // 町民投稿アプリ
+            "letter" : "letterSelect",
             "letters" : "letterList",
             "letters/new*queryString" : "letterWizard",
             "letters/:id" : "letterDetail",
@@ -437,9 +438,9 @@ define(function(require, exports, module) {
          * ---------- 町民投稿 ----------
          */
         /**
-         * 町民投稿：トップページ
+         * 町民投稿：遷移先選択画面
          */
-        letterList : function() {
+        letterSelect : function() {
             var letterGlobalNavView;
 
             // 実際の描画処理はletter/TopViewに書かれている
@@ -454,6 +455,12 @@ define(function(require, exports, module) {
                 // 投稿後の新規記事取得処理
                 app.letterTopView.initCollection();
             }
+        },
+
+        /**
+         * 町民投稿：記事一覧
+         */
+        letterList : function() {
         },
 
         /**

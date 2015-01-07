@@ -43,7 +43,7 @@ define(function(require, exports, module) {
             this.$step = this.$el.find(LetterWizardView.SELECTOR_LETTER_WIZARD).steps({
                 headerTag : "h3",
                 bodyTag : "section",
-                transitionEffect : "slideLeft",
+                transitionEffect : "none",
                 labels : {
                     next : "次へ",
                     previous : "戻る",
