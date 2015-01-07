@@ -100,7 +100,6 @@ define(function(require, exports, module) {
             if(!this.model.get("imagePath")){
                 this.model.set("imagePath", this.generateFilePath());
             }
-            this.model.set("imageThumbUrl", null);
 
             var images = this.model.get("images");
             this.makeThmbnail(images[0], $.proxy(function(blob){
@@ -133,35 +132,45 @@ define(function(require, exports, module) {
                 return;
             }
 
-            var thumbData = $($("#fileArea").find("#previewFile")[0]).data("imageByteArray");
-            var thmbDavModel = new WebDavModel();
-            thmbDavModel.set("path", this.model.get("imagePath"));
-            thmbDavModel.set("fileName", images[0].fileName + ".thumb");
-            thmbDavModel.set("contentType", "image/png");
-            this.model.set("imageThumbUrl", images[0].fileName + ".thumb");
-            this.makeThmbnail(thumbData, $.proxy(function(blob){
-                thmbDavModel.set("data", blob);
-                davs.push(thmbDavModel);
+            if(this.thumbImageByteArray) {
+                // サムネイル画像の生成が必要な場合(新規 or 編集で1つ目の画像が変更されている)
+                var thmbDavModel = new WebDavModel();
+                thmbDavModel.set("path", this.model.get("imagePath"));
+                thmbDavModel.set("fileName", "thumbnail.png");
+                thmbDavModel.set("contentType", "image/png");
+                this.makeThmbnail(this.thumbImageByteArray, $.proxy(function(blob){
+                    thmbDavModel.set("data", blob);
+                    davs.push(thmbDavModel);
+                    this.saveDavFile(davs);
+                }, this));
+            } else {
                 this.saveDavFile(davs);
-            }, this));
+            }
         },
+        /**
+         * DAVファイルの登録
+         */
         saveDavFile : function(davs) {
             var imageCount = davs.length;
-            _.each(davs, $.proxy(function(davModel){
-                davModel.save(null, {
-                    success : $.proxy(function(e){
-                        if(--imageCount <= 0){
-                            this.saveModel();
-                        }
-                    }, this),
-                    error: $.proxy(function(e){
-                        this.hideLoading();
-                        vexDialog.defaultOptions.className = 'vex-theme-default';
-                        vexDialog.alert("保存に失敗しました。");
-                        app.logger.error("保存に失敗しました。");
-                    }, this)
-                });
-            }, this));
+            if(imageCount > 0){
+                _.each(davs, $.proxy(function(davModel){
+                    davModel.save(null, {
+                        success : $.proxy(function(e){
+                            if(--imageCount <= 0){
+                                this.saveModel();
+                            }
+                        }, this),
+                        error: $.proxy(function(e){
+                            this.hideLoading();
+                            vexDialog.defaultOptions.className = 'vex-theme-default';
+                            vexDialog.alert("保存に失敗しました。");
+                            app.logger.error("保存に失敗しました。");
+                        }, this)
+                    });
+                }, this));
+            } else {
+                this.saveModel();
+            }
         },
         /**
          * Modelの保存

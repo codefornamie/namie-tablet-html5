@@ -113,11 +113,9 @@ define(function(require, exports, module) {
 
             saveData.imagePath = this.get("imagePath");
             saveData.imageUrl = this.get("imageUrl");
-            saveData.imageThumbUrl = this.get("imageThumbUrl");
             saveData.imageUrl2 = this.get("imageUrl2");
-            saveData.imageThumbUrl2 = this.get("imageThumbUrl2");
             saveData.imageUrl3 = this.get("imageUrl3");
-            saveData.imageThumbUrl3 = this.get("imageThumbUrl3");
+            saveData.imageThumbUrl = this.get("imageThumbUrl");
 
             saveData.imageComment = this.get("imageComment");
             saveData.imageComment2 = this.get("imageComment2");
