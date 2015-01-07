@@ -40,6 +40,7 @@ define(function(require, exports, module) {
         /**
          * 初期化
          * @param {Object} param
+         * @memberOf DojoLayout#
          */
         initialize: function (param) {
             console.assert(this.dojoTabView, "DojoLayout should have a DojoTabView");
@@ -58,6 +59,7 @@ define(function(require, exports, module) {
         /**
          * 詳細画面を表示する
          * @param {Object} param
+         * @memberOf DojoLayout#
          */
         showLesson: function (param) {
             console.assert(param, "param should be specified in order to show lesson page");
@@ -75,6 +77,7 @@ define(function(require, exports, module) {
 
         /**
          * 詳細画面を隠す
+         * @memberOf DojoLayout#
          */
         hideLesson: function () {
             this.removeView(DojoLayout.SELECTOR_LESSON);
@@ -85,6 +88,7 @@ define(function(require, exports, module) {
         /**
          * 初回説明画面を表示する
          * @param {Object} param
+         * @memberOf DojoLayout#
          */
         showIntroduction: function (param) {
             this.setView(DojoLayout.SELECTOR_INTRODUCTION, this.dojoIntroductionView);
@@ -94,6 +98,8 @@ define(function(require, exports, module) {
          * aタグをクリックした際の挙動を
          * ブラウザデフォルトではなく
          * pushStateに変更する
+         * @param {Event} evt
+         * @memberOf DojoLayout#
          */
         onClickAnchor: function (evt) {
             var $target = $(evt.currentTarget);
@@ -354,6 +360,7 @@ define(function(require, exports, module) {
         
         /**
          * this.dojoEditionCollectionを元に各子ビューを更新する
+         * @memberOf TopView#
          */
         updateChildViews: function () {
             // 1. DojoTabViewの更新
@@ -388,6 +395,7 @@ define(function(require, exports, module) {
 
         /**
          * ◯◯編が変更されたら呼ばれる
+         * @memberOf TopView#
          */
         onChangeEdition: function () {
             this.updateChildViews();
@@ -397,6 +405,7 @@ define(function(require, exports, module) {
          * ルーティングを監視して描画処理を行う
          * @param {String} route
          * @param {Object} params
+         * @memberOf TopView#
          */
         onRoute: function (route, params) {
             switch (route) {
