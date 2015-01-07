@@ -79,6 +79,7 @@ define(function(require, exports, module) {
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @memberOf NewsView#
          */
         setArticleSearchCondition : function(condition) {
             this.articleCollection.setSearchCondition(condition);
@@ -181,6 +182,7 @@ define(function(require, exports, module) {
         /**
          * favoriteを読み込む
          * @param {Function} callback
+         * @memberOf NewsView#
          */
         loadFavorite : function(callback) {
             this.favoriteCollection.condition.filters = [
@@ -466,6 +468,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期スクロール位置が指定されている場合、スクロールする
+         * @memberOf NewsView#
          */
         initScrollTop : function() {
             if (this.initialScrollTop) {
@@ -476,6 +479,7 @@ define(function(require, exports, module) {
         /**
          * 記事一覧の現在のスクロール位置を設定する
          * @param {Number} scrollTop
+         * @memberOf NewsView#
          */
         setScrollTop : function(scrollTop) {
             var $container = this.$el.find("#contents__top");
@@ -486,6 +490,7 @@ define(function(require, exports, module) {
         /**
          * 記事一覧の現在のスクロール位置を取得する
          * @return {Number}
+         * @memberOf NewsView#
          */
         getScrollTop : function() {
             var $container = this.$el.find("#contents__top");
@@ -523,6 +528,7 @@ define(function(require, exports, module) {
 
         /**
          * ビューが破棄される時に呼ばれる
+         * @memberOf NewsView#
          */
         cleanup : function() {
             $("#main").removeClass("is-top");
@@ -531,6 +537,7 @@ define(function(require, exports, module) {
 
         /**
          * Google Analyticsでページビューを記録する
+         * @memberOf NewsView#
          */
         trackPageView : function() {
             app.ga.trackPageView("/NewsView", "ニュース");
