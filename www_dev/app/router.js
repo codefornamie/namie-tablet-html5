@@ -36,6 +36,7 @@ define(function(require, exports, module) {
     var DojoTopView = require("modules/view/dojo/top/TopView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
     var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
+    var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
 
     var LetterTopView = require("modules/view/letter/top/TopView");
     var LetterGlobalNavView = require("modules/view/letter/common/GlobalNavView");
@@ -196,6 +197,7 @@ define(function(require, exports, module) {
             // 道場アプリ
             'dojo-top' : 'dojoTop',
             "dojo/lessons/:id" : "dojoLesson",
+            'dojo-introduction' : 'dojoIntroduction',
 
             // 町民投稿アプリ
             "letters" : "letterList",
@@ -430,6 +432,14 @@ define(function(require, exports, module) {
          * 道場：個別ページ
          */
         dojoLesson : function() {
+            // 実際の描画処理はdojo/TopViewに書かれている
+        },
+
+        /**
+         * 道場：初回説明画面ページ
+         */
+        dojoIntroduction : function() {
+            app.logger.debug("[route] dojoIntroduction");
             // 実際の描画処理はdojo/TopViewに書かれている
         },
 
