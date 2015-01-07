@@ -15,7 +15,7 @@ define(function(require, exports, module) {
      * おたよりギャラリー一覧の表示最大値
      * @memberOf FileAPIUtil#
      */
-    FileAPIUtil.GET_GALLERY_MAX = 20;
+    FileAPIUtil.GET_GALLERY_MAX = 16;
     /**
      * File関連のAPIまたはクラスがサポートされているかチェックを行う。
      * @return サポートの可否 true:サポートされいる false:サポートされていない
@@ -125,6 +125,9 @@ define(function(require, exports, module) {
                                     // 画像登録日時でソートし、先頭のGET_GALLERY_MAX数件のみ配列で返却する
                                     fileArray = _.sortBy(fileArray, function(fileItem) {
                                         return -fileItem.lastModifiedDate;
+                                    });
+                                    fileArray = _.filter(fileArray, function() {
+                                        return file.name.match(/\.jpg$/i);
                                     });
                                     callback(fileArray.slice(0, FileAPIUtil.GET_GALLERY_MAX));
                                 }

@@ -162,11 +162,8 @@ define(function(require, exports, module) {
 
                 if (!this.file) {
                     vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.buttons.YES.text = '';
-                    vexDialog.buttons.NO.text = '';
-
+                    vexDialog.buttons.YES.text = 'OK';
                     vexDialog.alert("画像が未選択です。");
-
                     return false;
                 }
 
@@ -241,6 +238,7 @@ define(function(require, exports, module) {
                         fileCount++;
                         if (fileCount >= fileArray.length) {
                             this.hideLoading();
+                            $(this.el).find("img").unbind("click");
                             $(this.el).find("img").click($.proxy(this.onClickGallery,this));
                         }
                     },this));
@@ -252,6 +250,7 @@ define(function(require, exports, module) {
                     fileCount++;
                     if (fileCount >= fileArray.length) {
                         this.hideLoading();
+                        $(this.el).find("img").unbind("click");
                         $(this.el).find("img").click($.proxy(this.onClickGallery,this));
                     }
                 }
@@ -263,6 +262,7 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          */
         onClickGallery : function(event) {
+            this.showLoading();
             app.logger.debug("onClickGallery");
             var target = event.target;
             $(target).data("fileEntry").file($.proxy(function(file) {
@@ -281,6 +281,7 @@ define(function(require, exports, module) {
             },this), function(e) {
                 // fileでエラー
                 app.logger.debug("fileEntry.file(): error" + e.code);
+                this.hideLoading();
             });
 
         },
@@ -318,9 +319,10 @@ define(function(require, exports, module) {
          * @param {Object} target 選択した画像要素
          */
         onLoadFileExtend : function(ev, file, target) {
+            this.hideLoading();
+            this.file = file;
+            this.file.data = ev.target.result;
             if (navigator.userAgent.indexOf('Android') < 0) {
-                this.file = file;
-                this.file.data = ev.target.result;
                 $("#letterPicture").attr("src", $("#previewFile").attr("src"));
                 return;
             }
@@ -332,17 +334,18 @@ define(function(require, exports, module) {
                 message : 'この写真でいいですか？',
                 input : "<div class='vex-custom-input-wrapper'><img src='" + $(target).attr("src") + "' width='700', height='700'></div>",
                 callback : $.proxy(function(value) {
-                    $(".letterImage").css("border","solid 0px red");
+                    var checkElem = $(".checkedPic");
+                    checkElem.css("border","none");
+                    checkElem.removeClass("checkedPic");
                     if (value) {
-                        this.file = file;
-                        this.file.data = ev.target.result;
                         $("#letterPicture").attr("src", $(target).attr("src"));
                         $(target).css("border","3px solid red");
-                        return;
+                        $(target).addClass("checkedPic");
                     } else {
                         this.file = null;
-                        return;
                     }
+                    $(".vex-custom-input-wrapper").remove();
+                    return;
                 },this)
             });
         },
