@@ -100,19 +100,19 @@ define(function(require, exports, module) {
             if(!this.model.get("imagePath")){
                 this.model.set("imagePath", this.generateFilePath());
             }
+            this.model.set("imageThumbUrl", null);
 
-            var imageCount = this.model.get("images").length;
-            if(imageCount === 0){
-                this.hideLoading();
-                this.saveModel();
-                return;
-            }
-            _.each(this.model.get("images"), $.proxy(function(image){
+            var images = this.model.get("images");
+            this.makeThmbnail(images[0], $.proxy(function(blob){
+                this.file.thumb = blob;
+            }, this));
+            var davs = [];
+            _.each(images, $.proxy(function(image){
                 if(image.data){
                     if(!this.model.get("__id")){
                         this.model.id = AbstractModel.createNewId();
                     }
-                    
+
                     if(!this.model.get("imagePath")){
                         this.model.set("imagePath", this.generateFilePath());
                     }
@@ -123,25 +123,44 @@ define(function(require, exports, module) {
                     
                     davModel.set("data", image.data);
                     davModel.set("contentType", image.contentType);
-                    
-                    davModel.save(null, {
-                        success : $.proxy(function(e){
-                            if(--imageCount <= 0){
-                                this.saveModel();
-                            }
-                        }, this),
-                        error: $.proxy(function(e){
-                            this.hideLoading();
-                            vexDialog.defaultOptions.className = 'vex-theme-default';
-                            vexDialog.alert("保存に失敗しました。");
-                            app.logger.error("保存に失敗しました。");
-                        }, this)
-                    });
-                }else{
-                    if(--imageCount <= 0){
-                        this.saveModel();
-                    }
+                    davs.push(davModel);
                 }
+            }, this));
+
+            var imageCount = images.length;
+            if(imageCount === 0){
+                this.saveModel();
+                return;
+            }
+
+            var thumbData = $($("#fileArea").find("#previewFile")[0]).data("imageByteArray");
+            var thmbDavModel = new WebDavModel();
+            thmbDavModel.set("path", this.model.get("imagePath"));
+            thmbDavModel.set("fileName", images[0].fileName + ".thumb");
+            thmbDavModel.set("contentType", "image/png");
+            this.model.set("imageThumbUrl", images[0].fileName + ".thumb");
+            this.makeThmbnail(thumbData, $.proxy(function(blob){
+                thmbDavModel.set("data", blob);
+                davs.push(thmbDavModel);
+                this.saveDavFile(davs);
+            }, this));
+        },
+        saveDavFile : function(davs) {
+            var imageCount = davs.length;
+            _.each(davs, $.proxy(function(davModel){
+                davModel.save(null, {
+                    success : $.proxy(function(e){
+                        if(--imageCount <= 0){
+                            this.saveModel();
+                        }
+                    }, this),
+                    error: $.proxy(function(e){
+                        this.hideLoading();
+                        vexDialog.defaultOptions.className = 'vex-theme-default';
+                        vexDialog.alert("保存に失敗しました。");
+                        app.logger.error("保存に失敗しました。");
+                    }, this)
+                });
             }, this));
         },
         /**

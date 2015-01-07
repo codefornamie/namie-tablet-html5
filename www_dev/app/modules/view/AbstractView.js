@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
     var colorbox = require("colorbox");
+    var canvasToBlob = require("canvas-to-blob");
 
     /**
      * 全てのViewの基底クラスを作成する。

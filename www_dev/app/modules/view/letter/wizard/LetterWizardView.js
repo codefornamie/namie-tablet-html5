@@ -298,7 +298,7 @@ define(function(require, exports, module) {
             this.model.set("nickname", $("#letter-wizard-form__nickname").val());
             var imageUrl = this.generateFileName(this.file.name);
             this.model.set("imageUrl", imageUrl);
-            this.model.set("imageUrlThmb", imageUrl + ".thmb");
+            this.model.set("imageThumbUrl", imageUrl + ".thumb");
             this.model.set("createUserId", app.user.get("__id"));
 
             // 配信日は固定で翌日とする
@@ -317,7 +317,7 @@ define(function(require, exports, module) {
                 this.file = file;
                 this.file.data = ev.target.result;
                 this.makeThmbnail(this.file.data, $.proxy(function(blob){
-                    this.file.thmb = blob;
+                    this.file.thumb = blob;
                 }, this));
                 $("#letterPicture").attr("src", $("#previewFile").attr("src"));
                 return;
@@ -335,7 +335,7 @@ define(function(require, exports, module) {
                         this.file = file;
                         this.file.data = ev.target.result;
                         this.makeThmbnail(this.file.data, $.proxy(function(blob){
-                            this.file.thmb = blob;
+                            this.file.thumb = blob;
                         }, this));
                         $("#letterPicture").attr("src", $(target).attr("src"));
                         $(target).css("border","3px solid red");
@@ -399,8 +399,8 @@ define(function(require, exports, module) {
             // サムネイル画像の保存
             var thmbDavModel = new WebDavModel();
             thmbDavModel.set("path", this.model.get("imagePath"));
-            thmbDavModel.set("fileName", this.model.get("imageUrl") + ".thmb");
-            thmbDavModel.set("data", this.file.thmb);
+            thmbDavModel.set("fileName", this.model.get("imageUrl") + ".thumb");
+            thmbDavModel.set("data", this.file.thumb);
             thmbDavModel.set("contentType", this.file.type);
             thmbDavModel.save(null, {
                 success : success,

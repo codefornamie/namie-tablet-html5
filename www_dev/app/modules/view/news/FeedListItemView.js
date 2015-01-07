@@ -32,11 +32,15 @@ define(function(require, exports, module) {
             var articleImageElement = this.$el.find(".articleImage");
             var imageType = this.model.getImageType();
 
+            var imageUrl = this.model.get("imageUrl");
+            if (this.model.get("imageThumbUrl")) {
+                imageUrl = this.model.get("imageThumbUrl");
+            }
             switch (imageType) {
             case Code.IMAGE_TYPE_PIO:
                 this.showPIOImages(".articleImage", [
                     {
-                        imageUrl : this.model.get("imageUrl"),
+                        imageUrl : imageUrl,
                         imageIndex : 1
                     }
                 ]);
@@ -44,7 +48,7 @@ define(function(require, exports, module) {
                 break;
 
             case Code.IMAGE_TYPE_URL:
-                articleImageElement.attr("src", this.model.get("imageUrl"));
+                articleImageElement.attr("src", imageUrl);
                 break;
 
             case Code.IMAGE_TYPE_NONE:

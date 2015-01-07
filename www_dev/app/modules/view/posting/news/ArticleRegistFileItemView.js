@@ -46,6 +46,7 @@ define(function(require, exports, module) {
                     });
                     var url = FileAPIUtil.createObjectURL(blob);
                     var imgElement = self.$el.find("#previewFile");
+                    imgElement.data("imageByteArray", arrayBufferView);
                     imgElement.load(function() {
                     });
                     imgElement.attr("src", url);
