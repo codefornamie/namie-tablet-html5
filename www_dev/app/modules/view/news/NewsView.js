@@ -244,6 +244,8 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         onFetchAll : function(err) {
+            var targetDate = new Date(this.targetDate);
+
             if (err) {
                 console.error(err);
                 return;
@@ -297,6 +299,36 @@ define(function(require, exports, module) {
             } else {
                 this.$(".recommendArticleContainer").hide();
             }
+
+            // おたより記事が存在する場合の処理
+            var anyLetter = this.newsCollection.find(function(article) {
+                return article.get("type") === "6";
+            });
+            if (anyLetter) {
+                var newsArticles = this.newsCollection.toArray();
+                var letterArticles = [];
+                var letterFolderArticle;
+
+                // newsCollectionからおたより記事を削除し、配列に追加する
+                _.each(newsArticles, $.proxy(function(article) {
+                    if (article.get("type") === "6") {
+                        this.newsCollection.remove(article);
+                        letterArticles.push(article);
+                    }
+                }, this));
+
+                // おたより画面を開くための記事を作成し、コレクションの先頭に登録
+                letterFolderArticle = new ArticleModel({
+                    __id: "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
+                    dispSite: "おたより",
+                    dispTitle: (targetDate.getMonth() + 1) + "月" + targetDate.getDate() + "日のおたより",
+                    type: "6",
+                    letters: letterArticles
+                });
+                this.newsCollection.unshift(letterFolderArticle);
+                this.articleCollection.unshift(letterFolderArticle);
+            }
+
             // GridListView初期化
             this.showGridListView();
 
@@ -404,7 +436,7 @@ define(function(require, exports, module) {
                 template = require("ldsh!templates/{mode}/news/youTubeListItem");
                 ListItemView = YouTubeListItemView;
                 break;
-            case "6": // 町民投稿
+            case "6": // おたより
                 template = require("ldsh!templates/{mode}/news/letterDetail");
                 ListItemView = EventListItemView;
                 break;

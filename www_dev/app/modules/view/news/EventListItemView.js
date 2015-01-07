@@ -49,22 +49,34 @@ define(function(require, exports, module) {
          * @memberOf EventListItemView#
          */
         showImage : function() {
+            var modelArray = [];
             var imgArray = [];
-            for (var i = 1; i < 4; i++) {
-                var index = i;
-                if (i === 1) {
-                    index = "";
-                }
-                if (this.model.get("imageUrl" + index)) {
-                    imgArray.push({
-                        imageUrl : this.model.get("imageUrl" + index),
-                        imageComment : this.model.get("imageComment" + index),
-                        imageIndex : i
-                    });
-                } else {
-                    $($(this.el).find(".eventFileImage img")[i - 1]).parent().parent().hide();
-                }
+
+            if (this.model.get("letters")) {
+                // おたより記事のリストを持っている場合は、その内容を対象とする
+                modelArray = this.model.get("letters");
+            } else {
+                // その他の場合はモデル自身がもつ画像情報を対象とする
+                modelArray.push(this.model);
             }
+
+            _.each(modelArray, $.proxy(function(model) {
+                for (var i = 1; i < 4; i++) {
+                    var index = i;
+                    if (i === 1) {
+                        index = "";
+                    }
+                    if (model.get("imageUrl" + index)) {
+                        imgArray.push({
+                            imageUrl : model.get("imageUrl" + index),
+                            imageComment : model.get("imageComment" + index),
+                            imageIndex : i
+                        });
+                    } else {
+                        $($(this.el).find(".eventFileImage img")[i - 1]).parent().parent().hide();
+                    }
+                }
+            }, this));
             this.showPIOImages(".eventFileImage img", imgArray, true, $.proxy(this.onClickImage, this));
         },
     });

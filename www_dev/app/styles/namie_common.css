@@ -870,6 +870,15 @@ div.nehan-block.nehan-body:last-child {
     border-bottom: 1px solid #eee;
     margin-bottom: 16px;
 }
+
+/**
+ *  Letters Detail
+ */
+.letters-detail {
+    background: #f6f5ec;
+    margin-bottom: 50px;
+}
+
 /**
  * Feed
  **/
