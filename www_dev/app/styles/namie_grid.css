@@ -27,6 +27,10 @@
     margin: auto;
 }
 
+.grid-list>div:first-child {
+    width: 100%;
+}
+
 .grid-list>div {
     box-sizing: border-box;
     position: relative;
