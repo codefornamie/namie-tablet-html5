@@ -33,7 +33,7 @@ define(function(require, exports, module) {
          * このクラスのモデル
          * @memberOf LetterWizardView#
          */
-        model : new ArticleModel(),
+        model : null,
         /**
          * Layoutがレンダリングされたら呼ばれる
          * @memberOf LetterWizardView#
@@ -76,6 +76,7 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          */
         initialize : function() {
+            this.model = new ArticleModel();
             this.initEvents();
 
             // 初期画面

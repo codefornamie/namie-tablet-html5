@@ -12,7 +12,7 @@ define(function(require, exports, module) {
      * 記事情報のモデルクラスを作成する。
      *
      * @class 記事情報のモデルクラス
-     * @exports EvenftsModel
+     * @exports EventsModel
      * @constructor
      */
     var ArticleModel = AbstractODataModel.extend({
