@@ -162,6 +162,9 @@ define(function(require, exports, module) {
 
                 if (!this.file) {
                     vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.buttons.YES.text = '';
+                    vexDialog.buttons.NO.text = '';
+
                     vexDialog.alert("画像が未選択です。");
 
                     return false;
@@ -223,10 +226,16 @@ define(function(require, exports, module) {
         setGalleryList : function(fileArray) {
             var urls = [];
             var fileCount = 0;
+            if (fileArray.length === 0) {
+                var notPicElem = $("<li><div>画像がありません</div></li>");
+                $("#gallery-list").append(notPicElem);
+                this.hideLoading();
+                return;
+            }
             _.each(fileArray, $.proxy(function(file) {
                 if (file.name.match(/\.jpg$/i)) {
                     // Android撮影画像はjpegのみ
-                    var elemString = "<li><img class='letterImage'></li>"; 
+                    var elemString = "<li class='gallery-list__item'><img class='letterImage'></li>"; 
                     var element = $(elemString);
                     element.find("img").load($.proxy(function() {
                         fileCount++;
@@ -388,6 +397,7 @@ define(function(require, exports, module) {
         saveModel : function(){
             this.model.save(null, {
                 success : $.proxy(function() {
+                    $("#gallery-list").empty();
                     this.hideLoading();
                     app.router.go('/letters');
                 }, this),

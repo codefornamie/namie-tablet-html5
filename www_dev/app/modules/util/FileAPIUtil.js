@@ -12,6 +12,11 @@ define(function(require, exports, module) {
 
     };
     /**
+     * おたよりギャラリー一覧の表示最大値
+     * @memberOf FileAPIUtil#
+     */
+    FileAPIUtil.GET_GALLERY_MAX = 20;
+    /**
      * File関連のAPIまたはクラスがサポートされているかチェックを行う。
      * @return サポートの可否 true:サポートされいる false:サポートされていない
      * @memberOf FileAPIUtil#
@@ -117,10 +122,18 @@ define(function(require, exports, module) {
                                 fileArray.push(file);
                                 if (fileArray.length >= files.length) {
                                     directoryEntry = null;
-                                    callback(fileArray);
+                                    // 画像登録日時でソートし、先頭のGET_GALLERY_MAX数件のみ配列で返却する
+                                    fileArray = _.sortBy(fileArray, function(fileItem) {
+                                        return -fileItem.lastModifiedDate;
+                                    });
+                                    callback(fileArray.slice(0, FileAPIUtil.GET_GALLERY_MAX));
                                 }
                             });
                         });
+                        // ファイルが無い場合は空配列を返す
+                        if (files.length === 0) {
+                            callback(fileArray);
+                        }
                     }, function(e) {
                         // readEntriesでエラー
                         app.logger.debug("FileAPIUtil.getGalleryList: readEntries(): error" + e.code);
@@ -144,7 +157,15 @@ define(function(require, exports, module) {
      */
     FileAPIUtil.getFileEntry = function(directoryEntry, fileName, callback) {
         directoryEntry.getFile(fileName, null, function(fileEntry) {
-            callback(fileEntry);
+            fileEntry.file(function(file) {
+                // 画像登録日時を取得する
+                fileEntry.lastModifiedDate = file.lastModifiedDate;
+                callback(fileEntry);
+            }, function(e) {
+                // fileでエラー
+                app.logger.debug("FileAPIUtil.getFileEntry: file(): error" + e.code);
+                callback(null);
+            });
         }, function(e) {
             // getFileでエラー
             app.logger.debug("FileAPIUtil.getFileEntry: getFile(): error" + e.code);
