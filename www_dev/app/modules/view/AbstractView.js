@@ -239,8 +239,10 @@ define(function(require, exports, module) {
         },
         /**
          * サムネイルを生成する。
-         * @param blog 元画像。
-         * @param callback サムネイル生成後にコールバックされる。
+         * 
+         * @memberOf AbstractView#
+         * @param {ByteArray} byteArray 元画像。
+         * @param {Function} callback サムネイル生成後にコールバックされる。
          */
         makeThmbnail : function(byteArray, callback){
             // サムネイルの長辺のサイズ
@@ -267,7 +269,10 @@ define(function(require, exports, module) {
         },
         /**
          * base64データをバイナリデータに変換
-         *
+         * 
+         * @memberOf AbstractView#
+         * @param {ByteArray} s  元画像。
+         * @return {String} バイナリデータ
          */
         encodeBase64 : function(s) {
             var base64list = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
