@@ -14,10 +14,7 @@ define(function(require, exports, module) {
     var BusinessUtil = require("modules/util/BusinessUtil");
     var moment = require("moment");
     var vexDialog = require("vexDialog");
-<<<<<<< Upstream, based on origin/develop
     var canvasToBlob = require("canvas-to-blob");
-=======
->>>>>>> b22af6f NAM-607 サムネイル追加
 
     /**
      * 記事一覧のViewクラス
