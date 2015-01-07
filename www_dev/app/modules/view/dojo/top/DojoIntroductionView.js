@@ -25,6 +25,7 @@ define(function(require, exports, module) {
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         *  @memberOf DojoIntroductionView#
          */
         afterRendered : function() {
             var $fadeIn = this.$el.find('[data-fade-in]');
@@ -37,6 +38,7 @@ define(function(require, exports, module) {
 
         /**
          *  初期化処理
+         *  @memberOf DojoIntroductionView#
          */
         initialize : function() {
         },
@@ -47,16 +49,19 @@ define(function(require, exports, module) {
 
         /**
          *  初回説明画面を閉じる。閉じるボタンが押されたら呼ばれる
-         *
          *  @param {Event} ev
+         *  @memberOf DojoIntroductionView#
          */
         onClickIntroductionCloser: function (ev) {
             var self = this;
+            var $fadeIn = this.$el.find('[data-fade-in]');
 
             ev.preventDefault();
 
             // ダイアログをフェードアウトさせる
-            this.$el.find('[data-fade-in]').removeClass('is-ready');
+            setTimeout(function () {
+                $fadeIn.removeClass('is-ready');
+            }, 0);
 
             // CSSトランジションの完了後に閉じる
             setTimeout(function () {
