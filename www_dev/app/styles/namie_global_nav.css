@@ -7,10 +7,11 @@
  *  ----------
  */
 .global-nav {
-    height: 54px;
+    width: 95%;
+    height: 68px;
     position: relative;
     z-index: 60;
-    background: #53c0d3;
+    margin: auto;
 }
 
 .global-nav nav {
@@ -23,8 +24,8 @@
     position: relative;
     box-sizing: content-box;
     display: inline-block;
-    height: 54px;
-    line-height: 54px;
+    height: 78px;
+    line-height: 78px;
     vertical-align: middle;
     float: left;
 }
@@ -72,7 +73,6 @@
  */
 .global-nav__menu {
     width: 7%;
-    background: #44bbcf;
 }
 
 .global-nav__menu .button {
@@ -103,7 +103,6 @@
  */
 .global-nav__title {
     width: 25%;
-    background-color: #78d0df;
     background-image: url(../../app/img/img-title-logo.png);
     background-repeat: no-repeat;
     background-position: center;
@@ -136,7 +135,7 @@
 }
 
 .date-area {
-    line-height: 54px;
+    line-height: 78px;
     font-size: 0;
 }
 
@@ -148,34 +147,32 @@
 .date-area__year .date--year {
     font-size: 30px;
     display: inline-block;
-    transform: scale(0.8, 1);
 }
 
 .date-area__year .date--unit {
     font-size: 26px;
-    margin-left: -5px;
 }
 
 /* date */
 .date-area__date {
     display: inline-block;
+    margin-left: 5px;
 }
 
 .date-area__date .date--month {
     font-size: 40px;
     display: inline-block;
-    transform: scale(0.8, 1);
+    font-weight: bold;
 }
 
 .date-area__date .date--day {
     font-size: 40px;
     display: inline-block;
-    transform: scale(0.8, 1);
+    font-weight: bold;
 }
 
 .date-area__date .date--unit {
     font-size: 26px;
-    margin-left: -5px;
 }
 
 /* weekday */
@@ -189,6 +186,8 @@
 
 .date-area__weekday .date--weekday {
     font-size: 36px;
+    font-weight: bold;
+    margin: 0 3px;
 }
 
 .date-area__weekday .date--weekday-unit {
@@ -207,6 +206,12 @@
     white-space: nowrap;
 }
 
+/* 版 */
+.date-area__weekday .date--ban {
+    font-size: 26px;
+    margin: 0 5px;
+}
+
 /* others */
 .date-area__span {
     display: inline-block;
@@ -219,29 +224,23 @@
  */
 .global-nav__menubutton {
     width: 25%;
-    text-align: center;
-    background: #78d0df;
+    text-align: right;
 }
 
 .global-nav__menubutton ul {
     margin: 0;
+    display: inline-block;
 }
 
 .global-nav__menubutton ul li {
     display: inline-block;
     vertical-align: middle;
-    margin-top: 6px;
-    line-height: 54px;
-    width: 20%;
 }
 
 .global-nav__menubutton .button {
-    background: transparent;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    font-size: 36px;
-    
+    height: 60px;
+    line-height: 60px;
+    border-radius: 30px;
 }
 
 /**

@@ -27,18 +27,24 @@ body {
  *  foundation overrides
  */
 .button {
-    background: #ffa801;
-    -webkit-box-shadow: 0px 3px 0px #df6f23;
-    -moz-box-shadow: 0px 3px 0px #df6f23;
-    box-shadow: 0px 3px 0px #df6f23;
-    color: #ffffff;
+    background-color:  #ffffff;
+    background: -webkit-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: -moz-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: -o-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: -ms-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: linear-gradient(0deg, #c0baa1 0%, #ffffff 100%);
+    -webkit-box-shadow: 0px 3px 3px 0.00px rgba(0, 64, 93, 0.3);
+    -moz-box-shadow: 0px 3px 3px 0.00px rgba(0, 64, 93, 0.3);
+    box-shadow: 0px 2px 2px 0.00px rgba(0, 64, 93, 0.3);
+    color: rgb(5, 59, 101);
     font-size: 20px;
     padding: 5px 25px 5px 25px;
     text-decoration: none;
 }
 .button:focus,
 .button:hover {
-    background: rgb(230, 148, 1);
+    background-color:  #ffffff;
+    color: rgb(5, 59, 101);
 }
 
 .button--gray {
@@ -124,7 +130,7 @@ main {
 
 .snap-content {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
-    background-color: #f6f5ec;
+    background-color: rgb(29, 124, 189);
 }
 .posting-content {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
@@ -337,7 +343,7 @@ main {
 
 .contents {
     height: 100%;
-    background-color: #f6f5ec;
+    background-color: rgb(29, 124, 189);
 }
 
 .is-backnumber-date .contents,
@@ -1414,34 +1420,41 @@ select#articleCategory {
  *  記事のラベル
  */
 .article-label {
-    background-repeat: no-repeat;
-    background-position: left center;
-    background-size: auto 1.5rem;
-    padding-left: 2.2rem;
-    margin-bottom: 10px;
-    min-height: 40px;
-    line-height: 40px;
+    position: relative;
+    text-align: right;
+    padding: 0 35px 5px 0;
+    color: rgb(160, 174, 183);
 }
 
-.article-label--blog {
-    color: #c66287;
-    background-image: url(../../app/img/img-article-label-blog.png);
+.article-label::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border: 15px solid transparent;
+    border-right-color: #ccc;
+    border-bottom-color: #ccc;
 }
-.article-label--localnews {
-    color: #61b152;
-    background-image: url(../../app/img/img-article-label-localnews.png);
+
+.article-label--blog::after {
+    border-right-color: #c66287;
+    border-bottom-color: #c66287;
 }
-.article-label--event {
-    color: #d9bc08;
-    background-image: url(../../app/img/img-article-label-event.png);
+.article-label--localnews::after {
+    border-right-color: #61b152;
+    border-bottom-color: #61b152;
 }
-.article-label--townoffice {
-    color: #27a8bd;
-    background-image: url(../../app/img/img-article-label-townoffice.png);
+.article-label--event::after {
+    border-right-color: #d9bc08;
+    border-bottom-color: #d9bc08;
 }
-.article-label--other {
-    color: #9c9c9c;
-    background-image: url(../../app/img/img-article-label-other.png);
+.article-label--townoffice::after {
+    border-right-color: #27a8bd;
+    border-bottom-color: #27a8bd;
+}
+.article-label--other::after {
+    border-right-color: #9c9c9c;
+    border-bottom-color: #9c9c9c;
 }
 .article-label__text {
 }

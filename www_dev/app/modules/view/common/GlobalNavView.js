@@ -112,7 +112,7 @@ define(function(require, exports, module) {
         setDate : function(date) {
             if (date) {
                 $("#naviPublishDate").show();
-                $("#naviPublishDate").find(".date--year").text(DateUtil.formatDate(date, "ggge"));
+                $("#naviPublishDate").find(".date--year").text(DateUtil.formatDate(date, "yyyy"));
                 $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
                 $("#naviPublishDate").find(".date--day").text(date.getDate());
                 $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
