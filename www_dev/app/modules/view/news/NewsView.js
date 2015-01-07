@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var async = require("async");
+    var moment = require("moment");
 
     // view
     var AbstractView = require("modules/view/AbstractView");
@@ -431,6 +432,28 @@ define(function(require, exports, module) {
             $("#snap-content").scrollTop(0);
             $(".backnumber-scroll-container").scrollTop(0);
         },
+        
+        /**
+         * YYYY年MM月DD日版の新聞に戻るボタンの日付を更新する
+         * @memberOf NewsView#
+         */
+        updateFooterButtons: function () {
+            var self = this;
+            var $btnGoTop = this.$el.find("#news-action").find("[data-gotop]");
+            var $btnBack = this.$el.find("#news-action").find("[data-back]");
+            var currentMoment = moment(app.currentDate);
+            var currentDateStr = currentMoment.format("YYYY-MM-DD");
+
+            $btnGoTop.on("click", function () {
+                self.setScrollTop(0);
+            });
+
+            $btnBack.text(currentMoment.format("YYYY年MM月DD日版の新聞に戻る"));
+            $btnBack.on("click", function (ev) {
+                ev.preventDefault();
+                app.router.go("top", currentDateStr);
+            });
+        },
 
         /**
          * 初期スクロール位置が指定されている場合、スクロールする
@@ -446,7 +469,7 @@ define(function(require, exports, module) {
          * @param {Number} scrollTop
          */
         setScrollTop : function(scrollTop) {
-            var $container = this.$el.find("#contents__top");
+            var $container = $("#snap-content");
 
             $container.scrollTop(scrollTop);
         },
@@ -456,7 +479,7 @@ define(function(require, exports, module) {
          * @return {Number}
          */
         getScrollTop : function() {
-            var $container = this.$el.find("#contents__top");
+            var $container = $("#snap-content");
             var scrollTop = $container.scrollTop();
 
             return scrollTop;
@@ -470,10 +493,10 @@ define(function(require, exports, module) {
             if (route === "settings") {
             } else if (route === "showArticle") {
                 $(NewsView.SELECTOR_ARTICLE_LIST).hide();
-                $(NewsView.SELECTOR_ARTICLE_DESTINATION).show();
+                $(NewsView.SELECTOR_ARTICLE_CONTAINER).show();
             } else {
                 $(NewsView.SELECTOR_ARTICLE_LIST).show();
-                $(NewsView.SELECTOR_ARTICLE_DESTINATION).hide();
+                $(NewsView.SELECTOR_ARTICLE_CONTAINER).hide();
             }
 
             $("#main").removeClass("is-top");
@@ -487,6 +510,8 @@ define(function(require, exports, module) {
             } else if (route === "backnumber") {
                 $("#main").addClass("is-backnumber");
             }
+
+            this.updateFooterButtons();
         },
 
         /**
@@ -504,6 +529,11 @@ define(function(require, exports, module) {
             app.ga.trackPageView("/NewsView", "ニュース");
         }
     }, {
+        /**
+         * 記事詳細及び戻るボタンのコンテナのセレクタ
+         */
+        SELECTOR_ARTICLE_CONTAINER : "[data-news-container]",
+
         /**
          * 記事詳細を挿入する先のセレクタ
          */
