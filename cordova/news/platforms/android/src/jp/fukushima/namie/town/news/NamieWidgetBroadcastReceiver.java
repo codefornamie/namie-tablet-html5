@@ -14,8 +14,11 @@ import android.widget.RemoteViews;
 
 public class NamieWidgetBroadcastReceiver extends BroadcastReceiver {
 
+    // 現在のフレーム数(約200msecで1増加する)
     public static int frame = 0;
+    // 吹き出しメッセージが切り替わるまでのフレーム数
     public static final int PER_FRAME = 16;
+    // 吹き出し表示後に吹き出しが非表示となるまでのフレーム数
     public static final int SHOW_MESSAGE_FRAME = 14;
     public static int[] images = { R.drawable.img_ukedon_1, R.drawable.img_ukedon_2};
     public static String[] messages = null;
