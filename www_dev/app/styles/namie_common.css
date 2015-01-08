@@ -131,6 +131,7 @@ main {
 .snap-content {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
     background-color: rgb(29, 124, 189);
+    background-image: url(../../app/img/bg-b-paper.jpg);
 }
 .posting-content {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
@@ -344,6 +345,7 @@ main {
 .contents {
     height: 100%;
     background-color: rgb(29, 124, 189);
+    background-image: url(../../app/img/bg-b-paper.jpg);
 }
 
 .is-backnumber-date .contents,
@@ -1445,15 +1447,16 @@ select#articleCategory {
 .article-label {
     position: relative;
     text-align: right;
-    padding: 0 35px 5px 0;
+    padding: 0 35px 3px 0;
     color: rgb(160, 174, 183);
+    top: 5px;
 }
 
 .article-label::after {
     content: "";
     position: absolute;
     right: 0;
-    bottom: 0;
+    bottom: 5px;
     border: 15px solid transparent;
     border-right-color: #ccc;
     border-bottom-color: #ccc;

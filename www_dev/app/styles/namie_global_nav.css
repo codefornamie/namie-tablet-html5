@@ -106,7 +106,7 @@
     background-image: url(../../app/img/img-title-logo.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: auto 100%;
+    background-size: 100%;
 }
 
 /**
@@ -122,12 +122,9 @@
  *  日付のエリア
  */
 .global-nav__date {
-    width: 43%;
+    width: 50%;
     text-align: center;
     color: #fff;
-}
-.global-nav__date.no-backbutton {
-    width: 50%;
 }
 
 .global-nav__date .nav-content {
@@ -225,6 +222,7 @@
 .global-nav__menubutton {
     width: 25%;
     text-align: right;
+    float: right;
 }
 
 .global-nav__menubutton ul {

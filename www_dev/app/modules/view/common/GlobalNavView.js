@@ -38,7 +38,7 @@ define(function(require, exports, module) {
             var $target = $("[value='" + app.user.get("fontSize") + "']");
             var size = parseInt($target.attr('data-font-size'), 10);
             $('html, body').css('font-size', size + 'px');
-            this.setDate(this.targetDate);
+            this.setDate(this.targetDate || new Date(app.currentDate));
         },
 
         /**

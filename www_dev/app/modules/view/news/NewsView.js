@@ -334,7 +334,8 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         showFeetNotFoundMessage : function() {
-            this.$el.text("記事情報がありません");
+            this.$el.find(NewsView.SELECTOR_ARTICLE_LIST).hide();
+            this.$el.find(NewsView.SELECTOR_NOTFOUND).show();
         },
 
         /**
@@ -542,7 +543,12 @@ define(function(require, exports, module) {
         /**
          * 記事一覧のセレクタ
          */
-        SELECTOR_ARTICLE_LIST : "#contents__top"
+        SELECTOR_ARTICLE_LIST : "#contents__top",
+
+        /**
+         * 記事情報がない場合に出すnotificationのセレクタ
+         */
+        SELECTOR_NOTFOUND : "#not-found"
     });
 
     module.exports = NewsView;
