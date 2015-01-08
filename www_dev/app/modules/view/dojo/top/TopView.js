@@ -66,7 +66,7 @@ define(function(require, exports, module) {
          */
         showLevel: function (param) {
             console.assert(param, "param should be specified in order to show level page");
-            console.assert(param.level != null, "level should be specified in order to show level page");
+            console.assert(param.level !== null, "level should be specified in order to show level page");
 
             this.dojoLevelView.model.set("level", param.level);
 
