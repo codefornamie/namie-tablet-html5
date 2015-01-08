@@ -375,6 +375,11 @@ define(function(require, exports, module) {
             this.onSyncDojoContent();
             this.hideLoading();
 
+            var notAchievementedLevel = this.dojoContentCollection.getNotAchievementedLevel();
+            for (var i = 0; i <= parseInt(notAchievementedLevel); i++) {
+                $("#dojo-level-" + i).show();
+            }
+
             // 「どの動画も達成されていない場合」にのみ初回説明画面を表示する
             if (!isSolved) {
                 app.router.navigate("dojo-introduction", true);

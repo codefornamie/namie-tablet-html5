@@ -96,14 +96,12 @@ define(function(require, exports, module) {
          */
         setFeedList : function() {
             var self = this;
-            var levels = this.extractLevels();
             var animationDeley = 0;
             // 選択されている級の文字列表現を取得する。この値は、dojo_movie#levelの文字列と同じ
-            var levelValue = levels[this.level.get("level")];
+            var levelValue = this.level.get("level");
             this.collection.each($.proxy(function(model) {
                 if (model.get("level") === levelValue) {
                     var ItemView = self.feedListItemViewClass;
-                    var selectorPrefix = "-" + levels[model.get("level")];
                     this.insertView(this.listElementSelector, new ItemView({
                         model : model,
                         animationDeley : animationDeley,
