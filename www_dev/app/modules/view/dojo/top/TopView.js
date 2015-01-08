@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var DojoTabView = require("modules/view/dojo/top/DojoTabView");
     var DojoEditionView = require("modules/view/dojo/top/DojoEditionView");
+    var DojoLevelView = require("modules/view/dojo/top/DojoLevelView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
     var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
@@ -45,15 +46,31 @@ define(function(require, exports, module) {
         initialize: function (param) {
             console.assert(this.dojoTabView, "DojoLayout should have a DojoTabView");
             console.assert(this.dojoEditionView, "DojoLayout should have a DojoEditionView");
+            console.assert(this.dojoLevelView, "DojoLayout should have a DojoLevelView");
             console.assert(this.dojoLessonView, "DojoLayout should have a DojoLessonView");
             console.assert(this.dojoIntroductionView, "DojoLayout should have a DojoIntroductionView");
 
             this.dojoTabView = param.dojoTabView;
             this.dojoEditionView = param.dojoEditionView;
+            this.dojoLevelView = param.dojoLevelView;
             this.dojoLessonView = param.dojoLessonView;
             this.dojoIntroductionView = param.dojoIntroductionView;
 
             this.hideLesson();
+        },
+
+        /**
+         * コース内コンテンツ一覧画面を表示する
+         * @param {Object} param
+         * @memberOf DojoLayout#
+         */
+        showLevel: function (param) {
+            console.assert(param, "param should be specified in order to show level page");
+            console.assert(param.level, "level should be specified in order to show level page");
+
+            this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLevelView.layout);
+            this.removeView(DojoLayout.SELECTOR_TAB);
+            this.removeView(DojoLayout.SELECTOR_EDITION);
         },
 
         /**
@@ -201,6 +218,7 @@ define(function(require, exports, module) {
                 collection: this.dojoEditionCollection
             });
             var dojoEditionView = new DojoEditionView();
+            var dojoLevelView = new DojoLevelView(/*{level: 0}*/);
             var dojoLessonView = new DojoLessonView();
             var dojoIntroductionView = new DojoIntroductionView();
 
@@ -208,6 +226,7 @@ define(function(require, exports, module) {
             this.layout = new DojoLayout({
                 dojoTabView: dojoTabView,
                 dojoEditionView: dojoEditionView,
+                dojoLevelView: dojoLevelView,
                 dojoLessonView: dojoLessonView,
                 dojoIntroductionView: dojoIntroductionView
             });
@@ -411,6 +430,15 @@ define(function(require, exports, module) {
             switch (route) {
             case "dojoTop":
                 this.layout.hideLesson();
+                break;
+
+            case "dojoLevel":
+                var level = params[0];
+
+                this.layout.hideLesson();
+                this.layout.showLevel({
+                    level: level
+                });
                 break;
 
             case "dojoLesson":
