@@ -26,6 +26,7 @@ define(function(require, exports, module) {
     var DateUtil = require("modules/util/DateUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
     var vexDialog = require("vexDialog");
+    var Code = require("modules/util/Code");
     var IsNull = require("modules/util/filter/IsNull");
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
@@ -79,6 +80,7 @@ define(function(require, exports, module) {
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @memberOf NewsView#
          */
         setArticleSearchCondition : function(condition) {
             this.articleCollection.setSearchCondition(condition);
@@ -181,6 +183,7 @@ define(function(require, exports, module) {
         /**
          * favoriteを読み込む
          * @param {Function} callback
+         * @memberOf NewsView#
          */
         loadFavorite : function(callback) {
             this.favoriteCollection.condition.filters = [
@@ -244,6 +247,8 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         onFetchAll : function(err) {
+            var targetDate = new Date(this.targetDate);
+
             if (err) {
                 console.error(err);
                 return;
@@ -297,6 +302,39 @@ define(function(require, exports, module) {
             } else {
                 this.$(".recommendArticleContainer").hide();
             }
+
+            // 新聞アプリの場合、おたより全件を1件の表示するための処理を行う
+            if (app.config.basic.mode === Code.APP_MODE_NEWS) {
+                var anyLetter = this.newsCollection.find(function(article) {
+                    return article.get("type") === "6";
+                });
+                if (anyLetter) {
+                    // おたより記事が存在する場合の処理
+                    var newsArticles = this.newsCollection.toArray();
+                    var letterArticles = [];
+                    var letterFolderArticle;
+    
+                    // newsCollectionからおたより記事を削除し、配列に追加する
+                    _.each(newsArticles, $.proxy(function(article) {
+                        if (article.get("type") === "6") {
+                            this.newsCollection.remove(article);
+                            letterArticles.push(article);
+                        }
+                    }, this));
+    
+                    // おたより画面を開くための記事を作成し、コレクションの先頭に登録
+                    letterFolderArticle = new ArticleModel({
+                        __id: "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
+                        dispSite: "おたより",
+                        dispTitle: (targetDate.getMonth() + 1) + "月" + targetDate.getDate() + "日のおたより",
+                        type: "6",
+                        letters: letterArticles
+                    });
+                    this.newsCollection.unshift(letterFolderArticle);
+                    this.articleCollection.unshift(letterFolderArticle);
+                }
+            }
+
             // GridListView初期化
             this.showGridListView();
 
@@ -394,6 +432,7 @@ define(function(require, exports, module) {
 
             switch (model.get("type")) {
             case "1": // RSS
+            case "7": // Facebook
                 template = require("ldsh!templates/{mode}/news/articleListItem");
                 ListItemView = ArticleListItemView;
                 if (model.get("rawHTML")) {
@@ -404,7 +443,7 @@ define(function(require, exports, module) {
                 template = require("ldsh!templates/{mode}/news/youTubeListItem");
                 ListItemView = YouTubeListItemView;
                 break;
-            case "6": // 町民投稿
+            case "6": // おたより
                 template = require("ldsh!templates/{mode}/news/letterDetail");
                 ListItemView = EventListItemView;
                 break;
@@ -434,6 +473,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期スクロール位置が指定されている場合、スクロールする
+         * @memberOf NewsView#
          */
         initScrollTop : function() {
             if (this.initialScrollTop) {
@@ -444,6 +484,7 @@ define(function(require, exports, module) {
         /**
          * 記事一覧の現在のスクロール位置を設定する
          * @param {Number} scrollTop
+         * @memberOf NewsView#
          */
         setScrollTop : function(scrollTop) {
             var $container = this.$el.find("#contents__top");
@@ -454,6 +495,7 @@ define(function(require, exports, module) {
         /**
          * 記事一覧の現在のスクロール位置を取得する
          * @return {Number}
+         * @memberOf NewsView#
          */
         getScrollTop : function() {
             var $container = this.$el.find("#contents__top");
@@ -491,6 +533,7 @@ define(function(require, exports, module) {
 
         /**
          * ビューが破棄される時に呼ばれる
+         * @memberOf NewsView#
          */
         cleanup : function() {
             $("#main").removeClass("is-top");
@@ -499,6 +542,7 @@ define(function(require, exports, module) {
 
         /**
          * Google Analyticsでページビューを記録する
+         * @memberOf NewsView#
          */
         trackPageView : function() {
             app.ga.trackPageView("/NewsView", "ニュース");

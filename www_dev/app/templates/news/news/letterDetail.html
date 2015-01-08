@@ -23,34 +23,42 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">本文</div>
-                </div>
-                <div class="large-11 large-centered columns">
-                    <%=model.get("dispDescription")%>
-                </div>
+            <div class="post-header__title">
+                <%= model.get("dispTitle") %>
+            </div>
 
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">画像</div>
-                </div>
-                <div class="large-11 large-centered columns">
-                    <div class="eventFile">
-                        <div class="eventFileImage">
-                            <img class="articleDetailImage">
+            <% _.each(model.get("letters"), function(model) { %>
+                <div class="row">
+                    <div class="letters-detail">
+                        <div class="large-12 columns">
+                            <div class="eventColumnsHeader">本文</div>
                         </div>
-                        <%=model.get("imageComment")%>
+                        <div class="large-11 large-centered columns">
+                            <%= model.get("dispDescription") %>
+                        </div>
+        
+                        <div class="large-12 columns">
+                            <div class="eventColumnsHeader">画像</div>
+                        </div>
+                        <div class="large-11 large-centered columns">
+                            <div class="eventFile">
+                                <div class="eventFileImage">
+                                    <img class="articleDetailImage">
+                                </div>
+                                <%= model.get("imageComment") %>
+                            </div>
+                        </div>
+        
+                        <div class="large-12 columns">
+                            <div class="eventColumnsHeader">ニックネーム</div>
+                        </div>
+        
+                        <div class="large-11 large-centered columns end">
+                            <%= model.get("nickname") %>
+                        </div>
                     </div>
                 </div>
-
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">ニックネーム</div>
-                </div>
-
-                <div class="large-11 large-centered columns end">
-                    <%=model.get("nickname")%>
-                </div>
-            </div>
+            <% }); %>
         </div>
     </section>
 
