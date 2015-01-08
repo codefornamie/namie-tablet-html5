@@ -97,10 +97,10 @@ define(function(require, exports, module) {
             var self = this;
             var levels = this.extractLevels();
             var animationDeley = 0;
-            // 選択されている級を取得する。このオブジェクトのlabelプロパティは、dojo_movie#levelの文字列と同じ
+            // 選択されている級を取得する。このオブジェクトのidプロパティは、dojo_movie#levelと同じ
             var dojoLevel = levels[this.level.get("level")];
             this.collection.each($.proxy(function(model) {
-                if (model.get("level") === dojoLevel.label) {
+                if (model.get("level") === dojoLevel.id) {
                     var ItemView = self.feedListItemViewClass;
                     var selectorPrefix = "-" + levels[model.get("level")];
                     this.insertView(this.listElementSelector, new ItemView({
