@@ -17,6 +17,7 @@ define(function(require, exports, module) {
      */
     var ArticleModel = AbstractODataModel.extend({
         entity : "article",
+
         /**
          * 取得したOData情報のparse処理を行う。
          * <p>

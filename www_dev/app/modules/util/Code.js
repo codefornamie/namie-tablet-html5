@@ -82,7 +82,7 @@ define(function(require, exports, module) {
                 value : "blog"
             }, {
                 key : "おたより",
-                value : "other"
+                value : "letter"
             }, {
                 key : "つながろうなみえ",
                 value : "blog"

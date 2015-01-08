@@ -208,6 +208,9 @@
 .news-detail .post--townoffice .post-header__site {
     color: #27a8bd;
 }
+.news-detail .post--letter .post-header__site {
+    color: rgb(241, 132, 132);
+}
 .news-detail .post--other .post-header__site {
     color: #9c9c9c;
 }

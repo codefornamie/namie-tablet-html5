@@ -887,8 +887,30 @@ div.nehan-block.nehan-body:last-child {
  *  Letters Detail
  */
 .letters-detail {
-    background: #f6f5ec;
+    background: white;
     margin-bottom: 50px;
+    padding: 45px;
+}
+
+.letter-detail .eventFile {
+    margin: 0;
+}
+
+.letter-detail__nickname {
+    color: rgb(241, 132, 132);
+    font-weight: bold;
+    font-size: 2.0rem;
+    margin-bottom: 20px;
+}
+
+.letter-detail__nickname-unit {
+    margin: 0 15px;
+    font-size: 1.6rem;
+}
+
+.letter-detail__description {
+    color: rgb(90, 86, 61);
+    font-size: 2.0rem;
 }
 
 /**
