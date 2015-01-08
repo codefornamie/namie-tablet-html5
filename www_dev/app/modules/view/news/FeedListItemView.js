@@ -30,12 +30,9 @@ define(function(require, exports, module) {
         afterRendered : function() {
             var self = this;
             var articleImageElement = this.$el.find(".articleImage");
-            var imageType = this.model.getImageType();
+            var imageType = this.model.getThumbImageType();
 
-            var imageUrl = this.model.get("imageUrl");
-            if (this.model.get("imageThumbUrl")) {
-                imageUrl = this.model.get("imageThumbUrl");
-            }
+            var imageUrl = this.model.get("imageThumbUrl");
             switch (imageType) {
             case Code.IMAGE_TYPE_PIO:
                 this.showPIOImages(".articleImage", [

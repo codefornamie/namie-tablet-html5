@@ -240,6 +240,22 @@ define(function(require, exports, module) {
         },
 
         /**
+         * この記事のサムネイル画像タイプを判定する。
+         * @return {Number} Code.IMAGE_TYPE_* を返す
+         * @memberOf ArticleModel#
+         */
+        getThumbImageType : function() {
+            var url = this.get("imageThumbUrl");
+            if (!url) {
+                return Code.IMAGE_TYPE_NONE;
+            } else if (url.lastIndexOf("http://", 0) === 0 || url.lastIndexOf("https://", 0) === 0) {
+                return Code.IMAGE_TYPE_URL;
+            } else {
+                return Code.IMAGE_TYPE_PIO;
+            }
+        },
+
+        /**
          * 情報源タイプを判定する
          * @return {string} class文字列を返す
          */
