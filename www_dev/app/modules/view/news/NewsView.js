@@ -303,8 +303,8 @@ define(function(require, exports, module) {
                 this.$(".recommendArticleContainer").hide();
             }
 
-            // 新聞アプリの場合、おたより全件を1件の表示するための処理を行う
-            if (app.config.basic.mode === Code.APP_MODE_NEWS) {
+            // 新聞アプリおよび管理アプリプレビュー表示の場合、おたより全件を1件の表示するための処理を行う
+            if (app.config.basic.mode === Code.APP_MODE_NEWS || this.isPreview) {
                 var anyLetter = this.newsCollection.find(function(article) {
                     return article.get("type") === "6";
                 });
