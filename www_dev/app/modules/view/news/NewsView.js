@@ -394,6 +394,7 @@ define(function(require, exports, module) {
 
             switch (model.get("type")) {
             case "1": // RSS
+            case "7": // Facebook
                 template = require("ldsh!templates/{mode}/news/articleListItem");
                 ListItemView = ArticleListItemView;
                 if (model.get("rawHTML")) {
