@@ -336,3 +336,61 @@
     margin: 20px 0 0;
     padding: 0;
 }
+
+/**
+ *  初回説明画面
+ */
+.dojo-introduction-container {
+}
+
+.dojo-introduction-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 100;
+    opacity: 0;
+    transition: .3s ease opacity;
+}
+
+.dojo-introduction-bg.is-ready {
+    opacity: 1;
+}
+
+.dojo-introduction-dialog {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 80%;
+    height: 80%;
+    margin: auto;
+    background: white;
+    z-index: 110;
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.32);
+    opacity: 0;
+    transition: .3s ease opacity;
+}
+
+.dojo-introduction-dialog.is-ready {
+    opacity: 1;
+}
+
+.dojo-introduction-dialog__header {
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
+}
+
+.dojo-introduction-dialog__header h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 36px;
+}
+
+.dojo-introduction-dialog__body {
+    text-align: center;
+}
