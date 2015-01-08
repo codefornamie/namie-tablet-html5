@@ -40,6 +40,7 @@ define(function(require, exports, module) {
         events : {
             "click [data-complete-lesson]" : "onClickCompleteLesson",
             "click [data-uncomplete-lesson]" : "onClickUncompleteLesson",
+            "click [data-back]" : "onClickBack"
         },
         /**
          * はいボタンを押したら呼ばれる
@@ -90,6 +91,16 @@ define(function(require, exports, module) {
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.buttons.YES.text = "OK";
             vexDialog.alert("習得できるように頑張りましょう！");
+        },
+
+        /**
+         * 動画一覧へ戻るボタンを押したら呼ばれる
+         * @memberOf DojoLessonLayout#
+         */
+        onClickBack : function(ev) {
+            ev.preventDefault();
+
+            app.router.go("dojo", "levels", app.currentDojoLevel);
         },
 
         /**

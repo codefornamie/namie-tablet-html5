@@ -9,7 +9,7 @@ define(function(require, exports, module) {
     var Super = FeedListView;
 
     /**
-     * 道場アプリのトップ画面にあるコンテンツ一覧を表示するためのViewクラスを作成する。
+     * 道場アプリのコンテンツ一覧を表示するためのViewクラスを作成する。
      * 
      * @class 道場アプリのトップ画面を表示するためのView
      * @exports DojoListView
@@ -97,10 +97,11 @@ define(function(require, exports, module) {
             var self = this;
             var levels = this.extractLevels();
             var animationDeley = 0;
+
             this.collection.each($.proxy(function(model) {
                 var ItemView = self.feedListItemViewClass;
                 var selectorPrefix = "-" + levels[model.get("level")];
-                this.insertView(this.listElementSelector + selectorPrefix, new ItemView({
+                this.insertView(this.listElementSelector, new ItemView({
                     model : model,
                     animationDeley : animationDeley,
                     parentView: this

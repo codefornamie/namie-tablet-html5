@@ -66,7 +66,9 @@ define(function(require, exports, module) {
          */
         showLevel: function (param) {
             console.assert(param, "param should be specified in order to show level page");
-            console.assert(param.level, "level should be specified in order to show level page");
+            console.assert(param.level != null, "level should be specified in order to show level page");
+
+            this.dojoLevelView.model.set("level", param.level);
 
             this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLevelView.layout);
             this.removeView(DojoLayout.SELECTOR_TAB);
@@ -218,7 +220,9 @@ define(function(require, exports, module) {
                 collection: this.dojoEditionCollection
             });
             var dojoEditionView = new DojoEditionView();
-            var dojoLevelView = new DojoLevelView(/*{level: 0}*/);
+            var dojoLevelView = new DojoLevelView({
+                dojoEditionModel: this.currentEditionModel
+            });
             var dojoLessonView = new DojoLessonView();
             var dojoIntroductionView = new DojoIntroductionView();
 
@@ -434,6 +438,8 @@ define(function(require, exports, module) {
 
             case "dojoLevel":
                 var level = params[0];
+
+                app.currentDojoLevel = level;
 
                 this.layout.hideLesson();
                 this.layout.showLevel({

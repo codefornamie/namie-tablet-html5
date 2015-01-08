@@ -25,7 +25,7 @@ define(function(require, exports, module) {
          */
         serialize: function () {
             return {
-                levels: this.extractLevels()
+                levels: this.extractLevels(),
             };
         },
 
