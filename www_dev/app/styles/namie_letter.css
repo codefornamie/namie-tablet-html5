@@ -475,3 +475,16 @@
     line-height: 1.4;
     color: rgb(90, 86, 60);
 }
+
+.gallery-list {
+    list-style: none;
+    width: 100%;
+    margin: auto;
+}
+
+.gallery-list__item {
+    box-sizing: border-box;
+    width: 25%;
+    display: inline-table;
+}
+

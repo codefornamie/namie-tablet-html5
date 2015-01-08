@@ -37,6 +37,9 @@ define(function(require, exports, module) {
             }, {
                 key : "6",
                 value : "おたより"
+            }, {
+                key : "7",
+                value : "Facebook"
             }
     ];
 
@@ -80,6 +83,9 @@ define(function(require, exports, module) {
             }, {
                 key : "おたより",
                 value : "other"
+            }, {
+                key : "つながろうなみえ",
+                value : "blog"
             }
     ];
     Code.ARTICLE_SITE_NONE = "other";

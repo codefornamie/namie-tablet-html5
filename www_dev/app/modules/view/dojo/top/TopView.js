@@ -7,11 +7,13 @@ define(function(require, exports, module) {
     var DojoTabView = require("modules/view/dojo/top/DojoTabView");
     var DojoEditionView = require("modules/view/dojo/top/DojoEditionView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
+    var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
     var YouTubeCollection = require("modules/collection/dojo/YouTubeCollection");
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
     var DojoEditionCollection = require("modules/collection/dojo/DojoEditionCollection");
     var AchievementCollection = require("modules/collection/misc/AchievementCollection");
+    var Code = require("modules/util/Code");
     var Equal = require("modules/util/filter/Equal");
     var IsNull = require("modules/util/filter/IsNull");
     
@@ -38,15 +40,18 @@ define(function(require, exports, module) {
         /**
          * 初期化
          * @param {Object} param
+         * @memberOf DojoLayout#
          */
         initialize: function (param) {
             console.assert(this.dojoTabView, "DojoLayout should have a DojoTabView");
             console.assert(this.dojoEditionView, "DojoLayout should have a DojoEditionView");
             console.assert(this.dojoLessonView, "DojoLayout should have a DojoLessonView");
+            console.assert(this.dojoIntroductionView, "DojoLayout should have a DojoIntroductionView");
 
             this.dojoTabView = param.dojoTabView;
             this.dojoEditionView = param.dojoEditionView;
             this.dojoLessonView = param.dojoLessonView;
+            this.dojoIntroductionView = param.dojoIntroductionView;
 
             this.hideLesson();
         },
@@ -54,6 +59,7 @@ define(function(require, exports, module) {
         /**
          * 詳細画面を表示する
          * @param {Object} param
+         * @memberOf DojoLayout#
          */
         showLesson: function (param) {
             console.assert(param, "param should be specified in order to show lesson page");
@@ -71,6 +77,7 @@ define(function(require, exports, module) {
 
         /**
          * 詳細画面を隠す
+         * @memberOf DojoLayout#
          */
         hideLesson: function () {
             this.removeView(DojoLayout.SELECTOR_LESSON);
@@ -79,9 +86,20 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 初回説明画面を表示する
+         * @param {Object} param
+         * @memberOf DojoLayout#
+         */
+        showIntroduction: function (param) {
+            this.setView(DojoLayout.SELECTOR_INTRODUCTION, this.dojoIntroductionView);
+        },
+
+        /**
          * aタグをクリックした際の挙動を
          * ブラウザデフォルトではなく
          * pushStateに変更する
+         * @param {Event} evt
+         * @memberOf DojoLayout#
          */
         onClickAnchor: function (evt) {
             var $target = $(evt.currentTarget);
@@ -111,6 +129,11 @@ define(function(require, exports, module) {
          * 一覧のセレクタ
          */
         SELECTOR_EDITION: "#dojo-edition-container",
+
+        /**
+         * 初回説明画面のセレクタ
+         */
+        SELECTOR_INTRODUCTION: "#dojo-introduction-container",
     });
 
     /**
@@ -179,12 +202,14 @@ define(function(require, exports, module) {
             });
             var dojoEditionView = new DojoEditionView();
             var dojoLessonView = new DojoLessonView();
+            var dojoIntroductionView = new DojoIntroductionView();
 
             // layoutを初期化する
             this.layout = new DojoLayout({
                 dojoTabView: dojoTabView,
                 dojoEditionView: dojoEditionView,
-                dojoLessonView: dojoLessonView
+                dojoLessonView: dojoLessonView,
+                dojoIntroductionView: dojoIntroductionView
             });
 
             // 各子ビューをレンダリングする
@@ -305,6 +330,8 @@ define(function(require, exports, module) {
          * @memberOf TopView#
          */
         onSearchAchievement : function() {
+            var isSolved = false;
+
             // 動画と達成情報の連結を行う
             if (this.achievementCollection.size() !== 0) {
                 this.achievementCollection.each($.proxy(function(achievement) {
@@ -314,16 +341,26 @@ define(function(require, exports, module) {
                                 dojoContent.achievementModels = [];
                             }
                             dojoContent.achievementModels.push(achievement);
+
+                            if (!isSolved) {
+                                isSolved = dojoContent.getSolvedState() === Code.DOJO_STATUS_SOLVED;
+                            }
                         }
                     },this));
                 },this));
             }
             this.onSyncDojoContent();
             this.hideLoading();
+
+            // 「どの動画も達成されていない場合」にのみ初回説明画面を表示する
+            if (!isSolved) {
+                app.router.navigate("dojo-introduction", true);
+            }
         },
         
         /**
          * this.dojoEditionCollectionを元に各子ビューを更新する
+         * @memberOf TopView#
          */
         updateChildViews: function () {
             // 1. DojoTabViewの更新
@@ -358,6 +395,7 @@ define(function(require, exports, module) {
 
         /**
          * ◯◯編が変更されたら呼ばれる
+         * @memberOf TopView#
          */
         onChangeEdition: function () {
             this.updateChildViews();
@@ -367,6 +405,7 @@ define(function(require, exports, module) {
          * ルーティングを監視して描画処理を行う
          * @param {String} route
          * @param {Object} params
+         * @memberOf TopView#
          */
         onRoute: function (route, params) {
             switch (route) {
@@ -382,6 +421,10 @@ define(function(require, exports, module) {
                     dojoEditionModel: this.currentEditionModel,
                     dojoContentModel: dojoContentModel
                 });
+                break;
+
+            case "dojoIntroduction":
+                this.layout.showIntroduction();
                 break;
 
             default:

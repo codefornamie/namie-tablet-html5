@@ -60,7 +60,14 @@ define(function(require, exports, module) {
             
             $(".contents-wrapper").css("overflow", "hidden");
 
-            FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
+            // 実機から画像一覧を取得表示
+            if (navigator.userAgent.indexOf('Android') >= 0) {
+                FileAPIUtil.getGalleryList($.proxy(this.setGalleryList,this));
+                $(".onPC").hide();
+            } else {
+                FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
+                this.hideLoading();
+            }
         },
 
         /**
@@ -155,8 +162,8 @@ define(function(require, exports, module) {
 
                 if (!this.file) {
                     vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.buttons.YES.text = 'OK';
                     vexDialog.alert("画像が未選択です。");
-
                     return false;
                 }
 
@@ -209,6 +216,76 @@ define(function(require, exports, module) {
             });
         },
         /**
+         * 画面にギャラリー一覧を表示する関数
+         * @param {Array} fileArray FileEntryオブジェクトの配列
+         * @memberOf LetterWizardView#
+         */
+        setGalleryList : function(fileArray) {
+            var urls = [];
+            var fileCount = 0;
+            if (fileArray.length === 0) {
+                var notPicElem = $("<li><div>画像がありません</div></li>");
+                $("#gallery-list").append(notPicElem);
+                this.hideLoading();
+                return;
+            }
+            _.each(fileArray, $.proxy(function(file) {
+                if (file.name.match(/\.jpg$/i)) {
+                    // Android撮影画像はjpegのみ
+                    var elemString = "<li class='gallery-list__item'><img class='letterImage'></li>"; 
+                    var element = $(elemString);
+                    element.find("img").load($.proxy(function() {
+                        fileCount++;
+                        if (fileCount >= fileArray.length) {
+                            this.hideLoading();
+                            $(this.el).find("img").unbind("click");
+                            $(this.el).find("img").click($.proxy(this.onClickGallery,this));
+                        }
+                    },this));
+                    element.find("img").attr("src", file.toURL());
+                    element.find("img").data("fileEntry", file);
+                    $("#gallery-list").append(element);
+                } else {
+                    // 動画の場合は共通処理以外は何もしない
+                    fileCount++;
+                    if (fileCount >= fileArray.length) {
+                        this.hideLoading();
+                        $(this.el).find("img").unbind("click");
+                        $(this.el).find("img").click($.proxy(this.onClickGallery,this));
+                    }
+                }
+            },this));
+        },
+        /**
+         * 画像選択時のハンドラ
+         * @param {Event} event 画像クリックイベント
+         * @memberOf LetterWizardView#
+         */
+        onClickGallery : function(event) {
+            this.showLoading();
+            app.logger.debug("onClickGallery");
+            var target = event.target;
+            $(target).data("fileEntry").file($.proxy(function(file) {
+                app.logger.debug("onClickGallery: file: " + file);
+                app.logger.debug("onClickGallery: file.type: " + file.type);
+                app.logger.debug("onClickGallery: file.name: " + file.name);
+
+              // ファイルの読み込み
+                var reader = new FileReader();
+                reader.onload = $.proxy(function(e) {
+                    target.data = e.target.result;
+                    this.onLoadFileExtend(e, file, target);
+                },this);
+                reader.readAsArrayBuffer(file);
+              
+            },this), function(e) {
+                // fileでエラー
+                app.logger.debug("fileEntry.file(): error" + e.code);
+                this.hideLoading();
+            });
+
+        },
+        /**
          * 確認画面にインプットデータをセットする関数
          * @memberOf LetterWizardView#
          */
@@ -237,12 +314,40 @@ define(function(require, exports, module) {
         /**
          * ファイル読み込み後に行う拡張処理
          * @memberOf LetterWizardView#
-         * @param {Event} ファイルロードイベント
+         * @param {Event} ev ファイルロードイベント
+         * @param {Object} file ファイルオブジェクト
+         * @param {Object} target 選択した画像要素
          */
-        onLoadFileExtend : function(ev, file) {
+        onLoadFileExtend : function(ev, file, target) {
+            this.hideLoading();
             this.file = file;
             this.file.data = ev.target.result;
-            $("#letterPicture").attr("src", $("#previewFile").attr("src"));
+            if (navigator.userAgent.indexOf('Android') < 0) {
+                $("#letterPicture").attr("src", $("#previewFile").attr("src"));
+                return;
+            }
+
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.buttons.YES.text = 'これでOK';
+            vexDialog.buttons.NO.text = '選びなおす';
+            vexDialog.open({
+                message : 'この写真でいいですか？',
+                input : "<div class='vex-custom-input-wrapper'><img src='" + $(target).attr("src") + "' width='700', height='700'></div>",
+                callback : $.proxy(function(value) {
+                    var checkElem = $(".checkedPic");
+                    checkElem.css("border","none");
+                    checkElem.removeClass("checkedPic");
+                    if (value) {
+                        $("#letterPicture").attr("src", $(target).attr("src"));
+                        $(target).css("border","3px solid red");
+                        $(target).addClass("checkedPic");
+                    } else {
+                        this.file = null;
+                    }
+                    $(".vex-custom-input-wrapper").remove();
+                    return;
+                },this)
+            });
         },
         /**
          * 削除ボタン押下時のハンドラ
@@ -295,6 +400,7 @@ define(function(require, exports, module) {
         saveModel : function(){
             this.model.save(null, {
                 success : $.proxy(function() {
+                    $("#gallery-list").empty();
                     this.hideLoading();
                     app.router.go('/letters');
                 }, this),
