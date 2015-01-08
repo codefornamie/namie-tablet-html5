@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
     var FeedListView = require("modules/view/news/FeedListView");
     var Super = FeedListView;
+    var Code = require("modules/util/Code");
 
     /**
      * 道場アプリのコンテンツ一覧を表示するためのViewクラスを作成する。
@@ -99,13 +100,28 @@ define(function(require, exports, module) {
             var animationDeley = 0;
             // 選択されている級の文字列表現を取得する。この値は、dojo_movie#levelの文字列と同じ
             var levelValue = this.level.get("level");
+            this.collection.models = _.sortBy(this.collection.models,function(model) {
+                return model.get("sequence");
+            });
+            
+            // 次に見るべき動画とグレーアウトする動画を判断するカウント変数
+            var nextCount = 0;
             this.collection.each($.proxy(function(model) {
                 if (model.get("level") === levelValue) {
+                    var solvedItem = _.find(model.achievementModels,function(ach){
+                        return ach.get("type") === "dojo_" + Code.DOJO_STATUS_SOLVED;
+                    });
+                    if (!solvedItem) {
+                        nextCount++;
+                    }
                     var ItemView = self.feedListItemViewClass;
                     this.insertView(this.listElementSelector, new ItemView({
                         model : model,
                         animationDeley : animationDeley,
-                        parentView: this
+                        parentView: this,
+                        isNext: nextCount === 1,
+                        isGrayedOut: nextCount > 1,
+                        
                     }));
                     animationDeley += 0.2;
                 }
