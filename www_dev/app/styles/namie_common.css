@@ -348,6 +348,10 @@ main {
     background-image: url(../../app/img/bg-b-paper.jpg);
 }
 
+.is-ope .contents {
+    background: rgb(248, 247, 242);
+}
+
 .is-backnumber-date .contents,
 .is-top .contents {
     height: auto;
