@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var Code = require("modules/util/Code");
     var AbstractView = require("modules/view/AbstractView");
     var DojoListItemView = require("modules/view/dojo/top/DojoListItemView");
 
@@ -42,19 +43,23 @@ define(function(require, exports, module) {
          * @memberOf DojoLevelListView#
          */
         extractLevels : function() {
-            var levels = {};
-            // 級の名称を収集し、重複を削除する
-            var levelValues = this.collection.map(function(model) {
-                return model.get("level");
-            });
-            levelValues = _.uniq(levelValues);
-
-            // 「級の名称=>インデックス」の対応を格納する
-            _.each(levelValues, function(levelValue, index) {
-                levels[levelValue] = index;
-            });
-
+            // 定義されている級のリストを取得する
+            // TODO: 将来的には、級の定義情報はperosnium.ioに定義する
+            var levels = Code.DOJO_LEVELS;
             return levels;
+//            var levels = {};
+//            // 級の名称を収集し、重複を削除する
+//            var levelValues = this.collection.map(function(model) {
+//                return model.get("level");
+//            });
+//            levelValues = _.uniq(levelValues);
+//
+//            // 「級の名称=>インデックス」の対応を格納する
+//            _.each(levelValues, function(levelValue, index) {
+//                levels[levelValue] = index;
+//            });
+//
+//            return levels;
         },
     });
 

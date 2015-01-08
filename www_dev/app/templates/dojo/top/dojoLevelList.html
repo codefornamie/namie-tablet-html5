@@ -1,5 +1,5 @@
-<% _(levels).pairs().each(function(level) { %>
-    <a href="dojo/levels/<%= level[1] %>" class="button dojo-level-title">
-        <%= level[0] %>
+<% _(levels).each(function(level) { %>
+    <a href="dojo/levels/<%= level.id %>" class="button dojo-level-title">
+        <%= level.label %>
     </h3>
 <% }) %>
