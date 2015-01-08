@@ -46,31 +46,8 @@ define(function(require, exports, module) {
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
          */
         showImage : function() {
+            var self = this;
             var imageElems = $(this.el).find("img");
-            imageElems.each(function() {
-                if ($(this).attr("src")) {
-                    $(this).wrap("<a class='expansionPicture' href='" + $(this).attr("src") + "'></a>");
-                }
-            });
-            $(this.el).find(".expansionPicture").colorbox({
-                closeButton : false,
-                current : "",
-                photo : true,
-                maxWidth : "83%",
-                maxHeight : "100%",
-                onComplete : $.proxy(function() {
-                    $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
-                    $("#cboxOverlay").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
-                    $("#cboxCloseButton").click(function() {
-                        $.colorbox.close();
-                    });
-                    $("#cboxSaveButton").click($.proxy(this.onClickImage, this));
-                },this),
-                onClosed : function() {
-                    $("#cboxSaveButton").remove();
-                    $("#cboxCloseButton").remove();
-                }
-            });
             var articleImage = $(this.el).find(".articleDetailImage");
             var onGetBinary = function(binary) {
                 var arrayBufferView = new Uint8Array(binary);
@@ -80,10 +57,11 @@ define(function(require, exports, module) {
                 var url = FileAPIUtil.createObjectURL(blob);
                 articleImage.load(function() {
                     articleImage.parent().show();
-                    window.URL.revokeObjectURL(articleImage.attr("src"));
+//                    window.URL.revokeObjectURL(articleImage.attr("src"));
                 });
                 articleImage.attr("src", url);
                 articleImage.data("blob", blob);
+                self.setColorbox(imageElems);
             };
 
             if (this.model.get("imageUrl")) {
@@ -112,6 +90,37 @@ define(function(require, exports, module) {
                 $(this.el).find("#nehan-articleDetailImage").css("width", "auto");
                 $(this.el).find("#nehan-articleDetailImage").css("height", "auto");
             }
+        },
+        /**
+         * colorboxの設定を行う
+         * @param {Array} imageElems img要素の配列
+         * @memberOf ArticleListItemView#
+         */
+        setColorbox : function(imageElems) {
+            imageElems.each(function() {
+                if ($(this).attr("src")) {
+                    $(this).wrap("<a class='expansionPicture' href='" + $(this).attr("src") + "'></a>");
+                }
+            });
+            $(this.el).find(".expansionPicture").colorbox({
+                closeButton : false,
+                current : "",
+                photo : true,
+                maxWidth : "83%",
+                maxHeight : "100%",
+                onComplete : $.proxy(function() {
+                    $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
+                    $("#cboxOverlay").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                    $("#cboxCloseButton").click(function() {
+                        $.colorbox.close();
+                    });
+                    $("#cboxSaveButton").click($.proxy(this.onClickImage, this));
+                },this),
+                onClosed : function() {
+                    $("#cboxSaveButton").remove();
+                    $("#cboxCloseButton").remove();
+                }
+            });
         },
         /**
          * Viewの秒が処理の後の、記事表示処理で共通する処理を行う。
