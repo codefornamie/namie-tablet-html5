@@ -97,7 +97,7 @@ define(function(require, exports, module) {
             var self = this;
             var levels = this.extractLevels();
             var animationDeley = 0;
-            // 選択されている級の文字列表現を取得する。この値は、dojo_movie#levelの文字列と同じ
+            // 選択されている級を取得する。このオブジェクトのlabelプロパティは、dojo_movie#levelの文字列と同じ
             var dojoLevel = levels[this.level.get("level")];
             this.collection.each($.proxy(function(model) {
                 if (model.get("level") === dojoLevel.label) {

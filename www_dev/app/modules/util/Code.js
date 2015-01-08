@@ -120,19 +120,23 @@ define(function(require, exports, module) {
      */
     Code.DOJO_LEVELS = [{
         id: "0",
+        className: "white",
         label: "白帯編",
-        description: "初めてタブレットをさわる方のためのコースです。",
+        description: "初めてタブレットをさわる方のためのコースです。（文言未決定）",
         iconPath: ""
     },{
         id: "1",
+        className: "brown",
         label: "茶帯編",
-        description: "",
+        description: "茶帯コースです。（文言未決定）",
         iconPath: ""
     },{
         id: "2",
+        className: "black",
         label: "黒帯編",
-        description: "",
+        description: "黒帯コースです。（文言未決定）",
         iconPath: ""
     }];
+
     module.exports = Code;
 });

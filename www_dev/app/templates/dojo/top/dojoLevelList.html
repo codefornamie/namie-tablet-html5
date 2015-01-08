@@ -1,5 +1,13 @@
 <% _(levels).each(function(level) { %>
-    <a href="dojo/levels/<%= level.id %>" class="button dojo-level-title">
-        <%= level.label %>
-    </h3>
+    <div class="dojo-level-item">
+        <div class="dojo-level-item-label">
+            <%= level.label %>
+            <a href="dojo/levels/<%= level.id %>" class="button dojo-level-title">
+                このコースを見る
+            </a>
+        </div>
+        <div class="dojo-level-item-description">
+            <%= level.description %>
+        </div>
+    </div>
 <% }) %>

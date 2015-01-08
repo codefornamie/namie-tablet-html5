@@ -2,12 +2,17 @@
  *  道場アプリCSS
  */
 .page-dojo .contents {
-    background: rgb(200, 93, 47);
+    background-color: #efeeec;
+    background-image: url(../../app/img/dojo/img-bg.png);
+    background-size: contain;
+    color: #754a2a;
 }
 
 .page-dojo .header {
-    background: #777;
-    height: 80px;
+    background-image: url(../../app/img/dojo/img-header-bg.png);
+    background-size: contain;
+    box-shadow: 0px 0px 5px #888;
+    height: 70px;
     margin: 0;
     display: block;
 }
@@ -36,7 +41,7 @@
 }
 
 .page-dojo .contents-wrapper {
-    padding-top: 80px;
+    padding-top: 70px;
     padding-right: 0;
     padding-left: 0;
 }
@@ -58,7 +63,7 @@
  *
  */
 .dojo-login {
-    color: white;
+    color: #754a2a;
     margin-top: 40px;
 }
 
@@ -111,10 +116,23 @@
 }
 
 .dojo-edition-title {
-    color: white;
+    color: #754a2a;
     margin: 20px 0;
     font-weight: bold;
     text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+/**
+ *  コース一覧
+ */
+.dojo-level-container {
+    padding: 20px;
+}
+.dojo-level-container .dojo-level-item {
+    background-color: #fff;
+    border: 3px solid #ffb401;
+    height: 111px;
+    margin-bottom: 20px;
 }
 
 /**
@@ -137,13 +155,6 @@
 /**
  *  動画コンテンツ一覧
  */
-.dojo-level-title {
-    color: white;
-    margin: 20px 40px;
-    font-weight: bold;
-    text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-}
-
 .dojo-list {
     display: -webkit-flex;
     display: flex;
