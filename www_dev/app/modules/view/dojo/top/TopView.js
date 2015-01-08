@@ -87,6 +87,10 @@ define(function(require, exports, module) {
 
             this.dojoLessonView.dojoEditionModel.set(param.dojoEditionModel.toJSON());
             this.dojoLessonView.dojoContentModel.set(param.dojoContentModel.toJSON());
+            if (!param.dojoContentModel.achievementModels) {
+                // achievementModels配列のインスタンスを共有するため、undefinedの場合はここで配列のインスタンスを生成する
+                param.dojoContentModel.achievementModels = [];
+            }
             this.dojoLessonView.dojoContentModel.achievementModels = param.dojoContentModel.achievementModels;
 
             this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView.layout);
