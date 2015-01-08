@@ -308,7 +308,7 @@ define(function(require, exports, module) {
             this.model.set("nickname", $("#letter-wizard-form__nickname").val());
             var imageUrl = this.generateFileName(this.file.name);
             this.model.set("imageUrl", imageUrl);
-            this.model.set("imageThumbUrl", imageUrl + ".thumb");
+            this.model.set("imageThumbUrl", "thumbnail.png");
             this.model.set("createUserId", app.user.get("__id"));
 
             // 配信日は固定で翌日とする
@@ -411,7 +411,7 @@ define(function(require, exports, module) {
             // サムネイル画像の保存
             var thmbDavModel = new WebDavModel();
             thmbDavModel.set("path", this.model.get("imagePath"));
-            thmbDavModel.set("fileName", this.model.get("imageUrl") + ".thumb");
+            thmbDavModel.set("fileName", "thumbnail.png");
             thmbDavModel.set("data", this.file.thumb);
             thmbDavModel.set("contentType", this.file.type);
             thmbDavModel.save(null, {

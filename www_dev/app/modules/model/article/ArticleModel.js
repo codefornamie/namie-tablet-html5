@@ -73,8 +73,6 @@ define(function(require, exports, module) {
             
             // サムネイルがないデータは、本画像をサムネイルとする。
             response.imageThumbUrl = response.imageThumbUrl || response.imageUrl;
-            response.imageThumbUrl2 = response.imageThumbUrl2 || response.imageUrl2;
-            response.imageThumbUrl3 = response.imageThumbUrl3 || response.imageUrl3;
             
             return response;
         },
