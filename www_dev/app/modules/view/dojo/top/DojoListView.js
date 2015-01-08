@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var DojoListItemView = require("modules/view/dojo/top/DojoListItemView");
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
     var FeedListView = require("modules/view/news/FeedListView");
+    var Code = require("modules/util/Code");
     var Super = FeedListView;
 
     /**
@@ -75,16 +76,14 @@ define(function(require, exports, module) {
          */
         extractLevels : function() {
             var levels = {};
-            // 級の名称を収集し、重複を削除する
-            var levelValues = this.collection.map(function(model) {
-                return model.get("level");
-            });
-            levelValues = _.uniq(levelValues);
+
+            // 定義されている級のリストを取得する
+            // TODO: 将来的には、級の定義情報はperosnium.ioに定義する
+            var dojoLevels = Code.DOJO_LEVELS;
 
             // 「級の名称=>インデックス」の対応を格納する
-            _.each(levelValues, function(levelValue, index) {
-                //levels[levelValue] = index;
-                levels[index] = levelValue;
+            _.each(dojoLevels, function(dojoLevel, index) {
+                levels[dojoLevel.id] = dojoLevel;
             });
 
             return levels;
@@ -99,9 +98,9 @@ define(function(require, exports, module) {
             var levels = this.extractLevels();
             var animationDeley = 0;
             // 選択されている級の文字列表現を取得する。この値は、dojo_movie#levelの文字列と同じ
-            var levelValue = levels[this.level.get("level")];
+            var dojoLevel = levels[this.level.get("level")];
             this.collection.each($.proxy(function(model) {
-                if (model.get("level") === levelValue) {
+                if (model.get("level") === dojoLevel.label) {
                     var ItemView = self.feedListItemViewClass;
                     var selectorPrefix = "-" + levels[model.get("level")];
                     this.insertView(this.listElementSelector, new ItemView({
