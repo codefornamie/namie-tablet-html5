@@ -46,7 +46,57 @@ define(function(require, exports, module) {
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
          */
         showImage : function() {
+            var self = this;
             var imageElems = $(this.el).find("img");
+            var articleImage = $(this.el).find(".articleDetailImage");
+            var onGetBinary = function(binary) {
+                var arrayBufferView = new Uint8Array(binary);
+                var blob = new Blob([ arrayBufferView ], {
+                    type : "image/jpg"
+                });
+                var url = FileAPIUtil.createObjectURL(blob);
+                articleImage.load(function() {
+                    articleImage.parent().show();
+//                    window.URL.revokeObjectURL(articleImage.attr("src"));
+                });
+                articleImage.attr("src", url);
+                articleImage.data("blob", blob);
+                self.setColorbox(imageElems);
+            };
+
+            if (this.model.get("imageUrl")) {
+                try {
+                    var imagePath = this.model.get("imagePath") ? this.model.get("imagePath") + "/" : "";
+                    app.box.col("dav").getBinary(imagePath + this.model.get("imageUrl"), {
+                        success : onGetBinary
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+                // iscroll.jsが正確に高さを把握できなくなるため,
+                // 後から画像が読み込まれる場合はhideしない
+                //articleImage.parent().hide();
+            } else {
+                // ArticleListViewでiscrollを初期化する際に
+                // 記事内のimgの読み込みを待機しているので
+                // このimgは決して読み込まれないことを通知する
+                articleImage.trigger('error', "this image will never be loaded");
+                $(this.el).find(".articleDetailImageArea").hide();
+            }
+
+            if (this.model.get("imageUrl")) {
+                $(this.el).find("#nehan-articleDetailImage").parent().css("width", "auto");
+                $(this.el).find("#nehan-articleDetailImage").parent().css("height", "auto");
+                $(this.el).find("#nehan-articleDetailImage").css("width", "auto");
+                $(this.el).find("#nehan-articleDetailImage").css("height", "auto");
+            }
+        },
+        /**
+         * colorboxの設定を行う
+         * @param {Array} imageElems img要素の配列
+         * @memberOf ArticleListItemView#
+         */
+        setColorbox : function(imageElems) {
             imageElems.each(function() {
                 if ($(this).attr("src")) {
                     $(this).wrap("<a class='expansionPicture' href='" + $(this).attr("src") + "'></a>");
@@ -71,48 +121,6 @@ define(function(require, exports, module) {
                     $("#cboxCloseButton").remove();
                 }
             });
-            var articleImage = $(this.el).find(".articleDetailImage");
-            var onGetBinary = function(binary) {
-                var arrayBufferView = new Uint8Array(binary);
-                var blob = new Blob([ arrayBufferView ], {
-                    type : "image/jpg"
-                });
-                var url = FileAPIUtil.createObjectURL(blob);
-                articleImage.load(function() {
-                    articleImage.parent().show();
-                    window.URL.revokeObjectURL(articleImage.attr("src"));
-                });
-                articleImage.attr("src", url);
-                articleImage.data("blob", blob);
-            };
-
-            if (this.model.get("imageUrl")) {
-                articleImage.attr("src", this.model.get("imageUrl"));
-            } else if (this.model.get("fileName")) {
-                try {
-                    app.box.col("dav").getBinary(this.model.get("fileName"), {
-                        success : onGetBinary
-                    });
-                } catch (e) {
-                    console.error(e);
-                }
-                // iscroll.jsが正確に高さを把握できなくなるため,
-                // 後から画像が読み込まれる場合はhideしない
-                //articleImage.parent().hide();
-            } else {
-                // ArticleListViewでiscrollを初期化する際に
-                // 記事内のimgの読み込みを待機しているので
-                // このimgは決して読み込まれないことを通知する
-                articleImage.trigger('error', "this image will never be loaded");
-                $(this.el).find(".articleDetailImageArea").hide();
-            }
-
-            if (this.model.get("imageUrl")) {
-                $(this.el).find("#nehan-articleDetailImage").parent().css("width", "auto");
-                $(this.el).find("#nehan-articleDetailImage").parent().css("height", "auto");
-                $(this.el).find("#nehan-articleDetailImage").css("width", "auto");
-                $(this.el).find("#nehan-articleDetailImage").css("height", "auto");
-            }
         },
         /**
          * Viewの秒が処理の後の、記事表示処理で共通する処理を行う。
