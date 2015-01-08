@@ -317,7 +317,7 @@ define(function(require, exports, module) {
                 var fileAreaView = $fileArea.data("view");
                 if( fileAreaView.imageByteArray ) {
                     if( this.thumbImageByteArray === undefined) {
-                        if(fileAreaView.isChangeImage || i != 0) {
+                        if(fileAreaView.isChangeImage || i !== 0) {
                             this.thumbImageByteArray = fileAreaView.imageByteArray;
                         } else {
                             this.thumbImageByteArray = null;
