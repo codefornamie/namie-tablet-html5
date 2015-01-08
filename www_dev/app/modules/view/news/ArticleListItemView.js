@@ -87,10 +87,9 @@ define(function(require, exports, module) {
             };
 
             if (this.model.get("imageUrl")) {
-                articleImage.attr("src", this.model.get("imageUrl"));
-            } else if (this.model.get("fileName")) {
                 try {
-                    app.box.col("dav").getBinary(this.model.get("fileName"), {
+                    var imagePath = this.model.get("imagePath") ? this.model.get("imagePath") + "/" : "";
+                    app.box.col("dav").getBinary(imagePath + this.model.get("imageUrl"), {
                         success : onGetBinary
                     });
                 } catch (e) {

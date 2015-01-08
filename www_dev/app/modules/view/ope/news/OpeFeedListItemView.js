@@ -32,7 +32,7 @@ define(function(require, exports, module) {
          * </p>
          */
         afterRendered : function() {
-            if (this.model.get("type") === "1") {
+            if (this.model.get("type") === "1" || this.model.get("type") === "7") {
                 // RSS収集記事は編集ボタンを非表示にする
                 this.$el.find("[data-article-edit-button]").hide();
             }
@@ -131,6 +131,7 @@ define(function(require, exports, module) {
             $("#sequenceConfirm").hide();
             switch (this.model.get("type")) {
             case "1":
+            case "7":
                 var template = require("ldsh!templates/{mode}/news/articleDetail");
 
                 if (this.model.get("rawHTML")) {
