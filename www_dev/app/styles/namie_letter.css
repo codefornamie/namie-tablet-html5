@@ -478,6 +478,13 @@
 
 .gallery-list {
     list-style: none;
-    width: 90%;
+    width: 100%;
     margin: auto;
 }
+
+.gallery-list__item {
+    box-sizing: border-box;
+    width: 25%;
+    display: inline-table;
+}
+
