@@ -115,6 +115,24 @@ define(function(require, exports, module) {
     Code.DOJO_STATUS_WATCHED = "watched";
     Code.DOJO_STATUS_UNWATCHED = "unwatched";
 
-
+    /**
+     * 道場の級情報
+     */
+    Code.DOJO_LEVELS = [{
+        id: "0",
+        label: "白帯コース",
+        description: "初めてタブレットをさわる方のためのコースです。",
+        iconPath: ""
+    },{
+        id: "1",
+        label: "茶帯コース",
+        description: "",
+        iconPath: ""
+    },{
+        id: "2",
+        label: "黒帯コース",
+        description: "",
+        iconPath: ""
+    }];
     module.exports = Code;
 });

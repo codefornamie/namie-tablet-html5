@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var DojoListView = require("modules/view/dojo/top/DojoListView");
+    var DojoLevelListView = require("modules/view/dojo/top/DojoLevelListView");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
 
     /**
@@ -38,11 +38,11 @@ define(function(require, exports, module) {
             if (this.model && this.model.get("contentCollection")) {
                 this.updateNumberOfContent(this.model);
 
-                var dojoListView = new DojoListView({
+                var dojoLevelListView = new DojoLevelListView({
                     collection: this.model.get("contentCollection")
                 });
 
-                this.setView("#dojo-list-container", dojoListView).render();
+                this.setView("#dojo-level-container", dojoLevelListView).render();
             }
         },
 

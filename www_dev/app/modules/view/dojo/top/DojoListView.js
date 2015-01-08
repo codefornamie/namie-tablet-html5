@@ -9,7 +9,7 @@ define(function(require, exports, module) {
     var Super = FeedListView;
 
     /**
-     * 道場アプリのトップ画面にあるコンテンツ一覧を表示するためのViewクラスを作成する。
+     * 道場アプリのコンテンツ一覧を表示するためのViewクラスを作成する。
      * 
      * @class 道場アプリのトップ画面を表示するためのView
      * @exports DojoListView
@@ -83,7 +83,8 @@ define(function(require, exports, module) {
 
             // 「級の名称=>インデックス」の対応を格納する
             _.each(levelValues, function(levelValue, index) {
-                levels[levelValue] = index;
+                //levels[levelValue] = index;
+                levels[index] = levelValue;
             });
 
             return levels;
@@ -97,15 +98,20 @@ define(function(require, exports, module) {
             var self = this;
             var levels = this.extractLevels();
             var animationDeley = 0;
+            // 選択されている級の文字列表現を取得する。この値は、dojo_movie#levelの文字列と同じ
+            var levelValue = levels[this.level.get("level")];
             this.collection.each($.proxy(function(model) {
-                var ItemView = self.feedListItemViewClass;
-                var selectorPrefix = "-" + levels[model.get("level")];
-                this.insertView(this.listElementSelector + selectorPrefix, new ItemView({
-                    model : model,
-                    animationDeley : animationDeley,
-                    parentView: this
-                }));
-                animationDeley += 0.2;
+                if (model.get("level") === levelValue) {
+                    var ItemView = self.feedListItemViewClass;
+                    var selectorPrefix = "-" + levels[model.get("level")];
+                    this.insertView(this.listElementSelector, new ItemView({
+                        model : model,
+                        animationDeley : animationDeley,
+                        parentView: this
+                    }));
+                    animationDeley += 0.2;
+                }
+
             }, this));
         }
     });
