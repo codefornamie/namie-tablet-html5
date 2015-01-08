@@ -48,6 +48,7 @@ define(function(require, exports, module) {
         showImage : function() {
             var self = this;
             var imageElems = $(this.el).find("img");
+            this.setColorbox(imageElems);
             var articleImage = $(this.el).find(".articleDetailImage");
             var onGetBinary = function(binary) {
                 var arrayBufferView = new Uint8Array(binary);
@@ -61,7 +62,7 @@ define(function(require, exports, module) {
                 });
                 articleImage.attr("src", url);
                 articleImage.data("blob", blob);
-                self.setColorbox(imageElems);
+                self.setColorbox(articleImage);
             };
 
             if (this.model.get("imageUrl")) {
