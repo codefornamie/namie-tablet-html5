@@ -87,6 +87,10 @@ define(function(require, exports, module) {
 
             this.dojoLessonView.dojoEditionModel.set(param.dojoEditionModel.toJSON());
             this.dojoLessonView.dojoContentModel.set(param.dojoContentModel.toJSON());
+            if (!param.dojoContentModel.achievementModels) {
+                // achievementModels配列のインスタンスを共有するため、undefinedの場合はここで配列のインスタンスを生成する
+                param.dojoContentModel.achievementModels = [];
+            }
             this.dojoLessonView.dojoContentModel.achievementModels = param.dojoContentModel.achievementModels;
 
             this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView.layout);
@@ -374,6 +378,11 @@ define(function(require, exports, module) {
             }
             this.onSyncDojoContent();
             this.hideLoading();
+
+            var notAchievementedLevel = this.dojoContentCollection.getNotAchievementedLevel();
+            for (var i = 0; i <= parseInt(notAchievementedLevel); i++) {
+                $("#dojo-level-" + i).show();
+            }
 
             // 「どの動画も達成されていない場合」にのみ初回説明画面を表示する
             if (!isSolved) {

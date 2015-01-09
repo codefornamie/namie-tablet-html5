@@ -126,7 +126,7 @@ define(function(require, exports, module) {
                                     fileArray = _.sortBy(fileArray, function(fileItem) {
                                         return -fileItem.lastModifiedDate;
                                     });
-                                    fileArray = _.filter(fileArray, function() {
+                                    fileArray = _.filter(fileArray, function(file) {
                                         return file.name.match(/\.jpg$/i);
                                     });
                                     callback(fileArray.slice(0, FileAPIUtil.GET_GALLERY_MAX));

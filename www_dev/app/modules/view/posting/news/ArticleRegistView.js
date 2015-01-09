@@ -39,6 +39,11 @@ define(function(require, exports, module) {
          * 読み込み時のイメージ配列
          */
         imgArray : null,
+        /**
+         * サムネイルの元画像のByteArray
+         * サムネイルを生成する必要がない場合はnull
+         */
+        thumbImageByteArray : null,
 
         beforeRendered : function() {
 
@@ -301,37 +306,52 @@ define(function(require, exports, module) {
                 return preName + "_" + new Date().getTime() + _.uniqueId("") + suffName;
             };
 
+            // サムネイルの基となる画像
+            this.thumbImageByteArray = undefined;
+            
+            // サムネイル画像に使うviewの
+            
             // 画像に変更があるかチェックする
             for (var i = 0; i < $fileAreas.length; i++) {
                 var $fileArea = $fileAreas.eq(i);
-                var $previewImg = $fileArea.find("[data-preview-file]");
-                var file = $previewImg.prop("file");
-                var src = $previewImg.attr("src");
-                var comment = $fileArea.find("#articleFileComent").val();
-                var image;
+                var fileAreaView = $fileArea.data("view");
+                if( fileAreaView.imageByteArray ) {
+                    if( this.thumbImageByteArray === undefined) {
+                        if(fileAreaView.isChangeImage || i !== 0) {
+                            this.thumbImageByteArray = fileAreaView.imageByteArray;
+                        } else {
+                            this.thumbImageByteArray = null;
+                        }
+                    }
+                    var $previewImg = $fileArea.find("[data-preview-file]");
+                    var file = $previewImg.prop("file");
+                    var src = $previewImg.attr("src");
+                    var comment = $fileArea.find("#articleFileComent").val();
+                    var image;
 
-                if (!src) {
-                    continue;
+                    if (!src) {
+                        continue;
+                    }
+
+                    // 画像に変更があれば情報を更新する
+                    if (file) {
+                        image = {};
+
+                        image.fileName = generateFileName(file.name);
+                        image.contentType = file.type;
+                        image.data = $fileArea.find("#articleFile").prop("data");
+                    } else {
+                        image = this.imgArray[i];
+                    }
+
+                    // 画像の情報を更新する
+                    if (image) {
+                        image.comment = comment;
+                        image.src = src;
+                    }
+
+                    images.push(image);
                 }
-
-                // 画像に変更があれば情報を更新する
-                if (file) {
-                    image = {};
-
-                    image.fileName = generateFileName(file.name);
-                    image.contentType = file.type;
-                    image.data = $fileArea.find("#articleFile").prop("data");
-                } else {
-                    image = this.imgArray[i];
-                }
-
-                // 画像の情報を更新する
-                if (image) {
-                    image.comment = comment;
-                    image.src = src;
-                }
-
-                images.push(image);
             }
 
             // imagesを元に、imageUrlとimageCommentを更新する
@@ -345,6 +365,14 @@ define(function(require, exports, module) {
             }
 
             this.model.set("images", images);
+            
+            // サムネイルのURL
+            if ( this.thumbImageByteArray === undefined ) {
+                // 画像なしなので、サムネイルもなし
+                this.model.set("imageThumbUrl", null);
+            } else {
+                this.model.set("imageThumbUrl", "thumbnail.png");
+            }
         },
 
         /**
@@ -355,7 +383,8 @@ define(function(require, exports, module) {
             this.setInputValue();
             $("#articleRegistPage").hide();
             this.setView("#articleRegistConfirmWrapperPage", new ArticleRegistConfirmView({
-                model : this.model
+                model : this.model,
+                thumbImageByteArray : this.thumbImageByteArray
             })).render();
             $("#snap-content").scrollTop(0);
         },

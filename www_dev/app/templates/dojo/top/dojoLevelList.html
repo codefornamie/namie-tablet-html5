@@ -1,5 +1,5 @@
 <% _(levels).each(function(level) { %>
-    <a href="dojo/levels/<%= level.id %>" class="button dojo-level-title">
+    <a href="dojo/levels/<%= level.id %>" id="dojo-level-<%= level.id %>" class="button dojo-level-title" style="display:none;">
         <%= level.label %>
     </h3>
 <% }) %>

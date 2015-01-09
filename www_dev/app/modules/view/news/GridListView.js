@@ -56,9 +56,13 @@ define(function(require, exports, module) {
                 this.masonry.destroy();
             }
 
+            var $list = $("#grid-list");
+            var $item = $list.children().eq(1);
+
             this.masonry = new Masonry(
-                document.querySelector("#grid-list"),
+                $list[0],
                 {
+                    columnWidth: $item[0],
                     itemSelector: ".grid-list-item-div",
                     transitionDuration: 0
                 }

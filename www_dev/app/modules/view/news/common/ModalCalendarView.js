@@ -42,10 +42,26 @@ define(function(require, exports, module) {
 
             // カレンダー表示
             this.calendar = rome($("[data-modal-calendar]")[0], {
+                dayFormat: "D",
+                monthFormat: "YYYY年:M月",
+                weekStart: moment().weekday(1).day(),
                 time: false,
                 initialValue: moment(app.currentDate)
             });
+
             this.calendar.on("data", this.onChangeDate.bind(this));
+            this.calendar.on("show", this.onRenderCalendar.bind(this));
+            this.calendar.on("data", this.onRenderCalendar.bind(this));
+        },
+
+        /**
+         * Viewが破棄される時に呼ばれる
+         * @memberOf ModalCalendarView#
+         */
+        cleanup : function () {
+            if (this.calendar) {
+                this.calendar.destroy();
+            }
         },
 
         /**
@@ -98,6 +114,27 @@ define(function(require, exports, module) {
          */
         onClickDate: function () {
             app.router.go("top", moment(this.selectedDate).format("YYYY-MM-DD"));
+        },
+
+        /**
+         * カレンダーがレンダリングされたら呼ばれる
+         * @memberOf ModalCalendarView#
+         */
+        onRenderCalendar : function () {
+            var el = this.calendar.container;
+
+            // この時点では $(el).find(".rd-month-label") で要素を取得できないので
+            // DOMが構築されるまで待機する必要がある
+            setTimeout(function () {
+                $(el).find(".rd-month-label").html(function (index, yearMonthStr) {
+                    var yearMonth = yearMonthStr.split(":");
+                    var year = yearMonth[0];
+                    var month = yearMonth[1];
+
+                    return "<span class='rd-month-label__year'>" + year + "</span>" +
+                        "<span class='rd-month-label__month'>" + month + "</span>";
+                });
+            }, 0);
         }
     });
 

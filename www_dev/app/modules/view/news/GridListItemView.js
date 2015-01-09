@@ -47,13 +47,32 @@ define(function(require, exports, module) {
             } else {
                 this.$el.find(".articleImage")
                 .on("center", function () {
-                    // 画像を中央に寄せる
-                    var $container = $(this).parent();
-                    var width = $(this).width();
+                    var $this = $(this);
+                    var $container = $this.parent();
+
+                    // 画像を水平中央に寄せる
+                    var width = $this.width();
                     var containerWidth = $container.width();
 
-                    $(this)
+                    // 画像を垂直中央に寄せる
+                    var height = $this.height();
+                    var containerHeight = $container.height();
+
+                    // 高さが足りないと上下に余白ができてしまうので
+                    // 上下いっぱいに拡大する
+                    if (height < containerHeight) {
+                        $this.css({
+                            width: "auto",
+                            height: "100%"
+                        });
+
+                        width = $this.width();
+                        height = $this.height();
+                    }
+
+                    $this
                     .css({
+                        top: containerHeight / 2 - height / 2,
                         left: containerWidth / 2 - width / 2
                     });
                 })

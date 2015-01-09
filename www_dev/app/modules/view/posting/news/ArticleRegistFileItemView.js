@@ -21,33 +21,49 @@ define(function(require, exports, module) {
          */
         fileName : '',
 
+        /**
+         * このビューに表示されている画像のByteArray
+         */
+        imageByteArray : null,
+        /**
+         * このビューの表示されている画像に変更があったか
+         */
+        isChangeImage : false,
+
         beforeRendered : function() {
 
         },
 
         afterRendered : function() {
-            FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
             var self = this;
+            // エレメントに自分自身を保持する。
+            this.$el.data("view", this);
+            
+            FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
 
             if (!this.imageUrl) {
                 return;
             }
 
+            // 既に登録されている画像の読み込み
             var davModel = new WebDavModel();
             davModel.id = this.imageUrl;
             davModel.fetch({
                 success : $.proxy(function(model, binary) {
                     app.logger.debug("getBinary()");
-                    var arrayBufferView = new Uint8Array(binary);
+                    // 取得した画像をBlobURL型に変換
+                    self.imageByteArray = new Uint8Array(binary);
                     var blob = new Blob([
-                        arrayBufferView
+                                         this.imageByteArray
                     ], {
                         type : "image/jpg"
                     });
                     var url = FileAPIUtil.createObjectURL(blob);
+                    // エレメントに設定
                     var imgElement = self.$el.find("#previewFile");
-                    imgElement.load(function() {
-                    });
+//                    imgElement.load(function() {
+//                      window.URL.revokeObjectURL(imgElement.attr("src"));
+//                    });
                     imgElement.attr("src", url);
                     self.$el.find("#previewFile").show();
                     self.$el.find("#fileDeleteButton").show();
@@ -82,17 +98,17 @@ define(function(require, exports, module) {
         onChangeFileData : function(event) {
             var self = this;
             app.logger.debug("onChangeFileData");
+            this.isChangeImage = true;
             var inputFile = event.target;
             var file = (event.target.files ? event.target.files[0] : event.target.file);
+
+            if (!file) {
+                // 画像選択画面でキャンセルが押された場合は、元画像を保持したままにする
+                return;
+            }
             app.logger.debug("onChangeFileData: file: " + file);
             app.logger.debug("onChangeFileData: file.type: " + file.type);
             app.logger.debug("onChangeFileData: file.name: " + file.name);
-
-            if (!file) {
-                $(this.el).find('#previewFile').hide();
-                $(this.el).find("#fileDeleteButton").hide();
-                return;
-            }
 
             if (!file.type.match('image.*')) {
                 return;
@@ -108,6 +124,7 @@ define(function(require, exports, module) {
                     var reader = new FileReader();
                     reader.onload = function(e) {
                         inputFile.data = e.target.result;
+                        self.imageByteArray = inputFile.data;
                         self.onLoadFileExtend(e, file);
                     };
                     reader.readAsArrayBuffer(file);
@@ -128,6 +145,7 @@ define(function(require, exports, module) {
             $(this.el).find("#previewFile").hide();
             $(this.el).find("#fileDeleteButton").hide();
             $(this.el).find("#articleFileComent").val("");
+            this.imageByteArray = null;
         },
         setInputValue : function() {
         },

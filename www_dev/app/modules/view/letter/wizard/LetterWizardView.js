@@ -14,6 +14,7 @@ define(function(require, exports, module) {
     var BusinessUtil = require("modules/util/BusinessUtil");
     var moment = require("moment");
     var vexDialog = require("vexDialog");
+    var canvasToBlob = require("canvas-to-blob");
 
     /**
      * 記事一覧のViewクラス
@@ -32,7 +33,7 @@ define(function(require, exports, module) {
          * このクラスのモデル
          * @memberOf LetterWizardView#
          */
-        model : new ArticleModel(),
+        model : null,
         /**
          * Layoutがレンダリングされたら呼ばれる
          * @memberOf LetterWizardView#
@@ -77,6 +78,7 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          */
         initialize : function() {
+            this.model = new ArticleModel();
             this.initEvents();
 
             // 実行環境がAndoirdであるかどうか
@@ -314,7 +316,9 @@ define(function(require, exports, module) {
             this.model.set("title", $("#letter-wizard-form__title").val());
             this.model.set("description", $("#letter-wizard-form__body").val());
             this.model.set("nickname", $("#letter-wizard-form__nickname").val());
-            this.model.set("imageUrl", this.generateFileName(this.file.name));
+            var imageUrl = this.generateFileName(this.file.name);
+            this.model.set("imageUrl", imageUrl);
+            this.model.set("imageThumbUrl", "thumbnail.png");
             this.model.set("createUserId", app.user.get("__id"));
 
             // 配信日は固定で翌日とする
@@ -333,7 +337,14 @@ define(function(require, exports, module) {
             this.file = file;
             this.file.data = ev.target.result;
             if (navigator.userAgent.indexOf('Android') < 0) {
+<<<<<<< HEAD
                 $(".letterPicture").attr("src", $("#previewFile").attr("src"));
+=======
+                this.makeThmbnail(this.file.data, $.proxy(function(blob){
+                    this.file.thumb = blob;
+                }, this));
+                $("#letterPicture").attr("src", $("#previewFile").attr("src"));
+>>>>>>> develop
                 return;
             }
 
@@ -348,7 +359,14 @@ define(function(require, exports, module) {
                     checkElem.css("border","none");
                     checkElem.removeClass("checkedPic");
                     if (value) {
+<<<<<<< HEAD
                         $(".letterPicture").attr("src", $(target).attr("src"));
+=======
+                        this.makeThmbnail(this.file.data, $.proxy(function(blob){
+                            this.file.thumb = blob;
+                        }, this));
+                        $("#letterPicture").attr("src", $(target).attr("src"));
+>>>>>>> develop
                         $(target).css("border","3px solid red");
                         $(target).addClass("checkedPic");
                         this.$step.steps("next");
@@ -380,28 +398,44 @@ define(function(require, exports, module) {
             if(!this.model.get("__id")){
                 this.model.id = AbstractModel.createNewId();
             }
-            
             if(!this.model.get("imagePath")){
                 this.model.set("imagePath", this.generateFilePath());
             }
 
+            // コールバックの定義
+            var count = 2;
+            var success = $.proxy(function(e) {
+                if(--count <= 0){
+                    this.saveModel();
+                }
+            }, this);
+            var error = $.proxy(function(e) {
+                this.hideLoading();
+                vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+                vexDialog.alert("保存に失敗しました。");
+                app.logger.error("保存に失敗しました。");
+            }, this);
+
+            // 元画像の保存
             var davModel = new WebDavModel();
             davModel.set("path", this.model.get("imagePath"));
             davModel.set("fileName", this.model.get("imageUrl"));
-            
             davModel.set("data", this.file.data);
             davModel.set("contentType", this.file.type);
-            
             davModel.save(null, {
-              success : $.proxy(function(e) {
-              this.saveModel();
-              }, this),
-              error : $.proxy(function(e) {
-                  this.hideLoading();
-                  vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
-                  vexDialog.alert("保存に失敗しました。");
-                  app.logger.error("保存に失敗しました。");
-              }, this)
+                success : success,
+                error : error
+            });
+
+            // サムネイル画像の保存
+            var thmbDavModel = new WebDavModel();
+            thmbDavModel.set("path", this.model.get("imagePath"));
+            thmbDavModel.set("fileName", "thumbnail.png");
+            thmbDavModel.set("data", this.file.thumb);
+            thmbDavModel.set("contentType", this.file.type);
+            thmbDavModel.save(null, {
+                success : success,
+                error : error
             });
         },
         /**
