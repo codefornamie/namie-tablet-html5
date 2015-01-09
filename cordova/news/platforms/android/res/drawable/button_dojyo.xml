@@ -3,12 +3,12 @@
     <item
         android:state_pressed="true"
         android:state_enabled="true"
-        android:drawable="@drawable/img_dojo"/>
+        android:drawable="@drawable/img_dojyo"/>
     <item
         android:state_focused="true"
         android:state_enabled="true"
-        android:drawable="@drawable/img_dojo"/>
+        android:drawable="@drawable/img_dojyo"/>
     <item
         android:state_enabled="true"
-        android:drawable="@drawable/img_dojo"/>
+        android:drawable="@drawable/img_dojyo"/>
 </selector>
