@@ -337,14 +337,10 @@ define(function(require, exports, module) {
             this.file = file;
             this.file.data = ev.target.result;
             if (navigator.userAgent.indexOf('Android') < 0) {
-<<<<<<< HEAD
-                $(".letterPicture").attr("src", $("#previewFile").attr("src"));
-=======
                 this.makeThmbnail(this.file.data, $.proxy(function(blob){
                     this.file.thumb = blob;
                 }, this));
-                $("#letterPicture").attr("src", $("#previewFile").attr("src"));
->>>>>>> develop
+                $(".letterPicture").attr("src", $("#previewFile").attr("src"));
                 return;
             }
 
@@ -359,14 +355,10 @@ define(function(require, exports, module) {
                     checkElem.css("border","none");
                     checkElem.removeClass("checkedPic");
                     if (value) {
-<<<<<<< HEAD
-                        $(".letterPicture").attr("src", $(target).attr("src"));
-=======
                         this.makeThmbnail(this.file.data, $.proxy(function(blob){
                             this.file.thumb = blob;
                         }, this));
-                        $("#letterPicture").attr("src", $(target).attr("src"));
->>>>>>> develop
+                        $(".letterPicture").attr("src", $(target).attr("src"));
                         $(target).css("border","3px solid red");
                         $(target).addClass("checkedPic");
                         this.$step.steps("next");
