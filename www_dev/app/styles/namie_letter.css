@@ -17,16 +17,22 @@
 }
 
 .page-letter .header .top-bar {
-    background: #43c1d8;
+    background: url(../../app/img/img-letter-header-bg.png);
     height: 55px;
+}
+
+.page-letter .header .top-bar .title-area {
+    float: none;
 }
 
 .page-letter .top-bar .name h1 {
     line-height: 55px;
+    text-align: center;
+    font-size: 1.5rem;
 }
 
 .is-subpage .page-letter .top-bar .name h1 {
-    padding-left: 100px;
+    /*padding-left: 100px;*/
 }
 
 .page-letter .global-nav {
@@ -44,14 +50,19 @@
 }
 
 .is-subpage .page-letter .global-nav__menu {
-    display: block;
+    display: none;
 }
 
 .page-letter .contents-wrapper {
     padding-top: 55px;
 }
 
-.page-letter .contents>div {
+.page-letter .contents {
+    background: url(../../app/img/img-letter-bg.png);
+    color: #053b65;
+}
+
+    .page-letter .contents>div {
     height: auto;
     overflow: auto;
 }
@@ -66,10 +77,19 @@
 
 .page-letter .button {
     display: inline-block;
-    font-size: 1.4rem;
+    background: -webkit-gradient(linear, left top, left bottom, from(#0074c5), to(#004f85));
+    border-radius: 50px;
+    font-size: 1.3rem;
     margin: 0 20px 10px 0;
-    padding: 0.85rem 1.25rem;
+    padding: 1.2rem 1.2rem;
     line-height: 1;
+    box-shadow: 0 3px 8px #666;
+}
+
+.page-letter .button.button--gray {
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3e0d5));
+    color: #053b65;
+    font-size: 1.3rem;
 }
 
 /**
@@ -248,11 +268,11 @@
  */
 .letter-wizard {
     position: relative;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .letter-wizard-pages {
-    margin: 0 100px;
+    margin: 0 25px;
 }
 
 .letter-wizard-pages .preview-file {
@@ -268,19 +288,18 @@
 }
 
 .letter-wizard ul[role="tablist"] a {
-    color: white;
+    color: #053b65;
 }
 
 .letter-wizard li[role="tab"] {
-    float: left;
-    width: 25%;
+    display: block;
     height: 40px;
     line-height: 40px;
     text-align: center;
-    font-size: 1.3rem;
-    padding-left: 5px;
-    padding-right: 20px;
-    position: relative;
+    font-size: 1.5rem;
+    position: absolute;
+    left: 220px;
+    right: 0;
 }
 
 .letter-wizard li[role="tab"] .number {
@@ -288,33 +307,22 @@
 }
 
 .letter-wizard li[role="tab"]>a {
-    background: rgb(214, 209, 178);
+    background: transparent;
     display: block;
     position: relative;
     outline: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    visibility: hidden;
 }
 
 .letter-wizard li[role="tab"]:first-child {
-    padding-left: 0;
+    left: 0;
 }
 
 .letter-wizard li[role="tab"].current>a {
-    background: rgb(66, 193, 216);
-}
-
-.letter-wizard li[role="tab"]::after {
-    content: "";
-    width: 0;
-    height: 0;
-    border: 20px solid transparent;
-    border-left-color: rgb(214, 209, 178);
-    position: absolute;
-    top: 0;
-    right: -20px;
-    display: block;
+    visibility: visible;
 }
 
 .letter-wizard li[role="tab"].current::after {
@@ -326,15 +334,15 @@
 }
 
 .letter-wizard .content {
-    border: 3px solid rgb(234, 231, 210);
     background: white;
     display: block;
-    margin: 10px 0;
+    margin: 50px 0 10px 0;
     height: 520px;
     overflow : auto;
     position: relative;
     width: auto;
     overflow: auto;
+    box-shadow: 0 6px 6px #ccb;
 }
 
 .letter-wizard h3 {
@@ -371,8 +379,8 @@
 
 .letter-wizard ul[role="menu"] li>a {
     font-size: 1.4rem;
-    padding-top: 0.85rem;
-    padding-bottom: 0.85rem;
+    /*padding-top: 0.85rem;
+    padding-bottom: 0.85rem;*/
     line-height: 1;
 }
 
@@ -413,9 +421,18 @@
 
 .letter-wizard .body table td {
     background: none;
-    font-size: 1.33rem;
-    color: rgb(90, 86, 60);
+    font-size: 1.2rem;
+    color: #053b65;
     line-height: 1.4;
+}
+
+.letter-wizard .actions .button[href="#previous"] {
+    position: absolute;
+    top: -590px;
+    padding: 10px 30px;
+}
+.letter-wizard .actions .button[href="#finish"] {
+    background: -webkit-gradient(linear, left top, left bottom, from(#ff5f5f), to(#b90606));
 }
 
 /**
@@ -456,10 +473,9 @@
 }
 
 .letter-form label:not(.error) {
-    font-size: 1.6rem;
-    color: rgb(90, 86, 61);
+    font-size: 1.4rem;
+    color: #1475c1;
     margin: 15px 0;
-    font-weight: bold;
 }
 
 .letter-form label.is-nowrap {
@@ -475,6 +491,18 @@
     line-height: 1.4;
     color: rgb(90, 86, 60);
 }
+.letter-form textarea {
+    height: 220px;
+}
+
+.letter-form .guide {
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+}
+
+.letter-form #confirmNickname {
+    margin-bottom: 30px;
+}
 
 .gallery-list {
     list-style: none;
@@ -487,4 +515,3 @@
     width: 25%;
     display: inline-table;
 }
-

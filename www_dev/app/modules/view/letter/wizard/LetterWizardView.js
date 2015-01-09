@@ -43,10 +43,10 @@ define(function(require, exports, module) {
             this.$step = this.$el.find(LetterWizardView.SELECTOR_LETTER_WIZARD).steps({
                 headerTag : "h3",
                 bodyTag : "section",
-                transitionEffect : "slideLeft",
+                transitionEffect : "none",
                 labels : {
-                    next : "次へ",
-                    previous : "戻る",
+                    next : "OK",
+                    previous : "前にもどる",
                     finish : "投稿する"
                 },
                 onStepChanging : this.onStepChanging.bind(this),
@@ -323,7 +323,7 @@ define(function(require, exports, module) {
             this.file = file;
             this.file.data = ev.target.result;
             if (navigator.userAgent.indexOf('Android') < 0) {
-                $("#letterPicture").attr("src", $("#previewFile").attr("src"));
+                $(".letterPicture").attr("src", $("#previewFile").attr("src"));
                 return;
             }
 
@@ -338,7 +338,7 @@ define(function(require, exports, module) {
                     checkElem.css("border","none");
                     checkElem.removeClass("checkedPic");
                     if (value) {
-                        $("#letterPicture").attr("src", $(target).attr("src"));
+                        $(".letterPicture").attr("src", $(target).attr("src"));
                         $(target).css("border","3px solid red");
                         $(target).addClass("checkedPic");
                     } else {
