@@ -61,7 +61,8 @@ define(function(require, exports, module) {
                 this.updateNumberOfContent(this.dojoEditionModel);
 
                 var dojoListView = new DojoListView({
-                    collection: this.dojoEditionModel.get("contentCollection"),
+                    //collection: this.dojoEditionModel.get("contentCollection"),
+                    dojoEditionModel: this.dojoEditionModel,
                     level: this.level
                 });
 

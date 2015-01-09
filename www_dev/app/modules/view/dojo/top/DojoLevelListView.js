@@ -27,16 +27,24 @@ define(function(require, exports, module) {
         serialize: function () {
             return {
                 levels: this.extractLevels(),
+                numContent: this.collection.length,
+                numWatched: this.dojoEditionModel.getWatchedModels().length
             };
         },
 
         /**
          * 初期化
+         * @param {Object} param
          * @memberOf DojoLevelListView#
          */
-        initialize : function() {
+        initialize : function(param) {
+            console.assert(param, "param should be specified");
+            console.assert(param.dojoEditionModel, "param.dojoEditionModel should be specified");
             console.assert(this.collection, "DojoLevelListView should have a collection");
+
+            this.dojoEditionModel = param.dojoEditionModel;
         },
+
         /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
          * @memberOf DojoLevelListView#
