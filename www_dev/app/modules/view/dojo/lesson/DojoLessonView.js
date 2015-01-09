@@ -38,6 +38,7 @@ define(function(require, exports, module) {
          * イベント一覧
          */
         events : {
+            "click [data-playback-lesson]" : "onClickPlaybackLesson",
             "click [data-complete-lesson]" : "onClickCompleteLesson",
             "click [data-uncomplete-lesson]" : "onClickUncompleteLesson",
             "click [data-back]" : "onClickBack"
@@ -47,18 +48,22 @@ define(function(require, exports, module) {
          * @memberOf DojoLessonLayout#
          */
         onClickCompleteLesson : function() {
-            vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.buttons.YES.text = "OK";
-            vexDialog.alert("この操作を習得しました！！");
+            //vexDialog.defaultOptions.className = 'vex-theme-default';
+            //vexDialog.buttons.YES.text = "OK";
+            //vexDialog.alert("この操作を習得しました！！");
+
             if (this.dojoContentModel.achievementModels) {
                 var solvedAchievement = _.find(this.dojoContentModel.achievementModels, function(achievement) {
                     return achievement.get("type") === "dojo_solved";
                 });
+
                 if (solvedAchievement) {
                     return;
                 }
             }
-            $("[data-complete-lesson]").attr("disabled", "disabled");
+            //$("[data-complete-lesson]").attr("disabled", "disabled");
+
+            // 習得済みとしてセーブする
             var achievementModel = new AchievementModel();
             achievementModel.set("type", "dojo_solved");
             achievementModel.set("action", this.dojoContentModel.get("videoId"));
@@ -69,6 +74,8 @@ define(function(require, exports, module) {
                     this.onSaveAchievement(achievementModel);
                 }, this)
             });
+
+            app.router.go("dojo", "levels", app.currentDojoLevel);
         },
         /**
          * 達成状況情報保存後のコールバック関数
@@ -81,6 +88,18 @@ define(function(require, exports, module) {
             }
             this.dojoContentModel.achievementModels.push(achievementModel);
             $("[data-complete-lesson]").removeAttr("disabled");
+        },
+
+        /**
+         * いいえボタンを押したら呼ばれる
+         * @memberOf DojoLessonLayout#
+         */
+        onClickPlaybackLesson: function () {
+            this.$el.find("#dojo-lesson")
+                .removeClass("is-ended")
+                .addClass("is-ready");
+
+            this.player.seekTo(0);
         },
 
         /**
@@ -147,8 +166,8 @@ define(function(require, exports, module) {
                                 $("[data-play-movie]").show();
                             }
                             if (event.data === YT.PlayerState.ENDED) {
-                                // 動画終了時に習得済みとする
-                                this.onClickCompleteLesson();
+                                // 動画終了時に習得確認テキストを出す
+                                this.onEndYouTube();
                             }
                         }, this)
                     }
@@ -181,6 +200,17 @@ define(function(require, exports, module) {
                 self.player.pauseVideo();
             });
         },
+
+        /**
+         * YouTube再生が終了した後に呼ばれる
+         * @memberOf DojoLessonLayout#
+         */
+        onEndYouTube: function () {
+            this.$el.find("#dojo-lesson")
+                .removeClass("is-ready")
+                .addClass("is-ended");
+        },
+
         /**
          * Viewが破棄された際に呼び出されるコールバック関数。
          * <p>

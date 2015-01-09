@@ -43,7 +43,7 @@ define(function(require, exports, module) {
                     collection: this.model.get("contentCollection")
                 });
 
-                this.setView("#dojo-level-container", dojoLevelListView).render();
+                this.setView("#dojo-level-list-container", dojoLevelListView).render();
             }
         },
 

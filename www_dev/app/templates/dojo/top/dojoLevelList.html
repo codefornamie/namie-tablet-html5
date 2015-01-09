@@ -1,13 +1,31 @@
 <% _(levels).each(function(level) { %>
-    <div class="dojo-level-item">
-        <div class="dojo-level-item-label">
-            <%= level.label %>
-            <a href="dojo/levels/<%= level.id %>" id="dojo-level-<%= level.id %>" class="button dojo-level-title" style="display:none;">
-                このコースを見る
-            </h3>
+    <a
+        class="dojo-level-item dojo-level--<%= level.className %>"
+        href="dojo/levels/<%= level.id %>"
+        id="dojo-level-<%= level.id %>"
+        class="button dojo-level-title"
+        style="display: none;"
+    >
+        <div class="dojo-level-item__icon">
+            <img src="/app/img/dojo/text-<%= level.className %>-belt.png" alt="" />
         </div>
-        <div class="dojo-level-item-description">
+
+        <!--
+        <div class="dojo-level-item__label">
+            <%= level.label %>
+        </div>
+        -->
+
+        <div class="dojo-level-item__progress">
+            <%= level.numWatched %>/<%= level.numContent %>視聴済み
+        </div>
+
+        <div class="dojo-level-item__num">
+            <%= level.numContent %>本の動画があります
+        </div>
+
+        <div class="dojo-level-item__description">
             <%= level.description %>
         </div>
-    </div>
+    </a>
 <% }) %>

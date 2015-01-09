@@ -70,7 +70,8 @@ define(function(require, exports, module) {
 
             this.dojoLevelView.model.set("level", param.level);
 
-            this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLevelView.layout);
+            this.setView(DojoLayout.SELECTOR_LEVEL, this.dojoLevelView.layout);
+            this.removeView(DojoLayout.SELECTOR_LESSON);
             this.removeView(DojoLayout.SELECTOR_TAB);
             this.removeView(DojoLayout.SELECTOR_EDITION);
         },
@@ -103,6 +104,7 @@ define(function(require, exports, module) {
          * @memberOf DojoLayout#
          */
         hideLesson: function () {
+            this.removeView(DojoLayout.SELECTOR_LEVEL);
             this.removeView(DojoLayout.SELECTOR_LESSON);
             this.setView(DojoLayout.SELECTOR_TAB, this.dojoTabView);
             this.setView(DojoLayout.SELECTOR_EDITION, this.dojoEditionView);
@@ -138,6 +140,11 @@ define(function(require, exports, module) {
             }
         }
     }, {
+        /**
+         * コース内コンテンツ一覧画面のセレクタ
+         */
+        SELECTOR_LEVEL: "#dojo-level-container",
+
         /**
          * 詳細画面のセレクタ
          */

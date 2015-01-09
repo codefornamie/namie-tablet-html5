@@ -73,10 +73,11 @@ define(function(require, exports, module) {
                 });
 
                 if (!solvedItem) {
-                    nextCount++;
+                    nextCount = 1;
                 }
 
                 var ItemView = self.feedListItemViewClass;
+
                 this.insertView(this.listElementSelector, new ItemView({
                     model : model,
                     animationDeley : animationDeley,
