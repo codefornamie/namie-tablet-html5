@@ -9,18 +9,21 @@ define(function(require, exports, module) {
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         *  @memberOf GlobalNavView#
          */
         beforeRendered : function() {
         },
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         *  @memberOf GlobalNavView#
          */
         afterRendered : function() {
         },
 
         /**
          *  初期化処理
+         *  @memberOf GlobalNavView#
          */
         initialize : function() {
             this.initEvent();
@@ -28,6 +31,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
+         * @memberOf GlobalNavView#
          */
         initEvent: function () {
             this.listenTo(app.router, "route", this.onRoute);
@@ -35,6 +39,7 @@ define(function(require, exports, module) {
 
         /**
          *  イベント一覧
+         *  @memberOf GlobalNavView#
          */
         events: {
             "click a" : "onClickMenuButton"
@@ -44,6 +49,7 @@ define(function(require, exports, module) {
          * メニュー項目ボタンのaタグをクリックした際の挙動を
          * ブラウザデフォルトではなく
          * pushStateに変更する
+         * @memberOf GlobalNavView#
          */
         onClickMenuButton: function (evt) {
             var $target = $(evt.currentTarget);
@@ -68,6 +74,7 @@ define(function(require, exports, module) {
         onRoute: function (route, params) {
             switch (route) {
             case "letterSelect":
+            case "letterEditComplete":
                 $("#main").removeClass("is-subpage");
                 break;
 
@@ -75,7 +82,18 @@ define(function(require, exports, module) {
                 $("#main").addClass("is-subpage");
                 break;
             }
-        }
+
+            // 前にもどるボタンの戻り先を変更
+            switch (route) {
+            case "letterEdit":
+                $("[data-back-home]", this.$el).attr("href", "letters");
+                break;
+
+            default:
+                $("[data-back-home]", this.$el).attr("href", "letter");
+                break;
+            }
+}
     });
 
     module.exports = LetterGlobalNavView;

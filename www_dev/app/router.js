@@ -205,7 +205,8 @@ define(function(require, exports, module) {
             "letters" : "letterList",
             "letters/new*queryString" : "letterWizard",
             "letters/:id" : "letterDetail",
-            "letters/:id/edit" : "letterEdit"
+            "letters/:id/edit" : "letterEdit",
+            "letters/:id/modified" : "letterEditComplete"
         },
 
         index : function(queryString) {
@@ -492,6 +493,12 @@ define(function(require, exports, module) {
          * 町民投稿：詳細編集ページ
          */
         letterEdit : function() {
+        },
+
+        /**
+         * 町民投稿：詳細編集完了ページ
+         */
+        letterEditComplete : function() {
         },
 
         /**

@@ -1,78 +1,63 @@
 <div
     id="letter-edit"
-    class="letter-edit"
+    class="letter-edit contents__primary"
 >
     <h2>過去の投稿の編集</h2>
 
     <div class="letter-edit-form letter-section">
         <div class="letter-form">
             <div class="row">
-                <div class="columns large-3">
-                    <label for="letter-edit-form__title">タイトル</label>
-                </div>
-
-                <div class="columns large-9">
-                    <input
-                        type="text"
-                        name=""
-                        id="letter-edit-form__title"
-                        value="ダミータイトル"
-                    >
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="columns large-3">
-                    <label for="letter-edit-form__body">本文</label>
-                </div>
-
-                <div class="columns large-9">
-                    <textarea
-                        name=""
-                        id="letter-edit-form__body"
-                    >ダミー本文</textarea>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="columns large-3">
+                <div class="columns large-2">
                     <label for="letter-edit-form__camera">写真</label>
                 </div>
 
-                <div class="columns large-9"></div>
+                <div class="columns large-9 end"></div>
             </div>
 
             <div class="row">
-                <div class="columns large-3">
-                    <label for="letter-edit-form__nickname">ニックネーム</label>
+                <div class="columns large-2">
+                    <label for="letter-edit-form__body">ひとこと</label>
                 </div>
 
-                <div class="columns large-9">
+                <div class="columns large-9 end">
+                    <textarea
+                        name=""
+                        id="letter-edit-form__body"
+                    >投稿内容が入ります。</textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="columns large-2">
+                    <label for="letter-edit-form__nickname">お名前<br><span class="note">（ニックネーム可）</span></label>
+                </div>
+
+                <div class="columns large-9 end">
                     <input
                         type="text"
                         name=""
                         id="letter-edit-form__nickname"
-                        value="ダミーニックネーム"
+                        value="投稿内容が入ります。"
                     >
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="columns large-12 text-center">
-                <a
-                    href="/letters"
-                    class="button button--gray"
-                >
-                    戻る
-                </a>
-
-                <button
-                    class="button"
-                    data-update-letter
-                >
-                    更新する
-                </button>
+            <div class="row">
+                <div class="columns large-12 text-center column--action">
+                    <a
+                        href="/letters"
+                        class="button button--gray"
+                    >
+                        戻る
+                    </a>
+    
+                    <button
+                        class="button"
+                        data-update-letter
+                    >
+                        更新する
+                    </button>
+                </div>
             </div>
         </div>
     </div>

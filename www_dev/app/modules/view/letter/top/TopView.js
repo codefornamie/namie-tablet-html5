@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var LetterListView = require("modules/view/letter/top/LetterListView");
     var LetterWizardView = require("modules/view/letter/wizard/LetterWizardView");
     var LetterEditView = require("modules/view/letter/edit/LetterEditView");
+    var LetterEditCompleteView = require("modules/view/letter/edit/LetterEditCompleteView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var Equal = require("modules/util/filter/Equal");
     var Ge = require("modules/util/filter/Ge");
@@ -57,6 +58,7 @@ define(function(require, exports, module) {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
             this.setView(LetterTopLayout.SELECTOR_LETTER_SELECT, letterSelectView);
         },
 
@@ -68,12 +70,14 @@ define(function(require, exports, module) {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
             this.setView(LetterTopLayout.SELECTOR_LETTER_LIST, this.letterListView);
         },
 
         /**
          * ウィザード画面を開く
          * @param {Number} step
+         * @memberOf LetterTopLayout#
          */
         showWizard : function(step) {
             var isRendered = !!this.getView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
@@ -85,6 +89,7 @@ define(function(require, exports, module) {
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
+                this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
                 this.setView(LetterTopLayout.SELECTOR_LETTER_WIZARD, letterWizardView);
             }
         },
@@ -102,7 +107,25 @@ define(function(require, exports, module) {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
             this.setView(LetterTopLayout.SELECTOR_LETTER_EDIT, letterEditView);
+        },
+
+        /**
+         * 編集完了画面を開く
+         * @param {String} id 編集した記事のID
+         * @memberOf LetterTopLayout#
+         */
+        showEditComplete : function(id) {
+            console.assert(_.isString(id), "id should be a string");
+
+            var letterEditCompleteView = new LetterEditCompleteView();
+
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
+            this.setView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE, letterEditCompleteView);
         },
 
         /**
@@ -145,7 +168,12 @@ define(function(require, exports, module) {
         /**
          * 編集画面のセレクタ
          */
-        SELECTOR_LETTER_EDIT : "#letter-edit-container"
+        SELECTOR_LETTER_EDIT : "#letter-edit-container",
+
+        /**
+         * 編集完了画面のセレクタ
+         */
+        SELECTOR_LETTER_EDIT_COMPLETE : "#letter-edit-complete-container"
     });
 
     /**
@@ -220,6 +248,8 @@ define(function(require, exports, module) {
          * @param {Object} params
          */
         onRoute : function(route, params) {
+            var id;
+
             switch (route) {
             case "letterSelect":
                 this.layout.showSelect();
@@ -233,8 +263,13 @@ define(function(require, exports, module) {
                 break;
 
             case "letterEdit":
-                var id = params[0];
+                id = params[0];
                 this.layout.showEdit(id);
+                break;
+
+            case "letterEditComplete":
+                id = params[0];
+                this.layout.showEditComplete(id);
                 break;
 
             case "letterWizard":

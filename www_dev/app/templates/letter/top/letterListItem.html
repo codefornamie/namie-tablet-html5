@@ -4,7 +4,7 @@
 >
     <section>
         <div class="row">
-            <div class="small-2 columns columns--date">
+            <div class="small-1 columns columns--date">
                 <div class="date-area">
                     <div class="date--year">
                         <%= moment(model.get("publishedAt")).format("YYYY") %>年
@@ -18,27 +18,33 @@
                     <br />
 
                     <div class="date--weekday">
-                        <%= "日月火水木金土"[moment(model.get("publishedAt")).format("e")] %>曜日
+                        （<%= "日月火水木金土"[moment(model.get("publishedAt")).format("e")] %>）
                     </div>
                 </div>
             </div>
+
+            <div class="small-4 columns columns--thumbnail">
+                <img class="letterListItemPicture" src="">
+            </div>
             
-            <div class="small-7 columns columns--body">
+            <div class="small-5 columns columns--body">
                 <h4>
-                    <%= model.get("dispTitle") %>
+                    <%= model.get("nickname") %> さん
                 </h4>
 
                 <p>
                    <%= model.get("dispDescription") %>
                 </p>
+            </div>
 
+            <div class="small-2 columns columns--action">
                 <div class="post-action">
                     <a
                         href="/letters/<%= model.get('__id') %>/edit"
-                        class="button button--gray"
+                        class="button"
                     >
                         編集する
-                    </a>
+                    </a><br>
 
                     <a
                         href="/letters/<%= model.get('__id') %>/edit"
@@ -47,10 +53,6 @@
                         削除する
                     </a>
                 </div>
-            </div>
-
-            <div class="small-3 columns columns--thumbnail">
-                <img class="letterListItemPicture" src="">
             </div>
         </div>
     </section>

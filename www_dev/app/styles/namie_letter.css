@@ -72,17 +72,19 @@
 }
 
 .page-letter .contents-wrapper {
+    background-image: url(../../app/img/img-letter-bg.png);
     padding-top: 55px;
 }
 
 .page-letter .contents {
-    background: url(../../app/img/img-letter-bg.png);
+    background-color: transparent;
     color: #053b65;
 }
 
-    .page-letter .contents>div {
+.page-letter .contents>div {
     height: auto;
     overflow: auto;
+    background-image: url(../../app/img/img-letter-bg.png);
 }
 
 .page-letter h2 {
@@ -122,11 +124,11 @@
 }
 
 .page-letter .contents__primary h2 {
-    color: rgb(90, 87, 56);
+    color: #053b65;
     font-size: 2rem;
-    font-weight: bold;
-    margin: 0;
-    text-align: left;
+    font-weight: normal;
+    margin: 20px 0 0 0;
+    text-align: center;
 }
 
 .page-letter .contents__secondary {
@@ -168,13 +170,12 @@
 
 .page-letter .post {
     box-sizing: border-box;
-    margin: 20px auto;
-    background: #e8e8d0;
+    margin: 20px auto 30px;
     position: relative;
     padding: 0;
     width: 100%;
-    color: rgb(90, 87, 56);
     text-align: left;
+    background-color: #f1eddb;
 }
 
 /** 画像が無い場合がないためコメントアウト
@@ -200,16 +201,16 @@
 }
 
 .page-letter .columns--date {
-    background: rgb(66, 193, 216);
-    color: white;
+    background: #f1eddb;
+    color: #053b65;
 }
 
 .page-letter .date-area {
-    color: white;
     text-align: center;
     line-height: 1;
     position: relative;
     margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .page-letter .date--year {
@@ -224,7 +225,7 @@
 .page-letter .date--date::before {
     content: "";
     width: 110px;
-    border-top: 1px solid white;
+    border-top: 1px solid #053b65;
     display: block;
     position: absolute;
     -webkit-transform: rotate(-45deg);
@@ -258,18 +259,17 @@
 }
 
 .page-letter .columns--body h4 {
-    color: rgb(167, 110, 0);
-    font-weight: bold;
-    font-size: 1.6rem;
+    color: #053b65;
+    font-weight: normal;
+    font-size: 1.1rem;
     line-height: 1.4;
     margin: 0;
 }
 
 .page-letter .columns--body p {
-    color: #5a563c;
-    font-size: 1.4rem;
-    margin: 2rem 0;
-    line-height: 1.6;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    line-height: 1.8;
 }
 
 .page-letter .columns--body .post-action {
@@ -277,8 +277,13 @@
 }
 
 .page-letter .columns--thumbnail {
-    background: #e8e8d0;
+    background: #fff;
     padding: 35px 25px 35px 30px;
+}
+
+.page-letter .columns--action  {
+    background: #fff;
+    padding: 40px 20px 0 0;
 }
 
 /**
@@ -505,6 +510,17 @@
 }
 
 /**
+ *  過去投稿一覧画面
+ */
+.letter-section .post-action {
+    text-align: right;
+}
+
+.letter-section .post-action .button {
+    margin-bottom: 30px;
+}
+
+/**
  *  編集画面
  */
 .letter-edit {
@@ -512,8 +528,11 @@
 }
 
 .letter-edit-form {
-    margin: 30px;
-    padding: 75px 5% 100px;
+    margin: 20px 0;
+    padding: 30px 30px 100px;
+}
+.letter-edit-form .column--action .button {
+    min-width: 180px;
 }
 
 /**
@@ -525,15 +544,15 @@
  *  汎用セクション
  */
 .letter-section {
-    border: 3px solid #e8e8d0;
     background: white;
+    box-shadow: 0 6px 6px #ccb;
 }
 
 /**
  *  フォーム
  */
 .letter-form {
-    margin-bottom: 100px;
+    margin-bottom: 50px;
 }
 
 .letter-form label.error {
@@ -563,7 +582,10 @@
     background: rgb(247, 247, 247);
     height: auto;
     line-height: 1.4;
-    color: rgb(90, 86, 60);
+    color: #053b65;
+    border: 1px solid #c7c7c2;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #c7c7c2 inset;
 }
 .letter-form textarea {
     height: 220px;
