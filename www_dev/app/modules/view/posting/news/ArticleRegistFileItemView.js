@@ -101,15 +101,14 @@ define(function(require, exports, module) {
             this.isChangeImage = true;
             var inputFile = event.target;
             var file = (event.target.files ? event.target.files[0] : event.target.file);
+
+            if (!file) {
+                // 画像選択画面でキャンセルが押された場合は、元画像を保持したままにする
+                return;
+            }
             app.logger.debug("onChangeFileData: file: " + file);
             app.logger.debug("onChangeFileData: file.type: " + file.type);
             app.logger.debug("onChangeFileData: file.name: " + file.name);
-
-            if (!file) {
-                $(this.el).find('#previewFile').hide();
-                $(this.el).find("#fileDeleteButton").hide();
-                return;
-            }
 
             if (!file.type.match('image.*')) {
                 return;

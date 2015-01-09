@@ -24,6 +24,11 @@ define(function(require, exports, module) {
          */
         feedListElement : '#article_list',
         /**
+         * 記事一覧取得のキャッシュ有効の有無
+         * @memberOf OpeNewsView#
+         */
+        cache : false,
+        /**
          * このViewのイベント
          * @memberOf OpeNewsView#
          */
