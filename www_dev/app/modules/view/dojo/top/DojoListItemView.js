@@ -19,7 +19,13 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-            
+            if (this.isNext) {
+                // 次に見るべき動画
+                $(this.el).css("border","10px solid red");
+            }
+            if (this.isGrayedOut) {
+                $(this.el).block({message:null});
+            }
         },
         
         /**

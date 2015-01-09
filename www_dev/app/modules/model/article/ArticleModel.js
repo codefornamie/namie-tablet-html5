@@ -72,6 +72,9 @@ define(function(require, exports, module) {
                 response.dispDescriptionSummary = response.dispDescription;
             }
             
+            // サムネイルがないデータは、本画像をサムネイルとする。
+            response.imageThumbUrl = response.imageThumbUrl || response.imageUrl;
+            
             return response;
         },
         /**
@@ -111,6 +114,7 @@ define(function(require, exports, module) {
             saveData.imageUrl = this.get("imageUrl");
             saveData.imageUrl2 = this.get("imageUrl2");
             saveData.imageUrl3 = this.get("imageUrl3");
+            saveData.imageThumbUrl = this.get("imageThumbUrl");
 
             saveData.imageComment = this.get("imageComment");
             saveData.imageComment2 = this.get("imageComment2");
@@ -232,6 +236,22 @@ define(function(require, exports, module) {
             }
 
             return Code.IMAGE_TYPE_NONE;
+        },
+
+        /**
+         * この記事のサムネイル画像タイプを判定する。
+         * @return {Number} Code.IMAGE_TYPE_* を返す
+         * @memberOf ArticleModel#
+         */
+        getThumbImageType : function() {
+            var url = this.get("imageThumbUrl");
+            if (!url) {
+                return Code.IMAGE_TYPE_NONE;
+            } else if (url.lastIndexOf("http://", 0) === 0 || url.lastIndexOf("https://", 0) === 0) {
+                return Code.IMAGE_TYPE_URL;
+            } else {
+                return Code.IMAGE_TYPE_PIO;
+            }
         },
 
         /**

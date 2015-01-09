@@ -196,6 +196,7 @@ define(function(require, exports, module) {
 
             // 道場アプリ
             'dojo-top' : 'dojoTop',
+            "dojo/levels/:id" : "dojoLevel",
             "dojo/lessons/:id" : "dojoLesson",
             'dojo-introduction' : 'dojoIntroduction',
 
@@ -426,6 +427,14 @@ define(function(require, exports, module) {
                 app.dojoTopView = new DojoTopView();
                 this.layout.showView(app.dojoTopView.layout);
             }
+        },
+
+        /**
+         * 道場：コース内コンテンツ一覧ページ
+         */
+        dojoLevel : function() {
+            app.logger.debug("[route] dojoLevel");
+            // 実際の描画処理はdojo/TopViewに書かれている
         },
 
         /**

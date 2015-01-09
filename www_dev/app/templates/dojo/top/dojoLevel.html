@@ -1,6 +1,5 @@
 <div class="row">
     <div class="columns small-12">
-<!--
         <div class="dojo-watched-state right">
             <div class="dojo-watched-state__description">
                 <span data-content-num>--</span>
@@ -14,13 +13,12 @@
                 視聴済み
             </div>
         </div>
--->
 
-        <h2 class="dojo-edition-title"><%= model.get("editionTitle") %></h2>
+        <h2 class="dojo-edition-title">要コース名→<!-- %= model.get("levelTitle") % --></h2>
     </div>
 </div>
 
 <div
-    id="dojo-level-container"
-    class="dojo-level-container"
+    id="dojo-level-list-container"
+    class="dojo-level-list-container"
 ></div>

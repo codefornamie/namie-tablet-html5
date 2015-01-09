@@ -101,18 +101,17 @@ define(function(require, exports, module) {
                 this.model.set("imagePath", this.generateFilePath());
             }
 
-            var imageCount = this.model.get("images").length;
-            if(imageCount === 0){
-                this.hideLoading();
-                this.saveModel();
-                return;
-            }
-            _.each(this.model.get("images"), $.proxy(function(image){
+            var images = this.model.get("images");
+            this.makeThmbnail(images[0], $.proxy(function(blob){
+                this.file.thumb = blob;
+            }, this));
+            var davs = [];
+            _.each(images, $.proxy(function(image){
                 if(image.data){
                     if(!this.model.get("__id")){
                         this.model.id = AbstractModel.createNewId();
                     }
-                    
+
                     if(!this.model.get("imagePath")){
                         this.model.set("imagePath", this.generateFilePath());
                     }
@@ -123,7 +122,38 @@ define(function(require, exports, module) {
                     
                     davModel.set("data", image.data);
                     davModel.set("contentType", image.contentType);
-                    
+                    davs.push(davModel);
+                }
+            }, this));
+
+            var imageCount = images.length;
+            if(imageCount === 0){
+                this.saveModel();
+                return;
+            }
+
+            if(this.thumbImageByteArray) {
+                // サムネイル画像の生成が必要な場合(新規 or 編集で1つ目の画像が変更されている)
+                var thmbDavModel = new WebDavModel();
+                thmbDavModel.set("path", this.model.get("imagePath"));
+                thmbDavModel.set("fileName", "thumbnail.png");
+                thmbDavModel.set("contentType", "image/png");
+                this.makeThmbnail(this.thumbImageByteArray, $.proxy(function(blob){
+                    thmbDavModel.set("data", blob);
+                    davs.push(thmbDavModel);
+                    this.saveDavFile(davs);
+                }, this));
+            } else {
+                this.saveDavFile(davs);
+            }
+        },
+        /**
+         * DAVファイルの登録
+         */
+        saveDavFile : function(davs) {
+            var imageCount = davs.length;
+            if(imageCount > 0){
+                _.each(davs, $.proxy(function(davModel){
                     davModel.save(null, {
                         success : $.proxy(function(e){
                             if(--imageCount <= 0){
@@ -137,12 +167,10 @@ define(function(require, exports, module) {
                             app.logger.error("保存に失敗しました。");
                         }, this)
                     });
-                }else{
-                    if(--imageCount <= 0){
-                        this.saveModel();
-                    }
-                }
-            }, this));
+                }, this));
+            } else {
+                this.saveModel();
+            }
         },
         /**
          * Modelの保存
