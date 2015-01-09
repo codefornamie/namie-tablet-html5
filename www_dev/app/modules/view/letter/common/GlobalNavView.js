@@ -75,6 +75,7 @@ define(function(require, exports, module) {
             switch (route) {
             case "letterSelect":
             case "letterEditComplete":
+            case "letterWizardComplete":
                 $("#main").removeClass("is-subpage");
                 break;
 

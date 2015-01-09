@@ -171,7 +171,7 @@ define(function(require, exports, module) {
                 }
 
                 if (!this.file) {
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
                     vexDialog.buttons.YES.text = 'OK';
                     vexDialog.alert("画像が未選択です。");
                     return false;
@@ -337,8 +337,8 @@ define(function(require, exports, module) {
                 return;
             }
 
-            vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.buttons.YES.text = 'これでOK';
+            vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+            vexDialog.buttons.YES.text = 'OK';
             vexDialog.buttons.NO.text = '選びなおす';
             vexDialog.open({
                 message : 'この写真でいいですか？',
@@ -398,7 +398,7 @@ define(function(require, exports, module) {
               }, this),
               error : $.proxy(function(e) {
                   this.hideLoading();
-                  vexDialog.defaultOptions.className = 'vex-theme-default';
+                  vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
                   vexDialog.alert("保存に失敗しました。");
                   app.logger.error("保存に失敗しました。");
               }, this)
@@ -413,7 +413,7 @@ define(function(require, exports, module) {
                 success : $.proxy(function() {
                     $("#gallery-list").empty();
                     this.hideLoading();
-                    app.router.go('/letters');
+                    app.router.go('/letters/posted');
                 }, this),
                 error: function(e){
                     this.hideLoading();

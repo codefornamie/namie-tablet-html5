@@ -204,6 +204,7 @@ define(function(require, exports, module) {
             "letter" : "letterSelect",
             "letters" : "letterList",
             "letters/new*queryString" : "letterWizard",
+            "letters/posted" : "letterWizardComplete",
             "letters/:id" : "letterDetail",
             "letters/:id/edit" : "letterEdit",
             "letters/:id/modified" : "letterEditComplete"
@@ -505,6 +506,12 @@ define(function(require, exports, module) {
          * 町民投稿：新規投稿ウィザード
          */
         letterWizard : function() {
+        },
+
+        /**
+         * 町民投稿：新規投稿ウィザード完了ページ
+         */
+        letterWizardComplete : function() {
         },
 
         /**

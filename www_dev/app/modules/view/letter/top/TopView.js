@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var LetterSelectView = require("modules/view/letter/select/LetterSelectView");
     var LetterListView = require("modules/view/letter/top/LetterListView");
     var LetterWizardView = require("modules/view/letter/wizard/LetterWizardView");
+    var LetterWizardCompleteView = require("modules/view/letter/wizard/LetterWizardCompleteView");
     var LetterEditView = require("modules/view/letter/edit/LetterEditView");
     var LetterEditCompleteView = require("modules/view/letter/edit/LetterEditCompleteView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
@@ -56,6 +57,7 @@ define(function(require, exports, module) {
             var letterSelectView = new LetterSelectView();
 
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
@@ -69,6 +71,7 @@ define(function(require, exports, module) {
         showList : function() {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
             this.setView(LetterTopLayout.SELECTOR_LETTER_LIST, this.letterListView);
@@ -87,11 +90,27 @@ define(function(require, exports, module) {
                 var letterWizardView = new LetterWizardView();
 
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
+                this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
                 this.setView(LetterTopLayout.SELECTOR_LETTER_WIZARD, letterWizardView);
             }
+        },
+
+        /**
+         * ウィザード完了画面を開く
+         * @memberOf LetterTopLayout#
+         */
+        showWizardComplete : function(id) {
+            var letterWizardCompleteView = new LetterWizardCompleteView();
+
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
+            this.setView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE, letterWizardCompleteView);
         },
 
         /**
@@ -107,6 +126,7 @@ define(function(require, exports, module) {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
             this.setView(LetterTopLayout.SELECTOR_LETTER_EDIT, letterEditView);
         },
@@ -124,6 +144,7 @@ define(function(require, exports, module) {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
             this.setView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE, letterEditCompleteView);
         },
@@ -164,6 +185,11 @@ define(function(require, exports, module) {
          * ウィザード画面のセレクタ
          */
         SELECTOR_LETTER_WIZARD : "#letter-wizard-container",
+
+        /**
+         * ウィザード完了画面のセレクタ
+         */
+        SELECTOR_LETTER_WIZARD_COMPLETE : "#letter-wizard-complete-container",
 
         /**
          * 編集画面のセレクタ
@@ -279,6 +305,10 @@ define(function(require, exports, module) {
                 var step = query.step;
 
                 this.layout.showWizard(step);
+                break;
+
+            case "letterWizardComplete":
+                this.layout.showWizardComplete();
                 break;
 
             default:

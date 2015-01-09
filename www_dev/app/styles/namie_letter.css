@@ -95,7 +95,8 @@
     line-height: 1;
 }
 
-.page-letter .button {
+.page-letter .button,
+.vex.vex-theme-default.vex-theme-letter .vex-dialog-button {
     display: inline-block;
     background: -webkit-gradient(linear, left top, left bottom, from(#0074c5), to(#004f85));
     border-radius: 50px;
@@ -106,10 +107,68 @@
     box-shadow: 0 3px 8px #666;
 }
 
-.page-letter .button.button--gray {
+.page-letter .button.button--gray,
+.vex.vex-theme-default.vex-theme-letter .vex-dialog-button.vex-dialog-button-secondary {
     background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3e0d5));
     color: #053b65;
     font-size: 1.3rem;
+}
+
+/**
+ * vex
+ */
+.vex.vex-theme-default.vex-theme-letter {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.vex.vex-theme-default.vex-theme-letter .vex-content {
+    background: #fff;
+    border-radius: 0;
+    padding: 2rem 3rem 1rem;
+    width: 60%;
+    box-shadow: 0 0 70px #444;
+}
+
+.vex.vex-theme-default.vex-theme-letter .vex-dialog-form::after {
+    content: " ";
+    clear: both;
+    display: table;
+}
+
+.vex.vex-theme-default.vex-theme-letter .vex-dialog-form .vex-dialog-message {
+    color: #053b65;
+    font-size: 1.2rem;
+}
+
+.vex.vex-theme-default.vex-theme-letter .vex-dialog-buttons {
+    text-align: center;
+    margin-top: 2em;
+    position: relative;
+    left: 50%;
+    float: left;
+}
+
+.vex.vex-theme-default.vex-theme-letter .vex-dialog-button {
+    float: right;
+    min-width: 250px;
+    letter-spacing: normal;
+    position: relative;
+    left: -50%;
+}
+
+.vex.vex-theme-default.vex-theme-letter .vex-dialog-button.vex-dialog-button-primary {
+    margin-right: 0;
+}
+
+.vex.vex-theme-letter .vex-content.buttons-left2right .vex-dialog-button {
+    float: left;
+}
+.vex.vex-theme-letter .vex-content.buttons-left2right .vex-dialog-button.vex-dialog-button-primary {
+    margin-right: 20px;
+}
+.vex.vex-theme-letter .vex-content.buttons-left2right .vex-dialog-button.vex-dialog-button-secondery {
+    margin-right: 0;
 }
 
 /**
