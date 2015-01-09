@@ -31,13 +31,13 @@ define(function(require, exports, module) {
         // Androidアプリのバージョンを取得する
         window.cordova.getAppVersion().then(function(version) {
             // personium.io上のバージョン情報を取得する
-            $.getJSON("version.json").done(function(json) {
-                var latestVersion = json.version;
+            $.get("config.xml", function(xml) {
+                var latestVersion = $(xml).find("widget").attr("version");
                 console.log("latestVersion:" + latestVersion);
                 complete(latestVersion === version);
-            }).fail(function(jqxhr, textStatus, error) {
+            }, "xml").fail(function(jqxhr, textStatus, error) {
                 console.log("version.json not found." + textStatus);
-                // version.jsonが存在しない場合、バージョンチェックはスルーする
+                // version情報ファイルが存在しない場合、バージョンチェックはスルーする
                 complete(true);
             });
         });
