@@ -18,8 +18,7 @@ define(function(require, exports, module) {
      * @memberOf VersionChecker#
      */
     VersionChecker.check = function(complete) {
-        if (CommonUtil.isCordovaRunning() === undefined || document.location.protocol !== "file:" ||
-                window.cordova.getAppVersion === undefined) {
+        if (CommonUtil.isCordovaRunning() === undefined || window.cordova.getAppVersion === undefined) {
             console.log("VersionChecker: CommonUtil.isCordovaRunning():" + CommonUtil.isCordovaRunning());
             console.log("VersionChecker: document.location.protocol:" + document.location.protocol);
             console.log("VersionChecker: window.cordova.getAppVersion:" + window.cordova.getAppVersion);
