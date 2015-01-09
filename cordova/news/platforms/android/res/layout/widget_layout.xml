@@ -22,10 +22,11 @@
             android:layout_width="wrap_content"
             android:layout_height="120dp"
             android:layout_marginTop="10dp"
+            android:paddingStart="32dp"
+            android:paddingEnd="16dp"
             android:ellipsize="end"
             android:background="@drawable/img_fukidashi_v"
             android:gravity="center_vertical"
-            android:paddingLeft="32dp"
             android:textColor="@android:color/black"
             android:textSize="33px" />
 
@@ -46,8 +47,8 @@
         android:layout_gravity="center_horizontal" >
 
             <ImageButton
-                android:id="@+id/link1"
-                style="@style/style_btn_news"
+                android:id="@+id/link_news"
+                android:background="@drawable/button_news"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -59,8 +60,8 @@
                 android:orientation="horizontal" />
 
             <ImageButton
-                android:id="@+id/link2"
-                style="@style/style_btn_post"
+                android:id="@+id/link_post"
+                android:background="@drawable/button_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -72,8 +73,8 @@
                 android:orientation="horizontal" />
 
             <ImageButton
-                android:id="@+id/link3"
-                style="@style/style_btn_dojo"
+                android:id="@+id/link_dojo"
+                android:background="@drawable/button_dojo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"

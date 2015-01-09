@@ -6,11 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 public class NamieWidgetBroadcastReceiver extends BroadcastReceiver {
 
@@ -50,30 +53,59 @@ public class NamieWidgetBroadcastReceiver extends BroadcastReceiver {
         frame++;
     }
 
+    private void setTextViewStyle(Context context, RemoteViews remoteViews, int type) {
+        Resources resources = context.getResources();
+        float density = resources.getDisplayMetrics().density;
+        Configuration config = resources.getConfiguration();
+
+        switch(config.orientation) {
+        case Configuration.ORIENTATION_PORTRAIT:
+            if (type == 0) {
+                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_fukidashi_v);
+                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 32), 0, dpToPx(density, 16), 0);
+            } else {
+                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_midashi);
+                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 20), 0, dpToPx(density, 20), 0);
+            }
+            break;
+        case Configuration.ORIENTATION_LANDSCAPE:
+        default :
+            if (type == 0) {
+                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_fukidashi);
+                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 60), 0, dpToPx(density, 30), 0);
+            } else {
+                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_midashi);
+                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 20), 0, dpToPx(density, 20), 0);
+            }
+            break;
+        }
+    }
+
+    private void setLinkIcon(RemoteViews remoteViews, int buttonId, int resourceId) {
+        remoteViews.setInt(buttonId, "setBackgroundResource", resourceId);
+    }
+
+    private int dpToPx(float density, float dp) {
+        return (int) (dp * density + 0.5f);
+    }
+
     private void setPendingIntents(Context context, RemoteViews remoteViews) {
-
-        String newsArticleUrl = "namie-news-article://";
-        Intent newsArticleIntent = new Intent(Intent.ACTION_VIEW);
-        newsArticleIntent.setData(Uri.parse(newsArticleUrl));
-        //PendingIntent newsArticlePendingintent = PendingIntent.getActivity(context, 0, newsArticleIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        //	remoteViews.setOnClickPendingIntent(R.id.news_view_article, newsArticlePendingintent);
-
         String newsUrl = "namie-news://";
         Intent newsIntent = new Intent(Intent.ACTION_VIEW);
         newsIntent.setData(Uri.parse(newsUrl));
         PendingIntent newsPendingintent = PendingIntent.getActivity(context, 0, newsIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.link1, newsPendingintent);
+        remoteViews.setOnClickPendingIntent(R.id.link_news, newsPendingintent);
 
         String postingUrl = "namie-letter://";
         Intent postingIntent = new Intent(Intent.ACTION_VIEW);
         postingIntent.setData(Uri.parse(postingUrl));
         PendingIntent postingPendingintent = PendingIntent.getActivity(context, 0, postingIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.link2, postingPendingintent);
+        remoteViews.setOnClickPendingIntent(R.id.link_post, postingPendingintent);
 
         String dojoUrl = "namie-dojo://";
         Intent dojoIntent = new Intent(Intent.ACTION_VIEW);
         dojoIntent.setData(Uri.parse(dojoUrl));
         PendingIntent dojoPendingintent = PendingIntent.getActivity(context, 0, dojoIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.link3, dojoPendingintent);
+        remoteViews.setOnClickPendingIntent(R.id.link_dojo, dojoPendingintent);
     }
 }
