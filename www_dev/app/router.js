@@ -165,6 +165,7 @@ define(function(require, exports, module) {
     var Router = Backbone.Router.extend({
         initialize : function() {
             // Render to the page.
+            console.log("Router initialized");
             this.layout = new Layout();
             if (!app.noRendering) {
                 this.layout.render();
