@@ -370,6 +370,10 @@
     margin-bottom: 15px;
 }
 
+.is-ope .news-action {
+    display: none;
+}
+
 .news-action .button {
     margin: 15px;
     height: 60px;
