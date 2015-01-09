@@ -58,12 +58,6 @@ public class NamieWidgetBroadcastReceiver extends BroadcastReceiver {
         //PendingIntent newsArticlePendingintent = PendingIntent.getActivity(context, 0, newsArticleIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         //	remoteViews.setOnClickPendingIntent(R.id.news_view_article, newsArticlePendingintent);
 
-        String newsLeftUrl = "namie-news-left://";
-        Intent newsLeftIntent = new Intent(Intent.ACTION_VIEW);
-        newsLeftIntent.setData(Uri.parse(newsLeftUrl));
-        PendingIntent newsLeftPendingintent = PendingIntent.getActivity(context, 0, newsLeftIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.left, newsLeftPendingintent);
-
         String newsUrl = "namie-news://";
         Intent newsIntent = new Intent(Intent.ACTION_VIEW);
         newsIntent.setData(Uri.parse(newsUrl));
