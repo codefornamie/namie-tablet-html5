@@ -3,18 +3,17 @@
     android:id="@+id/widget"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/img_bg"
     android:paddingTop="20dp"
-    android:paddingLeft="20dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
     android:paddingBottom="20dp"
-    android:paddingRight="20dp"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:orientation="horizontal" >
 
         <ImageView
@@ -44,20 +43,24 @@
         android:layout_marginBottom="20dp"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal" >
+        
+        <ImageButton
+            android:visibility="invisible"
+            android:background="@drawable/button_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="65dp"
+            android:layout_weight="1"/>
 
-            <ImageButton
+        <ImageButton
                 android:id="@+id/link_news"
                 android:background="@drawable/button_news"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="36dp"
-                android:layout_marginStart="120dp"
-                android:layout_marginEnd="30dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" />
+                android:layout_marginBottom="65dp"
+                android:layout_weight="1"/>
 
             <ImageButton
                 android:id="@+id/link_post"
@@ -65,12 +68,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="36dp"
-                android:layout_marginEnd="30dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="false"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" />
+                android:layout_marginBottom="65dp"
+                android:layout_weight="1"/>
 
             <ImageButton
                 android:id="@+id/link_dojo"
@@ -78,12 +77,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="36dp"
-                android:layout_marginEnd="105dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" />
-    </LinearLayout>
+                android:layout_marginBottom="65dp"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:visibility="invisible"
+                android:background="@drawable/button_news"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="65dp"
+                android:layout_weight="1"/>
+            </LinearLayout>
 
 </LinearLayout>
