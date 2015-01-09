@@ -56,10 +56,13 @@ define(function(require, exports, module) {
                     // 検索結果が得られた場合は、そのarticle情報のpublishedAtを本日の配信日とする
                     publishDate = articleCollection.at(0).get("publishedAt");
                 }
-                callback(moment(publishDate).format("YYYY-MM-DD"));
+                app.currentPublishDate = moment(publishDate).format("YYYY-MM-DD");
+                // 既読管理のためにパーソナル情報を更新。
+                app.user.updateShowLastPublished();
+                callback(app.currentPublishDate);
             }, this),
             error : $.proxy(function() {
-                callback(moment(publishDate).format("YYYY-MM-DD"));
+                callback(app.currentPublishDate);
             }, this),
         });
     };
