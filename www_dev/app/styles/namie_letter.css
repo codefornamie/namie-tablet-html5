@@ -77,7 +77,7 @@
 }
 
 .page-letter .contents {
-    background-color: transparent;
+    background: transparent;
     color: #053b65;
 }
 
@@ -100,6 +100,7 @@
     display: inline-block;
     background: -webkit-gradient(linear, left top, left bottom, from(#0074c5), to(#004f85));
     border-radius: 50px;
+    color: #fff;
     font-size: 1.3rem;
     margin: 0 20px 10px 0;
     padding: 1.2rem 1.2rem;
