@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
-            android:background="@drawable/img_bubble"
+            android:background="@drawable/img_fukidashi"
             android:gravity="center_vertical"
             android:paddingLeft="60dp"
             android:textColor="@android:color/black"
@@ -48,7 +48,7 @@
 
             <ImageButton
                 android:id="@+id/link1"
-                style="@style/style_btn_newspaper"
+                style="@style/style_btn_news"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
