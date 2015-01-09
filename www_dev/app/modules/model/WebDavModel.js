@@ -101,6 +101,9 @@ define(function(require, exports, module) {
         create : function(method, model, options, complete) {
             Log.info("WebDavModel create");
             var path = this.get("path");
+            if (!path) {
+                new Error("path is null.");
+            } 
             var fileName = this.get("fileName");
             var contentType = this.get("contentType");
             var data = this.get("data");
