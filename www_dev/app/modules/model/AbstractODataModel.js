@@ -52,6 +52,7 @@ define(function(require, exports, module) {
          */
         sync : function(method, model, options) {
             Log.info("AbstractODataModel sync");
+            var def = $.Deferred();
             if (!options) {
                 options = {};
             }
@@ -72,6 +73,7 @@ define(function(require, exports, module) {
                     if (options.error) {
                         options.error(res);
                     }
+                    def.reject(res);
                 } else if (options.success) {
                     if (res.bodyAsJson) {
                         json = res.bodyAsJson();
@@ -84,6 +86,10 @@ define(function(require, exports, module) {
 
                 if (options.complete) {
                     options.complete(res, model, json);
+                }
+                
+                if (def.state() === "pending") {
+                    def.resolve(res);
                 }
             };
             Log.info("Request personium. method : " + method);
@@ -106,6 +112,7 @@ define(function(require, exports, module) {
                 Log.info("Personium Exception : " + e);
                 app.router.go("login");
             }
+            return def.promise();
         },
         /**
          * PCS ODataの登録処理を行う。
