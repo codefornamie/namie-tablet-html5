@@ -167,9 +167,13 @@ define(function(require, exports, module) {
          */
         loadArticle : function(callback) {
             var self = this;
+            var cache = true;
+            if (self.cache !==undefined && !self.cache) {
+                cache = self.cache;
+            }
 
             this.articleCollection.fetch({
-                cache : true,
+                cache : cache,
 
                 success : function() {
                     self.loadFavorite(callback);
