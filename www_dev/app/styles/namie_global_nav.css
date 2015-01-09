@@ -14,6 +14,12 @@
     margin: auto;
 }
 
+@media only screen and (orientation:portrait) {
+    .global-nav {
+        height: 148px;
+    }
+}
+
 .global-nav nav {
 }
 
@@ -223,6 +229,12 @@
     width: 25%;
     text-align: right;
     float: right;
+}
+
+@media only screen and (orientation:portrait) {
+    .global-nav__menubutton {
+        width: 100%;
+    }
 }
 
 .global-nav__menubutton ul {
