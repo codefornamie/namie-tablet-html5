@@ -2,7 +2,18 @@
 require([
         "app", "router", "modules/util/VersionChecker", "modules/util/CommonUtil"
 ], function(app, Router, VersionChecker, CommonUtil) {
+    var goRoute = function() {
+        // Define your master router on the application namespace and trigger all
+        // navigation from this instance.
+        app.router = new Router();
 
+        // Trigger the initial route and enable HTML5 History API support, set the
+        // root folder to '/' by default. Change in app.js.
+        Backbone.history.start({
+            pushState : true,
+            root : app.root
+        });
+    };
     var main = function() {
         VersionChecker.check(function(result) {
             console.log("versioncheck:" + result);
@@ -14,16 +25,7 @@ require([
                 }, '通知', 'アプリ更新画面へ');
                 return;
             } else {
-                // Define your master router on the application namespace and trigger all
-                // navigation from this instance.
-                app.router = new Router();
-
-                // Trigger the initial route and enable HTML5 History API support, set the
-                // root folder to '/' by default. Change in app.js.
-                Backbone.history.start({
-                    pushState : true,
-                    root : app.root
-                });
+                goRoute();
             }
         });
     };
@@ -43,5 +45,7 @@ require([
             console.log("Start document.addEventListener(deviceready)");
             document.addEventListener("deviceready", onDeviceReady, false);
         }
+    } else {
+        goRoute();
     }
 });
