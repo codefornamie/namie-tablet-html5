@@ -58,10 +58,12 @@ define(function(require, exports, module) {
             this.$step.find("[href='#next']").addClass("button");
             this.$step.find("[href='#finish']").addClass("button");
             
+            this.updateButtons();
+
             $(".contents-wrapper").css("overflow", "hidden");
 
             // 実機から画像一覧を取得表示
-            if (navigator.userAgent.indexOf('Android') >= 0) {
+            if (this.isAndroid) {
                 FileAPIUtil.getGalleryList($.proxy(this.setGalleryList,this));
                 $(".onPC").hide();
             } else {
@@ -76,6 +78,9 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             this.initEvents();
+
+            // 実行環境がAndoirdであるかどうか
+            this.isAndroid = navigator.userAgent.indexOf('Android') >= 0;
 
             // 初期画面
             this.moveTo(1);
@@ -128,12 +133,7 @@ define(function(require, exports, module) {
                 // 現在のページ番号をdata属性に格納
                 $("#letter-wizard", this.$el).attr("data-step", expectedStep);
 
-                // 先頭のステップのみグローバルナビの「戻る」ボタンを表示
-                if (expectedStep === 1) {
-                    $("#main").addClass("is-subpage");
-                } else {
-                    $("#main").removeClass("is-subpage");
-                }
+                this.updateButtons();
 
                 this._isMoving = false;
             }
@@ -351,6 +351,7 @@ define(function(require, exports, module) {
                         $(".letterPicture").attr("src", $(target).attr("src"));
                         $(target).css("border","3px solid red");
                         $(target).addClass("checkedPic");
+                        this.$step.steps("next");
                     } else {
                         this.file = null;
                     }
@@ -423,7 +424,29 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ボタン表示の更新
+         * @memberOf LetterWizardView#
+         */
+        updateButtons: function() {
+            var currentStep = this.$step.steps("getCurrentIndex") + 1;
+
+            // 先頭のステップかつAndroidの場合、「OK」ボタンを非表示にする
+            if (currentStep === 1 && this.isAndroid) {
+                $("[href='#next']").hide();
+            } else {
+                $("[href='#next']").show();
+            }
+            // 先頭のステップのみグローバルナビの「戻る」ボタンを表示
+            if (currentStep === 1) {
+                $("#main").addClass("is-subpage");
+            } else {
+                $("#main").removeClass("is-subpage");
+            }
+        },
+
+        /**
          * ビューが破棄される時に呼ばれる
+         * @memberOf LetterWizardView#
          */
         cleanup: function () {
             $(".contents-wrapper").css("overflow", "");

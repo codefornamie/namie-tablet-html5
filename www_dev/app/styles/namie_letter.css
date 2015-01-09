@@ -282,6 +282,49 @@
 }
 
 /**
+ *  機能選択ページ
+ */
+.letter-select {
+    margin-top: 50px;
+}
+
+.letter-select-pane {
+    background: #fff;
+    background-repeat: no-repeat;
+    background-position: center 70px;
+    padding: 20px 30px;
+    height: 540px;
+}
+.letter-select-pane-new {
+    background-image: url(../../app/img/img-letter-select-new.png);
+}
+.letter-select-pane-list {
+    background-image: url(../../app/img/img-letter-select-list.png);
+}
+
+.letter-select-pane h3 {
+    color: #145fb3;
+    font-size: 1.5rem;
+}
+.letter-select-pane .letter-select-description {
+    margin-top: 200px;
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+}
+.letter-select-pane .letter-select-action {
+    font-size: 1.2rem;
+    text-align: center;
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+}
+.letter-select-pane .letter-select-action .button {
+    margin: 0;
+    min-width: 280px;
+}
+
+/**
  *  ウィザード
  */
 .letter-wizard {
@@ -502,6 +545,7 @@
     font-size: 1.4rem;
     color: #1475c1;
     margin: 15px 0;
+    text-align: right;
 }
 
 .letter-form label.is-nowrap {
@@ -515,7 +559,7 @@
 .letter-form input,
 .letter-form textarea {
     padding: 20px;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     background: rgb(247, 247, 247);
     height: auto;
     line-height: 1.4;
