@@ -125,6 +125,16 @@ define(function(require, exports, module) {
                     app.router.navigate("/letters/new?step=" + expectedStep);
                 }
 
+                // 現在のページ番号をdata属性に格納
+                $("#letter-wizard", this.$el).attr("data-step", expectedStep);
+
+                // 先頭のステップのみグローバルナビの「戻る」ボタンを表示
+                if (expectedStep === 1) {
+                    $("#main").addClass("is-subpage");
+                } else {
+                    $("#main").removeClass("is-subpage");
+                }
+
                 this._isMoving = false;
             }
         },

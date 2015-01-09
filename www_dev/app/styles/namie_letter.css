@@ -45,12 +45,30 @@
 
 .page-letter .global-nav__menu {
     position: relative;
-    top: -55px;
     display: none;
+    background: transparent;
+    width: auto;
+    top: 10px;
+    left: 25px;
 }
 
 .is-subpage .page-letter .global-nav__menu {
-    display: none;
+    display: block;
+}
+
+.page-letter .global-nav__menu a[data-back-home] {
+/*
+    display: block;
+    width: 100%;
+    height: 54px;
+    background-image: url(../../app/img/img-btn-back.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+*/
+    height: auto;
+    padding: 10px 30px;
+    width: auto;
 }
 
 .page-letter .contents-wrapper {
@@ -337,7 +355,7 @@
     background: white;
     display: block;
     margin: 50px 0 10px 0;
-    height: 520px;
+    height: 570px;
     overflow : auto;
     position: relative;
     width: auto;
@@ -388,10 +406,18 @@
 .letter-wizard ul[role="menu"] a[href="#finish"]
     {
     position: absolute;
-    width: 280px;
-    top: 0;
+    width: 250px;
+    top: -120px;
     left: 50%;
     margin-left: -140px;
+}
+
+.letter-wizard[data-step="2"] ul[role="menu"] a[href="#next"],
+.letter-wizard[data-step="3"] ul[role="menu"] a[href="#next"] {
+    top: -550px;
+    right: 40px;
+    left: auto;
+    margin-left: 0;
 }
 
 .letter-wizard .body form {
@@ -428,7 +454,7 @@
 
 .letter-wizard .actions .button[href="#previous"] {
     position: absolute;
-    top: -590px;
+    top: -640px;
     padding: 10px 30px;
 }
 .letter-wizard .actions .button[href="#finish"] {
@@ -464,7 +490,7 @@
  *  フォーム
  */
 .letter-form {
-    margin-bottom: 30px;
+    margin-bottom: 100px;
 }
 
 .letter-form label.error {
@@ -480,6 +506,10 @@
 
 .letter-form label.is-nowrap {
     white-space: nowrap;
+}
+
+.letter-form label .note {
+    font-size: 60%;
 }
 
 .letter-form input,

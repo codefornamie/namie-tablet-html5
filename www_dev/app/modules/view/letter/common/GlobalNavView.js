@@ -67,7 +67,7 @@ define(function(require, exports, module) {
          */
         onRoute: function (route, params) {
             switch (route) {
-            case "letterList":
+            case "letterSelect":
                 $("#main").removeClass("is-subpage");
                 break;
 

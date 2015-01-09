@@ -1,6 +1,7 @@
 <div
     id="letter-wizard"
     class="letter-wizard"
+    data-step="1"
 >
     <form id="letter-form">
         <div
@@ -58,13 +59,16 @@
                             >
                         </div>
 
-                        <div class="columns large-10">
+                        <div class="columns large-7">
                             <textarea
                                 id="letter-wizard-form__body"
                                 placeholder="ここをタップすることで、ひとことが入力できます。"
                                 class="required"
                                 rows="9"
                             ></textarea>
+                        </div>
+
+                        <div class="columns large-3">
                         </div>
                     </div>
 
@@ -84,15 +88,18 @@
                 <div class="letter-form">
                     <div class="row">
                         <div class="columns large-3">
-                            <label for="letter-wizard-form__nickname">お名前<span style="font-size: 60%;">（ペンネーム可）</span></label>
+                            <label for="letter-wizard-form__nickname">お名前<span class="note">（ペンネーム可）</span></label>
                         </div>
 
-                        <div class="columns large-9">
+                        <div class="columns large-6">
                             <input
                                 type="text"
                                 class="required"
                                 id="letter-wizard-form__nickname"
                             />
+                        </div>
+
+                        <div class="columns large-3">
                         </div>
                     </div>
 
