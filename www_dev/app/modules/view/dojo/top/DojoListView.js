@@ -30,29 +30,6 @@ define(function(require, exports, module) {
         listElementSelector : "#dojo-list",
 
         /**
-         * テンプレートに渡す情報をシリアライズする
-         * @return {Object}
-         */
-        serialize: function () {
-            return _.extend({}, Super.prototype.serialize.call(this), {
-                levels: this.extractLevels()
-            });
-        },
-
-        /**
-         * Viewの描画処理の開始前に呼び出されるコールバック関数。
-         * <p>
-         * 記事一覧の表示処理を開始する。
-         * </p>
-         * @memberOf DojoListView#
-         */
-        beforeRendered : function() {
-            this.extractLevels();
-
-            Super.prototype.beforeRendered.call(this);
-        },
-
-        /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
          * @memberOf DojoListView#
          */
@@ -71,42 +48,36 @@ define(function(require, exports, module) {
         },
 
         /**
-         * コレクション内のモデルの値から級の一覧を作る
-         * @memberOf DojoListView#
-         */
-        extractLevels : function() {
-            var levels = {};
-
-            // 定義されている級のリストを取得する
-            // TODO: 将来的には、級の定義情報はperosnium.ioに定義する
-            var dojoLevels = Code.DOJO_LEVELS;
-
-            // 「級の名称=>インデックス」の対応を格納する
-            _.each(dojoLevels, function(dojoLevel, index) {
-                levels[dojoLevel.id] = dojoLevel;
-            });
-
-            return levels;
-        },
-
-        /**
          * 取得した動画一覧を描画する
          * @memberOf DojoListView#
          */
         setFeedList : function() {
             var self = this;
-            var levels = this.extractLevels();
             var animationDeley = 0;
-            // 選択されている級を取得する。このオブジェクトのidプロパティは、dojo_movie#levelと同じ
-            var dojoLevel = levels[this.level.get("level")];
+            // 選択されている級の文字列表現を取得する。この値は、dojo_movie#levelの文字列と同じ
+            var levelValue = this.level.get("level");
+            this.collection.models = _.sortBy(this.collection.models,function(model) {
+                return model.get("sequence");
+            });
+            
+            // 次に見るべき動画とグレーアウトする動画を判断するカウント変数
+            var nextCount = 0;
             this.collection.each($.proxy(function(model) {
-                if (model.get("level") === dojoLevel.id) {
+                if (model.get("level") === levelValue) {
+                    var solvedItem = _.find(model.achievementModels,function(ach){
+                        return ach.get("type") === "dojo_" + Code.DOJO_STATUS_SOLVED;
+                    });
+                    if (!solvedItem) {
+                        nextCount++;
+                    }
                     var ItemView = self.feedListItemViewClass;
-                    var selectorPrefix = "-" + levels[model.get("level")];
                     this.insertView(this.listElementSelector, new ItemView({
                         model : model,
                         animationDeley : animationDeley,
-                        parentView: this
+                        parentView: this,
+                        isNext: nextCount === 1,
+                        isGrayedOut: nextCount > 1,
+                        
                     }));
                     animationDeley += 0.2;
                 }

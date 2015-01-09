@@ -30,6 +30,7 @@
     "jquery-steps": "~1.1.0",
     "masonry": "~3.2.2",
     "backbone-fetch-cache": "~1.5.5",
-    "rome": "~1.2.1"
+    "rome": "~1.2.1",
+    "blueimp-canvas-to-blob": "~2.1.1"
   }
 }

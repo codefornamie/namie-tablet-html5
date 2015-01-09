@@ -37,6 +37,16 @@ define(function(require, exports, module) {
         initialize : function() {
             console.assert(this.collection, "DojoLevelListView should have a collection");
         },
+        /**
+         * Viewの描画処理の終了後に呼び出されるコールバック関数。
+         * @memberOf DojoLevelListView#
+         */
+        afterRendered : function() {
+            var notAchievementedLevel = this.collection.getNotAchievementedLevel();
+            for (var i = 0; i <= parseInt(notAchievementedLevel); i++) {
+                $("#dojo-level-" + i).show();
+            }
+        },
 
         /**
          * コレクション内のモデルの値から級の一覧を作る

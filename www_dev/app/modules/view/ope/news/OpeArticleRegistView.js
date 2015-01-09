@@ -103,7 +103,8 @@ define(function(require, exports, module) {
             this.setView("#articleRegistConfirmWrapperPage", new OpeArticleRegistConfirmView({
                 model : this.model,
                 recommendArticle : this.recommendArticle,
-                publishedAt : this.model.get("publishedAt")
+                publishedAt : this.model.get("publishedAt"),
+                thumbImageByteArray : this.thumbImageByteArray
             })).render();
             $("#contents__primary").scrollTop(0);
         },
