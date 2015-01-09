@@ -96,6 +96,22 @@
     display: inline-block;
     vertical-align: middle;
     height: 40px;
+    width: 77px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.dojo-account__rank-icon.is-white {
+    background-image: url(../../app/img/dojo/img-white-belt-small.png);
+}
+
+.dojo-account__rank-icon.is-brown {
+    background-image: url(../../app/img/dojo/img-brown-belt-small.png);
+}
+
+.dojo-account__rank-icon.is-black {
+    background-image: url(../../app/img/dojo/img-black-belt-small.png);
 }
 
 .dojo-account__rank-icon img {
@@ -205,8 +221,24 @@
 
 .dojo-level-item__icon {
     display: inline-block;
+    vertical-align: middle;
     height: 53px;
-    max-width: 277px;
+    width: 277px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.dojo-level-item__icon.is-white {
+    background-image: url(../../app/img/dojo/text-white-belt.png);
+}
+
+.dojo-level-item__icon.is-brown {
+    background-image: url(../../app/img/dojo/text-brown-belt.png);
+}
+
+.dojo-level-item__icon.is-black {
+    background-image: url(../../app/img/dojo/text-black-belt.png);
 }
 
 .dojo-level-item__icon img {

@@ -97,6 +97,9 @@ define(function(require, exports, module) {
             this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView.layout);
             this.removeView(DojoLayout.SELECTOR_TAB);
             this.removeView(DojoLayout.SELECTOR_EDITION);
+
+            // [TODO] ページの途中でモーダルを開くと切れてしまう問題への応急処置
+            $("#snap-content").scrollTop(0);
         },
 
         /**
