@@ -96,7 +96,8 @@ define(function(require, exports, module) {
                 } else {
                     // 休刊日
                     this.hideLoading();
-                    alert("休刊日です。");
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("休刊日です。");
                 }
             }.bind(this));
             this.initEvents();

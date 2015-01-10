@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var NewspaperHolidayModel = require("modules/model/misc/NewspaperHolidayModel");
     var Le = require("modules/util/filter/Le");
+    var Ge = require("modules/util/filter/Ge");
 
     /**
      * 休刊日情報のコレクションクラス
@@ -65,10 +66,44 @@ define(function(require, exports, module) {
                             return;
                         }
                     }
-                    callback(null, false, new Error()); // 廃刊
+                    // 休刊日の連続が限界を超えている。
+                    callback(null, false, new Error());
                 },
                 error : function(e) {
                     callback(null, false, e);
+                },
+            });
+        },
+        /**
+         * 指定した日から直近の次号発刊日を返す。
+         * @param {Date} d 日付
+         * @returns {Function} コールバック
+         * function(prevDate, isPublish, err)
+         *   {Date} prevDate 指定した日付の直近の発刊日
+         *   {Object} err エラーが発生した場合、その原因
+         * @memberOf NewspaperHolidayCollection#
+         */
+        nextPublish : function(d, callback) {
+            var md = moment(d);
+            this.condition.filters = [
+                                      new Ge("__id", md.format("YYYY-MM-DD"))
+                                      ];
+            this.condition.orderby = "__id";
+            this.fetch({
+                success : function(col, models) {
+                    var map = col.indexBy("__id");
+                    for(var i = 0; i < Code.LIMIT_CONSECUTIVE_HOLIDAY; i++){
+                        if(!map[md.format("YYYY-MM-DD")]) {
+                            callback(md.toDate(), null);
+                            return;
+                        }
+                        md.add(1, "d");
+                    }
+                    // 休刊日の連続が限界を超えている。
+                    callback(null, new Error());
+                },
+                error : function(e) {
+                    callback(null, e);
                 },
             });
         }

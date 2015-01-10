@@ -360,9 +360,15 @@ define(function(require, exports, module) {
          * ---------- 管理アプリ ----------
          */
         opeTop : function(targetDate) {
-            this.layout.showView(new TopView({targetDate:targetDate}));
-            this.layout.setHeader(new common.HeaderView());
-            this.layout.setFooter(new common.FooterView());
+            if( targetDate ) {
+                this.layout.showView(new TopView({targetDate:targetDate}));
+                this.layout.setHeader(new common.HeaderView());
+                this.layout.setFooter(new common.FooterView());
+            } else {
+                BusinessUtil.calcNextPublication(function(dateString){
+                    this.go("ope-top", dateString);
+                }.bind(this));
+            }
         },
 
         /**

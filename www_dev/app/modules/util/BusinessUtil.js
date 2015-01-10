@@ -5,6 +5,9 @@ define(function(require, exports, module) {
     var moment = require("moment");
     var IsNull = require("modules/util/filter/IsNull");
     var Le = require("modules/util/filter/Le");
+    var Ge = require("modules/util/filter/Ge");
+    
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     /**
      * 業務ユーティリティクラス
@@ -53,6 +56,28 @@ define(function(require, exports, module) {
             app.currentPublishDate = moment(publishDate).format("YYYY-MM-DD");
             // 既読管理のためにパーソナル情報を更新。
             app.user.updateShowLastPublished();
+            callback(considerDate);
+        });
+    };
+    /**
+     * 次号の配信日を返す。
+     * @memberOf BusinessUtil#
+     * @param {NewspaperHolidayCollection} newspaperHolidayCollection 
+     * @param {Function} callback 休刊日を加味した配信日計算後の処理
+     */
+    BusinessUtil.calcNextPublication = function(callback) {
+        var publishDate = moment();
+        
+        // 休刊日計算処理
+        var newspaperHolidayCollection = new NewspaperHolidayCollection();
+        newspaperHolidayCollection.nextPublish(publishDate.toDate(), function(nextPublishDate, err) {
+            var considerDate = publishDate.format("YYYY-MM-DD");
+            if (err) {
+                app.logger.error("error BusinessUtil.calcNextPublication()");
+            } else {
+                considerDate = moment(nextPublishDate).format("YYYY-MM-DD");
+            }
+            app.currentPublishDate = considerDate;
             callback(considerDate);
         });
     };
