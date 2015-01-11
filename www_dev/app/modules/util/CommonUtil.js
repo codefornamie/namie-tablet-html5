@@ -44,7 +44,7 @@ define(function(require, exports, module) {
      */
     CommonUtil.isCordova = function() {
         console.log("window.cordova:" + window.cordova);
-        return window.cordova;
+        return window.cordova !== undefined;
     };
     /**
      * アプリがCordova上で動作している、かつ、Cordovaが利用可能な状態どうかを判定する。
@@ -54,7 +54,7 @@ define(function(require, exports, module) {
      */
     CommonUtil.isCordovaRunning = function() {
         console.log("window.device:" + window.device);
-        return CommonUtil.isCordova() && window.device;
+        return CommonUtil.isCordova() && window.device !== undefined;
     };
     module.exports = CommonUtil;
 });

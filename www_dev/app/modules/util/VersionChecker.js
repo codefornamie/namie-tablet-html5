@@ -18,7 +18,7 @@ define(function(require, exports, module) {
      * @memberOf VersionChecker#
      */
     VersionChecker.check = function(complete) {
-        if (CommonUtil.isCordovaRunning() === undefined || window.cordova.getAppVersion === undefined) {
+        if (CommonUtil.isCordovaRunning() === false || window.cordova.getAppVersion === undefined) {
             console.log("VersionChecker: CommonUtil.isCordovaRunning():" + CommonUtil.isCordovaRunning());
             console.log("VersionChecker: document.location.protocol:" + document.location.protocol);
             console.log("VersionChecker: window.cordova.getAppVersion:" + window.cordova.getAppVersion);
@@ -27,8 +27,9 @@ define(function(require, exports, module) {
             complete(true);
             return;
         }
+
         // Androidアプリのバージョンを取得する
-        window.cordova.getAppVersion().then(function(version) {
+        window.cordova.getAppVersion(function(version) {
             // personium.io上のバージョン情報を取得する
             $.get("config.xml", function(xml) {
                 var latestVersion = $(xml).find("widget").attr("version");
@@ -39,6 +40,10 @@ define(function(require, exports, module) {
                 // version情報ファイルが存在しない場合、バージョンチェックはスルーする
                 complete(true);
             });
+        }, function() {
+            // Versionチェック処理でエラーが発生した場合はアプリを起動する
+            console.log("AppVersion plugin not valid. Skip version check.");
+            complete(true);
         });
     };
     module.exports = VersionChecker;

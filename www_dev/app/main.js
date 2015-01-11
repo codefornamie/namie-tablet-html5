@@ -2,7 +2,11 @@
 require([
         "app", "router", "modules/util/VersionChecker", "modules/util/CommonUtil"
 ], function(app, Router, VersionChecker, CommonUtil) {
+    // Cordova初期化中のCordova Plugin読み込みエラー時にalertが表示されるのを抑止する
+    var _alert = window.alert;
+    window.alert = function() {};
     var goRoute = function() {
+        window.alert = _alert;
         // Define your master router on the application namespace and trigger all
         // navigation from this instance.
         app.router = new Router();
@@ -29,7 +33,9 @@ require([
             }
         });
     };
+    var deviceReadyFired = false;
     var onDeviceReady = function() {
+        deviceReadyFired = true;
         console.log("cordova deviceReady.");
         console.log(window.device.cordova);
         main();
@@ -44,6 +50,11 @@ require([
             console.log("isCordovaRunning: false");
             console.log("Start document.addEventListener(deviceready)");
             document.addEventListener("deviceready", onDeviceReady, false);
+            setTimeout(function() {
+                if (deviceReadyFired === false) {
+                    onDeviceReady();
+                }
+            }, 5000);
         }
     } else {
         goRoute();
