@@ -14,7 +14,7 @@ define(function(require, exports, module) {
      */
     var LoginView = NewsLoginView.extend({
         goNextView: function() {
-            app.router.go("letters");
+            app.router.go("letter");
         }
     });
 

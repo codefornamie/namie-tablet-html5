@@ -44,10 +44,10 @@ define(function(require, exports, module) {
             this.$step = this.$el.find(LetterWizardView.SELECTOR_LETTER_WIZARD).steps({
                 headerTag : "h3",
                 bodyTag : "section",
-                transitionEffect : "slideLeft",
+                transitionEffect : "none",
                 labels : {
-                    next : "次へ",
-                    previous : "戻る",
+                    next : "OK",
+                    previous : "前にもどる",
                     finish : "投稿する"
                 },
                 onStepChanging : this.onStepChanging.bind(this),
@@ -59,10 +59,12 @@ define(function(require, exports, module) {
             this.$step.find("[href='#next']").addClass("button");
             this.$step.find("[href='#finish']").addClass("button");
             
+            this.updateButtons();
+
             $(".contents-wrapper").css("overflow", "hidden");
 
             // 実機から画像一覧を取得表示
-            if (navigator.userAgent.indexOf('Android') >= 0) {
+            if (this.isAndroid) {
                 FileAPIUtil.getGalleryList($.proxy(this.setGalleryList,this));
                 $(".onPC").hide();
             } else {
@@ -78,6 +80,9 @@ define(function(require, exports, module) {
         initialize : function() {
             this.model = new ArticleModel();
             this.initEvents();
+
+            // 実行環境がAndoirdであるかどうか
+            this.isAndroid = navigator.userAgent.indexOf('Android') >= 0;
 
             // 初期画面
             this.moveTo(1);
@@ -127,6 +132,11 @@ define(function(require, exports, module) {
                     app.router.navigate("/letters/new?step=" + expectedStep);
                 }
 
+                // 現在のページ番号をdata属性に格納
+                $("#letter-wizard", this.$el).attr("data-step", expectedStep);
+
+                this.updateButtons();
+
                 this._isMoving = false;
             }
         },
@@ -163,7 +173,7 @@ define(function(require, exports, module) {
                 }
 
                 if (!this.file) {
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
                     vexDialog.buttons.YES.text = 'OK';
                     vexDialog.alert("画像が未選択です。");
                     return false;
@@ -330,12 +340,12 @@ define(function(require, exports, module) {
                 this.makeThmbnail(this.file.data, $.proxy(function(blob){
                     this.file.thumb = blob;
                 }, this));
-                $("#letterPicture").attr("src", $("#previewFile").attr("src"));
+                $(".letterPicture").attr("src", $("#previewFile").attr("src"));
                 return;
             }
 
-            vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.buttons.YES.text = 'これでOK';
+            vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+            vexDialog.buttons.YES.text = 'OK';
             vexDialog.buttons.NO.text = '選びなおす';
             vexDialog.open({
                 message : 'この写真でいいですか？',
@@ -348,9 +358,10 @@ define(function(require, exports, module) {
                         this.makeThmbnail(this.file.data, $.proxy(function(blob){
                             this.file.thumb = blob;
                         }, this));
-                        $("#letterPicture").attr("src", $(target).attr("src"));
+                        $(".letterPicture").attr("src", $(target).attr("src"));
                         $(target).css("border","3px solid red");
                         $(target).addClass("checkedPic");
+                        this.$step.steps("next");
                     } else {
                         this.file = null;
                     }
@@ -392,7 +403,7 @@ define(function(require, exports, module) {
             }, this);
             var error = $.proxy(function(e) {
                 this.hideLoading();
-                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
                 vexDialog.alert("保存に失敗しました。");
                 app.logger.error("保存に失敗しました。");
             }, this);
@@ -428,7 +439,7 @@ define(function(require, exports, module) {
                 success : $.proxy(function() {
                     $("#gallery-list").empty();
                     this.hideLoading();
-                    app.router.go('/letters');
+                    app.router.go('/letters/posted');
                 }, this),
                 error: function(e){
                     this.hideLoading();
@@ -439,7 +450,29 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ボタン表示の更新
+         * @memberOf LetterWizardView#
+         */
+        updateButtons: function() {
+            var currentStep = this.$step.steps("getCurrentIndex") + 1;
+
+            // 先頭のステップかつAndroidの場合、「OK」ボタンを非表示にする
+            if (currentStep === 1 && this.isAndroid) {
+                $("[href='#next']").hide();
+            } else {
+                $("[href='#next']").show();
+            }
+            // 先頭のステップのみグローバルナビの「戻る」ボタンを表示
+            if (currentStep === 1) {
+                $("#main").addClass("is-subpage");
+            } else {
+                $("#main").removeClass("is-subpage");
+            }
+        },
+
+        /**
          * ビューが破棄される時に呼ばれる
+         * @memberOf LetterWizardView#
          */
         cleanup: function () {
             $(".contents-wrapper").css("overflow", "");

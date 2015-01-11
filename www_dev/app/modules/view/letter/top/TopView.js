@@ -4,9 +4,12 @@ define(function(require, exports, module) {
     var app = require("app");
     var moment = require("moment");
     var AbstractView = require("modules/view/AbstractView");
+    var LetterSelectView = require("modules/view/letter/select/LetterSelectView");
     var LetterListView = require("modules/view/letter/top/LetterListView");
     var LetterWizardView = require("modules/view/letter/wizard/LetterWizardView");
+    var LetterWizardCompleteView = require("modules/view/letter/wizard/LetterWizardCompleteView");
     var LetterEditView = require("modules/view/letter/edit/LetterEditView");
+    var LetterEditCompleteView = require("modules/view/letter/edit/LetterEditCompleteView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var Equal = require("modules/util/filter/Equal");
     var Ge = require("modules/util/filter/Ge");
@@ -47,18 +50,37 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 遷移先選択画面を開く
+         * @memberOf LetterTopLayout#
+         */
+        showSelect : function() {
+            var letterSelectView = new LetterSelectView();
+
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
+            this.setView(LetterTopLayout.SELECTOR_LETTER_SELECT, letterSelectView);
+        },
+
+        /**
          * 一覧画面を開く
          * @memberOf LetterTopLayout#
          */
         showList : function() {
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
             this.setView(LetterTopLayout.SELECTOR_LETTER_LIST, this.letterListView);
         },
 
         /**
          * ウィザード画面を開く
          * @param {Number} step
+         * @memberOf LetterTopLayout#
          */
         showWizard : function(step) {
             var isRendered = !!this.getView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
@@ -67,10 +89,28 @@ define(function(require, exports, module) {
             if (!isRendered) {
                 var letterWizardView = new LetterWizardView();
 
+                this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
+                this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
                 this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
+                this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
                 this.setView(LetterTopLayout.SELECTOR_LETTER_WIZARD, letterWizardView);
             }
+        },
+
+        /**
+         * ウィザード完了画面を開く
+         * @memberOf LetterTopLayout#
+         */
+        showWizardComplete : function(id) {
+            var letterWizardCompleteView = new LetterWizardCompleteView();
+
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
+            this.setView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE, letterWizardCompleteView);
         },
 
         /**
@@ -83,9 +123,30 @@ define(function(require, exports, module) {
 
             var letterEditView = new LetterEditView();
 
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
             this.setView(LetterTopLayout.SELECTOR_LETTER_EDIT, letterEditView);
+        },
+
+        /**
+         * 編集完了画面を開く
+         * @param {String} id 編集した記事のID
+         * @memberOf LetterTopLayout#
+         */
+        showEditComplete : function(id) {
+            console.assert(_.isString(id), "id should be a string");
+
+            var letterEditCompleteView = new LetterEditCompleteView();
+
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
+            this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT);
+            this.setView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE, letterEditCompleteView);
         },
 
         /**
@@ -111,6 +172,11 @@ define(function(require, exports, module) {
         }
     }, {
         /**
+         * 遷移先選択画面
+         */
+        SELECTOR_LETTER_SELECT : "#letter-select-container",
+
+        /**
          * ユーザーが投稿した記事一覧のセレクタ
          */
         SELECTOR_LETTER_LIST : "#letter-list-container",
@@ -121,9 +187,19 @@ define(function(require, exports, module) {
         SELECTOR_LETTER_WIZARD : "#letter-wizard-container",
 
         /**
+         * ウィザード完了画面のセレクタ
+         */
+        SELECTOR_LETTER_WIZARD_COMPLETE : "#letter-wizard-complete-container",
+
+        /**
          * 編集画面のセレクタ
          */
-        SELECTOR_LETTER_EDIT : "#letter-edit-container"
+        SELECTOR_LETTER_EDIT : "#letter-edit-container",
+
+        /**
+         * 編集完了画面のセレクタ
+         */
+        SELECTOR_LETTER_EDIT_COMPLETE : "#letter-edit-complete-container"
     });
 
     /**
@@ -152,7 +228,7 @@ define(function(require, exports, module) {
         initCollection : function() {
             // 直近１ヶ月分を表示する
             var dateFrom = moment().subtract(1, "month").format("YYYY-MM-DD");
-            var dateTo = moment().add(1,"d").format("YYYY-MM-DD");
+            var dateTo = moment().add(1, "d").format("YYYY-MM-DD");
 
             if (!this.letterCollection) {
                 this.letterCollection = new ArticleCollection();
@@ -198,7 +274,13 @@ define(function(require, exports, module) {
          * @param {Object} params
          */
         onRoute : function(route, params) {
+            var id;
+
             switch (route) {
+            case "letterSelect":
+                this.layout.showSelect();
+                break;
+
             case "letterList":
                 this.layout.showList();
                 break;
@@ -207,8 +289,13 @@ define(function(require, exports, module) {
                 break;
 
             case "letterEdit":
-                var id = params[0];
+                id = params[0];
                 this.layout.showEdit(id);
+                break;
+
+            case "letterEditComplete":
+                id = params[0];
+                this.layout.showEditComplete(id);
                 break;
 
             case "letterWizard":
@@ -218,6 +305,10 @@ define(function(require, exports, module) {
                 var step = query.step;
 
                 this.layout.showWizard(step);
+                break;
+
+            case "letterWizardComplete":
+                this.layout.showWizardComplete();
                 break;
 
             default:

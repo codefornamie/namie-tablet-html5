@@ -202,10 +202,13 @@ define(function(require, exports, module) {
             'dojo-introduction' : 'dojoIntroduction',
 
             // 町民投稿アプリ
+            "letter" : "letterSelect",
             "letters" : "letterList",
             "letters/new*queryString" : "letterWizard",
+            "letters/posted" : "letterWizardComplete",
             "letters/:id" : "letterDetail",
-            "letters/:id/edit" : "letterEdit"
+            "letters/:id/edit" : "letterEdit",
+            "letters/:id/modified" : "letterEditComplete"
         },
 
         index : function(queryString) {
@@ -459,9 +462,9 @@ define(function(require, exports, module) {
          * ---------- 町民投稿 ----------
          */
         /**
-         * 町民投稿：トップページ
+         * 町民投稿：遷移先選択画面
          */
-        letterList : function() {
+        letterSelect : function() {
             var letterGlobalNavView;
 
             // 実際の描画処理はletter/TopViewに書かれている
@@ -479,6 +482,12 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 町民投稿：記事一覧
+         */
+        letterList : function() {
+        },
+
+        /**
          * 町民投稿：詳細情報ページ
          */
         letterDetail : function(id) {
@@ -491,9 +500,21 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 町民投稿：詳細編集完了ページ
+         */
+        letterEditComplete : function() {
+        },
+
+        /**
          * 町民投稿：新規投稿ウィザード
          */
         letterWizard : function() {
+        },
+
+        /**
+         * 町民投稿：新規投稿ウィザード完了ページ
+         */
+        letterWizardComplete : function() {
         },
 
         /**
