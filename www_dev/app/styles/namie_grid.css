@@ -292,7 +292,7 @@
     text-decoration: underline;
 }
 
-.news-detail .post__body img {
+.news-detail .post__body img[src] {
     border: 10px solid rgb(242, 240, 226);
 }
 
@@ -368,6 +368,10 @@
  */
 .news-action {
     margin-bottom: 15px;
+}
+
+.is-ope .news-action {
+    display: none;
 }
 
 .news-action .button {
