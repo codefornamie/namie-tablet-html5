@@ -16,6 +16,7 @@ define(function(require, exports, module) {
 
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
+    var dojoCommon = require("modules/view/dojo/common/index");
     var NewsView = require("modules/view/news/NewsView");
 
     var ScrapView = require("modules/view/scrap/ScrapView");
@@ -421,6 +422,8 @@ define(function(require, exports, module) {
          * 道場：トップページ
          */
         dojoTop : function() {
+            this.layout.setHeader(new dojoCommon.HeaderView());
+
             // 実際の描画処理はdojo/TopViewに書かれている
             // アプリのライフサイクルの中で、DojoTopViewの初期化は1度だけ行う
             if (!app.dojoTopView) {

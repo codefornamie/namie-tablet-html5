@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var DojoListView = require("modules/view/dojo/top/DojoListView");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
+    var Code = require("modules/util/Code");
 
     /**
      * 道場アプリのコース内コンテンツ一覧画面のLayout
@@ -24,7 +25,9 @@ define(function(require, exports, module) {
          * @return {Object}
          */
         serialize : function() {
-            return {};
+            return {
+                dojoLevel: Code.DOJO_LEVELS[this.level.get("level")]
+            };
         },
 
         /**
@@ -58,7 +61,8 @@ define(function(require, exports, module) {
                 this.updateNumberOfContent(this.dojoEditionModel);
 
                 var dojoListView = new DojoListView({
-                    collection: this.dojoEditionModel.get("contentCollection"),
+                    //collection: this.dojoEditionModel.get("contentCollection"),
+                    dojoEditionModel: this.dojoEditionModel,
                     level: this.level
                 });
 

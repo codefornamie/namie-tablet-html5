@@ -39,18 +39,20 @@ define(function(require, exports, module) {
                 this.updateNumberOfContent(this.model);
 
                 var dojoLevelListView = new DojoLevelListView({
+                    dojoEditionModel: this.model,
                     collection: this.model.get("contentCollection")
                 });
 
-                this.setView("#dojo-level-container", dojoLevelListView).render();
+                this.setView("#dojo-level-list-container", dojoLevelListView).render();
             }
         },
 
         /**
          * 初期化
+         * @param {Object} param
          * @memberOf DojoEditionView#
          */
-        initialize : function() {
+        initialize : function(param) {
             this.model = new DojoEditionModel();
         },
 

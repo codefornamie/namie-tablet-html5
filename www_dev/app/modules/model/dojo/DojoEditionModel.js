@@ -29,6 +29,31 @@ define(function(require, exports, module) {
         getWatchedModels : function() {
             // TODO this.contentCollectionから実際の視聴済みコンテンツを返す
             return [];
+        },
+
+        /**
+         * 道場コンテンツをレベル指定して取得する
+         * @param {String} levelValue
+         * @return {Array}
+         * @memberOf DojoEditionView#
+         */
+        getModelsByLevel: function (levelValue) {
+            var col;
+
+            // 全ての道場コンテンツを取得する
+            col = this.get("contentCollection");
+
+            // sequenceでソートする
+            col = col.sortBy(function(model) {
+                return model.get("sequence");
+            });
+
+            // levelで絞り込む
+            col = col.filter(function(model) {
+                return (model.get("level") === levelValue);
+            }.bind(this));
+
+            return col;
         }
     });
 

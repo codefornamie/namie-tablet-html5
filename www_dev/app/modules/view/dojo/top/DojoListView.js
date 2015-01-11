@@ -6,8 +6,8 @@ define(function(require, exports, module) {
     var DojoListItemView = require("modules/view/dojo/top/DojoListItemView");
     var DojoContentCollection = require("modules/collection/dojo/DojoContentCollection");
     var FeedListView = require("modules/view/news/FeedListView");
-    var Super = FeedListView;
     var Code = require("modules/util/Code");
+    var Super = FeedListView;
 
     /**
      * 道場アプリのコンテンツ一覧を表示するためのViewクラスを作成する。
@@ -39,10 +39,19 @@ define(function(require, exports, module) {
 
         /**
          * 初期化
+         * @param {Object} param
          * @memberOf DojoListView#
          */
-        initialize : function() {
-            console.assert(this.collection, "DojoListView should have a collection");
+        initialize : function(param) {
+            console.assert(param, "param should be specified");
+            console.assert(param.dojoEditionModel, "param.dojoEditionModel should be specified");
+            console.assert(param.level, "param.level should be specified");
+
+            this.dojoEditionModel = param.dojoEditionModel;
+            this.level = param.level;
+
+            // 選択されている級の文字列表現を取得する。この値は、dojo_movie#levelの文字列と同じ
+            this.models = this.dojoEditionModel.getModelsByLevel(this.level.get("level"));
 
             Super.prototype.setFeedListItemViewClass.call(this, DojoListItemView);
         },
@@ -54,34 +63,30 @@ define(function(require, exports, module) {
         setFeedList : function() {
             var self = this;
             var animationDeley = 0;
-            // 選択されている級の文字列表現を取得する。この値は、dojo_movie#levelの文字列と同じ
-            var levelValue = this.level.get("level");
-            this.collection.models = _.sortBy(this.collection.models,function(model) {
-                return model.get("sequence");
-            });
-            
+
             // 次に見るべき動画とグレーアウトする動画を判断するカウント変数
             var nextCount = 0;
-            this.collection.each($.proxy(function(model) {
-                if (model.get("level") === levelValue) {
-                    var solvedItem = _.find(model.achievementModels,function(ach){
-                        return ach.get("type") === "dojo_" + Code.DOJO_STATUS_SOLVED;
-                    });
-                    if (!solvedItem) {
-                        nextCount++;
-                    }
-                    var ItemView = self.feedListItemViewClass;
-                    this.insertView(this.listElementSelector, new ItemView({
-                        model : model,
-                        animationDeley : animationDeley,
-                        parentView: this,
-                        isNext: nextCount === 1,
-                        isGrayedOut: nextCount > 1,
-                        
-                    }));
-                    animationDeley += 0.2;
+
+            _(this.models).each($.proxy(function(model) {
+                var solvedItem = _.find(model.achievementModels,function(ach){
+                    return ach.get("type") === "dojo_" + Code.DOJO_STATUS_SOLVED;
+                });
+
+                if (!solvedItem) {
+                    nextCount++;
                 }
 
+                var ItemView = self.feedListItemViewClass;
+
+                this.insertView(this.listElementSelector, new ItemView({
+                    model : model,
+                    animationDeley : animationDeley,
+                    parentView: this,
+                    isNext: nextCount === 1,
+                    isGrayedOut: nextCount > 1
+                }));
+
+                animationDeley += 0.2;
             }, this));
         }
     });

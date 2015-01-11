@@ -2,19 +2,17 @@
     <div class="columns small-12">
         <div class="dojo-watched-state right">
             <div class="dojo-watched-state__description">
-                <span data-content-num>--</span>
-                本の動画があります
+                <span data-content-num>--</span>本の動画があります
             </div>
 
             <div class="dojo-watched-state__progress">
-                <span data-watched-num>--</span>
-                /
-                <span data-content-num>--</span>
-                視聴済み
+                <span data-watched-num>--</span>/<span data-content-num>--</span>視聴済み
             </div>
         </div>
 
-        <h2 class="dojo-edition-title">要コース名→<!-- %= model.get("levelTitle") % --></h2>
+        <h2 class="dojo-edition-title">
+            <div class="dojo-level-item__icon is-<%= dojoLevel.className %>"></div>
+        </h2>
     </div>
 </div>
 
