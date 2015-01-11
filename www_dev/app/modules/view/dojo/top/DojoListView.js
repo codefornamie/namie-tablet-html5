@@ -73,7 +73,7 @@ define(function(require, exports, module) {
                 });
 
                 if (!solvedItem) {
-                    nextCount = 1;
+                    nextCount++;
                 }
 
                 var ItemView = self.feedListItemViewClass;
