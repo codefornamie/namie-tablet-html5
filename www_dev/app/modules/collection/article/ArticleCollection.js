@@ -24,12 +24,12 @@ define(function(require, exports, module) {
         model : ArticleModel,
         /**
          * 操作対象のEntitySet名
-         * @memberof ArticleCollection#
+         * @memberOf ArticleCollection#
          */
         entity : "article",
         /**
          * 検索条件
-         * @memberof ArticleCollection#
+         * @memberOf ArticleCollection#
          */
         condition : {
             top : 100,
@@ -39,7 +39,7 @@ define(function(require, exports, module) {
          * レスポンス情報のパースを行う。
          * @param {Array} レスポンス情報の配列
          * @param {Object} オプション
-         * @memberof ArticleCollection#
+         * @memberOf ArticleCollection#
          */
         parseOData : function(response, options) {
             _.each(response, function(res) {
@@ -66,7 +66,7 @@ define(function(require, exports, module) {
         /**
          * 記事の検索条件を指定する。
          * @param {Object} condition 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
-         * @memberof ArticleCollection#
+         * @memberOf ArticleCollection#
          */
         setSearchCondition : function(condition) {
             var targetDate = condition.targetDate;

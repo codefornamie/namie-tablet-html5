@@ -19,7 +19,7 @@ define(function(require, exports, module) {
 
         /**
          * 描画前に実行する処理。
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         beforeRendered : function() {
             this.$el.foundation();
@@ -27,7 +27,7 @@ define(function(require, exports, module) {
 
         /**
          * 描画後に実行する処理。
-         * @memberof TopView#
+         * @memberOf TopView#
          */
         afterRendered : function() {
             // カレンダー表示

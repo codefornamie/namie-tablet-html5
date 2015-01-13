@@ -16,7 +16,7 @@ define(function(require, exports, module) {
         /**
          * 取得したOData情報のparse処理を行う。
          * 
-         * @memberof AchievementModel#
+         * @memberOf AchievementModel#
          * @param {Object} レスポンス
          * @param {Object} オプション
          * @return {Object} パース後の情報
@@ -28,7 +28,7 @@ define(function(require, exports, module) {
          * モデル固有の永続化データを生成する。
          * 
          * @param {Object} saveData 保存データ
-         * @memberof AchievementModel#
+         * @memberOf AchievementModel#
          */
         makeSaveData : function(saveData) {
             saveData.userId = app.user.get("__id");

@@ -33,31 +33,39 @@ define(function(require, exports, module) {
         afterRender : function() {
             this.dojoLessonSiblingsView.render();
             this.setYouTubePlayer();
+            $('.is-grayedout').unblock(); 
         },
         /**
          * イベント一覧
          */
         events : {
+            "click [data-playback-lesson]" : "onClickPlaybackLesson",
             "click [data-complete-lesson]" : "onClickCompleteLesson",
             "click [data-uncomplete-lesson]" : "onClickUncompleteLesson",
+            "click [data-back]" : "onClickBack"
         },
         /**
          * はいボタンを押したら呼ばれる
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
          */
-        onClickCompleteLesson : function() {
-            vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.buttons.YES.text = "OK";
-            vexDialog.alert("この操作を習得しました！！");
+        onClickCompleteLesson : function(ev) {
+            //vexDialog.defaultOptions.className = 'vex-theme-default';
+            //vexDialog.buttons.YES.text = "OK";
+            //vexDialog.alert("この操作を習得しました！！");
+
             if (this.dojoContentModel.achievementModels) {
                 var solvedAchievement = _.find(this.dojoContentModel.achievementModels, function(achievement) {
                     return achievement.get("type") === "dojo_solved";
                 });
+
                 if (solvedAchievement) {
+                    this.onClickBack(ev);
                     return;
                 }
             }
-            $("[data-complete-lesson]").attr("disabled", "disabled");
+            //$("[data-complete-lesson]").attr("disabled", "disabled");
+
+            // 習得済みとしてセーブする
             var achievementModel = new AchievementModel();
             achievementModel.set("type", "dojo_solved");
             achievementModel.set("action", this.dojoContentModel.get("videoId"));
@@ -66,12 +74,15 @@ define(function(require, exports, module) {
             achievementModel.save(null, {
                 success : $.proxy(function() {
                     this.onSaveAchievement(achievementModel);
+                    this.onClickBack(ev);
                 }, this)
             });
+
+            //app.router.go("dojo", "levels", app.currentDojoLevel);
         },
         /**
          * 達成状況情報保存後のコールバック関数
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
          * @param {AchievementModel} 新規保存後の達成状況情報
          */
         onSaveAchievement : function(achievementModel) {
@@ -84,12 +95,34 @@ define(function(require, exports, module) {
 
         /**
          * いいえボタンを押したら呼ばれる
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
+         */
+        onClickPlaybackLesson: function () {
+            this.$el.find("#dojo-lesson")
+                .removeClass("is-ended")
+                .addClass("is-ready");
+
+            this.player.seekTo(0);
+        },
+
+        /**
+         * いいえボタンを押したら呼ばれる
+         * @memberOf DojoLessonLayout#
          */
         onClickUncompleteLesson : function() {
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.buttons.YES.text = "OK";
             vexDialog.alert("習得できるように頑張りましょう！");
+        },
+
+        /**
+         * 動画一覧へ戻るボタンを押したら呼ばれる
+         * @memberOf DojoLessonLayout#
+         */
+        onClickBack : function(ev) {
+            ev.preventDefault();
+
+            app.router.go("dojo", "levels", app.currentDojoLevel);
         },
 
         /**
@@ -114,7 +147,7 @@ define(function(require, exports, module) {
         },
         /**
          * YouTube動画プレイヤーの設定を行う。
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
          */
         setYouTubePlayer : function() {
             if (YT.Player) {
@@ -136,8 +169,8 @@ define(function(require, exports, module) {
                                 $("[data-play-movie]").show();
                             }
                             if (event.data === YT.PlayerState.ENDED) {
-                                // 動画終了時に習得済みとする
-                                this.onClickCompleteLesson();
+                                // 動画終了時に習得確認テキストを出す
+                                this.onEndYouTube();
                             }
                         }, this)
                     }
@@ -146,7 +179,7 @@ define(function(require, exports, module) {
         },
         /**
          * このViewで表示するYouTube動画をYouTube動画プレイヤーに設定する。
-         * @memberof DojoLessonLayout#
+         * @memberOf DojoLessonLayout#
          */
         onLoadYoutubePlayer : function() {
             if (!this.player) {
@@ -170,6 +203,17 @@ define(function(require, exports, module) {
                 self.player.pauseVideo();
             });
         },
+
+        /**
+         * YouTube再生が終了した後に呼ばれる
+         * @memberOf DojoLessonLayout#
+         */
+        onEndYouTube: function () {
+            this.$el.find("#dojo-lesson")
+                .removeClass("is-ready")
+                .addClass("is-ended");
+        },
+
         /**
          * Viewが破棄された際に呼び出されるコールバック関数。
          * <p>
@@ -203,7 +247,7 @@ define(function(require, exports, module) {
     var DojoLessonView = AbstractView.extend({
         /**
          * 初期化
-         * @memberof DojoLessonView#
+         * @memberOf DojoLessonView#
          * @param {Object} param
          */
         initialize : function(param) {

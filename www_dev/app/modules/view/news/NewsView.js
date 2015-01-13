@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var async = require("async");
+    var moment = require("moment");
 
     // view
     var AbstractView = require("modules/view/AbstractView");
@@ -26,6 +27,7 @@ define(function(require, exports, module) {
     var DateUtil = require("modules/util/DateUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
     var vexDialog = require("vexDialog");
+    var Code = require("modules/util/Code");
     var IsNull = require("modules/util/filter/IsNull");
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
@@ -60,7 +62,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化処理
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         initialize : function(options) {
             options = options || {};
@@ -79,6 +81,7 @@ define(function(require, exports, module) {
         /**
          * 記事の検索条件を指定する。
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @memberOf NewsView#
          */
         setArticleSearchCondition : function(condition) {
             this.articleCollection.setSearchCondition(condition);
@@ -88,7 +91,7 @@ define(function(require, exports, module) {
 
         /**
          * イベントを初期化する
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
@@ -96,7 +99,7 @@ define(function(require, exports, module) {
 
         /**
          * 記事の検索処理を開始する。
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         searchArticles : function() {
             this.trackPageView();
@@ -117,7 +120,7 @@ define(function(require, exports, module) {
         /**
          * youtubeライブラリを読み込む
          * @param {Function} callback
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         loadYouTubeLibrary : function(callback) {
             if (app.gapiLoaded) {
@@ -160,13 +163,17 @@ define(function(require, exports, module) {
         /**
          * articleを読み込む
          * @param {Function} callback
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         loadArticle : function(callback) {
             var self = this;
+            var cache = true;
+            if (self.cache !==undefined && !self.cache) {
+                cache = self.cache;
+            }
 
             this.articleCollection.fetch({
-                cache : true,
+                cache : cache,
 
                 success : function() {
                     self.loadFavorite(callback);
@@ -181,6 +188,7 @@ define(function(require, exports, module) {
         /**
          * favoriteを読み込む
          * @param {Function} callback
+         * @memberOf NewsView#
          */
         loadFavorite : function(callback) {
             this.favoriteCollection.condition.filters = [
@@ -203,7 +211,7 @@ define(function(require, exports, module) {
         /**
          * eventsを読み込む
          * @param {Function} callback
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         loadEvents : function(callback) {
             this.eventsCollection.reset();
@@ -222,7 +230,7 @@ define(function(require, exports, module) {
         /**
          * Recommendを読み込む
          * @param {Function} callback
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         loadRecommend : function(callback) {
             this.recommendCollection.fetch({
@@ -241,9 +249,11 @@ define(function(require, exports, module) {
         /**
          * 全ての情報検索完了後のコールバック関数
          * @param {Error|Undefined} err
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         onFetchAll : function(err) {
+            var targetDate = new Date(this.targetDate);
+
             if (err) {
                 console.error(err);
                 return;
@@ -297,6 +307,39 @@ define(function(require, exports, module) {
             } else {
                 this.$(".recommendArticleContainer").hide();
             }
+
+            // 新聞アプリおよび管理アプリプレビュー表示の場合、おたより全件を1件の表示するための処理を行う
+            if (app.config.basic.mode === Code.APP_MODE_NEWS || this.isPreview) {
+                var anyLetter = this.newsCollection.find(function(article) {
+                    return article.get("type") === "6";
+                });
+                if (anyLetter) {
+                    // おたより記事が存在する場合の処理
+                    var newsArticles = this.newsCollection.toArray();
+                    var letterArticles = [];
+                    var letterFolderArticle;
+    
+                    // newsCollectionからおたより記事を削除し、配列に追加する
+                    _.each(newsArticles, $.proxy(function(article) {
+                        if (article.get("type") === "6") {
+                            this.newsCollection.remove(article);
+                            letterArticles.push(article);
+                        }
+                    }, this));
+    
+                    // おたより画面を開くための記事を作成し、コレクションの先頭に登録
+                    letterFolderArticle = new ArticleModel({
+                        __id: "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
+                        dispSite: "おたより",
+                        dispTitle: (targetDate.getMonth() + 1) + "月" + targetDate.getDate() + "日のおたより",
+                        type: "6",
+                        letters: letterArticles
+                    });
+                    this.newsCollection.unshift(letterFolderArticle);
+                    this.articleCollection.unshift(letterFolderArticle);
+                }
+            }
+
             // GridListView初期化
             this.showGridListView();
 
@@ -307,12 +350,12 @@ define(function(require, exports, module) {
         },
         /**
          * 記事一覧Viewを表示する要素のセレクタ
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         feedListElement : "#contents__top",
         /**
          * 左ペインの記事一覧メニューを表示する。
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         showGridListView : function() {
             var gridListView = this.createGridListView();
@@ -330,16 +373,17 @@ define(function(require, exports, module) {
 
         /**
          * 記事が見つからなかった場合のメッセージを画面に表示する。
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         showFeetNotFoundMessage : function() {
-            this.$el.text("記事情報がありません");
+            this.$el.find(NewsView.SELECTOR_ARTICLE_LIST).hide();
+            this.$el.find(NewsView.SELECTOR_NOTFOUND).show();
         },
 
         /**
          * 右ペインの記事一覧を表示するViewのインスタンスを作成して返す。
          * @return {GridListView} 生成したGridListViewのインスタンス
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         createGridListView : function() {
             return new GridListView();
@@ -347,7 +391,7 @@ define(function(require, exports, module) {
 
         /**
          * 右ペインの記事一覧を表示する。
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         showArticleListView : function() {
             var articleListView = new ArticleListView();
@@ -365,7 +409,7 @@ define(function(require, exports, module) {
          * 
          * @param {jQuery.Event} ev
          * @param {Object} param
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         onClickGridItem : function(ev, param) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
@@ -376,7 +420,7 @@ define(function(require, exports, module) {
         /**
          * 指定された記事IDの記事を表示する。
          * @param articleId {String} 記事ID
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         showArticle : function(articleId) {
             var model = this.articleCollection.find(function(article) {
@@ -394,6 +438,7 @@ define(function(require, exports, module) {
 
             switch (model.get("type")) {
             case "1": // RSS
+            case "7": // Facebook
                 template = require("ldsh!templates/{mode}/news/articleListItem");
                 ListItemView = ArticleListItemView;
                 if (model.get("rawHTML")) {
@@ -404,7 +449,7 @@ define(function(require, exports, module) {
                 template = require("ldsh!templates/{mode}/news/youTubeListItem");
                 ListItemView = YouTubeListItemView;
                 break;
-            case "6": // 町民投稿
+            case "6": // おたより
                 template = require("ldsh!templates/{mode}/news/letterDetail");
                 ListItemView = EventListItemView;
                 break;
@@ -431,9 +476,32 @@ define(function(require, exports, module) {
             $("#snap-content").scrollTop(0);
             $(".backnumber-scroll-container").scrollTop(0);
         },
+        
+        /**
+         * YYYY年MM月DD日版の新聞に戻るボタンの日付を更新する
+         * @memberOf NewsView#
+         */
+        updateFooterButtons: function () {
+            var self = this;
+            var $btnGoTop = this.$el.find("#news-action").find("[data-gotop]");
+            var $btnBack = this.$el.find("#news-action").find("[data-back]");
+            var currentMoment = moment(app.currentDate);
+            var currentDateStr = currentMoment.format("YYYY-MM-DD");
+
+            $btnGoTop.on("click", function () {
+                self.setScrollTop(0);
+            });
+
+            $btnBack.text(currentMoment.format("YYYY年MM月DD日版の新聞に戻る"));
+            $btnBack.on("click", function (ev) {
+                ev.preventDefault();
+                app.router.go("top", currentDateStr);
+            });
+        },
 
         /**
          * 初期スクロール位置が指定されている場合、スクロールする
+         * @memberOf NewsView#
          */
         initScrollTop : function() {
             if (this.initialScrollTop) {
@@ -444,9 +512,10 @@ define(function(require, exports, module) {
         /**
          * 記事一覧の現在のスクロール位置を設定する
          * @param {Number} scrollTop
+         * @memberOf NewsView#
          */
         setScrollTop : function(scrollTop) {
-            var $container = this.$el.find("#contents__top");
+            var $container = $("#snap-content");
 
             $container.scrollTop(scrollTop);
         },
@@ -454,9 +523,10 @@ define(function(require, exports, module) {
         /**
          * 記事一覧の現在のスクロール位置を取得する
          * @return {Number}
+         * @memberOf NewsView#
          */
         getScrollTop : function() {
-            var $container = this.$el.find("#contents__top");
+            var $container = $("#snap-content");
             var scrollTop = $container.scrollTop();
 
             return scrollTop;
@@ -464,16 +534,16 @@ define(function(require, exports, module) {
 
         /**
          * 記事詳細ページ以外では、記事詳細の要素を隠す
-         * @memberof NewsView#
+         * @memberOf NewsView#
          */
         onRoute : function(route) {
             if (route === "settings") {
             } else if (route === "showArticle") {
                 $(NewsView.SELECTOR_ARTICLE_LIST).hide();
-                $(NewsView.SELECTOR_ARTICLE_DESTINATION).show();
+                $(NewsView.SELECTOR_ARTICLE_CONTAINER).show();
             } else {
                 $(NewsView.SELECTOR_ARTICLE_LIST).show();
-                $(NewsView.SELECTOR_ARTICLE_DESTINATION).hide();
+                $(NewsView.SELECTOR_ARTICLE_CONTAINER).hide();
             }
 
             $("#main").removeClass("is-top");
@@ -487,10 +557,13 @@ define(function(require, exports, module) {
             } else if (route === "backnumber") {
                 $("#main").addClass("is-backnumber");
             }
+
+            this.updateFooterButtons();
         },
 
         /**
          * ビューが破棄される時に呼ばれる
+         * @memberOf NewsView#
          */
         cleanup : function() {
             $("#main").removeClass("is-top");
@@ -499,11 +572,17 @@ define(function(require, exports, module) {
 
         /**
          * Google Analyticsでページビューを記録する
+         * @memberOf NewsView#
          */
         trackPageView : function() {
             app.ga.trackPageView("/NewsView", "ニュース");
         }
     }, {
+        /**
+         * 記事詳細及び戻るボタンのコンテナのセレクタ
+         */
+        SELECTOR_ARTICLE_CONTAINER : "[data-news-container]",
+
         /**
          * 記事詳細を挿入する先のセレクタ
          */
@@ -512,7 +591,12 @@ define(function(require, exports, module) {
         /**
          * 記事一覧のセレクタ
          */
-        SELECTOR_ARTICLE_LIST : "#contents__top"
+        SELECTOR_ARTICLE_LIST : "#contents__top",
+
+        /**
+         * 記事情報がない場合に出すnotificationのセレクタ
+         */
+        SELECTOR_NOTFOUND : "#not-found"
     });
 
     module.exports = NewsView;

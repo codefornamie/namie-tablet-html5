@@ -16,6 +16,7 @@ define(function(require, exports, module) {
 
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
+    var dojoCommon = require("modules/view/dojo/common/index");
     var NewsView = require("modules/view/news/NewsView");
 
     var ScrapView = require("modules/view/scrap/ScrapView");
@@ -36,6 +37,7 @@ define(function(require, exports, module) {
     var DojoTopView = require("modules/view/dojo/top/TopView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
     var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
+    var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
 
     var LetterTopView = require("modules/view/letter/top/TopView");
     var LetterGlobalNavView = require("modules/view/letter/common/GlobalNavView");
@@ -115,7 +117,7 @@ define(function(require, exports, module) {
 
         /**
          * 描画目に実行する処理。
-         * @memberof router#
+         * @memberOf router#
          */
         beforeRender : function() {
             this.template = this.templateMap[app.config.basic.mode];
@@ -195,13 +197,18 @@ define(function(require, exports, module) {
 
             // 道場アプリ
             'dojo-top' : 'dojoTop',
+            "dojo/levels/:id" : "dojoLevel",
             "dojo/lessons/:id" : "dojoLesson",
+            'dojo-introduction' : 'dojoIntroduction',
 
             // 町民投稿アプリ
+            "letter" : "letterSelect",
             "letters" : "letterList",
             "letters/new*queryString" : "letterWizard",
+            "letters/posted" : "letterWizardComplete",
             "letters/:id" : "letterDetail",
-            "letters/:id/edit" : "letterEdit"
+            "letters/:id/edit" : "letterEdit",
+            "letters/:id/modified" : "letterEditComplete"
         },
 
         index : function(queryString) {
@@ -227,13 +234,16 @@ define(function(require, exports, module) {
          */
         /**
          * Top画面の表示。
-         * @memberof router#
+         * @memberOf router#
          * @param {String} targetDate 日付文字列yyyy-MM-dd
          */
         top : function(date) {
             app.logger.debug("It's a top page.");
             var targetDate = app.previewTargetDate ? app.previewTargetDate : date;
             if (targetDate) {
+                // 現在の日付を記録する
+                app.currentDate = targetDate;
+
                 // 日付が設定されているなら描画開始
                 this.layout.showView(new NewsView({
                     targetDate : new Date(targetDate),
@@ -415,12 +425,22 @@ define(function(require, exports, module) {
          * 道場：トップページ
          */
         dojoTop : function() {
+            this.layout.setHeader(new dojoCommon.HeaderView());
+
             // 実際の描画処理はdojo/TopViewに書かれている
             // アプリのライフサイクルの中で、DojoTopViewの初期化は1度だけ行う
             if (!app.dojoTopView) {
                 app.dojoTopView = new DojoTopView();
                 this.layout.showView(app.dojoTopView.layout);
             }
+        },
+
+        /**
+         * 道場：コース内コンテンツ一覧ページ
+         */
+        dojoLevel : function() {
+            app.logger.debug("[route] dojoLevel");
+            // 実際の描画処理はdojo/TopViewに書かれている
         },
 
         /**
@@ -431,12 +451,20 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 道場：初回説明画面ページ
+         */
+        dojoIntroduction : function() {
+            app.logger.debug("[route] dojoIntroduction");
+            // 実際の描画処理はdojo/TopViewに書かれている
+        },
+
+        /**
          * ---------- 町民投稿 ----------
          */
         /**
-         * 町民投稿：トップページ
+         * 町民投稿：遷移先選択画面
          */
-        letterList : function() {
+        letterSelect : function() {
             var letterGlobalNavView;
 
             // 実際の描画処理はletter/TopViewに書かれている
@@ -454,6 +482,12 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 町民投稿：記事一覧
+         */
+        letterList : function() {
+        },
+
+        /**
          * 町民投稿：詳細情報ページ
          */
         letterDetail : function(id) {
@@ -466,9 +500,21 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 町民投稿：詳細編集完了ページ
+         */
+        letterEditComplete : function() {
+        },
+
+        /**
          * 町民投稿：新規投稿ウィザード
          */
         letterWizard : function() {
+        },
+
+        /**
+         * 町民投稿：新規投稿ウィザード完了ページ
+         */
+        letterWizardComplete : function() {
         },
 
         /**

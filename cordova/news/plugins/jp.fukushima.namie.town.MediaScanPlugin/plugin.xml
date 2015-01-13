@@ -1,0 +1,33 @@
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="jp.fukushima.namie.town.MediaScanPlugin"
+    version="1.0.0">
+
+    <name>MediaScan Plugin</name>
+
+    <description>This plugin scans recently added files to the Android filesystem.</description>
+    <author></author>
+    <keywords>android,image,photo library,mediascanner</keywords>
+
+    <engine>
+        <engine name="cordova" version=">=3.6.0" />
+    </engine>
+
+    <js-module src="www/MediaScanPlugin.js" name="MediaScanPlugin">
+        <clobbers target="window.MediaScanPlugin" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+
+        <config-file target="res/xml/config.xml" parent="/*">
+          <feature name="MediaScanPlugin" >
+            <param name="android-package" value="jp.fukushima.namie.town.MediaScanPlugin.MediaScanPlugin"/>
+          </feature>
+        </config-file>
+
+        <source-file src="src/android/MediaScanPlugin.java"
+            target-dir="src/jp/fukushima/namie/town/MediaScanPlugin" />
+
+    </platform>
+</plugin>

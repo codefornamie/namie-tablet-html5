@@ -4,43 +4,45 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport"
-    content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 <link rel="stylesheet" href="bower_components/animate.css/animate.css">
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="lib/dao/dc1-client.js"></script>
+<script src="bower_components/oh-snap/ohsnap.js"></script>
+<script src="bower_components/moment/moment.js"></script>
 <script src="bower_components/requirejs/require.js"></script>
 
 </head>
 
 <style>
 #slideImage {
-    -vendor-animation-duration: 5s;
-    -vendor-animation-delay: 1s;
-    -vendor-animation-iteration-count: infinite;
-    width: 100%;
-    height: 100%;
+	-vendor-animation-duration: 5s;
+	-vendor-animation-delay: 1s;
+	-vendor-animation-iteration-count: infinite;
+	width: 100%;
+	height: 100%;
 }
 
 body {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 #message {
-    padding: 30px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 50%;
-    height: 30%;
-    margin-left: -25%;
-    margin-top: -15%;
-    adisplay: relative;
-    display: none;
-    background-color: #ffff00;
-    z-index: 100;
-    vertical-align: middle;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
+	padding: 30px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 50%;
+	height: 30%;
+	margin-left: -25%;
+	margin-top: -15%;
+	adisplay: relative;
+	display: none;
+	background-color: #ffff00;
+	z-index: 100;
+	vertical-align: middle;
+	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
 }
 
 #icon {
@@ -48,11 +50,30 @@ body {
 }
 
 #msg {
-    line-height: 1.1em;
-    vertical-align: middle;
-    font-size: 70px;
-    color: #000000;
-    font-weight: bold;
+	line-height: 1.1em;
+	vertical-align: middle;
+	font-size: 70px;
+	color: #000000;
+	font-weight: bold;
+}
+
+.alert {
+	padding: 30px;
+	margin-bottom: 20px;
+	border: 1px solid #eed3d7;
+	border-radius: 4px;
+	position: absolute;
+	font-size: 40px;
+	top: 50%;
+	width: 100%;
+	/* Each alert has its own width */
+	float: right;
+	clear: right;
+}
+
+.alert-red {
+	color: white;
+	background-color: #DA4453;
 }
 </style>
 <script>
@@ -78,8 +99,10 @@ body {
     var _updateInterval = null;
     /** 画像の表示間隔。 */
     var _updateTime = 50 * 60 * 1000; // 50分
+    /** 負荷分散を行う時間帯。5の場合、17:00〜17:05の間の通知表示を分散させる。 */
+    var _distributionPeriod = 5;
     /** 負荷分散用の間隔。 */
-    var _distributionTime = 5;
+    var _distributionTime = 30;
     /** 負荷分散時のタイマーで利用するタイマーID. */
     var _distributionTimerID = null;
     /** 画像データのキャッシュ。 */
@@ -121,6 +144,7 @@ body {
      * 初期処理
      */
     function init() {
+        log("start init");
         _dc = new dcc.DcContext(_base);
         _publishTime.setHours(0);
         _publishTime.setMinutes(0, 0, 0);
@@ -200,33 +224,39 @@ body {
      * Personiumに保存されている設定情報を読み込み。
      */
     function updateAtricleInfo() {
-        log("start updateConfigure");
-        var conf = _odataObj.entitySet("configuration").retrieveAsResponse("PUBLISH_TIME");
-        if ((conf) && (conf.body) && (conf.body.value)) {
-            log(conf.body.value);
-            var ar = conf.body.value.split(":");
-            if (ar.length > 0) {
-                _publishTime.setHours(ar[0]);
-                _publishTime.setMinutes(ar[1]);
-                if (_debug) {
-                    _publishTime.setHours(_debug_pubHours);
-                    _publishTime.setMinutes(_debug_pubMinutes);
+        try {
+            log("start updateConfigure");
+            var conf = _odataObj.entitySet("configuration").retrieveAsResponse("PUBLISH_TIME");
+            if ((conf) && (conf.body) && (conf.body.value)) {
+                log(conf.body.value);
+                var ar = conf.body.value.split(":");
+                if (ar.length > 0) {
+                    _publishTime.setHours(ar[0]);
+                    _publishTime.setMinutes(ar[1]);
+                    if (_debug) {
+                        _publishTime.setHours(_debug_pubHours);
+                        _publishTime.setMinutes(_debug_pubMinutes);
+                    }
                 }
             }
+            var m = moment(_publishTime);
+            var pub = m.format("YYYY-MM-DD");
+            if (_debug) {
+                pub = _debug_pubdate;
+            }
+            log("search arcile start : " + pub);
+            var ret = _odataObj.entitySet("article").query().top(0).filter(
+                    "publishedAt eq '" + pub + "' and isDepublish eq null").run();
+            if (ret.length > 0) {
+                _hasRecentAtricle = true;
+            } else {
+                _hasRecentAtricle = false;
+            }
+            log("search article end : " + ret.length);
+        } catch (e) {
+            log("updateAtricleInfo failure : " + e);
+            ohSnap('設定情報取得処理でエラーが発生しました。', 'red');
         }
-        var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
-        if (_debug) {
-            pub = _debug_pubdate;
-        }
-        log("search arcile start : " + pub);
-        var ret = _odataObj.entitySet("article").query().top(0).filter(
-                "publishedAt eq '" + pub + "' and isDepublish eq null").run();
-        if (ret.length > 0) {
-            _hasRecentAtricle = true;
-        } else {
-            _hasRecentAtricle = false;
-        }
-        log("search article end : " + ret.length);
     }
 
     /**
@@ -243,15 +273,20 @@ body {
             _collectonObj = cellObj.box("data").col("dav").col("slideshow");
         } catch (e) {
             log("Personium certificate failure : " + e);
+            ohSnap('認証処理でエラーが発生しました。', 'red');
         }
         try {
             var ret = _odataObj.entitySet("slideshow").query().filter("published eq '1'").run();
             log("slideshow target file length : " + ret.length);
+            if (ret.length === 0) {
+                ohSnap('スライドショー画像がありません。', 'red');
+            }
             for (var i = 0; i < ret.length; i++) {
                 list.push(ret[i].filename);
             }
         } catch (e) {
             log("Personium odata failure : " + e);
+            ohSnap('スライドショー画像を取得できませんでした。', 'red');
         }
         return list;
     }
@@ -297,7 +332,11 @@ body {
      * @param {Function} callback コールバック
      */
     function getImageBinary(fname, callback) {
-        log("start getImageBinary");
+        log("start getImageBinary. fname=" + fname);
+        if (fname === undefined) {
+            callback(null);
+            return;
+        }
         if (_cache[fname]) {
             log("use cache");
             callback(_cache[fname]);
@@ -310,11 +349,12 @@ body {
                     callback(binary);
                 },
                 error : function(e) {
-                    log("personium request failure : " + e);
+                    log("personium request failure : " + e.toString());
+                    callback(null);
                 }
             });
         } catch (e) {
-            log("Personium load file failure : " + e);
+            log("Personium load file failure : " + e.toString());
             callback(null);
         }
     }
@@ -327,15 +367,40 @@ body {
         log("start checkRecentArticle");
         var pub = _publishTime.getFullYear() + "-" + (_publishTime.getMonth() + 1) + "-" + _publishTime.getDate();
         var now = new Date();
-        var distTime = new Date(_publishTime.getTime() + (_distributionTime * 60 * 1000));
+        var distTime = new Date(_publishTime.getTime() + (_distributionPeriod * 60 * 1000));
         log("checkRecentArticle now : " + now);
         log("checkRecentArticle publishTime : " + _publishTime);
         log("checkRecentArticle distTime : " + distTime);
         log("_hasRecentAtricle : " + _hasRecentAtricle);
         log("localStorage(" + pub + ") : " + localStorage.getItem(pub));
 
+        // 土日ならば新聞発行は行わない
+        var day = now.getDay();
+        if ((day === 0) || (day === 6)) {
+            log("Saturday or Sunday : " + day);
+            callback.hidden();
+            return;
+        }
+
+        // 休刊日チェック
+        var m = moment(now);
+        var nowStr = m.format("YYYY-MM-DD");
+        var ret = null;
+        try {
+            ret = _odataObj.entitySet("newspaper_holiday").retrieveAsJson(nowStr);
+        } catch (e) {
+            log("today is not holiday : " + e);
+        }
+        if (ret) {
+            if (!ret.deletedAt) {
+                log("today is holiday :" + nowStr);
+                callback.hidden();
+                return;
+            }
+        }
+
         if ((_hasRecentAtricle) && (!localStorage.getItem(pub)) && (now > _publishTime)) {
-            log("popup");
+            log("show popup");
             if (now < distTime) {
                 // 数分間の負荷分散を行う
                 callback.distribution();
@@ -343,6 +408,8 @@ body {
                 // リアルタイムにポップアップ表示
                 callback.realtime();
             }
+        } else {
+            callback.hidden();
         }
     }
 
@@ -365,15 +432,18 @@ body {
         log("start showImage : " + fname);
         checkRecentArticle({
             hidden : function() {
+                log("checkRecentArticle responsed hidden");
                 $("#message").hide();
             },
             realtime : function() {
+                log("checkRecentArticle responsed realtime");
                 if (!_distributionTimerID) {
                     // ポップアップタイマーがセットされていなければ実行
                     showPopup();
                 }
             },
             distribution : function() {
+                log("checkRecentArticle responsed distribution");
                 if (_distributionTimerID) {
                     // すでに遅延用のタイマーをセットされていれば、表示処理は行わない。
                     log("skip popup");
@@ -388,9 +458,14 @@ body {
                 }, displayTime * 60 * 1000);
             }
         });
+        if (_fileList.length === 0) {
+            ohSnap('スライドショー画像が未登録です。', 'red');
+            return;
+        }
         getImageBinary(fname, function(binary) {
             if (!binary) {
                 log("failure binary null");
+                ohSnap('スライドショー画像を取得できませんでした。', 'red');
                 return;
             }
             log("start onGetBinary");
@@ -412,12 +487,13 @@ body {
     }
 </script>
 <body>
-    <div id="container" style="font-size: 1.5em;"></div>
-    <div id="message">
-        <div>
-            <img id="icon" src="app/img/img-character01.png" />
-        </div>
-        <div id="msg"></div>
-    </div>
+	<div id="container" style="font-size: 1.5em;"></div>
+	<div id="message">
+		<div>
+			<img id="icon" src="app/img/img-character01.png" />
+		</div>
+		<div id="msg"></div>
+	</div>
+	<div id="ohsnap"></div>
 </body>
 </html>

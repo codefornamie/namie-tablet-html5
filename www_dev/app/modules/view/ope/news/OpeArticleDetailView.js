@@ -16,12 +16,12 @@ define(function(require, exports, module) {
     var OpeArticleDetailView = ArticleListItemView.extend({
         /**
          * このViewを表示する際に利用するアニメーション
-         * @memberof OpeArticleDetailView#
+         * @memberOf OpeArticleDetailView#
          */
         template : require("ldsh!templates/ope/news/articleDetail"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
-         * @memberof OpeArticleDetailView#
+         * @memberOf OpeArticleDetailView#
          * 
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
 
         /**
          * このViewのイベントを定義する。
-         * @memberof OpeArticleDetailView#
+         * @memberOf OpeArticleDetailView#
          */
         events : {
             'click [data-goto-cancel]' : 'onClickGotoCancel',
@@ -43,7 +43,7 @@ define(function(require, exports, module) {
         },
         /**
          * キャンセルボタンをクリックしたら呼ばれる
-         * @memberof OpeArticleDetailView#
+         * @memberOf OpeArticleDetailView#
          */
         onClickGotoCancel : function() {
             app.router.go("ope-top",this.model.get("publishedAt"));

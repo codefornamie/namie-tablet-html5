@@ -1,0 +1,48 @@
+/**
+ *  新聞アプリCSS
+ */
+/**
+ *  ----------
+ *  1. Base
+ *  ----------
+ */
+.button {
+    background: #ffa801;
+    -webkit-box-shadow: 0px 3px 0px #df6f23;
+    -moz-box-shadow: 0px 3px 0px #df6f23;
+    box-shadow: 0px 3px 0px #df6f23;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 5px 25px 5px 25px;
+    text-decoration: none;
+}
+
+.button:focus,
+.button:hover {
+    background: rgb(230, 148, 1);
+}
+
+/**
+ *  ----------
+ *  2. Project
+ *  ----------
+ */
+.modal-calendar {
+}
+
+.modal-calendar .rd-back,
+.modal-calendar .rd-next {
+    color: white;
+    background: rgb(8, 76, 129);
+    margin: 10px 0;
+    padding: 0px 30px;
+    border-radius: 30px;
+    height: 60px;
+    line-height: 60px;
+}
+
+/**
+ *  ----------
+ *  3. Cosmetic
+ *  ----------
+ */

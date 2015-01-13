@@ -20,12 +20,12 @@ define(function(require, exports, module) {
         model : DojoContentModel,
         /**
          * 操作対象のEntitySet名
-         * @memberof DojoContentCollection#
+         * @memberOf DojoContentCollection#
          */
         entity : "dojo_movie",
         /**
          * 検索条件
-         * @memberof DojoContentCollection#
+         * @memberOf DojoContentCollection#
          */
         condition : {
             top : 100,
@@ -33,12 +33,12 @@ define(function(require, exports, module) {
         },
         /**
          * youtubeCollection
-         * @memberof DojoContentCollection#
+         * @memberOf DojoContentCollection#
          */
         youtubeCollection: null,
         /**
          * achievementCollection
-         * @memberof DojoContentCollection#
+         * @memberOf DojoContentCollection#
          */
         achievementCollection: null,
         /**
@@ -70,7 +70,7 @@ define(function(require, exports, module) {
 
         /**
          * collectionが持つmodelを◯◯編ごとに分配し、それをDojoEditionCollectionとして返す
-         * @memberof DojoContentCollection#
+         * @memberOf DojoContentCollection#
          * @return {DojoEditionCollection} 編ごとの情報をもつ道場動画コレクション
          */
         groupByEditions: function () {
@@ -119,7 +119,31 @@ define(function(require, exports, module) {
                 
             });
             return editionCollection;
-        }
+        },
+        /**
+         * このコレクションに含まれる達成情報がどのlevelまで完了していないかを返却する
+         * @memberOf DojoContentCollection#
+         * @returns Number 完了していない最初レベル.なにも完了していない場合は0
+         */
+        getNotAchievementedLevel : function() {
+            if (!this.models || (this.models && this.models.length === 0) ) {
+                return 0;
+            }
+            var achievementArr = [];
+            
+            _.each(this.models, function(model) {
+                var solvedItem = _.find(model.achievementModels,function(ach){
+                    return ach.get("type") === "dojo_" + Code.DOJO_STATUS_SOLVED;
+                });
+                if (!solvedItem) {
+                    achievementArr.push(model.get("level"));
+                }
+            });
+            var minNum = _.sortBy(achievementArr, function(num) {
+                return num;
+            })[0];
+            return minNum === undefined ? 10 : minNum;
+        },
     });
 
     module.exports = DojoContentCollection;

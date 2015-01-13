@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
     var colorbox = require("colorbox");
+    var canvasToBlob = require("canvas-to-blob");
 
     /**
      * 全てのViewの基底クラスを作成する。
@@ -44,13 +45,13 @@ define(function(require, exports, module) {
          * サブクラスは本メソッドをオーバライドして、
          * 描画前の独自の処理を実装できる。
          * </p>
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         beforeRendered : function() {
         },
         /**
          * 要素の描画処理が完了した際に呼び出される。
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         afterRender : function() {
             this.afterRendered();
@@ -98,7 +99,7 @@ define(function(require, exports, module) {
          * サブクラスは本メソッドをオーバライドして、
          * 描画後の独自の処理を実装できる。
          * </p>
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         afterRendered : function() {
             
@@ -106,7 +107,7 @@ define(function(require, exports, module) {
 
         /**
          * ローディングメッセージを表示する。
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         showLoading : function () {
             $.blockUI({
@@ -124,7 +125,7 @@ define(function(require, exports, module) {
         },
         /**
          * ローディングメッセージを閉じる
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         hideLoading :function () {
             $.unblockUI();
@@ -139,7 +140,7 @@ define(function(require, exports, module) {
          * imageUrl: 画像のDAVのファイルパス<br/>
          * imageIndex: 画像のインデックス<br/>
          * @param {Boolean} isExpansion 画像拡大処理を設定するかどうか<br/>
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          */
         showPIOImages : function(imgElementSelector, imgArray, isExpansion, saveFunc) {
             var $articleImage = $(this.el).find(imgElementSelector);
@@ -216,7 +217,7 @@ define(function(require, exports, module) {
         /**
          * ファイル名を元に、ユニークなID付きのファイル名を生成する
          * 
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          * @param {String} fileName ファイル名
          * @return {String} 生成したファイルパス名
          */
@@ -230,12 +231,75 @@ define(function(require, exports, module) {
         /**
          * ファイル名を元に、ユニークなID付きのファイル名を生成する
          * 
-         * @memberof AbstractView#
+         * @memberOf AbstractView#
          * @param {String} fileName ファイル名
          * @return {String} 生成したファイルパス名
          */
         generateFilePath : function() {
-            return moment().format("YYYY-MM-DD") + "/" + this.model.id;
+            return moment().format("YYYY") + "/" + moment().format("MM-DD") + "/" + this.model.id;
+        },
+        /**
+         * サムネイルを生成する。
+         * 
+         * @memberOf AbstractView#
+         * @param {ByteArray} byteArray 元画像。
+         * @param {Function} callback サムネイル生成後にコールバックされる。
+         */
+        makeThmbnail : function(byteArray, callback){
+            // サムネイルの長辺のサイズ
+            var LONG_SIDE_SIZE = 256;
+            var canvas = document.createElement('canvas');
+            var img = new Image();
+            img.onload = function() {
+                var scale = Math.min(1, LONG_SIDE_SIZE / img.width, LONG_SIDE_SIZE / img.height);
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                if (canvas.toBlob) {
+                    canvas.toBlob(function(blob){
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            callback(e.target.result);
+                        };
+                        reader.readAsArrayBuffer(blob);
+                    }, 'image/png');
+                }
+            };
+            img.src = "data:image/jpeg;base64," + this.encodeBase64(new Uint8Array(byteArray));
+        },
+        /**
+         * base64データをバイナリデータに変換
+         * 
+         * @memberOf AbstractView#
+         * @param {ByteArray} s  元画像。
+         * @return {String} バイナリデータ
+         */
+        encodeBase64 : function(s) {
+            var base64list = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+            var t = "";
+            var p = -6;
+            var a = 0;
+            var i = 0;
+            var v = 0;
+            var c;
+
+            while ((i < s.length) || (p > -6)) {
+                if (p < 0) {
+                    if (i < s.length) {
+                        c = s[i++];
+                        v += 8;
+                    } else {
+                        c = 0;
+                    }
+                    a = ((a & 255) << 8) | (c & 255);
+                    p += 8;
+                }
+                t += base64list.charAt((v > 0) ? (a >> p) & 63 : 64);
+                p -= 6;
+                v -= 6;
+            }
+            return t;
         }
     });
 

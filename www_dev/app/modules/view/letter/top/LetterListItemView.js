@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var WebDavModel = require("modules/model/WebDavModel");
     var TabletArticleListItemView = require("modules/view/news/ArticleListItemView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var vexDialog = require("vexDialog");
 
     /**
      * 記事一覧アイテムのViewを作成する。
@@ -21,14 +22,14 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
-         * @memberof LetterListItemView#
+         * @memberOf LetterListItemView#
          */
         afterRendered : function() {
-            if(this.model.get("imageUrl")){
+            if(this.model.get("imageThumbUrl")){
                 var davModel = new WebDavModel();
                 var path = this.model.get("imagePath");
                 path = path ? path + "/" : "";
-                davModel.id = path + this.model.get("imageUrl");
+                davModel.id = path + this.model.get("imageThumbUrl");
                 davModel.fetch({
                     success : $.proxy(function(model, binary) {
                         app.logger.debug("getBinary()");
@@ -53,12 +54,46 @@ define(function(require, exports, module) {
         },
 
         /**
+         *  イベント一覧
+         *  @memberOf LetterListItemView#
+         */
+        events: {
+            "click a[data-delete-letter]" : "onClickDeleteLetter"
+        },
+
+        /**
          * aタグがクリックされたら呼ばれる
          * @override
-         * @memberof LetterListItemView#
+         * @memberOf LetterListItemView#
          */
         onClickAnchorTag: function (e) {
             e.preventDefault();
+        },
+
+        /**
+         * 削除ボタンがクリックされたら呼ばれる
+         * @param {Event} ev
+         * @memberOf LetterListItemView#
+         */
+        onClickDeleteLetter: function (ev) {
+            ev.preventDefault();
+
+            vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+            vexDialog.defaultOptions.contentClassName = 'buttons-left2right';
+            vexDialog.buttons.YES.text = 'はい';
+            vexDialog.buttons.NO.text = 'いいえ';
+            vexDialog.open({
+                // TODO: メッセージに削除対象項目のおたより名を反映する
+                message : '（おたより名）を削除していいですか？',
+                callback : $.proxy(function(value) {
+                    // TODO: おたよりの削除処理を実装する
+                    if (value) {
+                        alert("「はい」が押されました");
+                    }
+                    return;
+                },this)
+            });
+
         }
     });
     module.exports = LetterListItemView;

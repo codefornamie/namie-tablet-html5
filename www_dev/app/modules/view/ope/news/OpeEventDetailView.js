@@ -14,12 +14,12 @@ define(function(require, exports, module) {
     var OpeEventDetailView = ArticleDetailView.extend({
         /**
          * テンプレートファイル
-         * @memberof OpeEventDetailView#
+         * @memberOf OpeEventDetailView#
          */
         template : require("ldsh!templates/{mode}/news/eventDetail"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
-         * @memberof OpeEventDetailView#
+         * @memberOf OpeEventDetailView#
          */
         afterRendered : function() {
             this.showImage();
@@ -27,7 +27,7 @@ define(function(require, exports, module) {
         },
         /**
          * 編集ボタンをクリックしたら呼ばれる
-         * @memberof OpeEventDetailView#
+         * @memberOf OpeEventDetailView#
          */
         onClickGotoEdit : function() {
             this.showLoading();
@@ -45,7 +45,7 @@ define(function(require, exports, module) {
         },
         /**
          * キャンセルボタンをクリックしたら呼ばれる
-         * @memberof OpeEventDetailView#
+         * @memberOf OpeEventDetailView#
          */
         onClickGotoCancel : function() {
             app.router.go("ope-top" ,this.model.get("publishedAt"));

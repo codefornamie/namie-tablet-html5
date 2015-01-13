@@ -16,7 +16,7 @@ define(function(require, exports, module) {
          * 初期化処理を行う
          * @param {Object} key eq演算子のキー
          * @param {Object} value eq演算子の値
-         * @memberof Equal#
+         * @memberOf Equal#
          */
         init : function(key, value) {
             this.key = key;
@@ -29,7 +29,7 @@ define(function(require, exports, module) {
      * eq演算子固有の式の作成処理を行う。
      * @param {Array} equalOperator Equalクラスのインスタンスの配列
      * @returns {String} 生成した式
-     * @memberof Equal#
+     * @memberOf Equal#
      */
     Equal.prototype.customeMakeExpression = function(equalOperator) {
         if (_.isArray(equalOperator.value)) {

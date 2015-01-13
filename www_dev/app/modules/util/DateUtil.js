@@ -13,7 +13,7 @@ define(function(require, exports, module) {
      * Dateオブジェクトを、指定された文字列フォーマットに変換する。
      * @param {Date} date 日付情報
      * @param {String} format 日付フォーマット
-     * @memberof DateUtil#
+     * @memberOf DateUtil#
      */
     DateUtil.formatDate = function(date, format) {
 
@@ -88,7 +88,7 @@ define(function(require, exports, module) {
     };
     /**
      * ゼロ埋めを行う
-     * @memberof DateUtil#
+     * @memberOf DateUtil#
      * @param {Number} value ゼロ埋め後に加える値
      * @param {Number} length length
      */
@@ -97,7 +97,7 @@ define(function(require, exports, module) {
     };
     /**
      * Dateオブジェクトを生成する
-     * @memberof DateUtil#
+     * @memberOf DateUtil#
      * @param {Number} date 時間
      * @param {Number} days 日付
      * @return Dateオブジェクト

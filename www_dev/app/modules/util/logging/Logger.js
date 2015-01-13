@@ -19,7 +19,7 @@ define(function(require, exports, module) {
         /**
          * コンストラクタ。
          * @param {Object} app app.jsのインスタンス。アプリケーションの設定情報を参照するために利用される。
-         * @memberof Logger#
+         * @memberOf Logger#
          */
         init : function(app) {
             // ロガー初期化
@@ -71,7 +71,7 @@ define(function(require, exports, module) {
     /**
      * DEBUGレベルのログを出力する。
      * @param {String} message ログメッセージ
-     * @memberof Logger#
+     * @memberOf Logger#
      */
     Logger.prototype.debug = function(message) {
         this.logger.debug(message);
@@ -79,7 +79,7 @@ define(function(require, exports, module) {
     /**
      * INFOレベルのログを出力する。
      * @param {String} message ログメッセージ
-     * @memberof Logger#
+     * @memberOf Logger#
      */
     Logger.prototype.info = function(message) {
         this.logger.info(message);
@@ -87,7 +87,7 @@ define(function(require, exports, module) {
     /**
      * WARNレベルのログを出力する。
      * @param {String} message ログメッセージ
-     * @memberof Logger#
+     * @memberOf Logger#
      */
     Logger.prototype.warn = function(message) {
         this.logger.warn(message);
@@ -96,7 +96,7 @@ define(function(require, exports, module) {
      * ERRORレベルのログを出力する。
      * @param {String} message ログメッセージ
      * @param {Error} e Errorオブジェクト
-     * @memberof Logger#
+     * @memberOf Logger#
      */
     Logger.prototype.error = function(message, e) {
         this.logger.error(message, e);
@@ -116,7 +116,7 @@ define(function(require, exports, module) {
      * @param {Number} セッションIDの桁数
      * @param {String} セッションIDに追加で含める文字
      * @return {String} セッションID
-     * @memberof Logger#
+     * @memberOf Logger#
      */
     Logger.createSessionId = function(n, b) {
         b = b || '';

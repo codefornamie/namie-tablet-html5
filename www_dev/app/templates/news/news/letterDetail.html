@@ -1,57 +1,55 @@
 <article
-    class='post post--other'
+    class='post post--letter'
     id="<%= model.get('__id') %>"
 >
     <section class='post__body'>
-        <div class="row">
-            <div class="large-12 columns">
-                <div class="post-header">
-                    <div class="post-header__site">
-                        <div class="post-label">
-                            <div
-                                class="article-label article-label--<%= model.getSiteType() %> left"
-                            >
-                                <span class='article-label__text'>
-                                    <%= model.get("dispSite") %>
-                                </span>
-                            </div>
-
-                        </div>
-
-                        <div class="tagListArea"></div>
-                    </div>
-                </div>
+        <div class="post-header">
+            <div class="post-header__title">
+                <%= model.get("dispTitle") %>
             </div>
 
-            <div class="row">
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">本文</div>
-                </div>
-                <div class="large-11 large-centered columns">
-                    <%=model.get("dispDescription")%>
-                </div>
-
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">画像</div>
-                </div>
-                <div class="large-11 large-centered columns">
-                    <div class="eventFile">
-                        <div class="eventFileImage">
-                            <img class="articleDetailImage">
-                        </div>
-                        <%=model.get("imageComment")%>
+            <div class="post-header__site">
+                <div class="post-label">
+                    <div
+                        class="article-label article-label--<%= model.getSiteType() %> left"
+                    >
+                        <span class='article-label__text'>
+                            <%= model.get("dispSite") %>
+                        </span>
                     </div>
-                </div>
-
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">ニックネーム</div>
-                </div>
-
-                <div class="large-11 large-centered columns end">
-                    <%=model.get("nickname")%>
                 </div>
             </div>
         </div>
+
+        <% _.each(model.get("letters"), function(model) { %>
+            <div class="letters-detail">
+                <div class="row">
+                    <div class="columns large-7">
+                        <div class="eventFile">
+                            <div class="eventFileImage">
+                                <img class="articleDetailImage">
+                            </div>
+
+                            <%= model.get("imageComment") %>
+                        </div>
+                    </div>
+
+                    <div class="columns large-5">
+                        <div class="letter-detail__nickname">
+                            <%= model.get("nickname") %>
+
+                            <span class="letter-detail__nickname-unit">
+                                さん
+                            </span>
+                        </div>
+
+                        <div class="letter-detail__description">
+                            <%= model.get("dispDescription") %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
     </section>
 
     <section class='post__footer'>

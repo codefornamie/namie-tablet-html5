@@ -37,6 +37,9 @@ define(function(require, exports, module) {
             }, {
                 key : "6",
                 value : "おたより"
+            }, {
+                key : "7",
+                value : "Facebook"
             }
     ];
 
@@ -79,7 +82,10 @@ define(function(require, exports, module) {
                 value : "blog"
             }, {
                 key : "おたより",
-                value : "other"
+                value : "letter"
+            }, {
+                key : "つながろうなみえ",
+                value : "blog"
             }
     ];
     Code.ARTICLE_SITE_NONE = "other";
@@ -109,6 +115,28 @@ define(function(require, exports, module) {
     Code.DOJO_STATUS_WATCHED = "watched";
     Code.DOJO_STATUS_UNWATCHED = "unwatched";
 
+    /**
+     * 道場の級情報
+     */
+    Code.DOJO_LEVELS = [{
+        id: "0",
+        className: "white",
+        label: "白帯編",
+        description: "初めてタブレットをさわる方のためのコースです。（文言未決定）",
+        iconPath: ""
+    },{
+        id: "1",
+        className: "brown",
+        label: "茶帯編",
+        description: "茶帯コースです。（文言未決定）",
+        iconPath: ""
+    },{
+        id: "2",
+        className: "black",
+        label: "黒帯編",
+        description: "黒帯コースです。（文言未決定）",
+        iconPath: ""
+    }];
 
     module.exports = Code;
 });

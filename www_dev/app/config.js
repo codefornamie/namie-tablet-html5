@@ -33,7 +33,8 @@ require.config({
         "masonry": "../bower_components/masonry/dist/masonry.pkgd",
         "backbone-fetch-cache": "../bower_components/backbone-fetch-cache/backbone.fetch-cache",
         "rome" : "../bower_components/rome/dist/rome.standalone",
-        "moment/locale/ja" : "../bower_components/moment/locale/ja"
+        "moment/locale/ja" : "../bower_components/moment/locale/ja",
+        "canvas-to-blob" : "../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob"
     },
 
     deps : [ "main" ],

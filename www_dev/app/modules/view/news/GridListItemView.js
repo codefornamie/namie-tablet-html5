@@ -21,7 +21,7 @@ define(function(require, exports, module) {
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
-         * @memberof GridListItemView#
+         * @memberOf GridListItemView#
          */
         beforeRendered : function() {
             this.$el.addClass("grid-list-item-div");
@@ -32,7 +32,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
-         * @memberof GridListItemView#
+         * @memberOf GridListItemView#
          */
         afterRendered : function() {
             var self = this;
@@ -47,13 +47,32 @@ define(function(require, exports, module) {
             } else {
                 this.$el.find(".articleImage")
                 .on("center", function () {
-                    // 画像を中央に寄せる
-                    var $container = $(this).parent();
-                    var width = $(this).width();
+                    var $this = $(this);
+                    var $container = $this.parent();
+
+                    // 画像を水平中央に寄せる
+                    var width = $this.width();
                     var containerWidth = $container.width();
 
-                    $(this)
+                    // 画像を垂直中央に寄せる
+                    var height = $this.height();
+                    var containerHeight = $container.height();
+
+                    // 高さが足りないと上下に余白ができてしまうので
+                    // 上下いっぱいに拡大する
+                    if (height < containerHeight) {
+                        $this.css({
+                            width: "auto",
+                            height: "100%"
+                        });
+
+                        width = $this.width();
+                        height = $this.height();
+                    }
+
+                    $this
                     .css({
+                        top: containerHeight / 2 - height / 2,
                         left: containerWidth / 2 - width / 2
                     });
                 })
@@ -80,7 +99,7 @@ define(function(require, exports, module) {
 
         /**
          * viewが破棄される時に呼ばれる
-         * @memberof GridListItemView#
+         * @memberOf GridListItemView#
          */
         cleanup: function () {
             var eventId = "ev-" + this.cid;

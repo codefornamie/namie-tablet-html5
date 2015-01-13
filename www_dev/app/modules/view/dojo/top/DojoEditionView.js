@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var DojoListView = require("modules/view/dojo/top/DojoListView");
+    var DojoLevelListView = require("modules/view/dojo/top/DojoLevelListView");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
 
     /**
@@ -16,7 +16,7 @@ define(function(require, exports, module) {
     var DojoEditionView = AbstractView.extend({
         /**
          * このViewのテンプレートファイルパス
-         * @memberof DojoEditionView#
+         * @memberOf DojoEditionView#
          */
         template : require("ldsh!templates/{mode}/top/dojoEdition"),
 
@@ -25,39 +25,41 @@ define(function(require, exports, module) {
          * <p>
          * 記事一覧の表示処理を開始する。
          * </p>
-         * @memberof DojoEditionView#
+         * @memberOf DojoEditionView#
          */
         beforeRendered : function() {
         },
 
         /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
-         * @memberof DojoEditionView#
+         * @memberOf DojoEditionView#
          */
         afterRendered : function() {
             if (this.model && this.model.get("contentCollection")) {
                 this.updateNumberOfContent(this.model);
 
-                var dojoListView = new DojoListView({
+                var dojoLevelListView = new DojoLevelListView({
+                    dojoEditionModel: this.model,
                     collection: this.model.get("contentCollection")
                 });
 
-                this.setView("#dojo-list-container", dojoListView).render();
+                this.setView("#dojo-level-list-container", dojoLevelListView).render();
             }
         },
 
         /**
          * 初期化
-         * @memberof DojoEditionView#
+         * @param {Object} param
+         * @memberOf DojoEditionView#
          */
-        initialize : function() {
+        initialize : function(param) {
             this.model = new DojoEditionModel();
         },
 
         /**
          * 道場コンテンツの視聴状況を描画する
          * @param {DojoEditionModel} edition
-         * @memberof DojoEditionView#
+         * @memberOf DojoEditionView#
          */
         updateNumberOfContent : function(edition) {
             var collection = edition.get("contentCollection");

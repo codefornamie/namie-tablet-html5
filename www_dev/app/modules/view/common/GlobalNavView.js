@@ -38,7 +38,7 @@ define(function(require, exports, module) {
             var $target = $("[value='" + app.user.get("fontSize") + "']");
             var size = parseInt($target.attr('data-font-size'), 10);
             $('html, body').css('font-size', size + 'px');
-            this.setDate(this.targetDate);
+            this.setDate(this.targetDate || new Date(app.currentDate));
         },
 
         /**
@@ -112,7 +112,7 @@ define(function(require, exports, module) {
         setDate : function(date) {
             if (date) {
                 $("#naviPublishDate").show();
-                $("#naviPublishDate").find(".date--year").text(DateUtil.formatDate(date, "ggge"));
+                $("#naviPublishDate").find(".date--year").text(DateUtil.formatDate(date, "yyyy"));
                 $("#naviPublishDate").find(".date--month").text(date.getMonth() + 1);
                 $("#naviPublishDate").find(".date--day").text(date.getDate());
                 $("#naviPublishDate").find(".date--weekday").text(DateUtil.formatDate(date, "ddd"));
@@ -235,7 +235,7 @@ define(function(require, exports, module) {
 
         /**
          * カレンダーがクリックされたら呼ばれる
-         * @memberof GlobalNavView#
+         * @memberOf GlobalNavView#
          */
         onClickCalendar : function (evt) {
             var modalCalendarView = new ModalCalendarView();

@@ -17,7 +17,7 @@ define(function(require, exports, module) {
     var EventListItemView = ArticleListItemView.extend({
         /**
          * このViewを表示する際に利用するアニメーション
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         template : require("ldsh!templates/{mode}/news/eventsDetail"),
         /**
@@ -25,7 +25,7 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         afterRendered : function() {
             this.showImage();
@@ -46,23 +46,45 @@ define(function(require, exports, module) {
         },
         /**
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         showImage : function() {
             var imgArray = [];
-            for (var i = 1; i < 4; i++) {
-                var index = i;
-                if (i === 1) {
-                    index = "";
-                }
-                if (this.model.get("imageUrl" + index)) {
-                    imgArray.push({
-                        imageUrl : this.model.get("imageUrl" + index),
-                        imageComment : this.model.get("imageComment" + index),
-                        imageIndex : i
-                    });
-                } else {
-                    $($(this.el).find(".eventFileImage img")[i - 1]).parent().parent().hide();
+
+            if (this.model.get("letters")) {
+                // おたより記事のリストを持っている場合（おたより一覧記事の場合）は、その内容を対象とする
+                var modelArray = this.model.get("letters");
+                var index = 1;
+
+                _.each(modelArray, $.proxy(function(model) {
+                    if (model.get("imageUrl")) {
+                        var imagePath = model.get("imagePath") ? model.get("imagePath") + "/" : "";
+                        imgArray.push({
+                            imageUrl : imagePath + model.get("imageUrl"),
+                            imageComment : model.get("imageComment"),
+                            imageIndex : index
+                        });
+                    } else {
+                        $($(this.el).find(".eventFileImage img")[index - 1]).parent().parent().hide();
+                    }
+                    index++;
+                }, this));
+            } else {
+                // その他の場合（イベント記事の場合）はモデル自身がもつ画像情報を対象とする
+                for (var i = 1; i < 4; i++) {
+                    var indexPrefix = i;
+                    if (i === 1) {
+                        indexPrefix = "";
+                    }
+                    if (this.model.get("imageUrl" + indexPrefix)) {
+                        imgArray.push({
+                            imageUrl : this.model.get("imageUrl" + indexPrefix),
+                            imageComment : this.model.get("imageComment" + indexPrefix),
+                            imageIndex : i
+                        });
+                    } else {
+                        $($(this.el).find(".eventFileImage img")[i - 1]).parent().parent().hide();
+                    }
                 }
             }
             this.showPIOImages(".eventFileImage img", imgArray, true, $.proxy(this.onClickImage, this));

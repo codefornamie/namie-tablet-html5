@@ -16,7 +16,7 @@ define(function(require, exports, module) {
     var FeedListItemView = AbstractView.extend({
         /**
          * このViewのテンプレートファイパス
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         template : require("ldsh!templates/{mode}/news/feedListItem"),
 
@@ -25,18 +25,19 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
-         * @memberof EventListItemView#
+         * @memberOf EventListItemView#
          */
         afterRendered : function() {
             var self = this;
             var articleImageElement = this.$el.find(".articleImage");
-            var imageType = this.model.getImageType();
+            var imageType = this.model.getThumbImageType();
 
+            var imageUrl = this.model.get("imageThumbUrl");
             switch (imageType) {
             case Code.IMAGE_TYPE_PIO:
                 this.showPIOImages(".articleImage", [
                     {
-                        imageUrl : this.model.get("imageUrl"),
+                        imageUrl : imageUrl,
                         imageIndex : 1
                     }
                 ]);
@@ -44,7 +45,7 @@ define(function(require, exports, module) {
                 break;
 
             case Code.IMAGE_TYPE_URL:
-                articleImageElement.attr("src", this.model.get("imageUrl"));
+                articleImageElement.attr("src", imageUrl);
                 break;
 
             case Code.IMAGE_TYPE_NONE:

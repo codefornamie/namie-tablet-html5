@@ -16,7 +16,7 @@ define(function(require, exports, module) {
          * @param {Object} レスポンス情報
          * @param {Object} オプション
          * @return {Object} レスポンス情報
-         * @memberof AbstractCollection#
+         * @memberOf AbstractCollection#
          */
         parse : function parse(response, options) {
             response = this.parseResponse(response, options);
@@ -27,7 +27,7 @@ define(function(require, exports, module) {
          * @param {Object} レスポンス情報
          * @param {Object} オプション
          * @return {Object} レスポンス情報
-         * @memberof AbstractCollection#
+         * @memberOf AbstractCollection#
          */
         parseResponse : function(response, options) {
             return response;

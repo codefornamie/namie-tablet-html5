@@ -7,10 +7,17 @@
  *  ----------
  */
 .global-nav {
-    height: 54px;
+    width: 95%;
+    height: 68px;
     position: relative;
     z-index: 60;
-    background: #53c0d3;
+    margin: auto;
+}
+
+@media only screen and (orientation:portrait) {
+    .global-nav {
+        height: 148px;
+    }
 }
 
 .global-nav nav {
@@ -23,8 +30,8 @@
     position: relative;
     box-sizing: content-box;
     display: inline-block;
-    height: 54px;
-    line-height: 54px;
+    height: 78px;
+    line-height: 78px;
     vertical-align: middle;
     float: left;
 }
@@ -72,7 +79,6 @@
  */
 .global-nav__menu {
     width: 7%;
-    background: #44bbcf;
 }
 
 .global-nav__menu .button {
@@ -103,11 +109,10 @@
  */
 .global-nav__title {
     width: 25%;
-    background-color: #78d0df;
     background-image: url(../../app/img/img-title-logo.png);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: auto 100%;
+    background-size: 100%;
 }
 
 /**
@@ -123,12 +128,9 @@
  *  日付のエリア
  */
 .global-nav__date {
-    width: 43%;
+    width: 50%;
     text-align: center;
     color: #fff;
-}
-.global-nav__date.no-backbutton {
-    width: 50%;
 }
 
 .global-nav__date .nav-content {
@@ -136,7 +138,7 @@
 }
 
 .date-area {
-    line-height: 54px;
+    line-height: 78px;
     font-size: 0;
 }
 
@@ -148,34 +150,32 @@
 .date-area__year .date--year {
     font-size: 30px;
     display: inline-block;
-    transform: scale(0.8, 1);
 }
 
 .date-area__year .date--unit {
     font-size: 26px;
-    margin-left: -5px;
 }
 
 /* date */
 .date-area__date {
     display: inline-block;
+    margin-left: 5px;
 }
 
 .date-area__date .date--month {
     font-size: 40px;
     display: inline-block;
-    transform: scale(0.8, 1);
+    font-weight: bold;
 }
 
 .date-area__date .date--day {
     font-size: 40px;
     display: inline-block;
-    transform: scale(0.8, 1);
+    font-weight: bold;
 }
 
 .date-area__date .date--unit {
     font-size: 26px;
-    margin-left: -5px;
 }
 
 /* weekday */
@@ -189,6 +189,8 @@
 
 .date-area__weekday .date--weekday {
     font-size: 36px;
+    font-weight: bold;
+    margin: 0 3px;
 }
 
 .date-area__weekday .date--weekday-unit {
@@ -207,6 +209,12 @@
     white-space: nowrap;
 }
 
+/* 版 */
+.date-area__weekday .date--ban {
+    font-size: 26px;
+    margin: 0 5px;
+}
+
 /* others */
 .date-area__span {
     display: inline-block;
@@ -219,29 +227,30 @@
  */
 .global-nav__menubutton {
     width: 25%;
-    text-align: center;
-    background: #78d0df;
+    text-align: right;
+    float: right;
+}
+
+@media only screen and (orientation:portrait) {
+    .global-nav__menubutton {
+        width: 100%;
+    }
 }
 
 .global-nav__menubutton ul {
     margin: 0;
+    display: inline-block;
 }
 
 .global-nav__menubutton ul li {
     display: inline-block;
     vertical-align: middle;
-    margin-top: 6px;
-    line-height: 54px;
-    width: 20%;
 }
 
 .global-nav__menubutton .button {
-    background: transparent;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    font-size: 36px;
-    
+    height: 60px;
+    line-height: 60px;
+    border-radius: 30px;
 }
 
 /**
@@ -328,14 +337,60 @@
     width: 80%;
 }
 
+.modal-calendar__header {
+    background: rgb(222, 234, 243);
+    text-align: center;
+    padding: 15px 0;
+    color: rgb(8, 76, 129);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
 #modal-calendar .rd-container {
     display: block !important;
+    padding: 0;
+    border: none;
+}
+
+#modal-calendar .rd-month-label {
+    height: 60px;
+    line-height: 60px;
+    position: relative;
+    top: 13px;
+    z-index: 1;
+}
+
+#modal-calendar .rd-month-label__year {
+    color: rgb(8, 76, 129);
+    font-size: 1.25rem;
+}
+
+#modal-calendar .rd-month-label__month {
+    color: rgb(209, 116, 30);
+    font-size: 2.0rem;
+    margin: 0 10px;
 }
 
 #modal-calendar .rd-back,
 #modal-calendar .rd-next {
-    color: inherit;
-    background: none;
+    font-size: 1.0rem;
+    color: white;
+    background: rgb(8, 76, 129);
+    margin: 13px;
+    padding: 0px 30px;
+    border-radius: 30px;
+    height: 60px;
+    line-height: 60px;
+    position: relative;
+    z-index: 2;
+}
+
+#modal-calendar .rd-back::before {
+    content: "前の月を見る";
+}
+
+#modal-calendar .rd-next::before {
+    content: "次の月を見る";
 }
 
 #modal-calendar .rd-month {
@@ -344,10 +399,55 @@
 
 #modal-calendar .rd-days {
     width: 100%;
+    border-collapse: collapse;;
+    border: none;
 }
 
 #modal-calendar .rd-day-head {
     text-align: center;
+    background: rgb(222, 234, 243);
+    color: rgb(8, 76, 129);
+    font-size: 1.0rem;
+    padding: 10px;
+}
+
+#modal-calendar .rd-day-body {
+    color: rgb(8, 76, 129);
+    font-size: 1.25rem;
+    padding: 20px;
+}
+
+#modal-calendar .rd-day-body:last-child {
+    color: rgb(184, 5, 39);
+}
+
+#modal-calendar .rd-days-row:nth-child(odd) .rd-day-body:nth-child(odd) {
+    background: rgb(247, 250, 252);
+}
+
+#modal-calendar .rd-days-row:nth-child(odd) .rd-day-body:nth-child(even) {
+    background: rgb(239, 245, 249);
+}
+
+#modal-calendar .rd-days-row:nth-child(even) .rd-day-body:nth-child(odd) {
+    background: rgb(255, 255, 255);
+}
+
+#modal-calendar .rd-days-row:nth-child(even) .rd-day-body:nth-child(even) {
+    background: rgb(247, 250, 252);
+}
+
+#modal-calendar .rd-day-prev-month,
+#modal-calendar .rd-day-next-month {
+    color: rgb(177, 198, 215) !important;
+}
+
+#modal-calendar .rd-day-body:active,
+#modal-calendar .rd-day-selected {
+    outline: 3px solid rgb(209, 116, 30);
+    outline-offset: -3px;
+    background: none;
+    color: rgb(209, 116, 30);
 }
 
 /**

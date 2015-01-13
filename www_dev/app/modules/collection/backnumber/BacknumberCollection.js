@@ -23,7 +23,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化処理
-         * @memberof BacknumberCollection#
+         * @memberOf BacknumberCollection#
          */
         initialize : function() {
         },
@@ -31,7 +31,7 @@ define(function(require, exports, module) {
         /**
          * 対象月を指定する。
          * @param {Date|moment} 対象月をDateオブジェクトで指定。（年月のみ使用）
-         * @memberof BacknumberCollection#
+         * @memberOf BacknumberCollection#
          */
         setMonth : function(targetMonth) {
             var self = this;
@@ -51,7 +51,7 @@ define(function(require, exports, module) {
 
         /**
          * 月によってmodelを更新する
-         * @memberof BacknumberCollection#
+         * @memberOf BacknumberCollection#
          */
         updateModels : function() {
             var month = moment(this.month);
@@ -87,7 +87,7 @@ define(function(require, exports, module) {
         
         /**
          * モデルの読み込みが完了したら呼ばれる
-         * @memberof BacknumberCollection#
+         * @memberOf BacknumberCollection#
          */
         onModelFeched: function() {
             this.numFetchedModels++;

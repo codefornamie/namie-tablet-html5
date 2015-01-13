@@ -14,7 +14,7 @@ define(function(require, exports, module) {
         /**
          * 初期化処理を行う
          * @param {Object} operators
-         * @memberof Or#
+         * @memberOf Or#
          */
         init : function(operators) {
             this._super(operators);
@@ -24,7 +24,7 @@ define(function(require, exports, module) {
      * or演算子を文字列として返却する。
      * 
      * @returns {String} or演算子
-     * @memberof Or#
+     * @memberOf Or#
      */
     Or.prototype.operator = function() {
         return " or ";

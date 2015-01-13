@@ -15,27 +15,27 @@ define(function(require, exports, module) {
     var AbstractODataModel = AbstractModel.extend({
         /**
          * idとして使用するattribute中のフィールド
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         idAttribute : "__id",
         /**
          * セルID
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         cell : null,
         /**
          * Box名
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         box : null,
         /**
          * ODataCollection名
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         odata : null,
         /**
          * 操作対象のEntitySet名
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         entity : null,
 
@@ -48,10 +48,11 @@ define(function(require, exports, module) {
          *            model モデル
          * @param {Object}
          *            options オプション情報
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         sync : function(method, model, options) {
             Log.info("AbstractODataModel sync");
+            var def = $.Deferred();
             if (!options) {
                 options = {};
             }
@@ -72,6 +73,7 @@ define(function(require, exports, module) {
                     if (options.error) {
                         options.error(res);
                     }
+                    def.reject(res);
                 } else if (options.success) {
                     if (res.bodyAsJson) {
                         json = res.bodyAsJson();
@@ -84,6 +86,10 @@ define(function(require, exports, module) {
 
                 if (options.complete) {
                     options.complete(res, model, json);
+                }
+                
+                if (def.state() === "pending") {
+                    def.resolve(res);
                 }
             };
             Log.info("Request personium. method : " + method);
@@ -106,6 +112,7 @@ define(function(require, exports, module) {
                 Log.info("Personium Exception : " + e);
                 app.router.go("login");
             }
+            return def.promise();
         },
         /**
          * PCS ODataの登録処理を行う。
@@ -121,7 +128,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         create : function(method, model, options, complete) {
             Log.info("AbstractODataModel create");
@@ -146,7 +153,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         update : function(method, model, options, complete) {
             Log.info("AbstractODataModel update");
@@ -171,7 +178,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         del : function(method, model, options, complete) {
             Log.info("AbstractODataModel delete");
@@ -196,7 +203,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         retrieve : function(method, model, options, complete) {
             Log.info("AbstractODataModel retrieve");
@@ -215,7 +222,7 @@ define(function(require, exports, module) {
          * @param {Object} response レスポンス情報
          * @param {Object} options オプション情報
          * @return {Object} パース後の情報
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         parseResponse : function(response, options) {
             //Log.info("AbstractODataModel parseResponse");
@@ -234,7 +241,7 @@ define(function(require, exports, module) {
          * @param {Object} response レスポンス情報
          * @param {Object} options オプション情報
          * @return {Object} パース後の情報
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         parseOData : function(response, options) {
             //Log.info("AbstractODataModel parseOData");
@@ -244,7 +251,7 @@ define(function(require, exports, module) {
          * PCSへの永続化データを生成する。
          *
          * @return {Object} JSON オブジェクト
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         getSaveData : function() {
             Log.info("AbstractODataModel getSaveData");
@@ -276,7 +283,7 @@ define(function(require, exports, module) {
          * サブクラスは、本メソッドをオーバライドして、 永続化するデータを生成する処理を実装する。
          * </p>
          * @param {Object} saveData 永続化データ
-         * @memberof AbstractODataModel#
+         * @memberOf AbstractODataModel#
          */
         makeSaveData : function(saveData) {
 

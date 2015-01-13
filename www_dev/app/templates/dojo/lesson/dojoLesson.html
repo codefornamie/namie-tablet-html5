@@ -1,6 +1,46 @@
-<div class="dojo-lesson is-<%= model.getSolvedState() %> is-<%= model.getWatchedState() %>">
+<div id="dojo-lesson" class="dojo-lesson is-<%= model.getSolvedState() %> is-<%= model.getWatchedState() %> is-ready">
+    <div class="dojo-lesson__body">
+        <a class="button dojo-lesson__back" data-back>
+            ✕
+        </a>
+
+        <div id="dojo-lesson__content" class="dojo-lesson__content"></div>
+
+        <div class="dojo-lesson__footer">
+            <div class="visible-ready">
+                <div class="dojo-lesson__title">
+                    <%= model.get("title") %>
+                    を再生中
+                </div>
+            </div>
+
+            <div class="visible-ended">
+                <div class="dojo-lesson__q">
+                    習得できましたか？
+                </div>
+
+                <div class="text-center">
+                    <button class="button dojo-lesson__action--playback" data-playback-lesson>
+                        <div>
+                            まだよく分からない
+                        </div>
+
+                        <div>
+                            (動画をもう一度再生)
+                        </div>
+                    </button>
+
+                    <button class="button dojo-lesson__action--complete" data-complete-lesson>
+                        習得した
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
     <div class="dojo-lesson__header">
-        <a href="/dojo-top" class="button left">
+        <a class="button left" data-back>
             動画一覧へ戻る
         </a>
 
@@ -60,4 +100,5 @@
         
         <div id="dojo-lesson-siblings-container" class="dojo-lesson-siblings-container"></div>
     </div>
+    -->
 </div>

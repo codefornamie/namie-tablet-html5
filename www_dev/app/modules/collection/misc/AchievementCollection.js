@@ -16,12 +16,12 @@ define(function(require, exports, module) {
         model : AchievementModel,
         /**
          * 操作対象のEntitySet名
-         * @memberof AchievementCollection#
+         * @memberOf AchievementCollection#
          */
         entity : "achievement",
         /**
          * 検索条件
-         * @memberof AchievementCollection#
+         * @memberOf AchievementCollection#
          */
         condition : {
             top : 100,

@@ -40,7 +40,7 @@ define(function(require, exports, module) {
     var Filter = Class.extend({
         /**
          * 初期化
-         * @memberof Filter#
+         * @memberOf Filter#
          */
         init : function() {
 
@@ -53,7 +53,7 @@ define(function(require, exports, module) {
      * @param {Array}
      *            filters 演算子(Equal, Ge, Le などのインスタンス)の配列
      * @returns {String} クエリ文字列
-     * @memberof Filter#
+     * @memberOf Filter#
      */
     Filter.queryString = function(filters) {
         if (!_.isArray(filters)) {
@@ -86,7 +86,7 @@ define(function(require, exports, module) {
      * @param {Object}
      *            condition 検索条件
      * @returns 変換された検索条件
-     * @memberof Filter#
+     * @memberOf Filter#
      */
     Filter.searchCondition = function(condition) {
         if (!condition.top) {
@@ -107,7 +107,7 @@ define(function(require, exports, module) {
      * @param {Filter}
      *            filter 演算子クラスのインスタンス。または、演算子クラスのインスタンスの配列
      * @returns 生成したクエリ
-     * @memberof Filter#
+     * @memberOf Filter#
      */
     Filter.makeQueryString = function(filter) {
         if (filter.expression) {
@@ -127,7 +127,7 @@ define(function(require, exports, module) {
      * 指定された文字列内のシングルクォートをエスケープする。
      * @param value 文字列
      * @returns シングルクォートがエスケープされた文字列
-     * @memberof Filter#
+     * @memberOf Filter#
      */
     Filter.prototype.escapeSingleQuote = function(value) {
         var res = value.replace("'", "''");
@@ -140,7 +140,7 @@ define(function(require, exports, module) {
      * </p>
      *
      * @returns {String} 式
-     * @memberof Filter#
+     * @memberOf Filter#
      */
     Filter.prototype.expression = function() {
         return "";
