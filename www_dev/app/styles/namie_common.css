@@ -705,6 +705,31 @@ main {
     padding: 65px;
 }
 
+.article-detail__image-area--youtube {
+    text-align: center;
+}
+
+.article-detail__image-area--youtube .article-detail__image-area--inner {
+    padding-bottom: 55px;
+}
+
+.article-detail__youtube-action {
+}
+
+.article-detail__youtube-action .button {
+    margin: 0;
+    height: 60px;
+    border-radius: 30px;
+    line-height: 60px;
+    padding: 0;
+}
+
+.article-detail__image-description {
+    text-align: left;
+    margin: 40px 0;
+}
+
+
 /**
  *  post-action
  */

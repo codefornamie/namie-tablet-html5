@@ -33,7 +33,7 @@
             <div class="large-12 columns nehandiv">
                 <div
                     id="articleDetailImageArea"
-                    class="article-detail__image-area"
+                    class="article-detail__image-area article-detail__image-area--youtube"
                     height="390"
                     width="390"
                 >
@@ -42,25 +42,29 @@
                             id='youtubePlayer-<%= model.get("link") %>'
                             style="max-width: 100%;"
                         ></div>
-                    </div>
-                    <div class="row">
-                        <div class="columns large-6">
-                            <button
-                                class="button expand"
-                                data-play-movie
-                                style="margin-top: 8px; display: none;"
-                            >動画再生</button>
-                        </div>
 
-                        <div class="columns large-6">
-                            <button
-                                class="button expand"
-                                data-pause-movie
-                                style="margin-top: 8px;"
-                            >動画一時停止</button>
+                        <div class="row article-detail__youtube-action">
+                            <div class="columns large-6">
+                                <button
+                                    class="button expand"
+                                    data-play-movie
+                                    style="margin-top: 8px; display: none;"
+                                >動画再生</button>
+                            </div>
+
+                            <div class="columns large-6">
+                                <button
+                                    class="button expand"
+                                    data-pause-movie
+                                    style="margin-top: 8px;"
+                                >動画一時停止</button>
+                            </div>
                         </div>
                     </div>
-                    <%= model.get("description") %>
+
+                    <div class="article-detail__image-description">
+                        <%= model.get("description") %>
+                    </div>
                 </div>
             </div>
     </section>
