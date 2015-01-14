@@ -136,8 +136,6 @@ define(function(require, exports, module) {
                 $("#letter-wizard", this.$el).attr("data-step", expectedStep);
 
                 this.updateButtons();
-
-                this._isMoving = false;
             }
         },
 
@@ -166,28 +164,37 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          */
         onStepChanging : function(ev, currentIndex, newIndex) {
-            if (this.form.valid()) {
-                // this.moveTo()が再帰的に呼び出されてしまうのを防ぐ
-                if (this._isMoving) {
-                    return true;
-                }
-
-                if (!this.file) {
-                    vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
-                    vexDialog.buttons.YES.text = 'OK';
-                    vexDialog.alert("画像が未選択です。");
-                    return false;
-                }
-
-                this.setConfirmLabel();
-
-                this._isMoving = true;
-                this.moveTo(newIndex + 1);
-            } else {
+            // this.moveTo()が再帰的に呼び出されてしまうのを防ぐ
+            if (this._isMoving) {
                 this._isMoving = false;
-                return false;
+                return true;
             }
 
+            // エラーチェックを行う。
+            var isInvalid = false;
+            // ただし、前に戻る場合はチェックは回避する。
+            if ( newIndex > currentIndex ) {
+                if (this.form.valid()) {
+                    if (!this.file) {
+                        vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+                        vexDialog.buttons.YES.text = 'OK';
+                        vexDialog.alert("画像が未選択です。");
+                        isInvalid = true;
+                    }
+                } else {
+                    isInvalid = true;
+                }
+            }
+
+            // チェック結果による動作切り分け
+            if (isInvalid) {
+                return false;
+            } else {
+                this._isMoving = true;
+                this.setConfirmLabel();
+                this.moveTo(newIndex + 1);
+                return true;
+            }
         },
 
         /**
