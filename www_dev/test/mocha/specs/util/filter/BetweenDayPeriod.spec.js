@@ -5,8 +5,6 @@ define(function(require) {
     var DateUtil = require("modules/util/DateUtil");
     var BetweenDayPeriod = require("modules/util/filter/BetweenDayPeriod");
 
-    app.noRendering = true;
-
     describe("BetweenDayPeriod", function() {
         it("TEST-01 BetweenDayPeriod#expression", function() {
             var today = new Date('2014/11/07');

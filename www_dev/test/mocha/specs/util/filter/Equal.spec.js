@@ -4,8 +4,6 @@ define(function(require) {
     var Equal = require("modules/util/filter/Equal");
     var Filter = require("modules/util/filter/Filter");
 
-    app.noRendering = true;
-
     describe("Equal", function() {
         it("TEST-01 Equal#expression", function() {
             var equal = new Equal("property", 111);

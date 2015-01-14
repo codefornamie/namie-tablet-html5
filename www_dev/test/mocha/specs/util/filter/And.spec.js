@@ -6,8 +6,6 @@ define(function(require) {
     var And = require("modules/util/filter/And");
     var Filter = require("modules/util/filter/Filter");
 
-    app.noRendering = true;
-
     describe("And", function() {
         it("TEST-01 And#expression", function() {
             var filtersA = new Equal("country", "Japan");
