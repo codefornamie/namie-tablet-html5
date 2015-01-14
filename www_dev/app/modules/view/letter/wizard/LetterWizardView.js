@@ -7,7 +7,7 @@ define(function(require, exports, module) {
     var AbstractModel = require("modules/model/AbstractModel");
     var ArticleModel = require("modules/model/article/ArticleModel");
     var WebDavModel = require("modules/model/WebDavModel");
-    
+
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
@@ -58,21 +58,34 @@ define(function(require, exports, module) {
             this.$step.find("[href='#previous']").addClass("button button--gray");
             this.$step.find("[href='#next']").addClass("button");
             this.$step.find("[href='#finish']").addClass("button");
-            
+
             this.updateButtons();
 
             $(".contents-wrapper").css("overflow", "hidden");
 
             // 実機から画像一覧を取得表示
             if (this.isAndroid) {
-                FileAPIUtil.getGalleryList($.proxy(this.setGalleryList,this));
-                $(".onPC").hide();
+                FileAPIUtil.getGalleryList($.proxy(this.setGalleryList, this));
+                FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
             } else {
                 FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
                 this.hideLoading();
             }
         },
-
+        /**
+         * 写真選択後、対象写真の削除ボタンやプレビュー画像を表示するための要素を表示する。
+         * <p>
+         * なみえ写真投稿では、写真選択後のプレビュー画像は別の方法で表示するため、この処理はオーバライドして抑止する。
+         * </p>
+         */
+        showImageControl : function() {
+            if (this.isAndroid) {
+                return;
+            } else {
+                $(this.el).find('#previewFile').show();
+                $(this.el).find("#fileDeleteButton").show();
+            }
+        },
         /**
          * 初期化する
          * @memberOf LetterWizardView#
@@ -210,7 +223,7 @@ define(function(require, exports, module) {
         onFinished : function(ev, currentIndex) {
             this.showLoading();
             this.setInputValue();
-             this.saveLetterPicture();
+            this.saveLetterPicture();
         },
         /**
          * バリデータの初期化処理を行う
@@ -244,16 +257,16 @@ define(function(require, exports, module) {
             _.each(fileArray, $.proxy(function(file) {
                 if (file.name.match(/\.jpg$/i)) {
                     // Android撮影画像はjpegのみ
-                    var elemString = "<li class='gallery-list__item'><img class='letterImage'></li>"; 
+                    var elemString = "<li class='gallery-list__item'><img class='letterImage'></li>";
                     var element = $(elemString);
                     element.find("img").load($.proxy(function() {
                         fileCount++;
                         if (fileCount >= fileArray.length) {
                             this.hideLoading();
                             $(this.el).find("img").unbind("click");
-                            $(this.el).find("img").click($.proxy(this.onClickGallery,this));
+                            $(this.el).find("img").click($.proxy(this.onClickGallery, this));
                         }
-                    },this));
+                    }, this));
                     element.find("img").attr("src", file.toURL());
                     element.find("img").data("fileEntry", file);
                     $("#gallery-list").append(element);
@@ -263,10 +276,10 @@ define(function(require, exports, module) {
                     if (fileCount >= fileArray.length) {
                         this.hideLoading();
                         $(this.el).find("img").unbind("click");
-                        $(this.el).find("img").click($.proxy(this.onClickGallery,this));
+                        $(this.el).find("img").click($.proxy(this.onClickGallery, this));
                     }
                 }
-            },this));
+            }, this));
         },
         /**
          * 画像選択時のハンドラ
@@ -282,15 +295,15 @@ define(function(require, exports, module) {
                 app.logger.debug("onClickGallery: file.type: " + file.type);
                 app.logger.debug("onClickGallery: file.name: " + file.name);
 
-              // ファイルの読み込み
+                // ファイルの読み込み
                 var reader = new FileReader();
                 reader.onload = $.proxy(function(e) {
                     target.data = e.target.result;
                     this.onLoadFileExtend(e, file, target);
-                },this);
+                }, this);
                 reader.readAsArrayBuffer(file);
-              
-            },this), function(e) {
+
+            }, this), function(e) {
                 // fileでエラー
                 app.logger.debug("fileEntry.file(): error" + e.code);
                 this.hideLoading();
@@ -337,7 +350,7 @@ define(function(require, exports, module) {
             this.file = file;
             this.file.data = ev.target.result;
             if (navigator.userAgent.indexOf('Android') < 0) {
-                this.makeThmbnail(this.file.data, $.proxy(function(blob){
+                this.makeThmbnail(this.file.data, $.proxy(function(blob) {
                     this.file.thumb = blob;
                 }, this));
                 $(".letterPicture").attr("src", $("#previewFile").attr("src"));
@@ -349,17 +362,18 @@ define(function(require, exports, module) {
             vexDialog.buttons.NO.text = '選びなおす';
             vexDialog.open({
                 message : 'この写真でいいですか？',
-                input : "<div class='vex-custom-input-wrapper'><img src='" + $(target).attr("src") + "' width='700', height='700'></div>",
+                input : "<div class='vex-custom-input-wrapper'><img src='" + $(target).attr("src") +
+                        "' style='max-height: 400px; width: auto;'></div>",
                 callback : $.proxy(function(value) {
                     var checkElem = $(".checkedPic");
-                    checkElem.css("border","none");
+                    checkElem.css("border", "none");
                     checkElem.removeClass("checkedPic");
                     if (value) {
-                        this.makeThmbnail(this.file.data, $.proxy(function(blob){
+                        this.makeThmbnail(this.file.data, $.proxy(function(blob) {
                             this.file.thumb = blob;
                         }, this));
                         $(".letterPicture").attr("src", $(target).attr("src"));
-                        $(target).css("border","3px solid red");
+                        //$(target).css("border", "3px solid red");
                         $(target).addClass("checkedPic");
                         this.$step.steps("next");
                     } else {
@@ -367,7 +381,7 @@ define(function(require, exports, module) {
                     }
                     $(".vex-custom-input-wrapper").remove();
                     return;
-                },this)
+                }, this)
             });
         },
         /**
@@ -387,17 +401,17 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          */
         saveLetterPicture : function() {
-            if(!this.model.get("__id")){
+            if (!this.model.get("__id")) {
                 this.model.id = AbstractModel.createNewId();
             }
-            if(!this.model.get("imagePath")){
+            if (!this.model.get("imagePath")) {
                 this.model.set("imagePath", this.generateFilePath());
             }
 
             // コールバックの定義
             var count = 2;
             var success = $.proxy(function(e) {
-                if(--count <= 0){
+                if (--count <= 0) {
                     this.saveModel();
                 }
             }, this);
@@ -434,14 +448,14 @@ define(function(require, exports, module) {
          * Modelの保存
          * @memberOf LetterWizardView#
          */
-        saveModel : function(){
+        saveModel : function() {
             this.model.save(null, {
                 success : $.proxy(function() {
                     $("#gallery-list").empty();
                     this.hideLoading();
                     app.router.go('/letters/posted');
                 }, this),
-                error: function(e){
+                error : function(e) {
                     this.hideLoading();
                     vexDialog.alert("保存に失敗しました。");
                     app.logger.error("保存に失敗しました。");
@@ -453,7 +467,7 @@ define(function(require, exports, module) {
          * ボタン表示の更新
          * @memberOf LetterWizardView#
          */
-        updateButtons: function() {
+        updateButtons : function() {
             var currentStep = this.$step.steps("getCurrentIndex") + 1;
 
             // 先頭のステップかつAndroidの場合、「OK」ボタンを非表示にする
@@ -474,7 +488,7 @@ define(function(require, exports, module) {
          * ビューが破棄される時に呼ばれる
          * @memberOf LetterWizardView#
          */
-        cleanup: function () {
+        cleanup : function() {
             $(".contents-wrapper").css("overflow", "");
         },
     }, {
