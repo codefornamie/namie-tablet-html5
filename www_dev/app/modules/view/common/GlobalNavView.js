@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var DateUtil = require("modules/util/DateUtil");
     var AbstractView = require("modules/view/AbstractView");
     var ModalCalendarView = require("modules/view/news/common/ModalCalendarView");
+    var TutorialView = require("modules/view/tutorial/TutorialView");
     var PersonalModel = require("modules/model/personal/PersonalModel");
     var Snap = require("snap");
 
@@ -223,9 +224,23 @@ define(function(require, exports, module) {
             }
             $('#snap-content').data("snap").close();
         },
+
+        /**
+         * カレンダーがクリックされたら呼ばれる
+         * @memberOf GlobalNavView#
+         */
         onClickHelp : function(evt) {
             app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「ヘルプ」","");
+
+            var tutorialView = new TutorialView();
+
+            this.setView(GlobalNavView.SELECTOR_GLOBAL_HELP, tutorialView);
+            this.listenTo(tutorialView, "closeGlobalHelp", function () {
+                tutorialView.remove();
+            });
+            tutorialView.render();
         },
+
         onClickBackno : function(evt) {
             app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「バックナンバー」","");
         },
@@ -259,7 +274,12 @@ define(function(require, exports, module) {
         /**
          * modal-calendarを挿入する部分のセレクタ
          */
-        SELECTOR_MODAL_CALENDAR: "#modal-calendar-container"
+        SELECTOR_MODAL_CALENDAR: "#modal-calendar-container",
+
+        /**
+         * ヘルプを挿入する部分のセレクタ
+         */
+        SELECTOR_GLOBAL_HELP: "#global-help-container"
     });
 
     module.exports = GlobalNavView;
