@@ -78,7 +78,7 @@ define(function(require, exports, module) {
                                 new Equal("publishedAt", dateString), new And([
                                         new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
                                 ])
-                        ]), new IsNull("isDepublish")
+                        ]), new IsNull("isDepublish"), new Or([new IsNull("deletedAt"), new Equal("deletedAt", "")])
                 ])
             ];
         }
