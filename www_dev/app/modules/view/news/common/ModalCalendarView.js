@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var rome = require("rome");
     var foundationCalendar = require("foundation-calendar");
     var AbstractView = require("modules/view/AbstractView");
+    var BusinessUtil = require("modules/util/BusinessUtil");
 
     require("moment/locale/ja");
 
@@ -35,6 +36,7 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             var self = this;
+            var latestPublishDate = moment(BusinessUtil.getCurrentPublishDate()).startOf('day');
 
             if (this.calendar) {
                 this.calendar.destroy();
@@ -45,6 +47,7 @@ define(function(require, exports, module) {
                 dayFormat: "D",
                 monthFormat: "YYYY年:M月",
                 weekStart: moment().weekday(1).day(),
+                max: latestPublishDate,
                 time: false,
                 initialValue: moment(app.currentDate)
             });
@@ -111,9 +114,13 @@ define(function(require, exports, module) {
         /**
          * 日付セルがクリックされた後に呼ばれる
          * @memberOf ModalCalendarView#
+         * @param {Event} ev
          */
-        onClickDate: function () {
-            app.router.go("top", moment(this.selectedDate).format("YYYY-MM-DD"));
+        onClickDate: function (ev) {
+            // クリックしたセルが（未配信日等の）無効な日付でない場合は遷移する
+            if (!$(ev.target).is(".rd-day-disabled")) {
+                app.router.go("top", moment(this.selectedDate).format("YYYY-MM-DD"));
+            }
         },
 
         /**
@@ -126,14 +133,17 @@ define(function(require, exports, module) {
             // この時点では $(el).find(".rd-month-label") で要素を取得できないので
             // DOMが構築されるまで待機する必要がある
             setTimeout(function () {
-                $(el).find(".rd-month-label").html(function (index, yearMonthStr) {
-                    var yearMonth = yearMonthStr.split(":");
-                    var year = yearMonth[0];
-                    var month = yearMonth[1];
-
-                    return "<span class='rd-month-label__year'>" + year + "</span>" +
-                        "<span class='rd-month-label__month'>" + month + "</span>";
-                });
+                // 「yyyy年:M月」形式の文字列を整形する。未整形の場合のみ処理を行う
+                if ($(el).find(".rd-month-label .rd-month-label__year").length === 0) {
+                    $(el).find(".rd-month-label").html(function (index, yearMonthStr) {
+                        var yearMonth = yearMonthStr.split(":");
+                        var year = yearMonth[0];
+                        var month = yearMonth[1];
+    
+                        return "<span class='rd-month-label__year'>" + year + "</span>" +
+                            "<span class='rd-month-label__month'>" + month + "</span>";
+                    });
+                }
             }, 0);
         }
     });
