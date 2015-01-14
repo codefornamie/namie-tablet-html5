@@ -40,7 +40,7 @@ define(function(require, exports, module) {
     SpecHelper.before = function(spec, done) {
         app.logger.debug("Start SpecHelper.before().");
 
-        app.noRendering = true;
+        app.noRendering = false;
 
         app.logger.debug("Setting personium.io enveironments.");
         // テスト用セル
@@ -49,6 +49,7 @@ define(function(require, exports, module) {
         // タイムアウト値を拡大
         spec.timeout(15000);
         // 認証
+        app.pcsManager.accessToken = null;
         var loginModel = new LoginModel();
         loginModel.baseUrl = app.config.basic.baseUrl;
         loginModel.cellId = app.config.basic.cellId;

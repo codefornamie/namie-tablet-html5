@@ -222,7 +222,7 @@ define(function(require, exports, module) {
          */
         loadPersonal : function(callback) {
             var collection = new PersonalCollection();
-            if (_.isEmpty(this.get("loginId"))) {
+            if (_.isEmpty(this.get("loginId")) && app.pcsManager.isAndroidDevice()) {
                 // AccountManager からログインIDを取得し、ログインモデルに設定する
                 var loginId = app.pcsManager.androidAccountManager.getAccountsByType(app.pcsManager.packageName,
                         $.proxy(function(res, accounts) {

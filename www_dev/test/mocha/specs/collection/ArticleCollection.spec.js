@@ -21,6 +21,7 @@ define(function(require) {
         });
         var fetchedModel = null;
         it("TEST-01 ArticleCollection#fetch, 指定した記事IDの記事が取得できることを確認する。", function(done) {
+            this.timeout(15000);
             NewsSpecHelper.createArticleTestData("6", function(articleId) {
                 testDataId = articleId;
                 var collection = new ArticleCollection();
@@ -40,6 +41,7 @@ define(function(require) {
             });
         });
         it("TEST-01 ArticleCollection#setSearchCondition, 指定した日付の記事を検索できることを確認する。", function(done) {
+            this.timeout(15000);
             var collection = new ArticleCollection();
             collection.condition.top = 1000;
             collection.setSearchCondition({
@@ -59,6 +61,7 @@ define(function(require) {
 
         after(function(done) {
             app.logger.debug("Start after().");
+            this.timeout(15000);
             SpecHelper.deleteTestData(fetchedModel, done);
         });
     });
