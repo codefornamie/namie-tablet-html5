@@ -84,10 +84,8 @@ define(function(require, exports, module) {
             vexDialog.buttons.YES.text = 'はい';
             vexDialog.buttons.NO.text = 'いいえ';
             vexDialog.open({
-                // TODO: メッセージに削除対象項目のおたより名を反映する
-                message : 'この投稿（' + moment(this.publishedAt).format('YYYY年MM月DD日') + '配信）を削除していいですか？',
+                message : 'この投稿（' + moment(this.model.get('publishedAt')).format('YYYY年MM月DD日') + '配信）を削除していいですか？',
                 callback : $.proxy(function(value) {
-                    // TODO: おたよりの削除処理を実装する
                     if (value) {
                         this.showLoading();
                         this.deleteLetter();
