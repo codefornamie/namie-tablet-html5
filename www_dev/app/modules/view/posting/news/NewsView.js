@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var ArticleListView = require("modules/view/posting/news/ArticleListView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var IsNull = require("modules/util/filter/IsNull");
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
     var Code = require("modules/util/Code");
@@ -45,7 +46,8 @@ define(function(require, exports, module) {
             this.articleCollection.condition.filters = [
                 new And([
                         new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING]), 
-                        new Equal("createUserId", app.user.get("__id"))
+                        new Equal("createUserId", app.user.get("__id")),
+                        new IsNull("deletedAt")
                 ])
             ];
 

@@ -15,6 +15,7 @@ define(function(require, exports, module) {
     var Ge = require("modules/util/filter/Ge");
     var Le = require("modules/util/filter/Le");
     var And = require("modules/util/filter/And");
+    var IsNull = require("modules/util/filter/IsNull");
     var Code = require("modules/util/Code");
 
     /**
@@ -237,7 +238,8 @@ define(function(require, exports, module) {
             this.letterCollection.condition.filters = [
                     new Ge("publishedAt", dateFrom), new Le("publishedAt", dateTo),
                     new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_LETTER]),
-                    new Equal("createUserId", app.user.get("__id"))
+                    new Equal("createUserId", app.user.get("__id")),
+                    new IsNull("deletedAt")
             ];
 
             this.letterCollection.fetch();
@@ -324,6 +326,17 @@ define(function(require, exports, module) {
          */
         onSyncLetter : function() {
             this.layout.render();
+            // 削除後レンダリング時の要素非表示処理
+            var listViewLayout = this.layout.getView("#letter-list-container");
+            var listItems = listViewLayout.getViews("#letter-list").value();
+            var deletedItems = _.filter(listItems, function(item) {
+                return item.model.get("isDeleted");
+            });
+            if (deletedItems.length > 0) {
+                _.each(deletedItems, function(deleteItem) {
+                    $(deleteItem.el).hide();
+                });
+            }
             this.hideLoading();
         },
 
