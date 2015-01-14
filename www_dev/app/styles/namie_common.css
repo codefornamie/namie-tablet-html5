@@ -707,10 +707,11 @@ main {
 
 .article-detail__image-area--youtube {
     text-align: center;
+    margin-top: 0;
 }
 
 .article-detail__image-area--youtube .article-detail__image-area--inner {
-    padding-bottom: 55px;
+    padding: 15px;
 }
 
 .article-detail__youtube-action {
