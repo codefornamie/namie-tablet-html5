@@ -94,7 +94,7 @@ define(function(require, exports, module) {
             });
         },
         /**
-         * おたより削除関数
+         * 写真投稿削除関数
          * @memberOf LetterListItemView#
          */
         deleteLetter: function () {

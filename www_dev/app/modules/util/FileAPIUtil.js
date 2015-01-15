@@ -12,7 +12,7 @@ define(function(require, exports, module) {
 
     };
     /**
-     * おたよりギャラリー一覧の表示最大値
+     * 写真投稿ギャラリー一覧の表示最大値
      * @memberOf FileAPIUtil#
      */
     FileAPIUtil.GET_GALLERY_MAX = 8;
