@@ -328,7 +328,10 @@ define(function(require, exports, module) {
             this.layout.render();
             // 削除後レンダリング時の要素非表示処理
             var listViewLayout = this.layout.getView("#letter-list-container");
-            var listItems = listViewLayout.getViews("#letter-list").value();
+            var listItems = [];
+            if (listViewLayout) {
+                listItems = listViewLayout.getViews("#letter-list").value();
+            }
             var deletedItems = _.filter(listItems, function(item) {
                 return item.model.get("isDeleted");
             });

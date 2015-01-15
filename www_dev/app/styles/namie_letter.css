@@ -672,3 +672,28 @@
     width: 25%;
     display: inline-table;
 }
+
+/**
+ * ニックネーム入力候補用スタイル
+ **/
+.dropdownList {
+    list-style-type: none;
+    position:absolute;
+    background:#fff;
+    width:100%;
+    border-radius:10px;
+    margin:0;
+    padding:0;
+    display:none;
+    border:1px solid #ccc;
+    z-index:2;
+  }
+.dropdownList li {
+    padding: 3px 10px;
+    display: block;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+.dropdownList li:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+}
