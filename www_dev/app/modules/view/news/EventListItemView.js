@@ -60,6 +60,7 @@ define(function(require, exports, module) {
                     if (model.get("imageUrl")) {
                         var imagePath = model.get("imagePath") ? model.get("imagePath") + "/" : "";
                         imgArray.push({
+                            hasPath : true,
                             imageUrl : imagePath + model.get("imageUrl"),
                             imageComment : model.get("imageComment"),
                             imageIndex : index

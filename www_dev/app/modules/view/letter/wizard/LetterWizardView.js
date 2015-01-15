@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     var WebDavModel = require("modules/model/WebDavModel");
 
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
+    var Code = require("modules/util/Code");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
@@ -62,6 +63,7 @@ define(function(require, exports, module) {
             this.updateButtons();
 
             $(".contents-wrapper").css("overflow", "hidden");
+            this.setLocalStorageValue();
 
             // 実機から画像一覧を取得表示
             if (this.isAndroid) {
@@ -230,6 +232,8 @@ define(function(require, exports, module) {
         onFinished : function(ev, currentIndex) {
             this.showLoading();
             this.setInputValue();
+            // ニックネームをlocalStorageに保存
+            this.saveLocalStorage();
             this.saveLetterPicture();
         },
         /**
@@ -341,9 +345,10 @@ define(function(require, exports, module) {
             this.model.set("imageThumbUrl", "thumbnail.png");
             this.model.set("createUserId", app.user.get("__id"));
 
-            // 配信日は固定で翌日とする
+            // 配信日は固定で翌日から1週間とする
             var prePublishedAt = BusinessUtil.getCurrentPublishDate();
             this.model.set("publishedAt", moment(prePublishedAt).add(1, "d").format("YYYY-MM-DD"));
+            this.model.set("depublishedAt", moment(prePublishedAt).add(Code.LETTER_PUB_PERIOD, "d").format("YYYY-MM-DD"));
         },
         /**
          * ファイル読み込み後に行う拡張処理
@@ -450,6 +455,48 @@ define(function(require, exports, module) {
                 success : success,
                 error : error
             });
+        },
+        /**
+         * localStorageからデータ読み込み、画面に設定
+         * @memberOf LetterWizardView#
+         */
+        setLocalStorageValue : function() {
+            // nicknameの読み込み
+            this.nicknameArray = JSON.parse(localStorage.getItem("nickname"));
+            if (this.nicknameArray) {
+                var dropdownList = $(".dropdownList");
+                // ニックネーム候補用リスト作成
+                _.each(this.nicknameArray, function(nickname) {
+                    dropdownList.append("<li>" + nickname + "</li>");
+                });
+                var nicknameInput = $("#letter-wizard-form__nickname");
+                nicknameInput.focus(function () {
+                    dropdownList.slideDown();
+                });
+
+                dropdownList.find("li").each(function () {
+                    $(this).click(function () {
+                        nicknameInput.val($(this).text());
+                    }); 
+                });
+            }
+        },
+        /**
+         * localStorageにデータを保存する
+         * @memberOf LetterWizardView#
+         */
+        saveLocalStorage : function() {
+            // nicknameの保存
+            var nicknameArray = [];
+            if (this.nicknameArray) {
+                nicknameArray = this.nicknameArray;
+            }
+            nicknameArray.unshift(this.model.get("nickname"));
+            nicknameArray = _.uniq(nicknameArray);
+            if (nicknameArray.length > 4) {
+                nicknameArray.pop();
+            }
+            localStorage.setItem("nickname",JSON.stringify(nicknameArray));
         },
         /**
          * Modelの保存

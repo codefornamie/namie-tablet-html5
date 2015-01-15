@@ -318,13 +318,22 @@ define(function(require, exports, module) {
                     var newsArticles = this.newsCollection.toArray();
                     var letterArticles = [];
                     var letterFolderArticle;
+                    var imagePath;
+                    var imageThumbUrl;
     
                     // newsCollectionからおたより記事を削除し、配列に追加する
                     _.each(newsArticles, $.proxy(function(article) {
-                        if (article.get("type") === "6") {
-                            this.newsCollection.remove(article);
-                            letterArticles.push(article);
+                        if (article.get("type") !== "6") return;
+
+                        // 一番最初のおたよりのサムネイルを
+                        // まとめた後の記事のサムネイルとして設定する
+                        if (!imagePath) {
+                            imagePath = article.get("imagePath");
+                            imageThumbUrl = article.get("imageThumbUrl");
                         }
+
+                        this.newsCollection.remove(article);
+                        letterArticles.push(article);
                     }, this));
     
                     // おたより画面を開くための記事を作成し、コレクションの先頭に登録
@@ -333,7 +342,9 @@ define(function(require, exports, module) {
                         dispSite: "おたより",
                         dispTitle: (targetDate.getMonth() + 1) + "月" + targetDate.getDate() + "日のおたより",
                         type: "6",
-                        letters: letterArticles
+                        letters: letterArticles,
+                        imagePath: imagePath,
+                        imageThumbUrl: imageThumbUrl
                     });
                     this.newsCollection.unshift(letterFolderArticle);
                     this.articleCollection.unshift(letterFolderArticle);
