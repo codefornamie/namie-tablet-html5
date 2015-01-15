@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     var WebDavModel = require("modules/model/WebDavModel");
 
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
+    var Code = require("modules/util/Code");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
@@ -341,9 +342,10 @@ define(function(require, exports, module) {
             this.model.set("imageThumbUrl", "thumbnail.png");
             this.model.set("createUserId", app.user.get("__id"));
 
-            // 配信日は固定で翌日とする
+            // 配信日は固定で翌日から1週間とする
             var prePublishedAt = BusinessUtil.getCurrentPublishDate();
             this.model.set("publishedAt", moment(prePublishedAt).add(1, "d").format("YYYY-MM-DD"));
+            this.model.set("depublishedAt", moment(prePublishedAt).add(Code.LETTER_PUB_PERIOD, "d").format("YYYY-MM-DD"));
         },
         /**
          * ファイル読み込み後に行う拡張処理
