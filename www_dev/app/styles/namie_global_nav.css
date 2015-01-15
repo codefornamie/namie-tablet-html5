@@ -14,12 +14,6 @@
     margin: auto;
 }
 
-@media only screen and (orientation:portrait) {
-    .global-nav {
-        height: 148px;
-    }
-}
-
 .global-nav nav {
 }
 
@@ -115,6 +109,13 @@
     background-size: 100%;
 }
 
+@media only screen and (orientation:portrait) {
+    .global-nav__title {
+        width: 20%;
+        background-image: url(../../app/img/img-title-logo-no-kamome.png);
+    }
+}
+
 /**
  *  global-nav__info
  *  情報のエリア
@@ -133,6 +134,12 @@
     color: #fff;
 }
 
+@media only screen and (orientation:portrait) {
+    .global-nav__date {
+        width: 38%;
+    }
+}
+
 .global-nav__date .nav-content {
     font-size: 36px;
 }
@@ -145,6 +152,12 @@
 /* year */
 .date-area__year {
     display: inline-block;
+}
+
+@media only screen and (orientation:portrait) {
+    .date-area__year {
+        display: none;
+    }
 }
 
 .date-area__year .date--year {
@@ -168,10 +181,22 @@
     font-weight: bold;
 }
 
+@media only screen and (orientation:portrait) {
+    .date-area__date .date--month {
+        font-size: 30px;
+    }
+}
+
 .date-area__date .date--day {
     font-size: 40px;
     display: inline-block;
     font-weight: bold;
+}
+
+@media only screen and (orientation:portrait) {
+    .date-area__date .date--day {
+        font-size: 30px;
+    }
 }
 
 .date-area__date .date--unit {
@@ -191,6 +216,12 @@
     font-size: 36px;
     font-weight: bold;
     margin: 0 3px;
+}
+
+@media only screen and (orientation:portrait) {
+    .date-area__weekday .date--weekday {
+        font-size: 30px;
+    }
 }
 
 .date-area__weekday .date--weekday-unit {
@@ -233,7 +264,12 @@
 
 @media only screen and (orientation:portrait) {
     .global-nav__menubutton {
-        width: 100%;
+        width: 300px;
+        text-align: right;
+        white-space: nowrap;
+        position: absolute;
+        top: 0;
+        right: 0;
     }
 }
 
@@ -317,7 +353,7 @@
  *  モーダルカレンダー
  */
 .modal-calendar-overlay {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.7);
     height: 100%;
     left: 0;
     position: fixed;
@@ -358,6 +394,7 @@
     position: relative;
     top: 13px;
     z-index: 1;
+    white-space: nowrap;
 }
 
 #modal-calendar .rd-month-label__year {
@@ -445,9 +482,9 @@
 
 #modal-calendar .rd-day-body:active,
 #modal-calendar .rd-day-selected {
-    outline: 3px solid rgb(209, 116, 30);
-    outline-offset: -3px;
-    background: none;
+    outline: 5px solid rgb(209, 116, 30);
+    outline-offset: -5px;
+    background: #ffebd2;
     color: rgb(209, 116, 30);
 }
 
