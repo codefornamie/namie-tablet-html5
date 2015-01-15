@@ -1,3 +1,6 @@
+/**
+ * Copyright (C) 2014 Namie Town. All Rights Reserved.
+ */
 package jp.fukushima.namie.town.news;
 
 import android.app.AlarmManager;
@@ -10,6 +13,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +23,6 @@ import android.widget.RemoteViews;
  * なみえ新聞ウィジェット
  */
 public class NamieWidgetProvider extends AppWidgetProvider {
-
     private static final String TAG = "kuro";
     private static final String WIDGET_UPDATE_ACTION = "jp.fukushima.namie.town.news.WIDGET_UPDATE_ACTION";
 
@@ -27,6 +30,9 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     private static final int TIMER_START_DELAY = 3 * 1000;
     // ウィジェット更新インターバル(ms)
     private static final int UPDATE_INTERVAL = 500;
+    // 新聞発行チェックインターバル(ms)
+    // TODO: 正しい実行間隔を設定すること
+    private static final int PUBLISH_CHECK_INTERVAL = 10 * 1000;
 
     // フレームインデックス
     private static int frameIndex = 0;
@@ -34,6 +40,11 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     private static final int MESSAGE_ACTION_FRAME = 16;
     // メッセージを非表示とするフレームインデックス
     private static final int SHOW_MESSAGE_FRAME = 14;
+
+    // 最終サーバーリクエスト時刻
+    private static long lastRequestTime = 0;
+    // 当日分の新聞が発行済みかどうかを示すフラグ
+    private static boolean published = false;
 
     private static int imageIndex = 0;
     private static int[] images = { R.drawable.img_ukedon_1, R.drawable.img_ukedon_2};
@@ -84,9 +95,39 @@ public class NamieWidgetProvider extends AppWidgetProvider {
                 messages = context.getResources().getStringArray(R.array.messages);
             }
 
+            // 新聞発行チェック
+            checkPublished(context);
+
+            // ウィジェットの表示更新
             updateWidget(context);
         }
         super.onReceive(context, intent);
+    }
+
+    /**
+     * 新聞が発行されているかどうかを設定する.
+     * @param status 新着の発行状態 false:発行未 true:発行済
+     */
+    public void setPublished(boolean status) {
+        published = status;
+    }
+
+    /**
+     * 新聞が発行されているかどうかをチェックする.
+     * @param context コンテキスト
+     */
+    private void checkPublished(Context context) {
+        PersoniumRequestThread requestThread = null;
+        long currentElaspedTime = SystemClock.elapsedRealtime();
+        if (currentElaspedTime - lastRequestTime > PUBLISH_CHECK_INTERVAL) {
+            if (requestThread == null) {
+                requestThread = new PersoniumRequestThread(context, this);
+            }
+            if (requestThread != null) {
+                requestThread.start();
+                lastRequestTime = currentElaspedTime;
+            }
+        }
     }
 
     /**
@@ -101,6 +142,13 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         // キャラの更新
         imageIndex = (imageIndex + 1) % images.length;
         remoteViews.setImageViewResource(R.id.chara, images[imageIndex]);
+
+        // 新聞発行の有無に応じて新聞アイコンを変更
+        if (published) {
+            setApplicationIcon(remoteViews, R.id.link_news, R.drawable.button_news_2);
+        } else {
+            setApplicationIcon(remoteViews, R.id.link_news, R.drawable.button_news);
+        }
 
         // メッセージ更新
         if (frameIndex == 0) {
