@@ -616,7 +616,6 @@ main {
 }
 
 .post__footer {
-    border-top: 1px solid #eee;
     margin: 16px;
     padding: 16px;
 }
@@ -1132,18 +1131,24 @@ div.nehan-block.nehan-body:last-child {
 }
 
 .eventColumnsHeader {
-    margin: 30px 0 30px 0;
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: rgb(35, 136, 215);
-    padding: 10px 30px;
-    line-height: 1.4;
-    border-left: 5px solid rgb(35, 136, 215);
-    background: rgb(237, 241, 241);
+    float: left;
+    padding: 0;
+    margin: 0 10px 0 0;
+    line-height: 2.3rem;
+    color: inherit;
+    font-size: 1.5rem;
+    font-weight: normal;
+    clear: both;
+}
+
+.eventColumnsHeader::after {
+    content: ":";
+    display: inline-block;
+    margin: 0 8px;
 }
 
 .eventColumnsBody {
-    margin-left: 35px;
+    margin-bottom: 10px;
 }
 
 .event__status {

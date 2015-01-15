@@ -52,28 +52,37 @@ define(function(require, exports, module) {
 
                     // 画像を水平中央に寄せる
                     var width = $this.width();
-                    var containerWidth = $container.width();
+                    var containerWidth = $container.outerWidth();
 
                     // 画像を垂直中央に寄せる
                     var height = $this.height();
-                    var containerHeight = $container.height();
+                    var containerHeight = $container.outerHeight();
 
-                    // 高さが足りないと上下に余白ができてしまうので
-                    // 上下いっぱいに拡大する
-                    if (height < containerHeight) {
-                        $this.css({
-                            width: "auto",
-                            height: "100%"
+                    var top;
+                    var left;
+
+                    // 初期状態ではみだすかどうか判定し
+                    // 水平中央寄せか垂直中央寄せか決める
+                    if (containerWidth < width) {
+                        top = 0;
+                        left = containerWidth / 2 - width / 2;
+                    } else {
+                        $this
+                        .css({
+                            width: "100%",
+                            height: "auto"
                         });
 
-                        width = $this.width();
                         height = $this.height();
+
+                        top = containerHeight / 2 - height / 2;
+                        left = 0;
                     }
 
                     $this
                     .css({
-                        top: containerHeight / 2 - height / 2,
-                        left: containerWidth / 2 - width / 2
+                        top: top,
+                        left: left
                     });
                 })
                 .on("load", function () {
