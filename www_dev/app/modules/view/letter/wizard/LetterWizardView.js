@@ -62,6 +62,7 @@ define(function(require, exports, module) {
             this.updateButtons();
 
             $(".contents-wrapper").css("overflow", "hidden");
+            this.setLocalStorageValue();
 
             // 実機から画像一覧を取得表示
             if (this.isAndroid) {
@@ -230,6 +231,8 @@ define(function(require, exports, module) {
         onFinished : function(ev, currentIndex) {
             this.showLoading();
             this.setInputValue();
+            // ニックネームをlocalStorageに保存
+            this.saveLocalStorage();
             this.saveLetterPicture();
         },
         /**
@@ -450,6 +453,47 @@ define(function(require, exports, module) {
                 success : success,
                 error : error
             });
+        },
+        /**
+         * localStorageからデータ読み込み、画面に設定
+         * @memberOf LetterWizardView#
+         */
+        setLocalStorageValue : function() {
+            // nicknameの読み込み
+            this.nicknameArray = JSON.parse(localStorage.getItem("nickname"));
+            if (this.nicknameArray) {
+                var dropdownList = $(".dropdownList");
+                // ニックネーム候補用リスト作成
+                _.each(this.nicknameArray, function(nickname) {
+                    dropdownList.append("<li>" + nickname + "</li>");
+                });
+                var nicknameInput = $("#letter-wizard-form__nickname");
+                nicknameInput.focus(function () {
+                    dropdownList.slideDown();
+                });
+
+                dropdownList.find("li").each(function () {
+                    $(this).click(function () {
+                        nicknameInput.val($(this).text());
+                    }); 
+                });
+            }
+        },
+        /**
+         * localStorageにデータを保存する
+         * @memberOf LetterWizardView#
+         */
+        saveLocalStorage : function() {
+            // nicknameの保存
+            var nicknameArray = [];
+            if (this.nicknameArray) {
+                nicknameArray = this.nicknameArray;
+            }
+            nicknameArray.unshift(this.model.get("nickname"));
+            if (nicknameArray.length > 4) {
+                nicknameArray.pop();
+            }
+            localStorage.setItem("nickname",JSON.stringify(nicknameArray));
         },
         /**
          * Modelの保存
