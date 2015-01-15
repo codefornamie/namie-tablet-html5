@@ -664,6 +664,7 @@
     list-style: none;
     width: 100%;
     margin: auto;
+    padding-bottom: 10px;
 }
 
 .gallery-list__item {
