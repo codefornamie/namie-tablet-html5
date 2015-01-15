@@ -1,5 +1,5 @@
 <article class='post post--<%= model.getSiteType() %>' id="<%= model.get('__id') %>">
-    <section class='post__body'>
+    <section class='post__body clearfix'>
         <div class="post-header">
             <div class="post-header__title">
                <%= model.get("dispTitle") %>
@@ -48,7 +48,7 @@
 
         <div class="eventColumnsHeader">日時</div>
         <div class="eventColumnsBody">
-            <div id="articleDateTime"></div>
+            <div id="articleDateTime" style="font-weight: bold;"></div>
         </div>
 
         <div class="eventColumnsHeader">場所</div>

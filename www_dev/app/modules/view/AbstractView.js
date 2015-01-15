@@ -196,7 +196,12 @@ define(function(require, exports, module) {
                     if(item.imageUrl){
                         var davModel = new WebDavModel();
                         var path = this.model.get("imagePath");
-                        path = path ? path + "/" : "";
+
+                        if (item.hasPath) {
+                            path = "";
+                        } else {
+                            path = path ? path + "/" : "";
+                        }
                         davModel.id = path + item.imageUrl;
                         davModel.fetch({
                             success : function(model, binary) {
