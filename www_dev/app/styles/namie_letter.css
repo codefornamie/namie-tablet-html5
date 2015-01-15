@@ -18,6 +18,7 @@
 
 .page-letter .header .top-bar {
     background: url(../../app/img/img-letter-header-bg.png);
+    background-size: contain;
     height: 55px;
 }
 
@@ -71,7 +72,7 @@
 
 .page-letter .contents {
     background: transparent;
-    color: #2b4a62;
+    color: #333;
 }
 
 .page-letter .contents>div {
@@ -91,7 +92,7 @@
 .page-letter .button,
 .vex.vex-theme-default.vex-theme-letter .vex-dialog-button {
     display: inline-block;
-    background: -webkit-gradient(linear, left top, left bottom, from(#0074c5), to(#004f85));
+    background: -webkit-gradient(linear, left top, left bottom, from(#e14848), to(#9f3333));
     border-radius: 50px;
     color: #fff;
     font-size: 1.3rem;
@@ -104,7 +105,7 @@
 .page-letter .button.button--gray,
 .vex.vex-theme-default.vex-theme-letter .vex-dialog-button.vex-dialog-button-secondary {
     background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3e0d5));
-    color: #053b65;
+    color: #650505;
     font-size: 1.3rem;
 }
 
@@ -131,7 +132,7 @@
 }
 
 .vex.vex-theme-default.vex-theme-letter .vex-dialog-form .vex-dialog-message {
-    color: #2b4a62;
+    color: #333;
     font-size: 1.2rem;
 }
 
@@ -177,7 +178,7 @@
 }
 
 .page-letter .contents__primary h2 {
-    color: #053b65;
+    color: #650505;
     font-size: 2rem;
     font-weight: normal;
     margin: 20px 0 0 0;
@@ -255,7 +256,7 @@
 
 .page-letter .columns--date {
     background: #f1eddb;
-    color: #053b65;
+    color: #650505;
 }
 
 .page-letter .date-area {
@@ -278,7 +279,7 @@
 .page-letter .date--date::before {
     content: "";
     width: 110px;
-    border-top: 1px solid #053b65;
+    border-top: 1px solid #650505;
     display: block;
     position: absolute;
     -webkit-transform: rotate(-45deg);
@@ -312,7 +313,7 @@
 }
 
 .page-letter .columns--body h4 {
-    color: #053b65;
+    color: #650505;
     font-weight: normal;
     font-size: 1.1rem;
     line-height: 1.4;
@@ -351,7 +352,7 @@
     font-size: 1.2rem;
     line-height: 1.8rem;
     margin-bottom: 2rem;
-    color: #2b4a62;
+    color: #333;
 }
 
 .letter-select .letter-select-button {
@@ -368,13 +369,13 @@
     border-radius: 200px;
 }
 .letter-select .letter-select-button-title {
-    color: #053b65;
+    color: #650505;
     font-size: 2.3rem;
     font-weight: bold;
     margin-bottom: 0.7rem;
 }
 .letter-select .letter-select-button-description {
-    color: #2b4a62;
+    color: #333;
     line-height: 1.5;
     font-size: 1.2rem;
     margin-bottom: 0.2rem;
@@ -476,7 +477,7 @@
 }
 
 .letter-wizard ul[role="tablist"] a {
-    color: #053b65;
+    color: #650505;
 }
 
 .letter-wizard li[role="tab"] {
@@ -682,7 +683,7 @@
 
 .letter-form label:not(.error) {
     font-size: 1.4rem;
-    color: #1475c1;
+    color: #cc3e3e;
     margin: 15px 0;
     text-align: right;
 }
