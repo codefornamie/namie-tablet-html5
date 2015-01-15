@@ -18,6 +18,7 @@
 
 .page-letter .header .top-bar {
     background: url(../../app/img/img-letter-header-bg.png);
+    background-size: contain;
     height: 55px;
 }
 
@@ -26,13 +27,15 @@
 }
 
 .page-letter .top-bar .name h1 {
-    line-height: 55px;
+    background-image: url("../../app/img/img-letter-title-logo.png");
+    background-repeat: no-repeat;
+    background-position: center;    line-height: 55px;
     text-align: center;
     font-size: 1.5rem;
 }
 
-.is-subpage .page-letter .top-bar .name h1 {
-    /*padding-left: 100px;*/
+.page-letter .top-bar .name h1 a {
+    text-indent: -9999px;
 }
 
 .page-letter .global-nav {
@@ -57,15 +60,6 @@
 }
 
 .page-letter .global-nav__menu a[data-back-home] {
-/*
-    display: block;
-    width: 100%;
-    height: 54px;
-    background-image: url(../../app/img/img-btn-back.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 60%;
-*/
     height: auto;
     padding: 10px 30px;
     width: auto;
@@ -78,7 +72,7 @@
 
 .page-letter .contents {
     background: transparent;
-    color: #053b65;
+    color: #333;
 }
 
 .page-letter .contents>div {
@@ -98,7 +92,7 @@
 .page-letter .button,
 .vex.vex-theme-default.vex-theme-letter .vex-dialog-button {
     display: inline-block;
-    background: -webkit-gradient(linear, left top, left bottom, from(#0074c5), to(#004f85));
+    background: -webkit-gradient(linear, left top, left bottom, from(#e14848), to(#9f3333));
     border-radius: 50px;
     color: #fff;
     font-size: 1.3rem;
@@ -111,7 +105,7 @@
 .page-letter .button.button--gray,
 .vex.vex-theme-default.vex-theme-letter .vex-dialog-button.vex-dialog-button-secondary {
     background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3e0d5));
-    color: #053b65;
+    color: #650505;
     font-size: 1.3rem;
 }
 
@@ -138,7 +132,7 @@
 }
 
 .vex.vex-theme-default.vex-theme-letter .vex-dialog-form .vex-dialog-message {
-    color: #053b65;
+    color: #333;
     font-size: 1.2rem;
 }
 
@@ -184,7 +178,7 @@
 }
 
 .page-letter .contents__primary h2 {
-    color: #053b65;
+    color: #650505;
     font-size: 2rem;
     font-weight: normal;
     margin: 20px 0 0 0;
@@ -262,7 +256,7 @@
 
 .page-letter .columns--date {
     background: #f1eddb;
-    color: #053b65;
+    color: #650505;
 }
 
 .page-letter .date-area {
@@ -285,7 +279,7 @@
 .page-letter .date--date::before {
     content: "";
     width: 110px;
-    border-top: 1px solid #053b65;
+    border-top: 1px solid #650505;
     display: block;
     position: absolute;
     -webkit-transform: rotate(-45deg);
@@ -319,7 +313,7 @@
 }
 
 .page-letter .columns--body h4 {
-    color: #053b65;
+    color: #650505;
     font-weight: normal;
     font-size: 1.1rem;
     line-height: 1.4;
@@ -350,9 +344,80 @@
  *  機能選択ページ
  */
 .letter-select {
-    margin-top: 50px;
+    margin: 1.5rem 4rem 0 4rem;
 }
 
+.letter-select .letter-select-description {
+    text-align: left;
+    font-size: 1.2rem;
+    line-height: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+    padding: 0 1.2rem;
+}
+
+.letter-select .letter-select-button {
+    display: block;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3c4c3));
+    padding: 0.5rem;
+    border-radius: 30px;
+    text-align: left;
+    margin: 0 10px 30px 10px;
+    box-shadow: 0 3px 14px #777;
+}
+.letter-select .letter-select-button-inner {
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ead6d6));
+    padding: 3.5rem 4.5rem;
+    border-radius: 30px;
+}
+.letter-select .letter-select-button-title {
+    color: #4e0f0e;
+    font-size: 3.2rem;
+    font-weight: bold;
+    margin-bottom: 0.7rem;
+}
+.letter-select .letter-select-button-description {
+    color: #4e0f0e;
+    line-height: 1.5;
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+.letter-select .letter-select-button-bg {
+    background-repeat: no-repeat;
+    background-position: right 6rem center;
+    background-size: contain;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.letter-select .letter-select-button--new .letter-select-button-bg {
+    background-image: url("../../app/img/img-letter-select-new-bg.png");
+    background-size: auto 85%;
+}
+
+.letter-select .letter-select-button--list {
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#d3ceb4));
+}
+.letter-select .letter-select-button--list .letter-select-button-inner {
+    background: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#e3e1d6));
+    /*padding-top: 1.0rem;
+    padding-bottom: 1.0rem;*/
+    padding: 1.2rem 4.5rem;
+}
+.letter-select .letter-select-button--list .letter-select-button-title {
+    font-size: 2rem;
+}
+.letter-select .letter-select-button--list .letter-select-button-description {
+    margin-bottom: 0;
+}
+.letter-select .letter-select-button--list .letter-select-button-bg {
+    background-image: url("../../app/img/img-letter-select-list-bg.png");
+    background-size: auto 70%;
+}
+
+/*
 .letter-select-pane {
     background: #fff;
     background-repeat: no-repeat;
@@ -387,7 +452,7 @@
 .letter-select-pane .letter-select-action .button {
     margin: 0;
     min-width: 280px;
-}
+}*/
 
 /**
  *  ウィザード
@@ -399,6 +464,10 @@
 
 .letter-wizard-pages {
     margin: 0 25px;
+}
+
+.letter-wizard-pages .letter-wizard-pages-actions {
+    text-align: center;
 }
 
 .letter-wizard-pages .preview-file {
@@ -414,7 +483,7 @@
 }
 
 .letter-wizard ul[role="tablist"] a {
-    color: #053b65;
+    color: #650505;
 }
 
 .letter-wizard li[role="tab"] {
@@ -505,8 +574,6 @@
 
 .letter-wizard ul[role="menu"] li>a {
     font-size: 1.4rem;
-    /*padding-top: 0.85rem;
-    padding-bottom: 0.85rem;*/
     line-height: 1;
 }
 
@@ -556,7 +623,7 @@
 .letter-wizard .body table td {
     background: none;
     font-size: 1.2rem;
-    color: #053b65;
+    color: ;
     line-height: 1.4;
 }
 
@@ -622,7 +689,7 @@
 
 .letter-form label:not(.error) {
     font-size: 1.4rem;
-    color: #1475c1;
+    color: #cc3e3e;
     margin: 15px 0;
     text-align: right;
 }
@@ -642,7 +709,7 @@
     background: rgb(247, 247, 247);
     height: auto;
     line-height: 1.4;
-    color: #053b65;
+    color: ;
     border: 1px solid #c7c7c2;
     border-radius: 8px;
     box-shadow: 0 0 8px #c7c7c2 inset;
@@ -665,6 +732,7 @@
     width: 100%;
     margin: auto;
     padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .gallery-list__item {

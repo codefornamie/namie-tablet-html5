@@ -10,7 +10,6 @@
         >
             <h3>投稿する写真をタップしてください。</h3>
             <section>
-                <!-- <h4>画像を選んでください。</h4> -->
                 <div class="large-12 columns">
                     <ul id="gallery-list" class='gallery-list'></ul>
                      <img
@@ -19,11 +18,13 @@
                         data-preview-file
                     ></img>
 
-                    <button
-                        type="button"
-                        id="fileInputButton"
-                        class='button onPC'
-                    >他の写真を選ぶ</button>
+                    <div class="letter-wizard-pages-actions">
+                        <button
+                            type="button"
+                            id="fileInputButton"
+                            class='button button--gray onPC'
+                        >他の写真を選ぶ</button>
+                    </div>
 
                     <input
                         type="file"
@@ -46,13 +47,9 @@
 
             <h3>写真にひとことを添えて、「OK」ボタンをタップしてください。</h3>
             <section>
-                <!-- <h4>文章を入力してください。</h4> -->
-
                 <div class="letter-form">
                     <div class="row">
                         <div class="columns large-2">
-                            <label for="letter-wizard-form__body">
-                                ひとこと </label><br>
                             <img
                                 class="letterPicture"
                                 src=""
@@ -74,6 +71,7 @@
 
                     <div class="row">
                         <div class="columns large-10 large-offset-2 guide">
+                            文字入力は〇〇文字以内。<br>
                             例　・近所の公園の桜が八分咲きだったので、写真に撮りました。<br>
                             　　・〇〇小学校の運動会に行ってきました！みんな、精一杯頑張っていました。
                         </div>
@@ -83,8 +81,6 @@
 
             <h3>投稿者のお名前を入力して、「OK」ボタンをタップしてください。</h3>
             <section>
-                <!-- <h4>ニックネームを入力して下さい。</h4> -->
-
                 <div class="letter-form">
                     <div class="row">
                         <div class="columns large-3">
@@ -116,8 +112,6 @@
 
             <h3>内容を確認して、よろしければ「投稿」ボタンをタップしてください。</h3>
             <section>
-                <!-- <h4>下記の内容で投稿をしますがよろしいですか？</h4> -->
-
                 <div class="letter-form">
                     <div class="row">
                         <div class="columns large-6">

@@ -80,7 +80,6 @@ define(function(require, exports, module) {
             ev.preventDefault();
 
             vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
-            vexDialog.defaultOptions.contentClassName = 'buttons-left2right';
             vexDialog.buttons.YES.text = 'はい';
             vexDialog.buttons.NO.text = 'いいえ';
             vexDialog.open({
