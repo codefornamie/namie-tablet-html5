@@ -552,6 +552,10 @@
     list-style: none;
 }
 
+.global-help-pages ul[role=menu] li.disabled {
+    display: none;
+}
+
 .global-help-pages .button {
     width: 200px;
     height: 60px;
