@@ -1,6 +1,8 @@
 define(function(require, exports, module) {
     "use strict";
 
+    require("jquery-steps");
+
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
 
@@ -12,6 +14,24 @@ define(function(require, exports, module) {
 
         afterRendered : function() {
             app.ga.trackPageView("News/Help","新聞アプリ/ヘルプページ");
+
+            this.$step = this.$el.find(TutorialView.SELECTOR_GLOBAL_HELP).steps({
+                headerTag : "h3",
+                bodyTag : "section",
+                transitionEffect : "none",
+                labels : {
+                    next : "次へ",
+                    previous : "前に戻る",
+                    finish : "閉じる"
+                },
+                //onStepChanging : this.onStepChanging.bind(this),
+                onFinishing : this.onFinishing.bind(this),
+                //onFinished : this.onFinished.bind(this),
+            });
+
+            this.$step.find("[href='#previous']").addClass("button button--gray");
+            this.$step.find("[href='#next']").addClass("button button--red");
+            this.$step.find("[href='#finish']").addClass("button button--red");
         },
 
         initialize : function() {
@@ -19,8 +39,38 @@ define(function(require, exports, module) {
         },
 
         events : {
-        }
+            "click #global-help" : "onClickOverlay",
+            "click [data-close]" : "onFinishing"
+        },
 
+        /**
+         * オーバレイをクリックした時に呼ばれる
+         * @memberOf TutorialView#
+         * @param {Event} ev
+         */
+        onClickOverlay : function (ev) {
+            // オーバーレイの背景部分をタップした場合のみ処理する
+            if (!$(ev.target).is("#global-help")) {
+                return;
+            }
+
+            this.trigger("closeGlobalHelp");
+        },
+
+        /**
+         * 閉じるボタンをクリックした時に呼ばれる
+         * @memberOf TutorialView#
+         * @param {Event} ev
+         */
+        onFinishing: function (ev) {
+            this.trigger("closeGlobalHelp");
+        }
+    }, {
+        /**
+         * ウィザードのセレクタ
+         */
+        SELECTOR_GLOBAL_HELP : "#global-help-pages"
     });
+
     module.exports = TutorialView;
 });
