@@ -326,17 +326,23 @@ define(function(require, exports, module) {
          */
         onSyncLetter : function() {
             this.layout.render();
-            // 削除後レンダリング時の要素非表示処理
+
+            // 記事一覧画面の場合は
+            // 削除後レンダリング時の要素非表示処理を行う
             var listViewLayout = this.layout.getView("#letter-list-container");
-            var listItems = listViewLayout.getViews("#letter-list").value();
-            var deletedItems = _.filter(listItems, function(item) {
-                return item.model.get("isDeleted");
-            });
-            if (deletedItems.length > 0) {
-                _.each(deletedItems, function(deleteItem) {
-                    $(deleteItem.el).hide();
+
+            if (listViewLayout) {
+                var listItems = listViewLayout.getViews("#letter-list").value();
+                var deletedItems = _.filter(listItems, function(item) {
+                    return item.model.get("isDeleted");
                 });
+                if (deletedItems.length > 0) {
+                    _.each(deletedItems, function(deleteItem) {
+                        $(deleteItem.el).hide();
+                    });
+                }
             }
+
             this.hideLoading();
         },
 
