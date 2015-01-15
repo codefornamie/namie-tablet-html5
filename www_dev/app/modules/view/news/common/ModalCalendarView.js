@@ -128,6 +128,7 @@ define(function(require, exports, module) {
          * @memberOf ModalCalendarView#
          */
         onRenderCalendar : function () {
+            var self = this;
             var el = this.calendar.container;
 
             // この時点では $(el).find(".rd-month-label") で要素を取得できないので
@@ -143,6 +144,13 @@ define(function(require, exports, module) {
                         return "<span class='rd-month-label__year'>" + year + "</span>" +
                             "<span class='rd-month-label__month'>" + month + "</span>";
                     });
+                }
+                // 今日の日付の要素にclass rd-today をつける。
+                var today = new Date();
+                var selectedDate = moment(self.selectedDate);
+                if (selectedDate.get("year") === today.getFullYear() &&
+                        selectedDate.get("month") === today.getMonth()) {
+                    $('.rd-day-body:contains(' + today.getDate() + ')').addClass("rd-today");
                 }
             }, 0);
         }

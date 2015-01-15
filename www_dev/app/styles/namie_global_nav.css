@@ -451,6 +451,22 @@
     color: rgb(209, 116, 30);
 }
 
+#modal-calendar .rd-today {
+    background: #cadce9 !important;
+    position: relative;
+}
+
+#modal-calendar .rd-day-body:after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 0px;
+    height: 0px;
+    border-bottom: 17px solid #084C81 ;
+    border-left: 17px solid transparent;
+}
+
 /**
  *  ヘルプ
  */
