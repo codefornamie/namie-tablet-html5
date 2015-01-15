@@ -113,28 +113,33 @@ define(function(require, exports, module) {
             if (!file.type.match('image.*')) {
                 return;
             }
-          app.logger.debug("onChangeFileData");
-          var previewImg = $(this.el).find('#previewFile');
-          previewImg.prop("file", file);
-          // ファイルの読み込み
-            var reader = new FileReader();
-            reader.onload = (function(img) {
-                return function(e) {
-                    img.attr("src", e.target.result);
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        inputFile.data = e.target.result;
-                        self.imageByteArray = inputFile.data;
-                        self.onLoadFileExtend(e, file);
-                    };
-                    reader.readAsArrayBuffer(file);
-                };
-            })(previewImg);
-            reader.readAsDataURL(file);
-          
-          
-          $(this.el).find('#previewFile').show();
-          $(this.el).find("#fileDeleteButton").show();
+            app.logger.debug("onChangeFileData");
+            var previewImg = $(this.el).find('#previewFile');
+            previewImg.prop("file", file);
+            // ファイルの読み込み
+              var reader = new FileReader();
+              reader.onload = (function(img) {
+                  return function(e) {
+                      img.attr("src", e.target.result);
+                      var reader = new FileReader();
+                      reader.onload = function(e) {
+                          inputFile.data = e.target.result;
+                          self.imageByteArray = inputFile.data;
+                          self.onLoadFileExtend(e, file, img);
+                      };
+                      reader.readAsArrayBuffer(file);
+                  };
+              })(previewImg);
+              reader.readAsDataURL(file);
+            this.showImageControl();
+        },
+        /**
+         * 写真選択後、対象写真の削除ボタンやプレビュー画像を表示するための要素を表示する。
+         * @memberOf ArticleRegistFileItemView#
+         */
+        showImageControl: function() {
+            $(this.el).find('#previewFile').show();
+            $(this.el).find("#fileDeleteButton").show();
         },
         /**
          * 削除ボタン押下時のハンドラ
