@@ -27,6 +27,7 @@ public class PersoniumModel {
     AccountManager manager = null;
     Account account = null;
     DcContext dc = null;
+    String userName = "";
 
     /**
      * 指定した日付が土日か判定する。
@@ -55,7 +56,9 @@ public class PersoniumModel {
         String baseUrl = manager.getUserData(account, "baseUrl");
         String cellName = manager.getUserData(account, "cellName");
         String boxName = manager.getUserData(account, "boxName");
+        userName = account.name;
 
+        Log.d(TAG, "userName : " + userName);
         Log.d(TAG, "token : " + token);
         Log.d(TAG, "baseUrl : " + baseUrl);
         Log.d(TAG, "cellName : " + cellName);
@@ -157,6 +160,35 @@ public class PersoniumModel {
         return ret;
     }
 
+    @SuppressWarnings("unchecked")
+    private boolean isAllreadyread(ODataCollection odata) {
+        Log.d(TAG, "start isAllreadyread");
+        Calendar now = Calendar.getInstance();
+        String nowStr = String.format("%1$tY-%1$tm-%1$td", now);
+
+        HashMap<String, Object> json = null;
+        try {
+            json = odata.entitySet("personal").query().top(1).filter("loginId eq '" + userName + "'").run();
+        } catch (DaoException e) {
+            Log.d(TAG, "personium personal entity query failure : " + e.getMessage());
+            return true;
+        }
+        Log.d(TAG, json.toString());
+        HashMap<String, Object> d = (HashMap<String, Object>) json.get("d");
+        List<Object> results = (List<Object>) d.get("results");
+        String ret = null;
+        if ((results != null) && (results.size() > 0)) {
+            HashMap<String, Object> item = (HashMap<String, Object>) results.get(0);
+            String showLastPublished = (String) item.get("showLastPublished");
+            if (showLastPublished.equals(nowStr)) {
+                Log.d(TAG, "now equals showLastPublished");
+                return true;
+            }
+        }
+        Log.d(TAG, "un readed : " + ret);
+        return false;
+    }
+
     /**
      *
      * @param context
@@ -179,6 +211,11 @@ public class PersoniumModel {
         }
 
         // 既読情報をチェック
+        boolean isAllreadyread = isAllreadyread(odata);
+        if (isAllreadyread == true) {
+            Log.d(TAG, "AllReady read");
+            return null;
+        }
 
         // 発行時刻の取得
         Calendar publishTime = getPublishTime(odata);
@@ -201,7 +238,7 @@ public class PersoniumModel {
 
         // 今日の発行記事があるかチェック
         String recentArticle = readRecentArticle(odata);
-        Log.d(TAG, "end readRecentArticle");
+        Log.d(TAG, "end readRecentArticle : " + recentArticle);
         return recentArticle;
     }
 
