@@ -2,60 +2,47 @@
     id="letter-select"
     class="letter-select"
 >
-<!--
     <div class="row">
-        <div class="column large-5 large-offset-1">
-            <div class="letter-select-pane letter-select-pane-new">
-                <h3>写真の投稿</h3>
-
-                <div class="letter-select-description">
-                    自分で撮った写真にひとこと添えて、投稿ができます。投稿した写真は、翌日以降になみえ新聞に掲載されます。（抽選の場合があります）
-                </div>
-
-                <div class="letter-select-action">
-                    <a href="/letters/new" class="button">投稿する</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="column large-5 end">
-            <div class="letter-select-pane letter-select-pane-list">
-                <h3>過去投稿の確認</h3>
-
-                <div class="letter-select-description">
-                    過去に投稿した写真を見ることができます。写真ひとことの編集と、写真の削除もできます。
-                </div>
-
-                <div class="letter-select-action">
-                    <a href="/letters" class="button button--gray">過去投稿を確認する</a>
-                </div>
-            </div>
-        </div>
-    </div>
--->
-    <div class="row">
-        <div class="column large-10 large-centered" style="margin-bottom: 30px;">
-            <div style="padding: 0 100px;text-align: left;font-size: 1.2rem;line-height: 1.8rem;">
-                自分で撮った写真にひとこと添えて、投稿ができます。投稿した写真は、<br>
-                翌日以降になみえ新聞に掲載されます。（抽選の場合があります）<br>
-                また、過去に投稿した写真を見ることができ、削除もできます。
+        <div class="column large-12">
+            <div class="letter-select-description">
+                自分で撮った写真にひとこと添えて、投稿ができます。投稿した写真は、翌日以降になみえ新聞に掲載されます。（抽選の場合があります）
+                また、過去に投稿した写真を見ることができます。写真ひとことの編集と、写真の削除もできます。
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div class="column large-10 large-centered" style="margin-bottom: 20px;">
-            <div style="background-color: #fff;padding: 50px;text-align: center;">
-                <a href="/letters/new" class="button" style="min-width: 800px;">新しく投稿する</a>
-            </div>
+        <div class="column large-12">
+            <a href="/letters/new" class="button letter-select-button letter-select-button--new">
+                <div class="letter-select-button-inner">
+                    <div class="letter-select-button-title">
+                        新しく投稿する
+                    </div>
+                    <div class="letter-select-button-description">
+                        自分で撮った写真にひとこと添えて、投稿ができます。<br>
+                        さっそく投稿してみましょう！
+                    </div>
+                </div>
+                <div class="letter-select-button-bg">
+                </div>
+            </a>
         </div>
     </div>
 
     <div class="row">
-        <div class="column large-10 large-centered" style="margin-bottom: 20px;">
-            <div style="background-color: #fff;padding: 50px;text-align: center;">
-                <a href="/letters" class="button button--gray" style="min-width: 800px;">過去投稿を確認する</a>
-            </div>
+        <div class="column large-12">
+            <a href="/letters" class="button letter-select-button letter-select-button--list">
+                <div class="letter-select-button-inner">
+                    <div class="letter-select-button-title">
+                        編集する
+                    </div>
+                    <div class="letter-select-button-description">
+                        投稿した写真を編集、削除することができます。
+                    </div>
+                </div>
+                <div class="letter-select-button-bg">
+                </div>
+            </a>
         </div>
     </div>
 </div>
