@@ -315,9 +315,21 @@ define(function(require, exports, module) {
                 });
                 if (anyLetter) {
                     // おたより記事が存在する場合の処理
-                    var newsArticles = this.newsCollection.toArray();
-                    var letterArticles = [];
-                    var letterFolderArticle;
+                    var newsArticles = this.newsCollection.toArray().concat();
+                    // おたより記事の掲載日の降順でソートする
+                    newsArticles.sort(function(a, b){
+                        var pa = a.get("publishedAt");
+                        var pb = b.get("publishedAt");
+                        if(pa < pb){
+                            return 1;
+                        } else if(pa > pb){
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    });
+
+                    var articleDateMap = {};
                     var imagePath;
                     var imageThumbUrl;
     
@@ -325,24 +337,42 @@ define(function(require, exports, module) {
                     _.each(newsArticles, $.proxy(function(article) {
                         if (article.get("type") !== "6") return;
 
+                            var publishedAt = article.get("publishedAt");
+                            var articleModel = articleDateMap[publishedAt];
+                            if (!articleModel) {
+                                articleModel = new ArticleModel({
+                                    __id: "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
+                                    dispSite: "おたより",
+                                    dispTitle: (moment(publishedAt).format("YYYY年M月DD日")) + "のおたより",
+                                    type: "6",
+                                    articles: []
+                                });
+                                articleDateMap[article.get("publishedAt")] = articleModel;
+                            }
+
+                            var articleList = articleModel.get("articles");
+                            this.newsCollection.remove(article);
+                            articleList.push(article);
+
                         // 一番最初のおたよりのサムネイルを
                         // まとめた後の記事のサムネイルとして設定する
                         if (!imagePath) {
                             imagePath = article.get("imagePath");
                             imageThumbUrl = article.get("imageThumbUrl");
                         }
-
-                        this.newsCollection.remove(article);
-                        letterArticles.push(article);
                     }, this));
-    
+
+                    var articleDateList = [];
+                    _.each(articleDateMap, function(articleDate) {
+                        articleDateList.push(articleDate);
+                    });
                     // おたより画面を開くための記事を作成し、コレクションの先頭に登録
-                    letterFolderArticle = new ArticleModel({
+                    var letterFolderArticle = new ArticleModel({
                         __id: "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
                         dispSite: "おたより",
-                        dispTitle: (targetDate.getMonth() + 1) + "月" + targetDate.getDate() + "日のおたより",
+                        dispTitle: "おたよりコーナー",
                         type: "6",
-                        letters: letterArticles,
+                        articles: articleDateList,
                         imagePath: imagePath,
                         imageThumbUrl: imageThumbUrl
                     });

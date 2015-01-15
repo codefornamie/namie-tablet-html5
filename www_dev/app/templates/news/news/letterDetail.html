@@ -7,48 +7,39 @@
             <div class="post-header__title">
                 <%= model.get("dispTitle") %>
             </div>
-
-            <div class="post-header__site">
-                <div class="post-label">
-                    <div
-                        class="article-label article-label--<%= model.getSiteType() %> left"
-                    >
-                        <span class='article-label__text'>
-                            <%= model.get("dispSite") %>
-                        </span>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <% _.each(model.get("letters"), function(model) { %>
-            <div class="letters-detail">
-                <div class="row">
-                    <div class="columns large-7">
-                        <div class="eventFile">
-                            <div class="eventFileImage">
-                                <img class="articleDetailImage">
+        <% _.each(model.get("articles"), function(dateModel) { %>
+            <%= dateModel.get("dispTitle") %>
+            <% _.each(dateModel.get("articles"), function(model) { %>
+                <div class="letters-detail">
+                    <div class="row">
+                        <div class="columns large-7">
+                            <div class="eventFile">
+                                <div class="eventFileImage">
+                                    <img class="articleDetailImage">
+                                </div>
+
+                                <%= model.get("imageComment") %>
+                            </div>
+                        </div>
+
+                        <div class="columns large-5">
+                            <div class="letter-detail__nickname">
+                                <%= model.get("nickname") %>
+
+                                <span class="letter-detail__nickname-unit">
+                                    さん
+                                </span>
                             </div>
 
-                            <%= model.get("imageComment") %>
-                        </div>
-                    </div>
-
-                    <div class="columns large-5">
-                        <div class="letter-detail__nickname">
-                            <%= model.get("nickname") %>
-
-                            <span class="letter-detail__nickname-unit">
-                                さん
-                            </span>
-                        </div>
-
-                        <div class="letter-detail__description">
-                            <%= model.get("dispDescription") %>
+                            <div class="letter-detail__description">
+                                <%= model.get("dispDescription") %>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <% }); %>
         <% }); %>
     </section>
 
