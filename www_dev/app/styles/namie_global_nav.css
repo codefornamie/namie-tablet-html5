@@ -437,6 +437,7 @@
     background: rgb(247, 250, 252);
 }
 
+#modal-calendar .rd-day-disabled,
 #modal-calendar .rd-day-prev-month,
 #modal-calendar .rd-day-next-month {
     color: rgb(177, 198, 215) !important;
