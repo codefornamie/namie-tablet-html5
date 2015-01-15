@@ -168,7 +168,7 @@ define(function(require, exports, module) {
         loadArticle : function(callback) {
             var self = this;
             var cache = true;
-            if (self.cache !==undefined && !self.cache) {
+            if (self.cache !== undefined && !self.cache) {
                 cache = self.cache;
             }
 
@@ -310,75 +310,71 @@ define(function(require, exports, module) {
 
             // 新聞アプリおよび管理アプリプレビュー表示の場合、写真投稿全件を1件の表示するための処理を行う
             if (app.config.basic.mode === Code.APP_MODE_NEWS || this.isPreview) {
-                var anyLetter = this.newsCollection.find(function(article) {
-                    return article.get("type") === "6";
+                // 写真投稿記事が存在する場合の処理
+                var newsArticles = this.newsCollection.toArray().concat();
+                // 写真投稿記事の掲載日の降順でソートする
+                newsArticles.sort(function(a, b) {
+                    var pa = a.get("publishedAt");
+                    var pb = b.get("publishedAt");
+                    if (pa < pb) {
+                        return 1;
+                    } else if (pa > pb) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
                 });
-                if (anyLetter) {
-                    // 写真投稿記事が存在する場合の処理
-                    var newsArticles = this.newsCollection.toArray().concat();
-                    // 写真投稿記事の掲載日の降順でソートする
-                    newsArticles.sort(function(a, b){
-                        var pa = a.get("publishedAt");
-                        var pb = b.get("publishedAt");
-                        if(pa < pb){
-                            return 1;
-                        } else if(pa > pb){
-                            return -1;
-                        } else {
-                            return 0;
-                        }
-                    });
 
-                    var articleDateMap = {};
-                    var imagePath;
-                    var imageThumbUrl;
-    
-                    // newsCollectionから写真投稿記事を削除し、配列に追加する
-                    _.each(newsArticles, $.proxy(function(article) {
-                        if (article.get("type") !== "6") return;
+                var articleDateMap = {};
+                var imagePath;
+                var imageThumbUrl;
 
-                            var publishedAt = article.get("publishedAt");
-                            var articleModel = articleDateMap[publishedAt];
-                            if (!articleModel) {
-                                articleModel = new ArticleModel({
-                                    __id: "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
-                                    dispSite: "写真投稿",
-                                    dispTitle: (moment(publishedAt).format("YYYY年M月DD日")) + "の写真投稿",
-                                    type: "6",
-                                    articles: []
-                                });
-                                articleDateMap[article.get("publishedAt")] = articleModel;
-                            }
+                // newsCollectionから写真投稿記事を削除し、配列に追加する
+                _.each(newsArticles, $.proxy(function(article) {
+                    if (article.get("type") !== "6")
+                        return;
 
-                            var articleList = articleModel.get("articles");
-                            this.newsCollection.remove(article);
-                            articleList.push(article);
+                    var publishedAt = article.get("publishedAt");
+                    var articleModel = articleDateMap[publishedAt];
+                    if (!articleModel) {
+                        articleModel = new ArticleModel({
+                            __id : "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
+                            dispSite : "写真投稿",
+                            dispTitle : (moment(publishedAt).format("YYYY年M月DD日")) + "の写真投稿",
+                            type : "6",
+                            articles : []
+                        });
+                        articleDateMap[article.get("publishedAt")] = articleModel;
+                    }
 
-                        // 一番最初の写真投稿のサムネイルを
-                        // まとめた後の記事のサムネイルとして設定する
-                        if (!imagePath) {
-                            imagePath = article.get("imagePath");
-                            imageThumbUrl = article.get("imageThumbUrl");
-                        }
-                    }, this));
+                    var articleList = articleModel.get("articles");
+                    this.newsCollection.remove(article);
+                    articleList.push(article);
 
-                    var articleDateList = [];
-                    _.each(articleDateMap, function(articleDate) {
-                        articleDateList.push(articleDate);
-                    });
-                    // 写真投稿画面を開くための記事を作成し、コレクションの先頭に登録
-                    var letterFolderArticle = new ArticleModel({
-                        __id: "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
-                        dispSite: "写真投稿",
-                        dispTitle: "写真投稿コーナー",
-                        type: "6",
-                        articles: articleDateList,
-                        imagePath: imagePath,
-                        imageThumbUrl: imageThumbUrl
-                    });
-                    this.newsCollection.unshift(letterFolderArticle);
-                    this.articleCollection.unshift(letterFolderArticle);
-                }
+                    // 一番最初の写真投稿のサムネイルを
+                    // まとめた後の記事のサムネイルとして設定する
+                    if (!imagePath) {
+                        imagePath = article.get("imagePath");
+                        imageThumbUrl = article.get("imageThumbUrl");
+                    }
+                }, this));
+
+                var articleDateList = [];
+                _.each(articleDateMap, function(articleDate) {
+                    articleDateList.push(articleDate);
+                });
+                // 写真投稿画面を開くための記事を作成し、コレクションの先頭に登録
+                var letterFolderArticle = new ArticleModel({
+                    __id : "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
+                    dispSite : "写真投稿",
+                    dispTitle : "写真投稿コーナー",
+                    type : "6",
+                    articles : articleDateList,
+                    imagePath : imagePath,
+                    imageThumbUrl : imageThumbUrl
+                });
+                this.newsCollection.unshift(letterFolderArticle);
+                this.articleCollection.unshift(letterFolderArticle);
             }
 
             // GridListView初期化
@@ -517,24 +513,24 @@ define(function(require, exports, module) {
             $("#snap-content").scrollTop(0);
             $(".backnumber-scroll-container").scrollTop(0);
         },
-        
+
         /**
          * YYYY年MM月DD日版の新聞に戻るボタンの日付を更新する
          * @memberOf NewsView#
          */
-        updateFooterButtons: function () {
+        updateFooterButtons : function() {
             var self = this;
             var $btnGoTop = this.$el.find("#news-action").find("[data-gotop]");
             var $btnBack = this.$el.find("#news-action").find("[data-back]");
             var currentMoment = moment(app.currentDate);
             var currentDateStr = currentMoment.format("YYYY-MM-DD");
 
-            $btnGoTop.on("click", function () {
+            $btnGoTop.on("click", function() {
                 self.setScrollTop(0);
             });
 
             $btnBack.text(currentMoment.format("YYYY年MM月DD日版の新聞に戻る"));
-            $btnBack.on("click", function (ev) {
+            $btnBack.on("click", function(ev) {
                 ev.preventDefault();
                 app.router.go("top", currentDateStr);
             });
