@@ -344,38 +344,40 @@
  *  機能選択ページ
  */
 .letter-select {
-    margin: 2rem 4rem 0 4rem;
+    margin: 1.5rem 4rem 0 4rem;
 }
 
 .letter-select .letter-select-description {
     text-align: left;
     font-size: 1.2rem;
     line-height: 1.8rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     color: #333;
+    padding: 0 1.2rem;
 }
 
 .letter-select .letter-select-button {
     display: block;
-    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#d3ceb4));
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3c4c3));
     padding: 0.5rem;
-    border-radius: 200px;
+    border-radius: 30px;
     text-align: left;
-    margin: 0 10px 50px 10px;
+    margin: 0 10px 30px 10px;
+    box-shadow: 0 3px 14px #777;
 }
 .letter-select .letter-select-button-inner {
-    background: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#e3e1d6));
-    padding: 1.2rem 4.5rem;
-    border-radius: 200px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ead6d6));
+    padding: 3.5rem 4.5rem;
+    border-radius: 30px;
 }
 .letter-select .letter-select-button-title {
-    color: #650505;
-    font-size: 2.3rem;
+    color: #4e0f0e;
+    font-size: 3.2rem;
     font-weight: bold;
     margin-bottom: 0.7rem;
 }
 .letter-select .letter-select-button-description {
-    color: #333;
+    color: #4e0f0e;
     line-height: 1.5;
     font-size: 1.2rem;
     margin-bottom: 0.2rem;
@@ -392,13 +394,17 @@
 
 .letter-select .letter-select-button--new .letter-select-button-bg {
     background-image: url("../../app/img/img-letter-select-new-bg.png");
+    background-size: auto 50%;
 }
 
 .letter-select .letter-select-button--list {
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#d3ceb4));
 }
 .letter-select .letter-select-button--list .letter-select-button-inner {
-    padding-top: 1.0rem;
-    padding-bottom: 1.0rem;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#e3e1d6));
+    /*padding-top: 1.0rem;
+    padding-bottom: 1.0rem;*/
+    padding: 1.2rem 4.5rem;
 }
 .letter-select .letter-select-button--list .letter-select-button-title {
     font-size: 2rem;
@@ -408,7 +414,7 @@
 }
 .letter-select .letter-select-button--list .letter-select-button-bg {
     background-image: url("../../app/img/img-letter-select-list-bg.png");
-    background-position: right 5rem center;
+    background-size: auto 50%;
 }
 
 /*
