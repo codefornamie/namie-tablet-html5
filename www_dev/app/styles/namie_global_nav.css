@@ -451,6 +451,10 @@
     color: rgb(209, 116, 30);
 }
 
+#modal-calendar .rd-today {
+    background: rgb(255, 255, 150) !important;
+}
+
 /**
  *  ヘルプ
  */
