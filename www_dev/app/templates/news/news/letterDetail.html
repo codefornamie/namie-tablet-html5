@@ -10,7 +10,7 @@
         </div>
 
         <% if(model.get("articles").length === 0) { %>
-    記事情報がありません
+    写真投稿がありません
         <% } %>
         <% _.each(model.get("articles"), function(dateModel) { %>
             <%= dateModel.get("dispTitle") %>
