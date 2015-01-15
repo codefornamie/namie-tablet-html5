@@ -20,7 +20,6 @@ define(function(require, exports, module) {
     var NewsView = require("modules/view/news/NewsView");
 
     var ScrapView = require("modules/view/scrap/ScrapView");
-    var TutorialView = require("modules/view/tutorial/TutorialView");
     var BacknumberView = require("modules/view/backnumber/BacknumberView");
     var BacknumberDateView = require("modules/view/backnumber/BacknumberDateView");
 
@@ -183,7 +182,6 @@ define(function(require, exports, module) {
             "top/:date" : "top",
             "article/:id" : "showArticle",
             'scrap' : 'scrap',
-            'tutorial' : 'tutorial',
             'backnumber' : 'backnumber',
             'backnumber/:date' : 'backnumberDate',
             'settings' : 'settings',
@@ -283,12 +281,6 @@ define(function(require, exports, module) {
         scrap : function() {
             app.logger.debug('[route] scrap');
             this.layout.showView(new ScrapView());
-            this.commonView();
-        },
-
-        tutorial : function() {
-            app.logger.debug('[route] tutorial');
-            this.layout.showView(new TutorialView());
             this.commonView();
         },
 
