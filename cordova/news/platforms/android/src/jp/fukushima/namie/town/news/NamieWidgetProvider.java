@@ -31,8 +31,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     // ウィジェット更新インターバル(ms)
     private static final int UPDATE_INTERVAL = 500;
     // 新聞発行チェックインターバル(ms)
-    // TODO: 正しい実行間隔を設定すること
-    private static final int PUBLISH_CHECK_INTERVAL = 10 * 1000;
+    private static final int PUBLISH_CHECK_INTERVAL = 60 * 60 * 1000;
 
     // フレームインデックス
     private static int frameIndex = 0;
