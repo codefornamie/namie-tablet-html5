@@ -128,6 +128,7 @@ define(function(require, exports, module) {
          * @memberOf ModalCalendarView#
          */
         onRenderCalendar : function () {
+            var self = this;
             var el = this.calendar.container;
 
             // この時点では $(el).find(".rd-month-label") で要素を取得できないので
@@ -135,14 +136,22 @@ define(function(require, exports, module) {
             setTimeout(function () {
                 // 「yyyy年:M月」形式の文字列を整形する。未整形の場合のみ処理を行う
                 if ($(el).find(".rd-month-label .rd-month-label__year").length === 0) {
+                    var year, month;
                     $(el).find(".rd-month-label").html(function (index, yearMonthStr) {
                         var yearMonth = yearMonthStr.split(":");
-                        var year = yearMonth[0];
-                        var month = yearMonth[1];
+                        year = parseInt(yearMonth[0]);
+                        month = parseInt(yearMonth[1]);
     
-                        return "<span class='rd-month-label__year'>" + year + "</span>" +
-                            "<span class='rd-month-label__month'>" + month + "</span>";
+                        return "<span class='rd-month-label__year'>" + year + "年</span>" +
+                            "<span class='rd-month-label__month'>" + month + "月</span>";
                     });
+                    // 今日の日付の要素にclass rd-today をつける。
+                    var today = BusinessUtil.getCurrentPublishDate();
+                    var selectedDate = moment(self.selectedDate);
+                    if (year === today.getFullYear() &&
+                            month === today.getMonth() + 1) {
+                        $('.rd-day-body:contains(' + today.getDate() + ')').addClass("rd-today");
+                    }
                 }
             }, 0);
         }
