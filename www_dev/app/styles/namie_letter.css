@@ -394,7 +394,7 @@
 
 .letter-select .letter-select-button--new .letter-select-button-bg {
     background-image: url("../../app/img/img-letter-select-new-bg.png");
-    background-size: auto 50%;
+    background-size: auto 85%;
 }
 
 .letter-select .letter-select-button--list {
@@ -414,7 +414,7 @@
 }
 .letter-select .letter-select-button--list .letter-select-button-bg {
     background-image: url("../../app/img/img-letter-select-list-bg.png");
-    background-size: auto 50%;
+    background-size: auto 70%;
 }
 
 /*
