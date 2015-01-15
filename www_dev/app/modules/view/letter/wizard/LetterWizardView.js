@@ -490,6 +490,7 @@ define(function(require, exports, module) {
                 nicknameArray = this.nicknameArray;
             }
             nicknameArray.unshift(this.model.get("nickname"));
+            nicknameArray = _.uniq(nicknameArray);
             if (nicknameArray.length > 4) {
                 nicknameArray.pop();
             }
