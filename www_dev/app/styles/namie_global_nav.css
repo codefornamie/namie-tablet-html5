@@ -456,7 +456,7 @@
     position: relative;
 }
 
-#modal-calendar .rd-day-body:after {
+#modal-calendar .rd-today:after {
     content: "";
     position: absolute;
     bottom: 2px;
