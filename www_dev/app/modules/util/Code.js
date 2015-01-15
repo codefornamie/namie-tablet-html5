@@ -95,6 +95,9 @@ define(function(require, exports, module) {
     Code.IMAGE_TYPE_URL = 1;
     Code.IMAGE_TYPE_NONE = 0;
     
+    // 写真投稿アプリ: 投稿した記事の掲載期間(日数)
+    Code.LETTER_PUB_PERIOD = 7;
+
     // 道場動画カテゴリ
     // TODO 仮並び順
     Code.DOJO_CATEGORY_LIST = [
