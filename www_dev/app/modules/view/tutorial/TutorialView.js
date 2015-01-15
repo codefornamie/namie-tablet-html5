@@ -21,17 +21,17 @@ define(function(require, exports, module) {
                 transitionEffect : "none",
                 labels : {
                     next : "次へ",
-                    previous : "前にもどる",
+                    previous : "前に戻る",
                     finish : "閉じる"
                 },
                 //onStepChanging : this.onStepChanging.bind(this),
-                //onFinishing : this.onFinishing.bind(this),
+                onFinishing : this.onFinishing.bind(this),
                 //onFinished : this.onFinished.bind(this),
             });
 
             this.$step.find("[href='#previous']").addClass("button button--gray");
-            this.$step.find("[href='#next']").addClass("button");
-            this.$step.find("[href='#finish']").addClass("button");
+            this.$step.find("[href='#next']").addClass("button button--red");
+            this.$step.find("[href='#finish']").addClass("button button--red");
         },
 
         initialize : function() {
@@ -40,6 +40,7 @@ define(function(require, exports, module) {
 
         events : {
             "click #global-help" : "onClickOverlay",
+            "click [data-close]" : "onFinishing"
         },
 
         /**
@@ -53,6 +54,15 @@ define(function(require, exports, module) {
                 return;
             }
 
+            this.trigger("closeGlobalHelp");
+        },
+
+        /**
+         * 閉じるボタンをクリックした時に呼ばれる
+         * @memberOf TutorialView#
+         * @param {Event} ev
+         */
+        onFinishing: function (ev) {
             this.trigger("closeGlobalHelp");
         }
     }, {
