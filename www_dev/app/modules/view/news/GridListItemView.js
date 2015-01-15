@@ -37,7 +37,7 @@ define(function(require, exports, module) {
         afterRendered : function() {
             var self = this;
             var eventId = "ev-" + this.cid;
-            var imageType = this.model.getImageType();
+            var imageType = this.model.getThumbImageType();
 
             // 画像URLがない場合は、画像のエリアをつめる
             // 画像URLがある場合は、画像読み込みに失敗したら画像のエリアをつめる
