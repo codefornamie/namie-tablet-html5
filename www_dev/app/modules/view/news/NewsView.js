@@ -308,15 +308,15 @@ define(function(require, exports, module) {
                 this.$(".recommendArticleContainer").hide();
             }
 
-            // 新聞アプリおよび管理アプリプレビュー表示の場合、おたより全件を1件の表示するための処理を行う
+            // 新聞アプリおよび管理アプリプレビュー表示の場合、写真投稿全件を1件の表示するための処理を行う
             if (app.config.basic.mode === Code.APP_MODE_NEWS || this.isPreview) {
                 var anyLetter = this.newsCollection.find(function(article) {
                     return article.get("type") === "6";
                 });
                 if (anyLetter) {
-                    // おたより記事が存在する場合の処理
+                    // 写真投稿記事が存在する場合の処理
                     var newsArticles = this.newsCollection.toArray().concat();
-                    // おたより記事の掲載日の降順でソートする
+                    // 写真投稿記事の掲載日の降順でソートする
                     newsArticles.sort(function(a, b){
                         var pa = a.get("publishedAt");
                         var pb = b.get("publishedAt");
@@ -333,7 +333,7 @@ define(function(require, exports, module) {
                     var imagePath;
                     var imageThumbUrl;
     
-                    // newsCollectionからおたより記事を削除し、配列に追加する
+                    // newsCollectionから写真投稿記事を削除し、配列に追加する
                     _.each(newsArticles, $.proxy(function(article) {
                         if (article.get("type") !== "6") return;
 
@@ -342,8 +342,8 @@ define(function(require, exports, module) {
                             if (!articleModel) {
                                 articleModel = new ArticleModel({
                                     __id: "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
-                                    dispSite: "おたより",
-                                    dispTitle: (moment(publishedAt).format("YYYY年M月DD日")) + "のおたより",
+                                    dispSite: "写真投稿",
+                                    dispTitle: (moment(publishedAt).format("YYYY年M月DD日")) + "の写真投稿",
                                     type: "6",
                                     articles: []
                                 });
@@ -354,7 +354,7 @@ define(function(require, exports, module) {
                             this.newsCollection.remove(article);
                             articleList.push(article);
 
-                        // 一番最初のおたよりのサムネイルを
+                        // 一番最初の写真投稿のサムネイルを
                         // まとめた後の記事のサムネイルとして設定する
                         if (!imagePath) {
                             imagePath = article.get("imagePath");
@@ -366,11 +366,11 @@ define(function(require, exports, module) {
                     _.each(articleDateMap, function(articleDate) {
                         articleDateList.push(articleDate);
                     });
-                    // おたより画面を開くための記事を作成し、コレクションの先頭に登録
+                    // 写真投稿画面を開くための記事を作成し、コレクションの先頭に登録
                     var letterFolderArticle = new ArticleModel({
                         __id: "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
-                        dispSite: "おたより",
-                        dispTitle: "おたよりコーナー",
+                        dispSite: "写真投稿",
+                        dispTitle: "写真投稿コーナー",
                         type: "6",
                         articles: articleDateList,
                         imagePath: imagePath,
@@ -490,7 +490,7 @@ define(function(require, exports, module) {
                 template = require("ldsh!templates/{mode}/news/youTubeListItem");
                 ListItemView = YouTubeListItemView;
                 break;
-            case "6": // おたより
+            case "6": // 写真投稿
                 template = require("ldsh!templates/{mode}/news/letterDetail");
                 ListItemView = EventListItemView;
                 break;

@@ -336,7 +336,7 @@ define(function(require, exports, module) {
          */
         setInputValue : function() {
             this.model.set("type", "6");
-            this.model.set("site", "おたより");
+            this.model.set("site", "写真投稿");
             this.model.set("title", $("#letter-wizard-form__title").val());
             this.model.set("description", $("#letter-wizard-form__body").val());
             this.model.set("nickname", $("#letter-wizard-form__nickname").val());

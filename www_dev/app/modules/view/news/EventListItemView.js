@@ -53,7 +53,7 @@ define(function(require, exports, module) {
 
             if (this.model.get("articles")) {
                 var index = 1;
-                // おたより記事のリストを持っている場合（おたより一覧記事の場合）は、その内容を対象とする
+                // 写真投稿記事のリストを持っている場合（写真投稿一覧記事の場合）は、その内容を対象とする
                 var modelDayList = this.model.get("articles");
                 _.each(modelDayList, $.proxy(function(modelDay) {
                     var modelArray = modelDay.get("articles");

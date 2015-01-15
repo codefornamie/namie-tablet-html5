@@ -36,7 +36,7 @@ define(function(require, exports, module) {
                 value : "記事"
             }, {
                 key : "6",
-                value : "おたより"
+                value : "写真投稿"
             }, {
                 key : "7",
                 value : "Facebook"
@@ -81,7 +81,7 @@ define(function(require, exports, module) {
                 key : "浪江町復興支援員宮城県駐在ブログ",
                 value : "blog"
             }, {
-                key : "おたより",
+                key : "写真投稿",
                 value : "letter"
             }, {
                 key : "つながろうなみえ",
