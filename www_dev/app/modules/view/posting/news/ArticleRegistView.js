@@ -104,9 +104,11 @@ define(function(require, exports, module) {
             if (articleCategory === "6") {
                 $("#articleTitle").removeClass("required");
                 $("#articleDetail").addClass("required");
+                $("#articleNickname").addClass("required");
             } else {
                 $("#articleTitle").addClass("required");
                 $("#articleDetail").removeClass("required");
+                $("#articleNickname").removeClass("required");
             }
         },
 
@@ -118,7 +120,7 @@ define(function(require, exports, module) {
             "click #articleConfirmButton" : "onClickArticleConfirmButton",
             "click #articleCancelButton" : "onClickArticleCancelButton",
             "change #articleMultiDate" : "chageMultiDateCheckbox",
-            "change #articleCategory" : "setValidator"
+            "change #articleCategory" : "onChageCategory"
         },
         /**
          * 編集時にデータを各フォームにセットする
@@ -136,6 +138,7 @@ define(function(require, exports, module) {
             $("#articleTime2").val(this.model.get("endTime"));
             $("#articlePlace").val(this.model.get("place"));
             $("#articleDetail").val(this.model.get("description"));
+            $("#articleNickname").val(this.model.get("nickname"));
             $("#articleContact").val(this.model.get("contactInfo"));
             $("#articleRangeDate1").val(this.model.get("publishedAt"));
             $("#articleRangeDate2").val(this.model.get("depublishedAt"));
@@ -202,6 +205,18 @@ define(function(require, exports, module) {
             } else {
                 $(".articleDateTo").hide();
             }
+        },
+        /**
+         * カテゴリを変更された際に呼び出されるコールバック関数
+         */
+        onChangeCategory : function() {
+            var articleCategory = $("#articleCategory").val();
+            if (articleCategory === "6") {
+                if ($("#fileArea").children().size() >= 1) {
+                    $("#addFileForm").hide();
+                }
+            }
+            this.setValidator();
         },
         /**
          * 画像を追加ボタンを押された際のコールバック関数
@@ -279,6 +294,7 @@ define(function(require, exports, module) {
 
             this.model.set("place", $("#articlePlace").val());
             this.model.set("description", $("#articleDetail").val());
+            this.model.set("nickname", $("#articleNickname").val());
             this.model.set("contactInfo", $("#articleContact").val());
 
             this.model.set("publishedAt", $("#articleRangeDate1").val());
