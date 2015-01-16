@@ -21,6 +21,7 @@ define(function(require, exports, module) {
             "click #loginButton" : "onClickLoginButton"
         },
         beforeRendered : function() {
+            app.logger.info("Start LoginView:beforeRendered");
             setTimeout($.proxy(this.onTimeout, this), 1000);
         },
 
@@ -31,6 +32,7 @@ define(function(require, exports, module) {
          * 表示のタイミングをずらすタイマーのハンドラ
          */
         onTimeout : function() {
+            app.logger.info("Start LoginView:app.pcsManager.ready");
             app.pcsManager.ready($.proxy(function(error) {
                 if (error) {
                     Log.info("error pcsManager.ready failure msg : " + error);

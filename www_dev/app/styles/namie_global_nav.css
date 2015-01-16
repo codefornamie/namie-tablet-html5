@@ -14,12 +14,6 @@
     margin: auto;
 }
 
-@media only screen and (orientation:portrait) {
-    .global-nav {
-        height: 148px;
-    }
-}
-
 .global-nav nav {
 }
 
@@ -115,6 +109,13 @@
     background-size: 100%;
 }
 
+@media only screen and (orientation:portrait) {
+    .global-nav__title {
+        width: 20%;
+        background-image: url(../../app/img/img-title-logo-no-kamome.png);
+    }
+}
+
 /**
  *  global-nav__info
  *  情報のエリア
@@ -133,6 +134,12 @@
     color: #fff;
 }
 
+@media only screen and (orientation:portrait) {
+    .global-nav__date {
+        width: 38%;
+    }
+}
+
 .global-nav__date .nav-content {
     font-size: 36px;
 }
@@ -145,6 +152,12 @@
 /* year */
 .date-area__year {
     display: inline-block;
+}
+
+@media only screen and (orientation:portrait) {
+    .date-area__year {
+        display: none;
+    }
 }
 
 .date-area__year .date--year {
@@ -168,10 +181,22 @@
     font-weight: bold;
 }
 
+@media only screen and (orientation:portrait) {
+    .date-area__date .date--month {
+        font-size: 30px;
+    }
+}
+
 .date-area__date .date--day {
     font-size: 40px;
     display: inline-block;
     font-weight: bold;
+}
+
+@media only screen and (orientation:portrait) {
+    .date-area__date .date--day {
+        font-size: 30px;
+    }
 }
 
 .date-area__date .date--unit {
@@ -191,6 +216,12 @@
     font-size: 36px;
     font-weight: bold;
     margin: 0 3px;
+}
+
+@media only screen and (orientation:portrait) {
+    .date-area__weekday .date--weekday {
+        font-size: 30px;
+    }
 }
 
 .date-area__weekday .date--weekday-unit {
@@ -233,7 +264,12 @@
 
 @media only screen and (orientation:portrait) {
     .global-nav__menubutton {
-        width: 100%;
+        width: 300px;
+        text-align: right;
+        white-space: nowrap;
+        position: absolute;
+        top: 0;
+        right: 0;
     }
 }
 
@@ -317,7 +353,7 @@
  *  モーダルカレンダー
  */
 .modal-calendar-overlay {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.7);
     height: 100%;
     left: 0;
     position: fixed;
@@ -358,6 +394,7 @@
     position: relative;
     top: 13px;
     z-index: 1;
+    white-space: nowrap;
 }
 
 #modal-calendar .rd-month-label__year {
@@ -437,6 +474,7 @@
     background: rgb(247, 250, 252);
 }
 
+#modal-calendar .rd-day-disabled,
 #modal-calendar .rd-day-prev-month,
 #modal-calendar .rd-day-next-month {
     color: rgb(177, 198, 215) !important;
@@ -444,10 +482,217 @@
 
 #modal-calendar .rd-day-body:active,
 #modal-calendar .rd-day-selected {
-    outline: 3px solid rgb(209, 116, 30);
-    outline-offset: -3px;
-    background: none;
+    outline: 5px solid rgb(209, 116, 30);
+    outline-offset: -5px;
+    background: #ffebd2;
     color: rgb(209, 116, 30);
+}
+
+#modal-calendar .rd-today {
+    background: #cadce9 !important;
+    position: relative;
+}
+
+#modal-calendar .rd-today:after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 0px;
+    height: 0px;
+    border-bottom: 17px solid #084C81 ;
+    border-left: 17px solid transparent;
+}
+
+/**
+ *  ヘルプ
+ */
+.global-help {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    color: rgb(5, 59, 101);
+}
+
+.global-help__dialog {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 80%;
+    height: 620px;
+    margin: auto;
+    background: white;
+    padding-top: 20px;
+}
+
+.global-help-pages {
+}
+
+.global-help-pages .title {
+    display: none;
+}
+
+.global-help-pages ul[role=tablist] {
+    display: none;
+}
+
+.global-help-pages .body {
+    text-align: center;
+}
+
+.global-help-pages h4 {
+    color: rgb(5, 59, 101);
+    height: 60px;
+    margin: 0;
+}
+
+@media only screen and (orientation:portrait) {
+    .global-help-pages h4 {
+        margin-top: 100px;
+    }
+}
+
+.global-help-pages p {
+    width: 640px;
+    max-width: 100%;
+    text-align: left;
+    padding: 20px;
+}
+
+.global-help-pages ul[role=menu] li {
+    list-style: none;
+}
+
+.global-help-pages ul[role=menu] li.disabled {
+    display: none;
+}
+
+.global-help-pages .button {
+    width: 200px;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 30px;
+    padding: 0;
+    color: white;
+}
+
+.global-help-pages a[href="#previous"] {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+.global-help-pages a[href="#next"],
+.global-help-pages a[href="#finish"] {
+    display: inline-block;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+@media only screen and (orientation:portrait) {
+    .global-help-pages a[href="#next"],
+    .global-help-pages a[href="#finish"] {
+        left: auto;
+        right: 20px;
+    }
+}
+
+.global-help__image {
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 900px;
+    height: 440px;
+    display: inline-block;
+}
+
+@media only screen and (orientation:portrait) {
+    .global-help__image {
+        width: 480px;
+        height: 234px;
+    }
+}
+
+.global-help__image--1 {
+    background-image: url(../../app/img/help/help-01.png);
+}
+
+.global-help__image--2 {
+    background-image: url(../../app/img/help/help-02.png);
+}
+
+.global-help__image--3 {
+    background-image: url(../../app/img/help/help-03.png);
+}
+
+.global-help__image--4 {
+    background-image: url(../../app/img/help/help-04.png);
+}
+
+.global-help__image--5 {
+    background-image: url(../../app/img/help/help-05.png);
+}
+
+.global-help__image--6 {
+    background-image: url(../../app/img/help/help-06.png);
+}
+
+.global-help__image--7 {
+    background-image: url(../../app/img/help/help-07.png);
+}
+
+.global-help__image--8 {
+    background-image: url(../../app/img/help/help-08.png);
+}
+
+.global-help__image--9 {
+    background-image: url(../../app/img/help/help-09.png);
+}
+
+.global-help .button--close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 150px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 20px;
+    padding: 0;
+    color: white;
+}
+
+.global-help .button--blue {
+    background: -webkit-linear-gradient(90deg, #1d7cbe 0%, #45a4e3 100%);
+    background: -moz-linear-gradient(90deg, #1d7cbe 0%, #45a4e3 100%);
+    background: -o-linear-gradient(90deg, #1d7cbe 0%, #45a4e3 100%);
+    background: -ms-linear-gradient(90deg, #1d7cbe 0%, #45a4e3 100%);
+    background: linear-gradient(0deg, #1d7cbe 0%, #45a4e3 100%);
+    box-shadow: 0px 2px 2px 0.00px rgba(84, 84, 84, 0.3);
+}
+
+.global-help .button--gray {
+    background: -webkit-linear-gradient(90deg, #909090 0%, #b7b7b7 100%, #919191 100%);
+    background: -moz-linear-gradient(90deg, #909090 0%, #b7b7b7 100%, #919191 100%);
+    background: -o-linear-gradient(90deg, #909090 0%, #b7b7b7 100%, #919191 100%);
+    background: -ms-linear-gradient(90deg, #909090 0%, #b7b7b7 100%, #919191 100%);
+    background: linear-gradient(0deg, #909090 0%, #b7b7b7 100%, #919191 100%);
+    box-shadow: 0px 2px 2px 0.00px rgba(84, 84, 84, 0.3);
+}
+
+.global-help .button--red {
+    background: -webkit-linear-gradient(90deg, #b80404 0%, #ff5f5f 100%);
+    background: -moz-linear-gradient(90deg, #b80404 0%, #ff5f5f 100%);
+    background: -o-linear-gradient(90deg, #b80404 0%, #ff5f5f 100%);
+    background: -ms-linear-gradient(90deg, #b80404 0%, #ff5f5f 100%);
+    background: linear-gradient(0deg, #b80404 0%, #ff5f5f 100%);
+    box-shadow: 0px 2px 10px 0.00px rgba(0, 0, 0, 0.51);
 }
 
 /**

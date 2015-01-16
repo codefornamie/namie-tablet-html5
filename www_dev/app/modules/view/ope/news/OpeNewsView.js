@@ -12,6 +12,8 @@ define(function(require, exports, module) {
     var And = require("modules/util/filter/And");
     var Equal = require("modules/util/filter/Equal");
     var IsNull = require("modules/util/filter/IsNull");
+    var Or = require("modules/util/filter/Or");
+
     /**
      * 運用管理アプリの記事一覧画面を表示するためのViewクラスを作成する。
      * 

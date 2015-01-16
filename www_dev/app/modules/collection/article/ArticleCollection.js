@@ -32,7 +32,8 @@ define(function(require, exports, module) {
          * @memberOf ArticleCollection#
          */
         condition : {
-            top : 100,
+            // 新聞アプリの記事に表示する最大件数
+            top : 300,
             orderby : "createdAt desc"
         },
         /**

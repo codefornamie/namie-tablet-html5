@@ -57,6 +57,7 @@
 		"require",
         "FileTransfer",
 		"async",
-		"requirejs"
+		"requirejs",
+        "Camera"
     ]
 }
