@@ -32,7 +32,7 @@ define(function(require, exports, module) {
                     channelId : this.channelId,
                     type : "video",
                     part : "id,snippet",
-                    maxResults : 40,
+                    maxResults : 50,
                     order : "date",
                 },
                 callback : $.proxy(function(res) {
