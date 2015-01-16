@@ -35,7 +35,15 @@ define(function(require, exports, module) {
         },
 
         initialize : function() {
+            $(document).trigger("open:modal");
+        },
 
+        /**
+         * Viewが破棄される時に呼ばれる
+         * @memberOf TutorialView#
+         */
+        cleanup : function () {
+            $(document).trigger("close:modal");
         },
 
         events : {

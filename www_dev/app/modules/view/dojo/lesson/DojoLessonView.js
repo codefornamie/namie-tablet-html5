@@ -34,6 +34,8 @@ define(function(require, exports, module) {
             this.dojoLessonSiblingsView.render();
             this.setYouTubePlayer();
             $('.is-grayedout').unblock(); 
+
+            $(document).trigger("open:modal");
         },
         /**
          * イベント一覧
@@ -121,6 +123,8 @@ define(function(require, exports, module) {
          */
         onClickBack : function(ev) {
             ev.preventDefault();
+
+            $(document).trigger("close:modal");
 
             app.router.go("dojo", "levels", app.currentDojoLevel);
         },
@@ -258,7 +262,7 @@ define(function(require, exports, module) {
                 dojoEditionModel : dojoEditionModel,
                 dojoContentModel : dojoContentModel
             });
-        },
+        }
     });
 
     module.exports = DojoLessonView;
