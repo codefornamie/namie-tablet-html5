@@ -261,6 +261,9 @@ define(function(require, exports, module) {
             this.listenTo(this.dojoContentCollection, "sync", this.onSyncDojoContent);
             this.listenTo(this.dojoEditionCollection, "edition", this.onChangeEdition);
             this.listenTo(app.router, "route", this.onRoute);
+
+            $(document).on("open:modal", this.onOpenModal.bind(this));
+            $(document).on("close:modal", this.onCloseModal.bind(this));
         },
         /**
          * youtubeライブラリを読み込む
@@ -441,6 +444,22 @@ define(function(require, exports, module) {
          */
         onChangeEdition: function () {
             this.updateChildViews();
+        },
+
+        /**
+         * モーダルウィンドウが開いた後に呼ばれる
+         * @memberOf TopView#
+         */
+        onOpenModal: function () {
+            $("body").addClass("has-modal");
+        },
+
+        /**
+         * モーダルウィンドウが閉じた後に呼ばれる
+         * @memberOf TopView#
+         */
+        onCloseModal: function () {
+            $("body").removeClass("has-modal");
         },
 
         /**

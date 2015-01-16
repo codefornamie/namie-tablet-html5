@@ -56,6 +56,10 @@
     padding-left: 0;
 }
 
+.has-modal .page-dojo .contents-wrapper {
+    overflow: hidden;
+}
+
 .page-dojo .contents {
     padding: 0;
 }
