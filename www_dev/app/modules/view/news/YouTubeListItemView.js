@@ -65,6 +65,12 @@ define(function(require, exports, module) {
                             "onStateChange" : $.proxy(function(event) {
                                 app.logger.debug("Youtube state change. state=" + event.data);
                                 if (event.data === YT.PlayerState.PLAYING) {
+                                    // タブレットのホームボタンを押下された場合、youtubeを一時停止する
+                                    var self = this;
+                                    document.addEventListener("pause", function onPause() {
+                                        self.player.pauseVideo();
+                                        document.removeEventListener("pause", onPause, false);
+                                        }, false);
                                     // 動画開始されたら動画再生ボタンを表示
                                     $("[data-play-movie]").show();
                                 }
@@ -74,7 +80,6 @@ define(function(require, exports, module) {
                 }
             }, this));
         },
-
         /**
          * YouTube動画プレイヤーの初期化処理が完了し、利用可能な状態になった場合に呼び出されるコールバック関数。
          */
