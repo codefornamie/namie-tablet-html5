@@ -124,8 +124,6 @@ define(function(require, exports, module) {
         onClickBack : function(ev) {
             ev.preventDefault();
 
-            $(document).trigger("close:modal");
-
             app.router.go("dojo", "levels", app.currentDojoLevel);
         },
 
@@ -233,6 +231,8 @@ define(function(require, exports, module) {
             } catch (e) {
                 app.logger.debug(e);
             }
+
+            $(document).trigger("close:modal");
         }
     }, {
         /**
