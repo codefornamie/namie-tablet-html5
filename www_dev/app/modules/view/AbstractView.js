@@ -131,6 +131,27 @@ define(function(require, exports, module) {
             $.unblockUI();
         },
         /**
+         * aタグのクリックイベントを処理する。 ブラウザデフォルトではなくpushStateに変更する
+         * @param {Event} evt
+         * @memberOf AbstractView#
+         */
+        followAnchor : function(evt) {
+            var $target = $(evt.currentTarget);
+            var href = {
+                prop : $target.prop("href"),
+                attr : $target.attr("href")
+            };
+            var root = location.protocol + "//" + location.host + app.root;
+
+            if (href.prop && href.prop.slice(0, root.length) === root) {
+                evt.preventDefault();
+                app.router.navigate(href.attr, {
+                    trigger : true,
+                    replace : false
+                });
+            }
+        },
+        /**
          * 指定されたimg要素に、imgArrayパラメタで指定された画像のコンテンツを表示する。
          * 
          * @param {String} imgElementSelector 画像を表示する要素のセレクタ。<br/>

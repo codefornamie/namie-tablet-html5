@@ -156,8 +156,14 @@ define(function(require, exports, module) {
          * aタグをクリックした際の挙動を ブラウザデフォルトではなく pushStateに変更する
          * @memberOf LetterTopLayout#
          */
-        // TODO onClickAnchorメソッドが色々なファイルにコピペされているので、どこかにまとめる
         onClickAnchor : function(evt) {
+            evt.preventDefault();
+            if(evt.currentTarget.id !== "post_new_letter") {
+                // 新規投稿ボタン以外は、そのまま画面遷移する。
+                this.followAnchor(evt);
+                return;
+            }
+            // 新規投稿ボタンの場合、遷移する前に自身の本日中の投稿数制限にかかっていないかをチェックする必要がある。
             // PIOへ本日分の記事を検索する
             var articleCollection = new ArticleCollection();
             var prePublishedAt = BusinessUtil.getCurrentPublishDate();
@@ -182,19 +188,7 @@ define(function(require, exports, module) {
                         return;
                     }
                     // 画面遷移を行う
-                    var $target = $(evt.currentTarget);
-                    var href = {
-                        prop : $target.prop("href"),
-                        attr : $target.attr("href")
-                    };
-                    var root = location.protocol + "//" + location.host + app.root;
-
-                    if (href.prop && href.attr[0] !== "#" && href.prop.slice(0, root.length) === root) {
-                        app.router.navigate(href.attr, {
-                            trigger : true,
-                            replace : false
-                        });
-                    }
+                    this.followAnchor(evt);
                 }, this),
                 error : $.proxy(function onErrorLoadArticle() {
                     app.logger.error("Articleの読み込みに失敗。");
@@ -204,7 +198,6 @@ define(function(require, exports, module) {
                     this.hideLoading();
                 }, this)
             });
-            evt.preventDefault();
         }
     }, {
         /**
