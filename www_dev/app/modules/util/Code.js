@@ -98,6 +98,9 @@ define(function(require, exports, module) {
     // 写真投稿アプリ: 投稿した記事の掲載期間(日数)
     Code.LETTER_PUB_PERIOD = 7;
 
+    // 写真投稿アプリ: 一日の投稿記事の上限数
+    Code.LETTER_PUBLISH_LIMIT = 30;
+
     // 道場動画カテゴリ
     // TODO 仮並び順
     Code.DOJO_CATEGORY_LIST = [
