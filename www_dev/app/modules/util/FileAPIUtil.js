@@ -12,10 +12,10 @@ define(function(require, exports, module) {
 
     };
     /**
-     * おたよりギャラリー一覧の表示最大値
+     * 写真投稿ギャラリー一覧の表示最大値
      * @memberOf FileAPIUtil#
      */
-    FileAPIUtil.GET_GALLERY_MAX = 16;
+    FileAPIUtil.GET_GALLERY_MAX = 8;
     /**
      * File関連のAPIまたはクラスがサポートされているかチェックを行う。
      * @return サポートの可否 true:サポートされいる false:サポートされていない

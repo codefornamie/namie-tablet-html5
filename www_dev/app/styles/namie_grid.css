@@ -103,10 +103,9 @@
     max-width: initial;
     position: absolute;
     top: 0;
-    /* 暫定的に強制 */
-    left: 0 !important;
-    height: auto;
-    width: 100%;
+    left: 0;
+    height: 100%;
+    width: auto;
 }
 
 .grid-cell--image .articleImage[src=""],
@@ -169,7 +168,7 @@
  */
 .news-detail .post {
     margin: 15px 0;
-    padding: 50px 0 50px 0;
+    padding: 25px 0 50px 0;
     background: rgb(248, 247, 242);
     color: rgb(5, 59, 101);
 }
@@ -227,7 +226,7 @@
     font-size: 1.3rem;
     line-height: 1;
     padding: 0;
-    margin: 5px 0 30px 0;
+    margin: 5px 0 10px 0;
 }
 
 .news-detail .post-label .article-label::after {

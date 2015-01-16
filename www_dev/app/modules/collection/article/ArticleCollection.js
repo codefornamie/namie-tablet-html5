@@ -32,7 +32,8 @@ define(function(require, exports, module) {
          * @memberOf ArticleCollection#
          */
         condition : {
-            top : 100,
+            // 新聞アプリの記事に表示する最大件数
+            top : 300,
             orderby : "createdAt desc"
         },
         /**
@@ -78,7 +79,7 @@ define(function(require, exports, module) {
                                 new Equal("publishedAt", dateString), new And([
                                         new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
                                 ])
-                        ]), new IsNull("isDepublish")
+                        ]), new IsNull("isDepublish"), new Or([new IsNull("deletedAt"), new Equal("deletedAt", "")])
                 ])
             ];
         }

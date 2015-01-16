@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var WebDavModel = require("modules/model/WebDavModel");
     var TabletArticleListItemView = require("modules/view/news/ArticleListItemView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var moment = require("moment");
     var vexDialog = require("vexDialog");
 
     /**
@@ -79,22 +80,37 @@ define(function(require, exports, module) {
             ev.preventDefault();
 
             vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
-            vexDialog.defaultOptions.contentClassName = 'buttons-left2right';
             vexDialog.buttons.YES.text = 'はい';
             vexDialog.buttons.NO.text = 'いいえ';
             vexDialog.open({
-                // TODO: メッセージに削除対象項目のおたより名を反映する
-                message : '（おたより名）を削除していいですか？',
+                message : 'この投稿（' + moment(this.model.get('publishedAt')).format('YYYY年MM月DD日') + '配信）を削除していいですか？',
                 callback : $.proxy(function(value) {
-                    // TODO: おたよりの削除処理を実装する
                     if (value) {
-                        alert("「はい」が押されました");
+                        this.showLoading();
+                        this.deleteLetter();
                     }
                     return;
                 },this)
             });
-
-        }
+        },
+        /**
+         * 写真投稿削除関数
+         * @memberOf LetterListItemView#
+         */
+        deleteLetter: function () {
+            this.model.set("isDelete", true);
+            this.model.save(null, {
+                success : $.proxy(function() {
+                    this.hideLoading();
+                    this.model.set("isDeleted", true);
+                }, this),
+                error: function(e){
+                    this.hideLoading();
+                    vexDialog.alert("削除に失敗しました。");
+                    app.logger.error("削除に失敗しました。");
+                }
+            });
+        },
     });
     module.exports = LetterListItemView;
 });

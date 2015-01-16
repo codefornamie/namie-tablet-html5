@@ -51,24 +51,27 @@ define(function(require, exports, module) {
         showImage : function() {
             var imgArray = [];
 
-            if (this.model.get("letters")) {
-                // おたより記事のリストを持っている場合（おたより一覧記事の場合）は、その内容を対象とする
-                var modelArray = this.model.get("letters");
+            if (this.model.get("articles")) {
                 var index = 1;
-
-                _.each(modelArray, $.proxy(function(model) {
-                    if (model.get("imageUrl")) {
-                        var imagePath = model.get("imagePath") ? model.get("imagePath") + "/" : "";
-                        imgArray.push({
-                            imageUrl : imagePath + model.get("imageUrl"),
-                            imageComment : model.get("imageComment"),
-                            imageIndex : index
-                        });
-                    } else {
-                        $($(this.el).find(".eventFileImage img")[index - 1]).parent().parent().hide();
-                    }
-                    index++;
-                }, this));
+                // 写真投稿記事のリストを持っている場合（写真投稿一覧記事の場合）は、その内容を対象とする
+                var modelDayList = this.model.get("articles");
+                _.each(modelDayList, $.proxy(function(modelDay) {
+                    var modelArray = modelDay.get("articles");
+                    _.each(modelArray, $.proxy(function(model) {
+                        if (model.get("imageUrl")) {
+                            var imagePath = model.get("imagePath") ? model.get("imagePath") + "/" : "";
+                            imgArray.push({
+                                hasPath : true,
+                                imageUrl : imagePath + model.get("imageUrl"),
+                                imageComment : model.get("imageComment"),
+                                imageIndex : index
+                            });
+                        } else {
+                            $($(this.el).find(".eventFileImage img")[index - 1]).parent().parent().hide();
+                        }
+                        index++;
+                    }, this));
+                }));
             } else {
                 // その他の場合（イベント記事の場合）はモデル自身がもつ画像情報を対象とする
                 for (var i = 1; i < 4; i++) {

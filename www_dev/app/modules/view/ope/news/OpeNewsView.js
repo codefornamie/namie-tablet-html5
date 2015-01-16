@@ -9,7 +9,11 @@ define(function(require, exports, module) {
     var OpeFeedListItemView = require("modules/view/ope/news/OpeFeedListItemView");
     var OpeNewsPreviewView = require("modules/view/ope/news/OpeNewsPreviewView");
 
+    var And = require("modules/util/filter/And");
     var Equal = require("modules/util/filter/Equal");
+    var IsNull = require("modules/util/filter/IsNull");
+    var Or = require("modules/util/filter/Or");
+
     /**
      * 運用管理アプリの記事一覧画面を表示するためのViewクラスを作成する。
      * 
@@ -81,7 +85,11 @@ define(function(require, exports, module) {
             var targetDate = condition.targetDate;
             var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
             this.articleCollection.condition.filters = [
-                new Equal("publishedAt", dateString)
+                new And([
+                        new Equal("publishedAt", dateString), new Or([
+                                new IsNull("deletedAt"), new Equal("deletedAt", "")
+                        ])
+                ])
             ];
         },
         /**
