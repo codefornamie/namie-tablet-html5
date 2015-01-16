@@ -4,6 +4,7 @@
 package jp.fukushima.namie.town.news;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import android.util.Log;
 public class PersoniumModel {
     private static final String TAG = "NamieNewspaper";
     private static final String ACCOUNT_TYPE = "jp.fukushima.namie.town.Pcs";
+    private static final int RECOMMEND_FETCH_NUM = 10;
     AccountManager manager = null;
     Account account = null;
     DcContext dc = null;
@@ -52,6 +54,11 @@ public class PersoniumModel {
     private ODataCollection initializePersonium(Context context) {
         Log.d(TAG, "start initializePersonium");
         fetchAccountManager(context);
+        if (account == null) {
+            Log.d(TAG, "personium failure : account not exists.");
+            return null;
+        }
+
         String token = getAuthToken(context);
         String baseUrl = manager.getUserData(account, "baseUrl");
         String cellName = manager.getUserData(account, "cellName");
@@ -160,6 +167,38 @@ public class PersoniumModel {
         return ret;
     }
 
+    /**
+     * おすすめ記事のタイトル一覧を取得する。
+     * @param odata ODataコレクション
+     * @return おすすめ記事タイトル一覧
+     */
+    @SuppressWarnings("unchecked")
+    private List<String> readRecommendArticle(ODataCollection odata) {
+        Log.d(TAG, "start readRecommendArticle");
+        HashMap<String, Object> json = null;
+
+        String filter = "isRecommend eq 'true' and isDepublish eq null";
+        Log.d(TAG, "personium query : " + filter);
+        try {
+            json = odata.entitySet("article").query().top(RECOMMEND_FETCH_NUM).orderby("createdAt desc").filter(filter).run();
+        } catch (DaoException e) {
+            Log.d(TAG, "personium request failure : " + e.getMessage());
+            return null;
+        }
+        Log.d(TAG, json.toString());
+
+        List<String> articles = new ArrayList<String>();
+        HashMap<String, Object> d = (HashMap<String, Object>) json.get("d");
+        List<Object> results = (List<Object>) d.get("results");
+        if ((results != null) && (results.size() > 0)) {
+            for (Object article : results) {
+                articles.add(article.toString());
+            }
+        }
+        Log.d(TAG, "end readRecommendArticle : " + articles.size());
+        return articles;
+    }
+
     @SuppressWarnings("unchecked")
     private boolean isAllreadyread(ODataCollection odata) {
         Log.d(TAG, "start isAllreadyread");
@@ -242,6 +281,21 @@ public class PersoniumModel {
         return recentArticle;
     }
 
+    public List<String> readRecommendArticles(Context context) {
+        Log.d(TAG, "start readRecommendArticle");
+
+        // Perosonium接続
+        ODataCollection odata = initializePersonium(context);
+        if (odata == null) {
+            Log.w(TAG, "perosonium initialize error");
+            return null;
+        }
+
+        // おすすめ記事取得
+        List<String> articles = readRecommendArticle(odata);
+        Log.d(TAG, "end readRecommendArticle");
+        return articles;
+    }
 
     private void fetchAccountManager(Context context) {
         manager = AccountManager.get(context);
@@ -249,6 +303,7 @@ public class PersoniumModel {
         if (accountList.length == 0) {
             // Account is not exists.
             Log.e(TAG, "THIS DEVICE HAS NO ACCOUNT.");
+            return;
         }
         account = accountList[0];
     }
@@ -260,6 +315,10 @@ public class PersoniumModel {
         Log.d(TAG, "start getAuthToken");
         if ((manager == null) || (account == null)) {
             fetchAccountManager(context);
+        }
+        if (account == null) {
+            Log.d(TAG, "personium failure : account not exists.");
+            return null;
         }
         Bundle options = new Bundle();
         AccountManagerFuture<Bundle> future = manager.getAuthToken(
