@@ -2,7 +2,7 @@
     <div class="row">
         <div class="columns small-6 is-<%= prevContentModel ? prevContentModel.getSolvedState() : 'unsolved' %> is-<%= prevContentModel ? prevContentModel.getWatchedState() : 'unwatched'%>">
             <% if (prevContentModel) { %>
-                <a href="/dojo/lessons/<%= prevContentModel.get('__id') %>">
+                <a href="dojo/lessons/<%= prevContentModel.get('__id') %>">
                     <div class="dojo-sibling">
                         <div class="dojo-stamp right">
                             済
@@ -24,7 +24,7 @@
 
         <div class="columns small-6 is-<%= nextContentModel ? nextContentModel.getSolvedState() : 'unsolved' %> is-<%= nextContentModel ? nextContentModel.getWatchedState() : 'unwatched' %>">
             <% if (nextContentModel) { %>
-                <a href="/dojo/lessons/<%= nextContentModel.get('__id') %>">
+                <a href="dojo/lessons/<%= nextContentModel.get('__id') %>">
                     <div class="dojo-sibling">
                         <div class="dojo-stamp right">
                             済
@@ -47,7 +47,7 @@
                         この動画は<%= editionModel.get("editionTitle") %>の一番最後の動画だ
                     </p>
 
-                    <a href="/dojo-top" class="button expand">
+                    <a href="dojo-top" class="button expand">
                         動画一覧に戻る
                     </a>
                 </div>

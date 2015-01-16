@@ -58,13 +58,23 @@ define(function(require, exports, module) {
                         height : '390',
                         playerVars : {
                             'autoplay' : 0,
-                            'controls' : 1
+                            'controls' : 1,
+                            // 関連動画抑止
+                            'rel' : 0,
+                            // YouTubeロゴ非表示
+                            'modestbranding' : 1
                         },
                         events : {
                             "onReady" : $.proxy(this.onSetYouTubePlayer, this),
                             "onStateChange" : $.proxy(function(event) {
                                 app.logger.debug("Youtube state change. state=" + event.data);
                                 if (event.data === YT.PlayerState.PLAYING) {
+                                    // タブレットのホームボタンを押下された場合、youtubeを一時停止する
+                                    var self = this;
+                                    document.addEventListener("pause", function onPause() {
+                                        self.player.pauseVideo();
+                                        document.removeEventListener("pause", onPause, false);
+                                        }, false);
                                     // 動画開始されたら動画再生ボタンを表示
                                     $("[data-play-movie]").show();
                                 }
@@ -74,7 +84,6 @@ define(function(require, exports, module) {
                 }
             }, this));
         },
-
         /**
          * YouTube動画プレイヤーの初期化処理が完了し、利用可能な状態になった場合に呼び出されるコールバック関数。
          */
