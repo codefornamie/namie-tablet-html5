@@ -30,12 +30,25 @@ define(function(require, exports, module) {
             };
         },
 
+        /**
+         * ビューの描画が完了した時に呼び出される。
+         * @memberOf YouTubeListItemView#
+         */
         afterRender : function() {
             this.dojoLessonSiblingsView.render();
             this.setYouTubePlayer();
             $('.is-grayedout').unblock(); 
 
             $(document).trigger("open:modal");
+
+            // アプリがバックグラウンドになった場合、youtubeを一時停止する
+            var self = this;
+            this.onPause = function () {
+                if(self.player){
+                    self.player.pauseVideo();
+                }
+            };
+            document.addEventListener("pause", this.onPause, false);
         },
         /**
          * イベント一覧
@@ -164,12 +177,6 @@ define(function(require, exports, module) {
                         "onStateChange" : $.proxy(function(event) {
                             app.logger.debug("Youtube state change. state=" + event.data);
                             if (event.data === YT.PlayerState.PLAYING) {
-                                // タブレットのホームボタンを押下された場合、youtubeを一時停止する
-                                var self = this;
-                                document.addEventListener("pause", function onPause() {
-                                    self.player.pauseVideo();
-                                    document.removeEventListener("pause", onPause, false);
-                                    }, false);
                                 // 動画開始されたら動画再生ボタンを表示
                                 $("[data-play-movie]").show();
                             }
@@ -263,11 +270,15 @@ define(function(require, exports, module) {
          */
         cleanup : function() {
             try {
+                if(this.onPause){
+                    document.removeEventListener("pause", this.onPause, false);
+                    this.onPause = null;
+                }
                 $("[data-play-movie]").unbind("click");
                 $("[data-pause-movie]").unbind("click");
                 $("[data-slider]").unbind("change.fndtn.slider");
                 this.player.destroy();
-            } catch (e) {
+         } catch (e) {
                 app.logger.debug(e);
             }
 
