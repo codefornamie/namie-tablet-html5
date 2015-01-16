@@ -58,7 +58,11 @@ define(function(require, exports, module) {
                         height : '390',
                         playerVars : {
                             'autoplay' : 0,
-                            'controls' : 1
+                            'controls' : 1,
+                            // 関連動画抑止
+                            'rel' : 0,
+                            // YouTubeロゴ非表示
+                            'modestbranding' : 1
                         },
                         events : {
                             "onReady" : $.proxy(this.onSetYouTubePlayer, this),
