@@ -151,6 +151,7 @@ define(function(require, exports, module) {
             });
         }, false);
     };
+    FileAPIUtil.getFileEntryCache = {};
     /**
      * ファイル名からfileEntryオブジェクトを取得
      * @param {Object} directoryEntry DirecotryEntryオブジェクト
@@ -158,12 +159,51 @@ define(function(require, exports, module) {
      * @param {Function} callback コールバック関数
      * @memberOf FileAPIUtil#
      */
-    FileAPIUtil.getFileEntry = function(directoryEntry, fileName, callback) {
+    FileAPIUtil.getFileEntry = function(directoryEntry, fileName, callback, resize) {
         directoryEntry.getFile(fileName, null, function(fileEntry) {
             fileEntry.file(function(file) {
                 // 画像登録日時を取得する
                 fileEntry.lastModifiedDate = file.lastModifiedDate;
-                callback(fileEntry);
+                if (FileAPIUtil.getFileEntryCache[fileName]) {
+                    app.logger.debug("fileEntry used cache." + fileName);
+                    fileEntry.url = FileAPIUtil.getFileEntryCache[fileName];
+                    callback(fileEntry);
+                    return;
+                }
+                if (resize) {
+                    // png形式にしないと、リサイズ後の画像が壊れる
+                    file.type = "image/png";
+                    canvasResize(file, {
+                        width : 600,
+                        height : 0,
+                        crop : false,
+                        quality : 80,
+                        // rotate: 90,
+                        rotate : -1,
+                        callback : function(data, width, height) {
+                            fileEntry.dataUrl = data;
+                            FileAPIUtil.getFileEntryCache[fileName] = fileEntry.url;
+                            callback(fileEntry);
+                        }
+                    });
+                } else {
+                    var reader = new FileReader();
+                    reader.onload = $.proxy(function(fileEvent) {
+                        var binary = fileEvent.target.result;
+                        var uint8array = new Uint8Array(binary);
+                        var blob = new Blob([
+                            uint8array
+                        ], {
+                            type : file.type
+                        });
+                        var url = FileAPIUtil.createObjectURL(blob);
+                        fileEntry.url = url;
+                        FileAPIUtil.getFileEntryCache[fileName] = fileEntry.url;
+                        callback(fileEntry);
+                    });
+                    reader.readAsArrayBuffer(file);
+                }
+                // callback(fileEntry);
             }, function(e) {
                 // fileでエラー
                 app.logger.debug("FileAPIUtil.getFileEntry: file(): error" + e.code);

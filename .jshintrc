@@ -58,6 +58,7 @@
         "FileTransfer",
 		"async",
 		"requirejs",
-        "Camera"
+        "Camera",
+        "canvasResize"
     ]
 }

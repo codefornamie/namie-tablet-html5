@@ -14,6 +14,7 @@ define(function(require, exports, module) {
     var CustomHttpClient = require("modules/CustomHttpClient");
     var PcsManager = require("modules/PcsManager");
     var Logger = require("modules/util/logging/Logger");
+    var canvasResize = require("canvasResize");
 
     require("backbone-fetch-cache");
 
