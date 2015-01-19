@@ -120,7 +120,7 @@ define(function(require, exports, module) {
             "click #articleConfirmButton" : "onClickArticleConfirmButton",
             "click #articleCancelButton" : "onClickArticleCancelButton",
             "change #articleMultiDate" : "chageMultiDateCheckbox",
-            "change #articleCategory" : "onChageCategory"
+            "change #articleCategory" : "onChangeCategory"
         },
         /**
          * 編集時にデータを各フォームにセットする
