@@ -146,6 +146,11 @@ define(function(require, exports, module) {
                 vexDialog.alert("道場達成状況情報の取得に失敗しました。");
                 return;
             }
+            // TODO 下記情報を用いてExcel出力用データに変換(下記ダイアログはダミーダイアログ)
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.alert("this.personalCollection = " + this.personalCollection.size() +
+                    "件\nthis.dojoContentCollection = " + this.dojoContentCollection.size() +
+                    "件\nthis.achievementCollection = " + this.achievementCollection.size() + "件");
         },
     });
 
