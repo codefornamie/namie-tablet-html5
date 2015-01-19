@@ -69,12 +69,6 @@ define(function(require, exports, module) {
                             "onStateChange" : $.proxy(function(event) {
                                 app.logger.debug("Youtube state change. state=" + event.data);
                                 if (event.data === YT.PlayerState.PLAYING) {
-                                    // タブレットのホームボタンを押下された場合、youtubeを一時停止する
-                                    var self = this;
-                                    document.addEventListener("pause", function onPause() {
-                                        self.player.pauseVideo();
-                                        document.removeEventListener("pause", onPause, false);
-                                        }, false);
                                     // 動画開始されたら動画再生ボタンを表示
                                     $("[data-play-movie]").show();
                                 }
@@ -90,6 +84,14 @@ define(function(require, exports, module) {
         onSetYouTubePlayer : function() {
             this.player.removeEventListener("onReady");
             gapi.client.load('youtube', 'v3', $.proxy(this.onLoadYoutubePlayer, this));
+            // アプリがバックグラウンドになった場合、youtubeを一時停止する
+            var self = this;
+            this.onPause = function () {
+                if(self.player){
+                    self.player.pauseVideo();
+                }
+            };
+            document.addEventListener("pause", this.onPause, false);
         },
         /**
          * YouTube動画プレイヤークライアントの読み込み処理が完了し、動画再生可能な状態になった場合に呼び出されるコールバック関数。
@@ -133,6 +135,10 @@ define(function(require, exports, module) {
          */
         cleanup : function() {
             try {
+                if(this.onPause){
+                    document.removeEventListener("pause", this.onPause, false);
+                    this.onPause = null;
+                }
                 $("[data-play-movie]").unbind("click");
                 $("[data-pause-movie]").unbind("click");
                 $("[data-slider]").unbind("change.fndtn.slider");
