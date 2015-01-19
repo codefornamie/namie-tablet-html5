@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var DojoEditionView = require("modules/view/dojo/top/DojoEditionView");
     var DojoLevelView = require("modules/view/dojo/top/DojoLevelView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
+    var DojoLevelCompleteView = require("modules/view/dojo/top/DojoLevelCompleteView");
     var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
     var YouTubeCollection = require("modules/collection/dojo/YouTubeCollection");
@@ -48,12 +49,14 @@ define(function(require, exports, module) {
             console.assert(this.dojoEditionView, "DojoLayout should have a DojoEditionView");
             console.assert(this.dojoLevelView, "DojoLayout should have a DojoLevelView");
             console.assert(this.dojoLessonView, "DojoLayout should have a DojoLessonView");
+            console.assert(this.dojoLevelCompleteView, "DojoLayout should have a DojoLevelCompleteView");
             console.assert(this.dojoIntroductionView, "DojoLayout should have a DojoIntroductionView");
 
             this.dojoTabView = param.dojoTabView;
             this.dojoEditionView = param.dojoEditionView;
             this.dojoLevelView = param.dojoLevelView;
             this.dojoLessonView = param.dojoLessonView;
+            this.dojoLevelCompleteView = param.dojoLevelCompleteView;
             this.dojoIntroductionView = param.dojoIntroductionView;
 
             this.hideLesson();
@@ -72,6 +75,7 @@ define(function(require, exports, module) {
 
             this.setView(DojoLayout.SELECTOR_LEVEL, this.dojoLevelView.layout);
             this.removeView(DojoLayout.SELECTOR_LESSON);
+            this.removeView(DojoLayout.SELECTOR_LEVEL_COMPLETE);
             this.removeView(DojoLayout.SELECTOR_TAB);
             this.removeView(DojoLayout.SELECTOR_EDITION);
         },
@@ -95,6 +99,7 @@ define(function(require, exports, module) {
             this.dojoLessonView.dojoContentModel.achievementModels = param.dojoContentModel.achievementModels;
 
             this.setView(DojoLayout.SELECTOR_LESSON, this.dojoLessonView.layout);
+            this.removeView(DojoLayout.SELECTOR_LEVEL_COMPLETE);
             this.removeView(DojoLayout.SELECTOR_TAB);
             this.removeView(DojoLayout.SELECTOR_EDITION);
 
@@ -109,8 +114,26 @@ define(function(require, exports, module) {
         hideLesson: function () {
             this.removeView(DojoLayout.SELECTOR_LEVEL);
             this.removeView(DojoLayout.SELECTOR_LESSON);
+            this.removeView(DojoLayout.SELECTOR_LEVEL_COMPLETE);
             this.setView(DojoLayout.SELECTOR_TAB, this.dojoTabView);
             this.setView(DojoLayout.SELECTOR_EDITION, this.dojoEditionView);
+        },
+
+        /**
+         * コース制覇画面を表示する
+         * @param {Object} param
+         * @memberOf DojoLayout#
+         */
+        showLevelComplete: function (param) {
+            console.assert(param, "param should be specified in order to show level page");
+            console.assert(param.level !== null, "level should be specified in order to show level complete page");
+
+            this.dojoLevelCompleteView.model.set("level", param.level);
+
+            this.setView(DojoLayout.SELECTOR_LEVEL_COMPLETE, this.dojoLevelCompleteView.layout);
+            this.removeView(DojoLayout.SELECTOR_LESSON);
+            this.removeView(DojoLayout.SELECTOR_TAB);
+            this.removeView(DojoLayout.SELECTOR_EDITION);
         },
 
         /**
@@ -152,6 +175,11 @@ define(function(require, exports, module) {
          * 詳細画面のセレクタ
          */
         SELECTOR_LESSON: "#dojo-lesson-container",
+
+        /**
+         * コース制覇画面のセレクタ
+         */
+        SELECTOR_LEVEL_COMPLETE: "#dojo-level-complete-container",
 
         /**
          * タブ部分のセレクタ
@@ -238,6 +266,7 @@ define(function(require, exports, module) {
                 dojoEditionModel: this.currentEditionModel
             });
             var dojoLessonView = new DojoLessonView();
+            var dojoLevelCompleteView = new DojoLevelCompleteView();
             var dojoIntroductionView = new DojoIntroductionView();
 
             // layoutを初期化する
@@ -246,6 +275,7 @@ define(function(require, exports, module) {
                 dojoEditionView: dojoEditionView,
                 dojoLevelView: dojoLevelView,
                 dojoLessonView: dojoLessonView,
+                dojoLevelCompleteView: dojoLevelCompleteView,
                 dojoIntroductionView: dojoIntroductionView
             });
 
@@ -469,13 +499,15 @@ define(function(require, exports, module) {
          * @memberOf TopView#
          */
         onRoute: function (route, params) {
+            var level;
+
             switch (route) {
             case "dojoTop":
                 this.layout.hideLesson();
                 break;
 
             case "dojoLevel":
-                var level = params[0];
+                level = params[0];
 
                 app.currentDojoLevel = level;
 
@@ -492,6 +524,14 @@ define(function(require, exports, module) {
                 this.layout.showLesson({
                     dojoEditionModel: this.currentEditionModel,
                     dojoContentModel: dojoContentModel
+                });
+                break;
+
+            case "dojoLevelComplete":
+                level = params[0];
+
+                this.layout.showLevelComplete({
+                    level: level
                 });
                 break;
 

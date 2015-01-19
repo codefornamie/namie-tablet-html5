@@ -636,6 +636,88 @@
 }
 
 /**
+ *  コース制覇画面
+ *  モーダル表示
+ */
+.dojo-level-complete-container {
+}
+
+.dojo-level-complete-container > div {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(81, 75, 75, 0.82);
+    z-index: 100;
+    overflow: auto;
+}
+
+.dojo-level-complete {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 5% auto 2%;
+}
+
+/**
+ *  コース制覇画面のボディ
+ */
+.dojo-level-complete__body {
+    position: relative;
+    width: 80%;
+    margin: auto;
+    padding: 500px 23px 23px 23px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.is-white .dojo-level-complete__body {
+    background-image: url("../../../app/img/dojo/img-level-finish-white.png");
+}
+.is-brown .dojo-level-complete__body {
+    background-image: url("../../../app/img/dojo/img-level-finish-brown.png");
+}
+.is-black .dojo-level-complete__body {
+    background-image: url("../../../app/img/dojo/img-level-finish-black.png");
+}
+
+@media only screen and (orientation:portrait) {
+    .dojo-level-complete__body {
+        width: 90%;
+    }
+}
+
+/**
+ *  フッター
+ */
+.dojo-level-complete__footer {
+    padding: 43px 0 26px;
+}
+
+.page-dojo .button.dojo-level-complete__action--nextlevel {
+    background-color:  #ffffff;
+    background: -webkit-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: -moz-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: -o-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: -ms-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: linear-gradient(0deg, #c0baa1 0%, #ffffff 100%);
+    padding: 0 52px;
+    font-size: 1.0rem;
+    margin-bottom: 0;
+    color: #734929;
+    vertical-align: middle;
+    min-width: 300px;
+
+    margin-right: 0;
+    height: 68px;
+    line-height: 68px;
+    border-radius: 34px;
+    font-size: 1.5rem;
+}
+
+/**
  *  初回説明画面
  */
 .dojo-introduction-container {

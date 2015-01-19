@@ -198,6 +198,7 @@ define(function(require, exports, module) {
             'dojo-top' : 'dojoTop',
             "dojo/levels/:id" : "dojoLevel",
             "dojo/lessons/:id" : "dojoLesson",
+            "dojo/levels/:id/finished" : "dojoLevelComplete",
             'dojo-introduction' : 'dojoIntroduction',
 
             // 町民投稿アプリ
@@ -440,6 +441,14 @@ define(function(require, exports, module) {
          * 道場：個別ページ
          */
         dojoLesson : function() {
+            // 実際の描画処理はdojo/TopViewに書かれている
+        },
+
+        /**
+         * 道場：コース制覇ページ
+         */
+        dojoLevelFinish : function() {
+            app.logger.debug("[route] dojoLevelComplete");
             // 実際の描画処理はdojo/TopViewに書かれている
         },
 
