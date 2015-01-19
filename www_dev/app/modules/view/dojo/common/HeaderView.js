@@ -44,8 +44,8 @@ define(function(require, exports, module) {
             var notAchievementedLevel = this.dojoContentCollection.getNotAchievementedLevel();
             var level = Code.DOJO_LEVELS[notAchievementedLevel];
 
-            this.$el.find("#dojo-account__rank-name").text(level.levelName);
-            this.$el.find("#dojo-account__rank-icon").attr("data-dojo-level", level.className);
+            this.$el.find("#dojo-account__level").attr("data-dojo-level", level.className);
+            this.$el.find("#dojo-account__level-name").text(level.levelName);
         },
 
         /**

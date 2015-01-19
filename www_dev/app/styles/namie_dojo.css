@@ -90,13 +90,33 @@
     background-color: rgba(0,0,0,0.3);
 }
 
-.dojo-account__rank {
+.dojo-account__level {
     display: inline-block;
     margin: 0 20px;
     color: white;
 }
 
-.dojo-account__rank-icon {
+.dojo-account__level[data-dojo-level=white] {
+    display: none;
+}
+
+.dojo-account__level .visible-white-belt {
+    display: none;
+}
+
+.dojo-account__level .hidden-white-belt {
+    display: block;
+}
+
+.dojo-account__level[data-dojo-level=white] .visible-white-belt {
+    display: block;
+}
+
+.dojo-account__level[data-dojo-level=white] .hidden-white-belt {
+    display: none;
+}
+
+.dojo-account__level-icon {
     display: inline-block;
     vertical-align: middle;
     height: 40px;
@@ -106,24 +126,24 @@
     background-position: center;
 }
 
-.dojo-account__rank-icon[data-dojo-level=white] {
+.dojo-account__level[data-dojo-level=white] .dojo-account__level-icon {
     background-image: url(../../app/img/dojo/img-white-belt-small.png);
 }
 
-.dojo-account__rank-icon[data-dojo-level=brown] {
+.dojo-account__level[data-dojo-level=brown] .dojo-account__level-icon {
     background-image: url(../../app/img/dojo/img-brown-belt-small.png);
 }
 
-.dojo-account__rank-icon[data-dojo-level=black] {
+.dojo-account__level[data-dojo-level=black] .dojo-account__level-icon {
     background-image: url(../../app/img/dojo/img-black-belt-small.png);
 }
 
-.dojo-account__rank-icon img {
+.dojo-account__level-icon img {
     height: 100%;
     vertical-align: top;
 }
 
-.dojo-account__rank-name {
+.dojo-account__level-name {
     display: inline-block;
     vertical-align: baseline;
     font-size: 1.5rem;
