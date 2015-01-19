@@ -15,9 +15,6 @@ define(function(require, exports, module) {
     var ConfigurationCollection = AbstractODataCollection.extend({
         model : ConfigurationModel,
         entity : "configuration",
-        condition : {
-            top : 100,
-        },
         /**
          * 配列をマップに変換する。
          * @return {Objecy} 変換されたマップ

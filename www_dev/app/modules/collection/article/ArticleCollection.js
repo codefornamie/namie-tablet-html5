@@ -28,13 +28,14 @@ define(function(require, exports, module) {
          */
         entity : "article",
         /**
-         * 検索条件
+         * 初期化処理
          * @memberOf ArticleCollection#
          */
-        condition : {
-            // 新聞アプリの記事に表示する最大件数
-            top : 300,
-            orderby : "createdAt desc"
+        initialize : function() {
+            this.condition = {
+                top : 300,
+                orderby : "createdAt desc"
+            };
         },
         /**
          * レスポンス情報のパースを行う。

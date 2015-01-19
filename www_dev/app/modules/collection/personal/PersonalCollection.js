@@ -15,9 +15,6 @@ define(function(require, exports, module) {
     var PersonalCollection = AbstractODataCollection.extend({
         model : PersonalModel,
         entity : "personal",
-        condition : {
-            top : 100,
-        },
     });
 
     module.exports = PersonalCollection;
