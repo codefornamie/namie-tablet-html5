@@ -76,14 +76,14 @@ define(function(require, exports, module) {
          * @memberOf DojoLevelView#
          */
         updateNumberOfContent : function(edition) {
-            var collection = this.dojoEditionModel.getModelsByLevel(this.level.get("level"));
+            var contents = this.dojoEditionModel.getModelsByLevel(this.level.get("level"));
             var numWatched = 0;
-            _(collection).each(function (content) {
+            _.each(contents, function (content) {
                 if (content.getWatchedState() === Code.DOJO_STATUS_WATCHED) {
                     numWatched++;
                 }
             });
-            var numContent = collection.length
+            var numContent = contents.length;
             this.$el.find("[data-content-num]").text(numContent);
             this.$el.find("[data-remained-num]").text(numContent - numWatched);
         }
