@@ -33,7 +33,7 @@ define(function(require, exports, module) {
 
             this.dojoContentCollection = param.dojoContentCollection;
 
-            this.listenTo(this.dojoContentCollection, "achievement", this.onSyncDojoContent);
+            this.listenTo(this.dojoContentCollection, "achievement", this.onUpdateLevel);
         },
 
         /**
@@ -49,10 +49,10 @@ define(function(require, exports, module) {
         },
 
         /**
-         * 道場コンテンツが更新されたら呼ばれる
+         * 段位情報が更新されたら呼ばれる
          * @memberOf HeaderView#
          */
-        onSyncDojoContent: function () {
+        onUpdateLevel: function () {
             this.renderCurrentLevel();
         }
     });
