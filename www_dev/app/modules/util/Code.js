@@ -124,18 +124,21 @@ define(function(require, exports, module) {
     Code.DOJO_LEVELS = [{
         id: "0",
         className: "white",
+        levelName: "白帯",
         label: "白帯編",
         description: "初めてタブレットをさわる方のためのコースです。（文言未決定）",
         iconPath: ""
     },{
         id: "1",
         className: "brown",
+        levelName: "茶帯",
         label: "茶帯編",
         description: "茶帯コースです。（文言未決定）",
         iconPath: ""
     },{
         id: "2",
         className: "black",
+        levelName: "黒帯",
         label: "黒帯編",
         description: "黒帯コースです。（文言未決定）",
         iconPath: ""

@@ -389,6 +389,7 @@ define(function(require, exports, module) {
                     },this));
                 },this));
             }
+            this.dojoContentCollection.trigger("achievement");
             this.onSyncDojoContent();
             this.hideLoading();
 
