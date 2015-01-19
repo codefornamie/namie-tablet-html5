@@ -389,13 +389,13 @@ define(function(require, exports, module) {
                     },this));
                 },this));
             }
+
+            // 段位情報が更新されたタイミングを他Viewからフックできるように
+            // "achievement"イベントをトリガする
+            this.dojoContentCollection.trigger("achievement");
+
             this.onSyncDojoContent();
             this.hideLoading();
-
-            var notAchievementedLevel = this.dojoContentCollection.getNotAchievementedLevel();
-            for (var i = 0; i <= parseInt(notAchievementedLevel); i++) {
-                $("#dojo-level-" + i).show();
-            }
 
             // 「どの動画も達成されていない場合」にのみ初回説明画面を表示する
             if (!isSolved) {
