@@ -68,7 +68,7 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             var notAchievementedLevel = this.collection.getNotAchievementedLevel();
-            for (var i = 0; i <= parseInt(notAchievementedLevel); i++) {
+            for (var i = 0, max = parseInt(notAchievementedLevel); i <= max; i++) {
                 $("#dojo-level-" + i).show();
             }
         },
