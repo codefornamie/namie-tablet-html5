@@ -26,7 +26,7 @@ define(function(require, exports, module) {
          */
         serialize: function () {
             var self = this;
-            var levels = this.extractLevels();
+            var levels = _.initial(this.extractLevels());
 
             // 描画用に視聴済み動画の数を計算する
             _(levels).each(function (level) {
@@ -90,7 +90,7 @@ define(function(require, exports, module) {
         extractLevels : function() {
             // 定義されている級のリストを取得する
             // TODO: 将来的には、級の定義情報はperosnium.ioに定義する
-            var levels = Code.DOJO_LEVELS;
+            var levels = _.clone(Code.DOJO_LEVELS);
 
             return levels;
 //            var levels = {};
