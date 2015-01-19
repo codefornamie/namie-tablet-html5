@@ -32,6 +32,7 @@ define(function(require, exports, module) {
             $("#articleTime2").val(this.model.get("endTime"));
             $("#articlePlace").val(this.model.get("place"));
             $("#articleDetail").val(this.model.get("description"));
+            $("#articleNickname").val(this.model.get("nickname"));
             $("#articleContact").val(this.model.get("contactInfo"));
             $("#articleRangeDate1").val(this.model.get("publishedAt"));
             $("#articleRangeDate2").val(this.model.get("depublishedAt"));
@@ -127,6 +128,12 @@ define(function(require, exports, module) {
                     $("#articleRangeDate1").val() > $("#articleRangeDate2").val()) {
                 return "掲載期間の日付が開始と終了で逆になっています。";
             }
+            
+            var articleCategory = $("#articleCategory").val();
+            if (articleCategory === "6" && !$(this.el).find("#previewFile").attr("src")) {
+                return "写真投稿は写真の登録が必須です。";
+            }
+            
             return null;
         },
         /**
