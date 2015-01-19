@@ -31,17 +31,17 @@ define(function(require, exports, module) {
             // 描画用に視聴済み動画の数を計算する
             _(levels).each(function (level) {
                 var contents = self.dojoEditionModel.getModelsByLevel(level.id);
-                var numWatched = 0;
+                var numSolved = 0;
 
                 level.numContent = contents.length;
 
                 _(contents).each(function (content) {
-                    if (content.getWatchedState() === Code.DOJO_STATUS_WATCHED) {
-                        numWatched++;
+                    if (content.getSolvedState() === Code.DOJO_STATUS_SOLVED) {
+                        numSolved++;
                     }
                 });
 
-                level.numWatched = numWatched;
+                level.numSolved = numSolved;
             });
 
             return {

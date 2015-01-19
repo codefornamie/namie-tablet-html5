@@ -77,15 +77,19 @@ define(function(require, exports, module) {
          */
         updateNumberOfContent : function(edition) {
             var contents = this.dojoEditionModel.getModelsByLevel(this.level.get("level"));
-            var numWatched = 0;
+            var numSolved = 0;
             _.each(contents, function (content) {
-                if (content.getWatchedState() === Code.DOJO_STATUS_WATCHED) {
-                    numWatched++;
+                if (content.getSolvedState() === Code.DOJO_STATUS_SOLVED) {
+                    numSolved++;
                 }
             });
             var numContent = contents.length;
             this.$el.find("[data-content-num]").text(numContent);
-            this.$el.find("[data-remained-num]").text(numContent - numWatched);
+            if (numContent - numSolved === 0) {
+                this.$el.find("[data-remained-num]").text("段位達成！！");
+            } else {
+                this.$el.find("[data-remained-num]").text("あと" + (numContent - numSolved) + "で段位取得！！");
+            }
         }
     });
 
