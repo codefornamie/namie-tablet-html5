@@ -169,10 +169,7 @@ define(function(require, exports, module) {
          */
         loadArticle : function(callback) {
             var self = this;
-            var cache = true;
-            if (self.cache !== undefined && !self.cache) {
-                cache = self.cache;
-            }
+            var cache = app.useCache;
 
             this.articleCollection.fetch({
                 cache : cache,
@@ -198,7 +195,7 @@ define(function(require, exports, module) {
             ];
 
             this.favoriteCollection.fetch({
-                cache : true,
+                cache : app.useCache,
 
                 success : function() {
                     callback();
@@ -218,7 +215,7 @@ define(function(require, exports, module) {
         loadEvents : function(callback) {
             this.eventsCollection.reset();
             this.eventsCollection.fetch({
-                cache : true,
+                cache : app.useCache,
 
                 success : function() {
                     callback();
@@ -236,7 +233,7 @@ define(function(require, exports, module) {
          */
         loadRecommend : function(callback) {
             this.recommendCollection.fetch({
-                cache : true,
+                cache : app.useCache,
 
                 success : function() {
                     callback();
