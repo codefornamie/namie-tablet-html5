@@ -59,6 +59,7 @@
 		"async",
 		"requirejs",
         "Camera",
-        "canvasResize"
+        "canvasResize",
+        "LocalFileSystem"
     ]
 }

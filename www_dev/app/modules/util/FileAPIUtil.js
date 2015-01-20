@@ -116,7 +116,11 @@ define(function(require, exports, module) {
                         var files = _.filter(entries, function(entry) {
                             return entry.isFile === true;
                         });
-
+                        // 画像ファイルのみでフィルタする
+                        files = _.filter(files, function(file) {
+                            return file.name.match(/\.jpg$/i);
+                        });
+                        
                         _.each(files, function(fileEntry) {
                             FileAPIUtil.getFileEntry(directoryEntry, fileEntry.name, function(file) {
                                 fileArray.push(file);
@@ -125,9 +129,6 @@ define(function(require, exports, module) {
                                     // 画像登録日時でソートし、先頭のGET_GALLERY_MAX数件のみ配列で返却する
                                     fileArray = _.sortBy(fileArray, function(fileItem) {
                                         return -fileItem.lastModifiedDate;
-                                    });
-                                    fileArray = _.filter(fileArray, function(file) {
-                                        return file.name.match(/\.jpg$/i);
                                     });
                                     callback(fileArray.slice(0, FileAPIUtil.GET_GALLERY_MAX));
                                 }
