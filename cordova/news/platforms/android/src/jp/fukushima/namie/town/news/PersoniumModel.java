@@ -8,16 +8,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-
 import com.fujitsu.dc.client.DaoException;
 import com.fujitsu.dc.client.DcContext;
 import com.fujitsu.dc.client.ODataCollection;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -116,7 +115,7 @@ public class PersoniumModel {
     private boolean isNewspaperHoliday(ODataCollection odata, Calendar cal) {
         Log.d(TAG, "start isNewspaperHoliday");
         HashMap<String, Object> json = null;
-        String date = String.format("%1$tY-%1$tm-%1$td", cal);
+        String date = formatDate(cal);
         Log.d(TAG, "newspaper_holiday key : " + date);
         try {
             json = odata.entitySet("newspaper_holiday").retrieveAsJson(date);
@@ -146,7 +145,7 @@ public class PersoniumModel {
         Log.d(TAG, "start readRecentArticle");
         Calendar now = Calendar.getInstance();
         HashMap<String, Object> json = null;
-        String date = String.format("%1$tY-%1$tm-%1$td", now);
+        String date = formatDate(now);
         String filter = "publishedAt eq '" + date + "' and isDepublish eq null";
         Log.d(TAG, "personium query : " + filter);
         try {
@@ -200,10 +199,10 @@ public class PersoniumModel {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean isAllreadyread(ODataCollection odata) {
+    private boolean isAlreadyRead(ODataCollection odata) {
         Log.d(TAG, "start isAllreadyread");
         Calendar now = Calendar.getInstance();
-        String nowStr = String.format("%1$tY-%1$tm-%1$td", now);
+        String nowStr = formatDate(now);
 
         HashMap<String, Object> json = null;
         try {
@@ -228,6 +227,11 @@ public class PersoniumModel {
         return false;
     }
 
+    @SuppressLint("DefaultLocale")
+    private String formatDate(Calendar date) {
+        return String.format("%1$tY-%1$tm-%1$td", date);
+    }
+
     /**
      *
      * @param context
@@ -236,11 +240,6 @@ public class PersoniumModel {
     public String readRecentArticle(Context context) {
         Log.d(TAG, "start readRecentAtricle");
         Calendar now = Calendar.getInstance();
-        // 土曜日または日曜日ならば新聞発行なし
-        if (isSaturdayOrSunday(Calendar.getInstance())) {
-            Log.d(TAG, "Today is SATURDAY or SUNDAY");
-            return null;
-        }
 
         // Perosonium接続
         ODataCollection odata = initializePersonium(context);
@@ -250,7 +249,7 @@ public class PersoniumModel {
         }
 
         // 既読情報をチェック
-        boolean isAllreadyread = isAllreadyread(odata);
+        boolean isAllreadyread = isAlreadyRead(odata);
         if (isAllreadyread == true) {
             Log.d(TAG, "AllReady read");
             return null;
@@ -296,6 +295,100 @@ public class PersoniumModel {
         Log.d(TAG, "end readRecommendArticle");
         return articles;
     }
+
+   /**
+    *
+    * @param context
+    * @return
+    */
+   public boolean isArticleReaded(Context context) {
+       Log.d(TAG, "start isArticleReaded");
+
+       // Perosonium接続
+       ODataCollection odata = initializePersonium(context);
+       if (odata == null) {
+           Log.w(TAG, "perosonium initialize error");
+           return false;
+       }
+
+       // 既読情報をチェック
+       boolean isAlreadyRead = isAlreadyRead(odata);
+       if (isAlreadyRead == true) {
+           Log.d(TAG, "AllReady read");
+           return true;
+       }
+
+       return false;
+   }
+
+   /**
+    *
+    * @param context
+    * @return
+    */
+   public boolean isRecentArticleExists(Context context) {
+       Log.d(TAG, "start isRecentArticleExists");
+
+       // Perosonium接続
+       ODataCollection odata = initializePersonium(context);
+       if (odata == null) {
+           Log.w(TAG, "perosonium initialize error");
+           return false;
+       }
+
+       // 今日の発行記事があるかチェック
+       String recentArticle = readRecentArticle(odata);
+       Log.d(TAG, "end isRecentArticleExists : " + recentArticle);
+
+       if (recentArticle == null) {
+           return false;
+       }
+       return true;
+   }
+
+   /**
+    *
+    * @param context
+    * @return
+    */
+   public PublishStatus initPublishStatus(Context context) {
+       Log.d(TAG, "start initPublishStatus");
+
+       PublishStatus ret = new PublishStatus();
+
+       Calendar now = Calendar.getInstance();
+       // 土曜日または日曜日ならば新聞発行なし
+       if (isSaturdayOrSunday(Calendar.getInstance())) {
+           Log.d(TAG, "Today is SATURDAY or SUNDAY");
+           return ret;
+       }
+
+       // Perosonium接続
+       ODataCollection odata = initializePersonium(context);
+       if (odata == null) {
+           Log.w(TAG, "perosonium initialize error");
+           return null;
+       }
+
+       // 休刊日情報のチェック
+       boolean isHoliday = isNewspaperHoliday(odata, now);
+       if (isHoliday) {
+           // 休刊日
+           return ret;
+       }
+
+       // 発行時刻の取得
+       Calendar publishTime = getPublishTime(odata);
+       if (publishTime == null) {
+           return null;
+       }
+
+       ret.lastRequestDate = Calendar.getInstance();
+       ret.publishTime = publishTime;
+       ret.isPublishDay = true;
+       Log.d(TAG, "end initPublishStatus");
+       return ret;
+   }
 
     private void fetchAccountManager(Context context) {
         manager = AccountManager.get(context);

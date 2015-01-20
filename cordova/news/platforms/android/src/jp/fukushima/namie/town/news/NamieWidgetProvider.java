@@ -3,7 +3,11 @@
  */
 package jp.fukushima.namie.town.news;
 
+import java.util.Calendar;
+
 import jp.fukushima.namie.town.news.WidgetContentManager.MessageStyle;
+import jp.fukushima.namie.town.news.PublishStatus.ArticleExists;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -23,23 +27,34 @@ import android.widget.RemoteViews;
  * なみえ新聞ウィジェット
  */
 public class NamieWidgetProvider extends AppWidgetProvider {
-    private static final String TAG = "kuro";
+    private static final String TAG = "NamieNewspaper";
     private static final String WIDGET_UPDATE_ACTION = "jp.fukushima.namie.town.news.WIDGET_UPDATE_ACTION";
 
     // ウィジェット更新処理開始までのインターバル(ms)
     private static final int TIMER_START_DELAY = 3 * 1000;
     // ウィジェット更新インターバル(ms)
     private static final int UPDATE_INTERVAL = 500;
-    // 新聞発行チェックインターバル(ms)
-    private static final int PUBLISH_CHECK_INTERVAL = 60 * 60 * 1000;
+    // 既読チェックインターバル(ms)
+    private static final int READ_CHECK_INTERVAL = 30 * 60 * 1000;
 
-    // 最終サーバーリクエスト時刻
-    private static long lastRequestTime = 0;
+//    // フレームインデックス
+//    private static int frameIndex = 0;
+//    // 表示メッセージを切り替えるまでのフレーム数
+//    private static final int MESSAGE_ACTION_FRAME = 16;
+//    // メッセージを非表示とするフレームインデックス
+//    private static final int SHOW_MESSAGE_FRAME = 14;
+
+    private static PublishStatus publishStatus = null;
+    // 未読状態の最終チェック時刻
+    private static long lastUnreadCheckTime = 0;
 
     // ウィジェット表示情報管理オブジェクト
     private static WidgetContentManager contentManager = null;
 
     public NamieWidgetProvider() {
+        if (publishStatus == null) {
+            publishStatus = new PublishStatus();
+        }
     }
 
     @Override
@@ -83,8 +98,8 @@ public class NamieWidgetProvider extends AppWidgetProvider {
 
         String action = intent.getAction();
         if (action.equals(WIDGET_UPDATE_ACTION)) {
-            // 新聞発行チェック
-            checkPublished(context);
+            // 新聞の発行、未読状態を更新
+            updateNewspaperStatus(context);
 
             // ウィジェットの表示更新
             updateWidget(context);
@@ -93,26 +108,81 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
     }
 
-    /**
-     * 新聞が発行されているかどうかをチェックする.
-     * @param context コンテキスト
-     */
-    private void checkPublished(Context context) {
-        PersoniumRequestThread requestThread = null;
+    public PublishStatus getPublishStatus() {
+        return publishStatus;
+    }
 
-        if (contentManager == null) {
+    public void setPublishStatus(PublishStatus stat) {
+        publishStatus = stat;
+    }
+
+    private void updateNewspaperStatus(Context context) {
+        // 日付が変更されていた場合、新聞発行情報を初期化
+        if (!publishStatus.isDailyUpdated()) {
+            // 連続して呼び出されないように一旦最終処理日時をセットしておく
+            publishStatus.lastRequestDate = Calendar.getInstance();
+            initPublishStatus(context);
+        }
+
+        // 新聞発行日でなければチェックしない
+        if (!publishStatus.isPublishDay) {
+            return;
+        }
+
+        // 新聞発行時刻を過ぎているかのチェック
+        publishStatus.isPublished = publishStatus.isPastPublishTime();
+
+        // 発行時刻を過ぎていない場合はこれ以上チェックしない
+        if (!publishStatus.isPublished) {
             return;
         }
 
         long currentElaspedTime = SystemClock.elapsedRealtime();
-        if (currentElaspedTime - lastRequestTime > PUBLISH_CHECK_INTERVAL) {
-            if (requestThread == null) {
-                requestThread = new PersoniumRequestThread(context, contentManager);
+        if (currentElaspedTime - lastUnreadCheckTime > READ_CHECK_INTERVAL) {
+            lastUnreadCheckTime = currentElaspedTime;
+
+            // 当日分記事の存在チェック（新聞発行後１回のみ）
+            if (publishStatus.articleExists == ArticleExists.NOT_CHECKED) {
+                checkRecentArticleExists(context);
             }
-            if (requestThread != null) {
-                requestThread.start();
-                lastRequestTime = currentElaspedTime;
+
+            // 新聞発行済、かつ未読であれば既読状態をチェック
+            if (publishStatus.isPublished && !publishStatus.isReaded) {
+                checkAlreadyReaded(context);
             }
+        }
+    }
+
+    /**
+     * 新聞の発行情報（発行時刻、休刊日）を取得する.
+     * @param context コンテキスト
+     */
+    private void initPublishStatus(Context context) {
+        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this);
+        if (requestThread != null) {
+            requestThread.start();
+        }
+    }
+
+    /**
+     * 最新号の新聞の記事が存在するかどうかをチェックする.
+     * @param context コンテキスト
+     */
+    private void checkRecentArticleExists(Context context) {
+        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this, contentManager);
+        if (requestThread != null) {
+            requestThread.start();
+        }
+    }
+
+    /**
+     * 最新号の新聞が参照済みかどうかをチェックする.
+     * @param context コンテキスト
+     */
+    private void checkAlreadyReaded(Context context) {
+        ArticleReadedCheckThread requestThread = new ArticleReadedCheckThread(context, this);
+        if (requestThread != null) {
+            requestThread.start();
         }
     }
 
@@ -137,7 +207,8 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
 
         // 新聞発行の有無に応じて新聞アイコンを変更
-        setApplicationIcon(remoteViews, R.id.link_news, contentManager.getNewsIcon());
+        boolean published = publishStatus.isPublished && !publishStatus.isReaded;
+        setApplicationIcon(remoteViews, R.id.link_news, contentManager.getNewsIcon(published));
 
         // PendingIntent設定
         setPendingIntents(context, remoteViews);

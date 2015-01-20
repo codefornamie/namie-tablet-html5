@@ -133,6 +133,11 @@ main {
     background-color: rgb(29, 124, 189);
     background-image: url(../../app/img/bg-b-paper.jpg);
 }
+
+.has-modal .snap-content {
+    overflow: hidden;
+}
+
 .posting-content {
     box-shadow: 0 -1px 1px 0 rgba(0,0,0,0.16);
     background: #ffffff;

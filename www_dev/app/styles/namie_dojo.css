@@ -56,6 +56,10 @@
     padding-left: 0;
 }
 
+.has-modal .page-dojo .contents-wrapper {
+    overflow: hidden;
+}
+
 .page-dojo .contents {
     padding: 0;
 }
@@ -86,13 +90,33 @@
     background-color: rgba(0,0,0,0.3);
 }
 
-.dojo-account__rank {
+.dojo-account__level {
     display: inline-block;
     margin: 0 20px;
     color: white;
 }
 
-.dojo-account__rank-icon {
+.dojo-account__level[data-dojo-level=none] {
+    display: none;
+}
+
+.dojo-account__level .visible-none-belt {
+    display: none;
+}
+
+.dojo-account__level .hidden-none-belt {
+    display: block;
+}
+
+.dojo-account__level[data-dojo-level=none] .visible-none-belt {
+    display: block;
+}
+
+.dojo-account__level[data-dojo-level=none] .hidden-none-belt {
+    display: none;
+}
+
+.dojo-account__level-icon {
     display: inline-block;
     vertical-align: middle;
     height: 40px;
@@ -102,24 +126,27 @@
     background-position: center;
 }
 
-.dojo-account__rank-icon.is-white {
+.dojo-account__level[data-dojo-level=none] .dojo-account__level-icon {
+}
+
+.dojo-account__level[data-dojo-level=white] .dojo-account__level-icon {
     background-image: url(../../app/img/dojo/img-white-belt-small.png);
 }
 
-.dojo-account__rank-icon.is-brown {
+.dojo-account__level[data-dojo-level=brown] .dojo-account__level-icon {
     background-image: url(../../app/img/dojo/img-brown-belt-small.png);
 }
 
-.dojo-account__rank-icon.is-black {
+.dojo-account__level[data-dojo-level=black] .dojo-account__level-icon {
     background-image: url(../../app/img/dojo/img-black-belt-small.png);
 }
 
-.dojo-account__rank-icon img {
+.dojo-account__level-icon img {
     height: 100%;
     vertical-align: top;
 }
 
-.dojo-account__rank-name {
+.dojo-account__level-name {
     display: inline-block;
     vertical-align: baseline;
     font-size: 1.5rem;
@@ -183,7 +210,7 @@
 }
 
 /* 帯 */
-.dojo-level-list-container .dojo-level--white {
+.dojo-level-list-container .dojo-level--none {
     background: -webkit-linear-gradient(-90deg, #ffbb00 0%, #dd8200 100%);
     background: -moz-linear-gradient(-90deg, #ffbb00 0%, #dd8200 100%);
     background: -o-linear-gradient(-90deg, #ffbb00 0%, #dd8200 100%);
@@ -191,11 +218,11 @@
     background: linear-gradient(180deg, #ffbb00 0%, #dd8200 100%);
     color: rgb(115, 73, 41);
 }
-.dojo-level-list-container .dojo-level--white .dojo-level-item__description {
+.dojo-level-list-container .dojo-level--none .dojo-level-item__description {
     background-color: rgb(252, 175, 31);
 }
 
-.dojo-level-list-container .dojo-level--brown {
+.dojo-level-list-container .dojo-level--white {
     background: -webkit-linear-gradient(-90deg, #bc6077 0%, #984e4e 100%);
     background: -moz-linear-gradient(-90deg, #bc6077 0%, #984e4e 100%);
     background: -o-linear-gradient(-90deg, #bc6077 0%, #984e4e 100%);
@@ -203,11 +230,11 @@
     background: linear-gradient(180deg, #bc6077 0%, #984e4e 100%);
     color: white;
 }
-.dojo-level-list-container .dojo-level--brown .dojo-level-item__description {
+.dojo-level-list-container .dojo-level--white .dojo-level-item__description {
     background-color: rgb(188, 96, 119);
 }
 
-.dojo-level-list-container .dojo-level--black {
+.dojo-level-list-container .dojo-level--brown {
     background: -webkit-linear-gradient(-90deg, #5075a9 0%, #1e3350 100%);
     background: -moz-linear-gradient(-90deg, #5075a9 0%, #1e3350 100%);
     background: -o-linear-gradient(-90deg, #5075a9 0%, #1e3350 100%);
@@ -215,7 +242,7 @@
     background: linear-gradient(180deg, #5075a9 0%, #1e3350 100%);
     color: white;
 }
-.dojo-level-list-container .dojo-level--black .dojo-level-item__description {
+.dojo-level-list-container .dojo-level--brown .dojo-level-item__description {
     background-color: rgb(50, 72, 103);
 }
 
@@ -229,16 +256,19 @@
     background-position: center;
 }
 
-.dojo-level-item__icon.is-white {
+.dojo-level-item__icon[data-dojo-level=none] {
     background-image: url(../../app/img/dojo/text-white-belt.png);
 }
 
-.dojo-level-item__icon.is-brown {
+.dojo-level-item__icon[data-dojo-level=white] {
     background-image: url(../../app/img/dojo/text-brown-belt.png);
 }
 
-.dojo-level-item__icon.is-black {
+.dojo-level-item__icon[data-dojo-level=brown] {
     background-image: url(../../app/img/dojo/text-black-belt.png);
+}
+
+.dojo-level-item__icon[data-dojo-level=black] {
 }
 
 .dojo-level-item__icon img {

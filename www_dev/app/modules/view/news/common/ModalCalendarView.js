@@ -55,6 +55,8 @@ define(function(require, exports, module) {
             this.calendar.on("data", this.onChangeDate.bind(this));
             this.calendar.on("show", this.onRenderCalendar.bind(this));
             this.calendar.on("data", this.onRenderCalendar.bind(this));
+
+            $(document).trigger("open:modal");
         },
 
         /**
@@ -65,6 +67,8 @@ define(function(require, exports, module) {
             if (this.calendar) {
                 this.calendar.destroy();
             }
+
+            $(document).trigger("close:modal");
         },
 
         /**

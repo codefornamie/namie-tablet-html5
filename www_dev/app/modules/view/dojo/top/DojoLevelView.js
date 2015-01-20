@@ -76,10 +76,20 @@ define(function(require, exports, module) {
          * @memberOf DojoLevelView#
          */
         updateNumberOfContent : function(edition) {
-            var collection = edition.get("contentCollection");
-
-            this.$el.find("[data-content-num]").text(collection.length);
-            this.$el.find("[data-watched-num]").text(edition.getWatchedModels().length);
+            var contents = this.dojoEditionModel.getModelsByLevel(this.level.get("level"));
+            var numSolved = 0;
+            _.each(contents, function (content) {
+                if (content.getSolvedState() === Code.DOJO_STATUS_SOLVED) {
+                    numSolved++;
+                }
+            });
+            var numContent = contents.length;
+            this.$el.find("[data-content-num]").text(numContent);
+            if (numContent - numSolved === 0) {
+                this.$el.find("[data-remained-num]").text("段位達成！！");
+            } else {
+                this.$el.find("[data-remained-num]").text("あと" + (numContent - numSolved) + "本で段位取得！！");
+            }
         }
     });
 

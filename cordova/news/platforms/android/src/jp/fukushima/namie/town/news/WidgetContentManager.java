@@ -21,7 +21,7 @@ public class WidgetContentManager {
     private static final int SHOW_MESSAGE_FRAME = 14;
 
     // 当日分の新聞が発行済みかどうかを示すフラグ
-    private boolean published = false;
+//    private boolean published = false;
 
     // メッセージをスキップするかどうか
     private static boolean messageSkip = false;
@@ -124,9 +124,9 @@ public class WidgetContentManager {
      * 新聞が発行されているかどうかを設定する.
      * @param status 新着の発行状態 false:発行未 true:発行済
      */
-    public void setPublished(boolean status) {
-        published = status;
-    }
+//    public void setPublished(boolean status) {
+//        published = status;
+//    }
 
     /**
      * ウィジェットに表示するメッセージを追加する.
@@ -163,9 +163,10 @@ public class WidgetContentManager {
 
     /**
      * 新聞アイコンのリソースIDを返す.
+     * @param published true:新着あり false:新着なし
      * @return リソースID
      */
-    public int getNewsIcon() {
+    public int getNewsIcon(boolean published) {
         int id = R.drawable.button_news;
         if (published) {
             id = R.drawable.button_news_2;

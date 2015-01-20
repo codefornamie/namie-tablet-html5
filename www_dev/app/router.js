@@ -35,7 +35,6 @@ define(function(require, exports, module) {
 
     var DojoTopView = require("modules/view/dojo/top/TopView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
-    var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
     var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
 
     var LetterTopView = require("modules/view/letter/top/TopView");
@@ -418,14 +417,16 @@ define(function(require, exports, module) {
          * 道場：トップページ
          */
         dojoTop : function() {
-            this.layout.setHeader(new dojoCommon.HeaderView());
-
             // 実際の描画処理はdojo/TopViewに書かれている
             // アプリのライフサイクルの中で、DojoTopViewの初期化は1度だけ行う
             if (!app.dojoTopView) {
                 app.dojoTopView = new DojoTopView();
                 this.layout.showView(app.dojoTopView.layout);
             }
+
+            this.layout.setHeader(new dojoCommon.HeaderView({
+                dojoContentCollection: app.dojoTopView.dojoContentCollection
+            }));
         },
 
         /**

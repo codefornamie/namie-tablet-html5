@@ -58,7 +58,11 @@ define(function(require, exports, module) {
                         height : '390',
                         playerVars : {
                             'autoplay' : 0,
-                            'controls' : 1
+                            'controls' : 1,
+                            // 関連動画抑止
+                            'rel' : 0,
+                            // YouTubeロゴ非表示
+                            'modestbranding' : 1
                         },
                         events : {
                             "onReady" : $.proxy(this.onSetYouTubePlayer, this),
@@ -74,13 +78,20 @@ define(function(require, exports, module) {
                 }
             }, this));
         },
-
         /**
          * YouTube動画プレイヤーの初期化処理が完了し、利用可能な状態になった場合に呼び出されるコールバック関数。
          */
         onSetYouTubePlayer : function() {
             this.player.removeEventListener("onReady");
             gapi.client.load('youtube', 'v3', $.proxy(this.onLoadYoutubePlayer, this));
+            // アプリがバックグラウンドになった場合、youtubeを一時停止する
+            var self = this;
+            this.onPause = function () {
+                if(self.player){
+                    self.player.pauseVideo();
+                }
+            };
+            document.addEventListener("pause", this.onPause, false);
         },
         /**
          * YouTube動画プレイヤークライアントの読み込み処理が完了し、動画再生可能な状態になった場合に呼び出されるコールバック関数。
@@ -124,6 +135,10 @@ define(function(require, exports, module) {
          */
         cleanup : function() {
             try {
+                if(this.onPause){
+                    document.removeEventListener("pause", this.onPause, false);
+                    this.onPause = null;
+                }
                 $("[data-play-movie]").unbind("click");
                 $("[data-pause-movie]").unbind("click");
                 $("[data-slider]").unbind("change.fndtn.slider");

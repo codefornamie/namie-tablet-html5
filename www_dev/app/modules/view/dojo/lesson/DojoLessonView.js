@@ -30,10 +30,25 @@ define(function(require, exports, module) {
             };
         },
 
+        /**
+         * ビューの描画が完了した時に呼び出される。
+         * @memberOf YouTubeListItemView#
+         */
         afterRender : function() {
             this.dojoLessonSiblingsView.render();
             this.setYouTubePlayer();
             $('.is-grayedout').unblock(); 
+
+            $(document).trigger("open:modal");
+
+            // アプリがバックグラウンドになった場合、youtubeを一時停止する
+            var self = this;
+            this.onPause = function () {
+                if(self.player){
+                    self.player.pauseVideo();
+                }
+            };
+            document.addEventListener("pause", this.onPause, false);
         },
         /**
          * イベント一覧
@@ -49,10 +64,6 @@ define(function(require, exports, module) {
          * @memberOf DojoLessonLayout#
          */
         onClickCompleteLesson : function(ev) {
-            //vexDialog.defaultOptions.className = 'vex-theme-default';
-            //vexDialog.buttons.YES.text = "OK";
-            //vexDialog.alert("この操作を習得しました！！");
-
             if (this.dojoContentModel.achievementModels) {
                 var solvedAchievement = _.find(this.dojoContentModel.achievementModels, function(achievement) {
                     return achievement.get("type") === "dojo_solved";
@@ -63,7 +74,6 @@ define(function(require, exports, module) {
                     return;
                 }
             }
-            //$("[data-complete-lesson]").attr("disabled", "disabled");
 
             // 習得済みとしてセーブする
             var achievementModel = new AchievementModel();
@@ -77,8 +87,6 @@ define(function(require, exports, module) {
                     this.onClickBack(ev);
                 }, this)
             });
-
-            //app.router.go("dojo", "levels", app.currentDojoLevel);
         },
         /**
          * 達成状況情報保存後のコールバック関数
@@ -155,7 +163,11 @@ define(function(require, exports, module) {
                     height : '400',
                     playerVars : {
                         'autoplay' : 0,
-                        'controls' : 1
+                        'controls' : 1,
+                        // 関連動画抑止
+                        'rel' : 0,
+                        // YouTubeロゴ非表示
+                        'modestbranding' : 1
                     },
                     events : {
                         "onReady" : $.proxy(function() {
@@ -212,6 +224,42 @@ define(function(require, exports, module) {
             this.$el.find("#dojo-lesson")
                 .removeClass("is-ready")
                 .addClass("is-ended");
+            
+            this.saveWatchedAchievement();
+        },
+        /**
+         * 視聴済み情報保存処理
+         * @memberOf DojoLessonLayout#
+         */
+        saveWatchedAchievement: function () {
+            if (this.dojoContentModel.achievementModels) {
+                var watchedAchievement = _.find(this.dojoContentModel.achievementModels, function(achievement) {
+                    return achievement.get("type") === "dojo_watched";
+                });
+                if (watchedAchievement) {
+                    return;
+                }
+            }
+
+            // 視聴済み情報のセーブ
+            var achievementModel = new AchievementModel();
+            achievementModel.set("type", "dojo_watched");
+            achievementModel.set("action", this.dojoContentModel.get("videoId"));
+            achievementModel.set("count", "1");
+            achievementModel.set("lastActionDate", new Date().toISOString());
+            achievementModel.save(null, {
+                success : $.proxy(function() {
+                    app.logger.info("success dojo_watched save. videoId=" + this.dojoContentModel.get("videoId"));
+                    if (this.dojoContentModel.achievementModels) {
+                        this.dojoContentModel.achievementModels.push(achievementModel);
+                    } else {
+                        this.dojoContentModel.achievementModels = [achievementModel];
+                    }
+                }, this),
+                error : $.proxy(function() {
+                    app.logger.error("error dojo_watched save. videoId=" + this.dojoContentModel.get("videoId"));
+                }, this)
+            });
         },
 
         /**
@@ -222,13 +270,19 @@ define(function(require, exports, module) {
          */
         cleanup : function() {
             try {
+                if(this.onPause){
+                    document.removeEventListener("pause", this.onPause, false);
+                    this.onPause = null;
+                }
                 $("[data-play-movie]").unbind("click");
                 $("[data-pause-movie]").unbind("click");
                 $("[data-slider]").unbind("change.fndtn.slider");
                 this.player.destroy();
-            } catch (e) {
+         } catch (e) {
                 app.logger.debug(e);
             }
+
+            $(document).trigger("close:modal");
         }
     }, {
         /**
@@ -258,7 +312,7 @@ define(function(require, exports, module) {
                 dojoEditionModel : dojoEditionModel,
                 dojoContentModel : dojoContentModel
             });
-        },
+        }
     });
 
     module.exports = DojoLessonView;

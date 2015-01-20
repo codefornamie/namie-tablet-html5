@@ -98,6 +98,9 @@ define(function(require, exports, module) {
     // 写真投稿アプリ: 投稿した記事の掲載期間(日数)
     Code.LETTER_PUB_PERIOD = 7;
 
+    // 写真投稿アプリ: 一日の投稿記事の上限数
+    Code.LETTER_PUBLISH_LIMIT = 3;
+
     // 道場動画カテゴリ
     // TODO 仮並び順
     Code.DOJO_CATEGORY_LIST = [
@@ -123,21 +126,31 @@ define(function(require, exports, module) {
      */
     Code.DOJO_LEVELS = [{
         id: "0",
-        className: "white",
+        className: "none",
+        levelName: "",
         label: "白帯編",
         description: "初めてタブレットをさわる方のためのコースです。（文言未決定）",
         iconPath: ""
     },{
         id: "1",
-        className: "brown",
+        className: "white",
+        levelName: "白帯",
         label: "茶帯編",
         description: "茶帯コースです。（文言未決定）",
         iconPath: ""
     },{
         id: "2",
-        className: "black",
+        className: "brown",
+        levelName: "茶帯",
         label: "黒帯編",
         description: "黒帯コースです。（文言未決定）",
+        iconPath: ""
+    },{
+        id: "3",
+        className: "black",
+        levelName: "黒帯",
+        label: "",
+        description: "",
         iconPath: ""
     }];
 
