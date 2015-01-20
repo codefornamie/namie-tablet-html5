@@ -72,7 +72,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
             String boxName = am.getUserData(account, "boxName");
 
             DcContext dc = new DcContext(baseUrl, cellName, schema, boxName);
-            dc.setPlatform("android");
+            DcContext.setPlatform("android");
 
             String authToken = "";
             try {
