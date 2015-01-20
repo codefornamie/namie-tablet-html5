@@ -298,7 +298,7 @@ define(function(require, exports, module) {
             var confCol = new ConfigurationCollection();
             confCol.fetch({
                 success : function(col, models) {
-                    app.config = _.extend(app.config, col.toMap());
+                    app.serverConfig = col.toMap();
                     callback();
                 },
                 error : $.proxy(function() {

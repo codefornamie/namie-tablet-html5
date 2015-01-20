@@ -58,6 +58,12 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            var self = this;
+            _.each(app.serverConfig.COLOR_LABEL, function(c) {
+                self.$el.prepend("<style>.article-label--category" + c.id + "::after{" + 
+                        "border-right-color: " + c.color + ";" +
+                        "border-bottom-color: " + c.color + "}</style>");
+            });
         },
 
         /**
@@ -341,8 +347,8 @@ define(function(require, exports, module) {
                     if (!articleModel) {
                         articleModel = new ArticleModel({
                             __id : "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
-                            dispSite : "写真投稿",
                             dispTitle : (moment(publishedAt).format("YYYY年M月DD日")) + "の写真投稿",
+                            site : article.get("site"),
                             type : "6",
                             articles : []
                         });
@@ -368,8 +374,8 @@ define(function(require, exports, module) {
                 // 写真投稿画面を開くための記事を作成し、コレクションの先頭に登録
                 var letterFolderArticle = new ArticleModel({
                     __id : "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
-                    dispSite : "写真投稿",
-                    dispTitle : "写真投稿コーナー",
+                    site : articleDateList[0].get("site"),
+                    dispTitle : "みんなで投稿！撮れたて写真館",
                     type : "6",
                     articles : articleDateList,
                     imagePath : imagePath,
