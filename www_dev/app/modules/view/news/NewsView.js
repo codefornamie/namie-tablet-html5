@@ -95,6 +95,8 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
+            $(document).on("open:modal", this.onOpenModal.bind(this));
+            $(document).on("close:modal", this.onCloseModal.bind(this));
         },
 
         /**
@@ -567,6 +569,22 @@ define(function(require, exports, module) {
             var scrollTop = $container.scrollTop();
 
             return scrollTop;
+        },
+
+        /**
+         * モーダルウィンドウが開いた後に呼ばれる
+         * @memberOf TopView#
+         */
+        onOpenModal: function () {
+            $("body").addClass("has-modal");
+        },
+
+        /**
+         * モーダルウィンドウが閉じた後に呼ばれる
+         * @memberOf TopView#
+         */
+        onCloseModal: function () {
+            $("body").removeClass("has-modal");
         },
 
         /**

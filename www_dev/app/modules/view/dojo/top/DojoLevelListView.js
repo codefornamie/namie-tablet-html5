@@ -26,7 +26,7 @@ define(function(require, exports, module) {
          */
         serialize: function () {
             var self = this;
-            var levels = this.extractLevels();
+            var levels = _.initial(this.extractLevels());
 
             // 描画用に視聴済み動画の数を計算する
             _(levels).each(function (level) {
@@ -60,6 +60,8 @@ define(function(require, exports, module) {
             console.assert(this.collection, "DojoLevelListView should have a collection");
 
             this.dojoEditionModel = param.dojoEditionModel;
+
+            this.listenTo(this.collection, "achievement", this.onUpdateLevel);
         },
 
         /**
@@ -67,8 +69,16 @@ define(function(require, exports, module) {
          * @memberOf DojoLevelListView#
          */
         afterRendered : function() {
+            this.updateLevelVisibility();
+        },
+
+        /**
+         * コースの表示/非表示を切り替える
+         * @memberOf DojoLevelListView#
+         */
+        updateLevelVisibility: function () {
             var notAchievementedLevel = this.collection.getNotAchievementedLevel();
-            for (var i = 0; i <= parseInt(notAchievementedLevel); i++) {
+            for (var i = 0, max = parseInt(notAchievementedLevel); i <= max; i++) {
                 $("#dojo-level-" + i).show();
             }
         },
@@ -80,7 +90,7 @@ define(function(require, exports, module) {
         extractLevels : function() {
             // 定義されている級のリストを取得する
             // TODO: 将来的には、級の定義情報はperosnium.ioに定義する
-            var levels = Code.DOJO_LEVELS;
+            var levels = _.clone(Code.DOJO_LEVELS);
 
             return levels;
 //            var levels = {};
@@ -97,6 +107,14 @@ define(function(require, exports, module) {
 //
 //            return levels;
         },
+
+        /**
+         * 段位情報が更新されたら呼ばれる
+         * @memberOf DojoLevelListView#
+         */
+        onUpdateLevel: function () {
+            this.renderCurrentLevel();
+        }
     });
 
     module.exports = DojoLevelListView;

@@ -261,6 +261,9 @@ define(function(require, exports, module) {
             this.listenTo(this.dojoContentCollection, "sync", this.onSyncDojoContent);
             this.listenTo(this.dojoEditionCollection, "edition", this.onChangeEdition);
             this.listenTo(app.router, "route", this.onRoute);
+
+            $(document).on("open:modal", this.onOpenModal.bind(this));
+            $(document).on("close:modal", this.onCloseModal.bind(this));
         },
         /**
          * youtubeライブラリを読み込む
@@ -386,13 +389,13 @@ define(function(require, exports, module) {
                     },this));
                 },this));
             }
+
+            // 段位情報が更新されたタイミングを他Viewからフックできるように
+            // "achievement"イベントをトリガする
+            this.dojoContentCollection.trigger("achievement");
+
             this.onSyncDojoContent();
             this.hideLoading();
-
-            var notAchievementedLevel = this.dojoContentCollection.getNotAchievementedLevel();
-            for (var i = 0; i <= parseInt(notAchievementedLevel); i++) {
-                $("#dojo-level-" + i).show();
-            }
 
             // 「どの動画も達成されていない場合」にのみ初回説明画面を表示する
             if (!isSolved) {
@@ -441,6 +444,22 @@ define(function(require, exports, module) {
          */
         onChangeEdition: function () {
             this.updateChildViews();
+        },
+
+        /**
+         * モーダルウィンドウが開いた後に呼ばれる
+         * @memberOf TopView#
+         */
+        onOpenModal: function () {
+            $("body").addClass("has-modal");
+        },
+
+        /**
+         * モーダルウィンドウが閉じた後に呼ばれる
+         * @memberOf TopView#
+         */
+        onCloseModal: function () {
+            $("body").removeClass("has-modal");
         },
 
         /**

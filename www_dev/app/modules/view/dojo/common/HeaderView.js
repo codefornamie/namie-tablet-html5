@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var Code = require("modules/util/Code");
     
     /**
      * ヘッダのViewクラスを作成する。
@@ -12,7 +13,48 @@ define(function(require, exports, module) {
      * @constructor
      */
     var HeaderView = AbstractView.extend({
-        template : require("ldsh!templates/dojo/top/header")
+        template : require("ldsh!templates/dojo/top/header"),
+
+        /**
+         * Viewの描画処理の後に呼び出されるコールバック関数。
+         * @memberOf HeaderView#
+         */
+        afterRendered : function() {
+            this.renderCurrentLevel();
+        },
+
+        /**
+         * 初期化
+         * @param {Object} param
+         * @memberOf HeaderView#
+         */
+        initialize : function(param) {
+            console.assert(param.dojoContentCollection, "param.dojoContentCollection should be specified");
+
+            this.dojoContentCollection = param.dojoContentCollection;
+
+            this.listenTo(this.dojoContentCollection, "achievement", this.onUpdateLevel);
+        },
+
+        /**
+         * 現在の段位をレンダリングする
+         * @memberOf HeaderView#
+         */
+        renderCurrentLevel: function () {
+            var notAchievementedLevel = this.dojoContentCollection.getNotAchievementedLevel();
+            var level = Code.DOJO_LEVELS[notAchievementedLevel];
+
+            this.$el.find("#dojo-account__level").attr("data-dojo-level", level.className);
+            this.$el.find("#dojo-account__level-name").text(level.levelName);
+        },
+
+        /**
+         * 段位情報が更新されたら呼ばれる
+         * @memberOf HeaderView#
+         */
+        onUpdateLevel: function () {
+            this.renderCurrentLevel();
+        }
     });
 
     module.exports = HeaderView;

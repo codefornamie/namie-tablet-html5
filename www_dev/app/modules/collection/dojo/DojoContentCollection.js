@@ -139,10 +139,11 @@ define(function(require, exports, module) {
                     achievementArr.push(model.get("level"));
                 }
             });
+            var maxNum = Code.DOJO_LEVELS.length - 1;
             var minNum = _.sortBy(achievementArr, function(num) {
                 return num;
             })[0];
-            return minNum === undefined ? 10 : minNum;
+            return minNum === undefined ? maxNum : minNum;
         },
     });
 
