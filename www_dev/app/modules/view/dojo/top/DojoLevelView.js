@@ -88,7 +88,7 @@ define(function(require, exports, module) {
             if (numContent - numSolved === 0) {
                 this.$el.find("[data-remained-num]").text("段位達成！！");
             } else {
-                this.$el.find("[data-remained-num]").text("あと" + (numContent - numSolved) + "で段位取得！！");
+                this.$el.find("[data-remained-num]").text("あと" + (numContent - numSolved) + "本で段位取得！！");
             }
         }
     });
