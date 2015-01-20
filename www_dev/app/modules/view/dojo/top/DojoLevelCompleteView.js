@@ -26,7 +26,7 @@ define(function(require, exports, module) {
         serialize : function() {
             var nextLevelButtonTitle;
 
-            if (app.currentDojoLevel < this.getMaxDojoLevel()) {
+            if (app.currentDojoLevel < this.getMaxDojoLevel() - 1) {
                 nextLevelButtonTitle = "次のコースへ進む";
             } else {
                 nextLevelButtonTitle = "最初の画面に戻る";
@@ -63,8 +63,8 @@ define(function(require, exports, module) {
         onClickNextLevel : function(ev) {
             ev.preventDefault();
 
-            // 次のコースへ進む。既にレベルが最高の場合は、トップ画面に戻る
-            if (app.currentDojoLevel < this.getMaxDojoLevel()) {
+            // 次のコースへ進む。上位レベルがない場合は、トップ画面に戻る
+            if (app.currentDojoLevel < this.getMaxDojoLevel() - 1) {
                 app.router.go("dojo", "levels", parseInt(app.currentDojoLevel) + 1);
             } else {
                 app.router.go("dojo-top");

@@ -295,7 +295,7 @@ define(function(require, exports, module) {
             achievementModel.save(null, {
                 success : $.proxy(function() {
                     app.logger.info("success dojo_watched save. videoId=" + this.dojoContentModel.get("videoId"));
-                    if (this.dojoContentModel.achievementModels && this.dojoContentModel.achievementModels.length > 0) {
+                    if (this.dojoContentModel.achievementModels) {
                         this.dojoContentModel.achievementModels.push(achievementModel);
                     } else {
                         this.dojoContentModel.achievementModels = [achievementModel];

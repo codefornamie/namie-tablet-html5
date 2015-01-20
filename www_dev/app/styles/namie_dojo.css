@@ -699,13 +699,13 @@
     background-repeat: no-repeat;
     background-size: contain;
 }
-.is-white .dojo-level-complete__body {
+.dojo-level-complete__body[data-dojo-level=none] {
     background-image: url("../../../app/img/dojo/img-level-finish-white.png");
 }
-.is-brown .dojo-level-complete__body {
+.dojo-level-complete__body[data-dojo-level=white] {
     background-image: url("../../../app/img/dojo/img-level-finish-brown.png");
 }
-.is-black .dojo-level-complete__body {
+.dojo-level-complete__body[data-dojo-level=brown] {
     background-image: url("../../../app/img/dojo/img-level-finish-black.png");
 }
 
