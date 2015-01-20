@@ -27,10 +27,12 @@ define(function(require, exports, module) {
                 value : "YouTube"
             }, {
                 key : "3",
-                value : "イベント"
+                value : "イベント",
+                detailValue : "イベント(町民代理投稿)"
             }, {
                 key : "4",
-                value : "レポート"
+                value : "レポート",
+                detailValue : "レポート(町民代理投稿)"
             }, {
                 key : "5",
                 value : "記事"
@@ -40,7 +42,18 @@ define(function(require, exports, module) {
             }, {
                 key : "7",
                 value : "Facebook"
-            }
+            }, {
+                key : "8",
+                value : "おくやみ"
+            }, {
+                key : "9",
+                value : "イベント",
+                detailValue : "イベント(役場)"
+            }, {
+                key : "10",
+                value : "レポート",
+                detailValue : "レポート(役場)"
+            },
     ];
 
     // 各アプリで使用する記事カテゴリ
@@ -49,7 +62,7 @@ define(function(require, exports, module) {
             "3", "4"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_OPE] = [
-            "3", "4", "5", "6"
+            "5", "9", "10", "6", "3", "4"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_LETTER] = [
             "6"
