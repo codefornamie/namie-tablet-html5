@@ -11,7 +11,7 @@
     height: auto;
     background-color: #efeeec;
     background-image: url(../../app/img/dojo/img-bg.png);
-    background-size: contain;
+    background-size: 100% auto;
     color: rgb(115, 73, 41);
 }
 
