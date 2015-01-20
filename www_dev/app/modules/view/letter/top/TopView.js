@@ -292,8 +292,8 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
-            this.listenTo(this.letterCollection, "sync", this.onSyncLetter);
-            this.listenTo(this.letterCollection, "error", this.onErrorLetter);
+            this.listenTo(this.letterCollection, "sync", this.onSyncLetter.bind(this));
+            this.listenTo(this.letterCollection, "error", this.onErrorLetter.bind(this));
         },
 
         /**
@@ -357,7 +357,7 @@ define(function(require, exports, module) {
             var listViewLayout = this.layout.getView("#letter-list-container");
             var listItems = [];
             if (listViewLayout) {
-                listItems = listViewLayout.getViews("#letter-list").value();
+                listItems = listViewLayout.getViews("#letter-list") ? listViewLayout.getViews("#letter-list").value() : [];
             }
             var deletedItems = _.filter(listItems, function(item) {
                 return item.model.get("isDeleted");
