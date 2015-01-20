@@ -23,22 +23,21 @@ define(function(require, exports, module) {
     BusinessUtil.getCurrentPublishDate = function() {
         var publishDate = new Date();
         var nowTimeString = moment(publishDate).format("HH:mm");
-        if (nowTimeString < app.config.PUBLISH_TIME) {
+        if (nowTimeString < app.serverConfig.PUBLISH_TIME) {
             publishDate = moment(publishDate).add(-1, "d");
         }
-        return new Date(moment(publishDate).format("YYYY-MM-DD") + "T" + app.config.PUBLISH_TIME + "+0900");
+        return new Date(moment(publishDate).format("YYYY-MM-DD") + "T" + app.serverConfig.PUBLISH_TIME + "+0900");
     };
     /**
      * 休刊日を加味した配信日計算を行う
      * @memberOf BusinessUtil#
-     * @param {ArticleCollection} articleCollection 記事情報コレクション：インポートしてしまうとループが発生してしまうため、
-     * 引数でインスタンスをもらう
+     * @param {ArticleCollection} articleCollection 記事情報コレクション：インポートしてしまうとループが発生してしまうため、 引数でインスタンスをもらう
      * @param {Function} callback 休刊日を加味した配信日計算後の処理
      */
     BusinessUtil.calcConsiderSuspendPublication = function(articleCollection, callback) {
         var publishDate = new Date();
         var nowTimeString = moment(publishDate).format("HH:mm");
-        if (nowTimeString < app.config.PUBLISH_TIME) {
+        if (nowTimeString < app.serverConfig.PUBLISH_TIME) {
             publishDate = moment(publishDate).add(-1, "d");
         }
 
