@@ -66,6 +66,10 @@ define(function(require, exports, module) {
 
             // 次に見るべき動画とグレーアウトする動画を判断するカウント変数
             var nextCount = 0;
+            // 現在表示しようとしている帯画面のレベルまでユーザが達しているかどうかを判断
+            if (this.dojoEditionModel.get("contentCollection").getNotAchievementedLevel() < this.level.get("level")) {
+                nextCount = 2;
+            }
 
             _(this.models).each($.proxy(function(model) {
                 var solvedItem = _.find(model.achievementModels,function(ach){
