@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.util.Log;
 
-public class PersoniumRequestThread extends Thread {
+public class PublishStatusInitializeThread extends Thread {
     private static final String TAG = "NamieNewspaper";
     private final Context _mContext;
     private final NamieWidgetProvider _mWidgetProvider;
     private final ArrayList<Integer> _mWidgets = new ArrayList<Integer>();
 
-    public PersoniumRequestThread(Context context, NamieWidgetProvider widgetProvider) {
+    public PublishStatusInitializeThread(Context context, NamieWidgetProvider widgetProvider) {
         super();
         _mContext = context;
         _mWidgetProvider = widgetProvider;
@@ -32,10 +32,10 @@ public class PersoniumRequestThread extends Thread {
     @Override
     public void run() {
         Log.d(TAG, "PersoniumRequestThread started.");
-        PersoniumModel personium = new PersoniumModel();
-        String message = personium.readRecentArticle(_mContext);
 
-        _mWidgetProvider.setPublished(message != null);
+        PersoniumModel personium = new PersoniumModel();
+        PublishStatus publishStatus = personium.initPublishStatus(_mContext);
+        _mWidgetProvider.setPublishStatus(publishStatus);
 
         Log.d(TAG, "PersoniumRequestThread completed.");
     }
