@@ -128,21 +128,21 @@ define(function(require, exports, module) {
         id: "0",
         className: "none",
         levelName: "",
-        label: "白帯編",
+        label: "白帯",
         description: "初めてタブレットをさわる方のためのコースです。（文言未決定）",
         iconPath: ""
     },{
         id: "1",
         className: "white",
         levelName: "白帯",
-        label: "茶帯編",
+        label: "茶帯",
         description: "茶帯コースです。（文言未決定）",
         iconPath: ""
     },{
         id: "2",
         className: "brown",
         levelName: "茶帯",
-        label: "黒帯編",
+        label: "黒帯",
         description: "黒帯コースです。（文言未決定）",
         iconPath: ""
     },{
