@@ -4,11 +4,12 @@
 package jp.fukushima.namie.town.news;
 
 import java.util.ArrayList;
+
 import android.content.Context;
 import android.util.Log;
 
 public class PersoniumRequestThread extends Thread {
-    private static final String TAG = "kuro";
+    private static final String TAG = "NamieNewspaper";
     private final Context _mContext;
     private final NamieWidgetProvider _mWidgetProvider;
     private final ArrayList<Integer> _mWidgets = new ArrayList<Integer>();

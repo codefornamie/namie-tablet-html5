@@ -23,7 +23,7 @@ import android.widget.RemoteViews;
  * なみえ新聞ウィジェット
  */
 public class NamieWidgetProvider extends AppWidgetProvider {
-    private static final String TAG = "kuro";
+    private static final String TAG = "NamieNewspaper";
     private static final String WIDGET_UPDATE_ACTION = "jp.fukushima.namie.town.news.WIDGET_UPDATE_ACTION";
 
     // ウィジェット更新処理開始までのインターバル(ms)
