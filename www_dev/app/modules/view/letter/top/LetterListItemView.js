@@ -104,11 +104,11 @@ define(function(require, exports, module) {
                     this.hideLoading();
                     this.model.set("isDeleted", true);
                 }, this),
-                error: function(e){
+                error: $.proxy(function(e){
                     this.hideLoading();
                     vexDialog.alert("削除に失敗しました。");
-                    app.logger.error("削除に失敗しました。");
-                }
+                    app.logger.error("error LetterListItemView:deleteLetter()");
+                },this)
             });
         },
     });
