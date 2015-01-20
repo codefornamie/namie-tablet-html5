@@ -557,6 +557,30 @@
 }
 
 /**
+ *  動画再生画面の動画操作ボタン
+ */
+.dojo-lesson__content-action {
+}
+
+.dojo-lesson__content-action .button {
+    background-color:  #ffffff;
+    background: -webkit-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: -moz-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: -o-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: -ms-linear-gradient(90deg, #c0baa1 0%, #ffffff 100%);
+    background: linear-gradient(0deg, #c0baa1 0%, #ffffff 100%);
+    padding: 0 52px;
+    font-size: 1.0rem;
+    height: 56px;
+    line-height: 28px;
+    border-radius: 28px;
+    margin-bottom: 0;
+    color: #734929;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+/**
  *  フッター
  */
 .dojo-lesson__footer {

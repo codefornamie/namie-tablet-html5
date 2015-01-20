@@ -174,12 +174,24 @@ define(function(require, exports, module) {
                             this.player.removeEventListener("onReady");
                             gapi.client.load('youtube', 'v3', $.proxy(this.onLoadYoutubePlayer, this));
                         }, this),
+
                         "onStateChange" : $.proxy(function(event) {
                             app.logger.debug("Youtube state change. state=" + event.data);
+
                             if (event.data === YT.PlayerState.PLAYING) {
-                                // 動画開始されたら動画再生ボタンを表示
+                                // 動画が再生可能になったらボタンを有効化する
                                 $("[data-play-movie]").show();
+                                $("[data-pause-movie]").show();
+
+                                // 動画再生したら動画停止ボタンを表示
+                                $("#cell-play-movie").hide();
+                                $("#cell-pause-movie").show();
+                            } else {
+                                // 動画停止したら動画再生ボタンを表示
+                                $("#cell-play-movie").show();
+                                $("#cell-pause-movie").hide();
                             }
+
                             if (event.data === YT.PlayerState.ENDED) {
                                 // 動画終了時に習得確認テキストを出す
                                 this.onEndYouTube();
