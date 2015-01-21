@@ -6,6 +6,9 @@ require([
     var _alert = window.alert;
     window.alert = function() {};
     var goRoute = function() {
+        // キャッシュの有無
+        app.useCache = CommonUtil.useCache(app.config.basic.mode);
+
         window.alert = _alert;
         // Define your master router on the application namespace and trigger all
         // navigation from this instance.
