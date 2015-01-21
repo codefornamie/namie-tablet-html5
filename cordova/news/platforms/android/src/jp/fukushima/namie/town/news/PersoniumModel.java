@@ -71,6 +71,7 @@ public class PersoniumModel {
         Log.d(TAG, "bxoName :" + boxName);
 
         dc = new DcContext(baseUrl, cellName, "", boxName);
+        DcContext.setPlatform("android");
         ODataCollection odata = null;
         try {
             odata = dc.withToken(token).cell().box().odata("odata");

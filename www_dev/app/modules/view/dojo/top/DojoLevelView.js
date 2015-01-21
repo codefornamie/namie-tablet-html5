@@ -84,11 +84,12 @@ define(function(require, exports, module) {
                 }
             });
             var numContent = contents.length;
+            var dojoLabel = this.serialize().dojoLevel.label;
             this.$el.find("[data-content-num]").text(numContent);
             if (numContent - numSolved === 0) {
-                this.$el.find("[data-remained-num]").text("段位達成！！");
+                this.$el.find("[data-remained-num]").text(dojoLabel + " 修得済み！！");
             } else {
-                this.$el.find("[data-remained-num]").text("あと" + (numContent - numSolved) + "本で段位取得！！");
+                this.$el.find("[data-remained-num]").text("あと" + (numContent - numSolved) + "本で" + dojoLabel + "修得！！");
             }
         }
     });
