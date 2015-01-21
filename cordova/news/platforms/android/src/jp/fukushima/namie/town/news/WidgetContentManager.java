@@ -51,7 +51,6 @@ public class WidgetContentManager {
 
     private DisplayMode displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;;
     private MessageStyle messageStyle = MessageStyle.STYLE_BUBBLE;;
-    private String site = null;
     private String message = null;
     private Bitmap thumbnail = null;
     private int messageVisiblity = View.VISIBLE;
@@ -70,25 +69,15 @@ public class WidgetContentManager {
     }
 
     /**
-     * フレーム更新に伴う表示情報を設定する.
+     * フレーム毎に表示情報を更新する.
      */
     public void nextFrame() {
         imageIndex = (imageIndex + 1) % images.length;
 
         if (frameIndex == 0) {
-            // メッセージ表示モードの決定
-            if (displayMode == DisplayMode.DISPLAY_FIXED_MESSAGE) {
-                // [たまに」記事切り抜きを表示
-                if (messageIndex == (messages.size() - 1) && !messageSkip && !recommendArticles.isEmpty()) {
-                    displayMode = DisplayMode.DISPLAY_RECOMMEND_BEFORE;
-                }
-            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
-                displayMode = DisplayMode.DISPLAY_RECOMMEND;
-            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND) {
-                displayMode = DisplayMode.DISPLAY_RECOMMEND_AFTER;
-            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND_AFTER) {
-                displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;
-            }
+
+            // メッセージ表示モードの遷移
+            displayMode = nextDisplayMode(displayMode);
 
             // 表示メッセージのインデックスをインクリメント
             if (displayMode == DisplayMode.DISPLAY_FIXED_MESSAGE) {
@@ -98,31 +87,39 @@ public class WidgetContentManager {
             }
 
             // 表示メッセージのスタイルとテキストを決める
-            site = null;
-            message = null;
-            thumbnail = null;
-            if (displayMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
-                messageStyle = MessageStyle.STYLE_BUBBLE;
-                message = RECOMMEND_ARTICLE_BEFORE;
-            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND) {
-                messageStyle = MessageStyle.STYLE_ARTICLE;
-                Map<String, Object> article = recommendArticles.get(recommendArticleIndex);
-                site = (String) article.get("site");
-                message = (String) article.get("title");
-                thumbnail = (Bitmap) article.get("thumbnail");
-                if (message == null) {
-                    Log.e(TAG, "Article title is empty.");
-                    displayMode = DisplayMode.DISPLAY_RECOMMEND_AFTER;
-                    messageStyle = MessageStyle.STYLE_BUBBLE;
-                    message = RECOMMEND_ARTICLE_ERROR;
-                }
-            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND_AFTER) {
-                messageStyle = MessageStyle.STYLE_BUBBLE;
-                message = RECOMMEND_ARTICLE_AFTER;
-            } else {
+            messageStyle =  getMessageStyle(displayMode);
+            message = getMessageText(displayMode);
+            thumbnail = getThumbnail(displayMode);
+
+            // メッセージの取得に失敗した場合は固定メッセージ表示とする
+            if (message == null) {
+                Log.e(TAG, "Widget message is null.");
+                displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;
                 messageStyle = MessageStyle.STYLE_BUBBLE;
                 message = messages.get(messageIndex);
             }
+
+//            if (displayMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
+//                messageStyle = MessageStyle.STYLE_BUBBLE;
+//                message = RECOMMEND_ARTICLE_BEFORE;
+//            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND) {
+//                messageStyle = MessageStyle.STYLE_ARTICLE;
+//                Map<String, Object> article = recommendArticles.get(recommendArticleIndex);
+//                message = (String) article.get("title");
+//                thumbnail = (Bitmap) article.get("thumbnail");
+//                if (message == null) {
+//                    Log.e(TAG, "Article title is empty.");
+//                    displayMode = DisplayMode.DISPLAY_RECOMMEND_AFTER;
+//                    messageStyle = MessageStyle.STYLE_BUBBLE;
+//                    message = RECOMMEND_ARTICLE_ERROR;
+//                }
+//            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND_AFTER) {
+//                messageStyle = MessageStyle.STYLE_BUBBLE;
+//                message = RECOMMEND_ARTICLE_AFTER;
+//            } else {
+//                messageStyle = MessageStyle.STYLE_BUBBLE;
+//                message = messages.get(messageIndex);
+//            }
         }
 
         // 吹き出しの表示／非表示
@@ -134,6 +131,75 @@ public class WidgetContentManager {
 
         messageSkip = false;
         frameIndex = (frameIndex + 1) % MESSAGE_ACTION_FRAME;
+    }
+
+    /**
+     * メッセージ表示モードを遷移する.
+     * @param currentMode 現在のメッセージ表示モード
+     * @return メッセージ表示モード
+     */
+    private DisplayMode nextDisplayMode(DisplayMode currentMode) {
+        DisplayMode nextMode = currentMode;
+        if (messageSkip) {
+            return nextMode;
+        }
+        if (currentMode == DisplayMode.DISPLAY_FIXED_MESSAGE) {
+            // 固定メッセージのループごとに記事切り抜きを表示
+            if (messageIndex == (messages.size() - 1) && !recommendArticles.isEmpty()) {
+                nextMode = DisplayMode.DISPLAY_RECOMMEND_BEFORE;
+            }
+        } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
+            nextMode = DisplayMode.DISPLAY_RECOMMEND;
+        } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND) {
+            nextMode = DisplayMode.DISPLAY_RECOMMEND_AFTER;
+        } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND_AFTER) {
+            nextMode = DisplayMode.DISPLAY_FIXED_MESSAGE;
+        }
+        return nextMode;
+    }
+
+    /**
+     * 表示モードに応じたメッセージのスタイルを返す.
+     * @param currentMode
+     * @return
+     */
+    private MessageStyle getMessageStyle(DisplayMode currentMode) {
+        MessageStyle style = MessageStyle.STYLE_BUBBLE;
+        if (currentMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
+            style = MessageStyle.STYLE_BUBBLE;
+        } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND) {
+            style = MessageStyle.STYLE_ARTICLE;
+        } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND_AFTER) {
+            style = MessageStyle.STYLE_BUBBLE;
+        } else {
+            style = MessageStyle.STYLE_BUBBLE;
+        }
+        return style;
+    }
+
+    private String getMessageText(DisplayMode currentMode) {
+        String messageText = null;
+
+        if (currentMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
+            messageText = RECOMMEND_ARTICLE_BEFORE;
+        } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND) {
+            Map<String, Object> article = recommendArticles.get(recommendArticleIndex);
+            messageText = (String) article.get("title");
+        } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND_AFTER) {
+            messageText = RECOMMEND_ARTICLE_AFTER;
+        } else {
+            messageText = messages.get(messageIndex);
+        }
+        return messageText;
+    }
+
+    private Bitmap getThumbnail(DisplayMode currentMode) {
+        Bitmap bitmap = null;
+        if (currentMode == DisplayMode.DISPLAY_RECOMMEND) {
+            Map<String, Object> article = recommendArticles.get(recommendArticleIndex);
+            bitmap = (Bitmap) article.get("thumbnail");
+        }
+        return bitmap;
     }
 
     /**
@@ -203,14 +269,6 @@ public class WidgetContentManager {
      */
     public MessageStyle getMessageStyle() {
         return messageStyle;
-    }
-
-    /**
-     * メッセージのソースを返す.
-     * @return メッセージソース。固定メッセージの場合はnull
-     */
-    public String getSite() {
-        return site;
     }
 
     /**
