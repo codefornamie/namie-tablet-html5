@@ -36,7 +36,7 @@ define(function(require, exports, module) {
             app.pcsManager.ready($.proxy(function(error) {
                 if (error) {
                     Log.info("error pcsManager.ready failure msg : " + error);
-                    var ar = res.split(":");
+                    var ar = error.split(":");
                     if (ar[0] === "msg") {
                         if ((ar[1]) && (ar[1] === "401")) {
                             alert("認証に失敗しました。正しいログインIDまたはパスワードを入力してください。");
@@ -44,7 +44,8 @@ define(function(require, exports, module) {
                             return;
                         }
                     }
-                    alert("通信に失敗しました。電波状態を見直してください。(" + ar[1] + ")");
+                    alert("通信に失敗しました。電波状態を見直して、起動し直してください。");
+                    navigator.app.exitApp();
                     return;
                 }
                 Log.info("pcsManager.ready success");
