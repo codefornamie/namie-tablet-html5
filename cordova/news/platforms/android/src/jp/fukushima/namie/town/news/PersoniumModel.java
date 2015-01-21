@@ -24,7 +24,7 @@ import android.util.Log;
 public class PersoniumModel {
     private static final String TAG = "NamieNewspaper";
     private static final String ACCOUNT_TYPE = "jp.fukushima.namie.town.Pcs";
-    private static final int RECOMMEND_FETCH_NUM = 10;
+    private static final int RECOMMEND_FETCH_NUM = 1;
     AccountManager manager = null;
     Account account = null;
     DcContext dc = null;
