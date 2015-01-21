@@ -37,6 +37,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     // 既読チェックインターバル(ms)
     private static final int READ_CHECK_INTERVAL = 30 * 60 * 1000;
 
+    // 新聞配信の基本情報と状態
     private static PublishStatus publishStatus = null;
     // 未読状態の最終チェック時刻
     private static long lastUnreadCheckTime = 0;
@@ -45,14 +46,15 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     private static WidgetContentManager contentManager = null;
 
     public NamieWidgetProvider() {
-        if (publishStatus == null) {
-            publishStatus = new PublishStatus();
-        }
     }
 
     @Override
     public void onEnabled(Context context) {
         Log.d(TAG, "NamieWidgetProvider#onEnabled()");
+
+        if (publishStatus == null) {
+            publishStatus = new PublishStatus();
+        }
 
         // ウィジット更新用アラームの登録
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -71,6 +73,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
         alarmManager.cancel(pendingIntent);
+
+        publishStatus = null;
+        lastUnreadCheckTime = 0;
+        contentManager = null;
 
         super.onDisabled(context);
     };
@@ -110,6 +116,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     }
 
     private void updateNewspaperStatus(Context context) {
+        if (publishStatus == null) {
+            return;
+        }
+
         // 日付が変更されていた場合、新聞発行情報を初期化
         if (!publishStatus.isDailyUpdated()) {
             // 連続して呼び出されないように一旦最終処理日時をセットしておく
@@ -200,8 +210,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
 
         // 新聞発行の有無に応じて新聞アイコンを変更
-        boolean published = publishStatus.isPublished && !publishStatus.isReaded;
-        setApplicationIcon(remoteViews, R.id.link_news, contentManager.getNewsIcon(published));
+        if (publishStatus != null) {
+            boolean published = publishStatus.isPublished && !publishStatus.isReaded;
+            setApplicationIcon(remoteViews, R.id.link_news, contentManager.getNewsIcon(published));
+        }
 
         // PendingIntent設定
         setPendingIntents(context, remoteViews);
