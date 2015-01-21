@@ -1,20 +1,44 @@
-<div class="row">
-    <div class="columns small-12">
-        <div class="dojo-watched-state right">
-            <div class="dojo-watched-state__description">
-                <span data-content-num>--</span>本の動画があります
-            </div>
-
-            <div class="dojo-watched-state__progress">
-                <span data-remained-num>--</span>
+<div
+    id="dojo-level-list-header"
+    class="dojo-level-list-header"
+>
+    <div class="row">
+        <div class="columns large-3">
+            <div class="dojo-list-footer text-center">
+                <a
+                    href="dojo-top"
+                    class="button"
+                >
+                    コース選択に戻る
+                </a>
             </div>
         </div>
 
-        <h2 class="dojo-edition-title">
-            <div class="dojo-level-item__icon" data-dojo-level="<%= dojoLevel.className %>"></div>
-        </h2>
+        <div class="columns large-3">
+            コース選択
+            白帯コースから順番に習得していきましょう！
+        </div>
+
+        <div class="columns large-3">
+            <div class="dojo-watched-state right">
+                <div class="dojo-watched-state__description">
+                    <span data-content-num>--</span>本の動画があります
+                </div>
+
+                <div class="dojo-watched-state__progress">
+                    <span data-remained-num>--</span>
+                </div>
+            </div>
+
+            <h2 class="dojo-edition-title">
+                <div class="dojo-level-item__icon" data-dojo-level="<%= dojoLevel.className %>"></div>
+            </h2>
+        </div>
     </div>
 </div>
+    </div>
+</div>
+
 
 <div
     id="dojo-level-list-container"

@@ -17,7 +17,6 @@
 
 .page-dojo .header {
     background-image: url(../../app/img/dojo/bg-wood.png);
-    box-shadow: 0px 0px 5px #888;
     height: 70px;
     margin: 0;
     display: block;
@@ -195,55 +194,100 @@
 /**
  *  コース一覧
  */
+.dojo-level-list-header {
+    background-color: white;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
+}
+
 .dojo-level-list-container {
     padding: 20px;
 }
 .dojo-level-list-container .dojo-level-item {
-    padding: 20px 10px 20px;
+    padding: 10px;
     margin-bottom: 15px;
-    display: block;
-    box-shadow: 3px 5px 3px 0.00px rgba(56, 16, 0, 0.15);
+    display: flex;
+    align-items: stretch;
 }
 
-.dojo-level-list-container .dojo-level-item:last-child {
-    padding-bottom: 10px;
+.dojo-level-item__header {
+    flex: 1 0 320px;
 }
 
 /* 帯 */
-.dojo-level-list-container .dojo-level--none {
-    background: -webkit-linear-gradient(-90deg, #ffbb00 0%, #dd8200 100%);
-    background: -moz-linear-gradient(-90deg, #ffbb00 0%, #dd8200 100%);
-    background: -o-linear-gradient(-90deg, #ffbb00 0%, #dd8200 100%);
-    background: -ms-linear-gradient(-90deg, #ffbb00 0%, #dd8200 100%);
-    background: linear-gradient(180deg, #ffbb00 0%, #dd8200 100%);
+.dojo-level-list-container .dojo-level--introduction {
+    background: -webkit-linear-gradient(-90deg, #d0915b 0%, #af7b4c 100%);
+    background: -moz-linear-gradient(-90deg, #d0915b 0%, #af7b4c 100%);
+    background: -o-linear-gradient(-90deg, #d0915b 0%, #af7b4c 100%);
+    background: -ms-linear-gradient(-90deg, #d0915b 0%, #af7b4c 100%);
+    background: linear-gradient(180deg, #d0915b 0%, #af7b4c 100%);
+    border-bottom: 5px solid #7e4f23;
     color: rgb(115, 73, 41);
 }
+.dojo-level-list-container .dojo-level--introduction .dojo-level-item__header {
+}
+.dojo-level-list-container .dojo-level--introduction .dojo-level-item__description {
+    background-color: rgb(255, 245, 234);
+    border-top: 1px solid #7e4f23;
+    border-bottom: 1px solid #d6b86f;
+}
+
+.dojo-level-list-container .dojo-level--none {
+    background: -webkit-linear-gradient(-90deg, #fff6cb 0%, #fec574 100%);
+    background: -moz-linear-gradient(-90deg, #fff6cb 0%, #fec574 100%);
+    background: -o-linear-gradient(-90deg, #fff6cb 0%, #fec574 100%);
+    background: -ms-linear-gradient(-90deg, #fff6cb 0%, #fec574 100%);
+    background: linear-gradient(180deg, #fff6cb 0%, #fec574 100%);
+    border-bottom: 5px solid #d59500;
+    color: rgb(115, 73, 41);
+}
+.dojo-level-list-container .dojo-level--none .dojo-level-item__header {
+    color: rgb(120, 76, 47);
+    text-shadow: 1px 1px 0px rgba(255, 252, 192, 0.75);
+}
 .dojo-level-list-container .dojo-level--none .dojo-level-item__description {
-    background-color: rgb(252, 175, 31);
+    background-color: rgb(255, 252, 234);
+    border-top: 1px solid #d59500;
+    border-bottom: 1px solid #ffe5bd;
 }
 
 .dojo-level-list-container .dojo-level--white {
-    background: -webkit-linear-gradient(-90deg, #bc6077 0%, #984e4e 100%);
-    background: -moz-linear-gradient(-90deg, #bc6077 0%, #984e4e 100%);
-    background: -o-linear-gradient(-90deg, #bc6077 0%, #984e4e 100%);
-    background: -ms-linear-gradient(-90deg, #bc6077 0%, #984e4e 100%);
-    background: linear-gradient(180deg, #bc6077 0%, #984e4e 100%);
+    background: -webkit-linear-gradient(-90deg, #ffc2c7 0%, #c95b5c 100%);
+    background: -moz-linear-gradient(-90deg, #ffc2c7 0%, #c95b5c 100%);
+    background: -o-linear-gradient(-90deg, #ffc2c7 0%, #c95b5c 100%);
+    background: -ms-linear-gradient(-90deg, #ffc2c7 0%, #c95b5c 100%);
+    background: linear-gradient(180deg, #ffc2c7 0%, #c95b5c 100%);
+    border-bottom: 5px solid #9c3e3f;
+    color: rgb(115, 73, 41);
+}
+.dojo-level-list-container .dojo-level--white .dojo-level-item__header {
     color: white;
+    text-shadow: 0px -2px 0px rgba(156, 62, 63, 0.75);
 }
 .dojo-level-list-container .dojo-level--white .dojo-level-item__description {
-    background-color: rgb(188, 96, 119);
+    background-color: rgb(255, 249, 251);
+    border-top: 1px solid #9c3e3f;
+    border-bottom: 1px solid #e79695;
 }
 
 .dojo-level-list-container .dojo-level--brown {
-    background: -webkit-linear-gradient(-90deg, #5075a9 0%, #1e3350 100%);
-    background: -moz-linear-gradient(-90deg, #5075a9 0%, #1e3350 100%);
-    background: -o-linear-gradient(-90deg, #5075a9 0%, #1e3350 100%);
-    background: -ms-linear-gradient(-90deg, #5075a9 0%, #1e3350 100%);
-    background: linear-gradient(180deg, #5075a9 0%, #1e3350 100%);
+    background: -webkit-linear-gradient(-90deg, #74a6e3 0%, #395dbb 100%);
+    background: -moz-linear-gradient(-90deg, #74a6e3 0%, #395dbb 100%);
+    background: -o-linear-gradient(-90deg, #74a6e3 0%, #395dbb 100%);
+    background: -ms-linear-gradient(-90deg, #74a6e3 0%, #395dbb 100%);
+    background: linear-gradient(180deg, #74a6e3 0%, #395dbb 100%);
+    border-bottom: 5px solid #182d62;
+    color: rgb(115, 73, 41);
+}
+.dojo-level-list-container .dojo-level--brown .dojo-level-item__header {
     color: white;
+    text-shadow: 0px -2px 0px rgba(24, 45, 98, 0.75);
 }
 .dojo-level-list-container .dojo-level--brown .dojo-level-item__description {
-    background-color: rgb(50, 72, 103);
+    background-color: rgb(241, 247, 255);
+    border-top: 1px solid #182d62;
+    border-bottom: 1px solid #5e98e2;
 }
 
 .dojo-level-item__icon {
@@ -254,6 +298,7 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    margin-right: 15px;
 }
 
 .dojo-level-item__icon[data-dojo-level=none] {
@@ -281,34 +326,23 @@
 }
 
 .dojo-level-item__progress {
-    display: inline-block;
+    display: block;
     font-size: 1.6rem;
     font-weight: bold;
     vertical-align: middle;
-    margin: 0 45px;
+    margin: 10px 15px 10px;
 }
 
 .dojo-level-item__num {
-    display: inline-block;
+    display: block;
     font-size: 1.3rem;
     vertical-align: middle;
 }
 
 .dojo-level-item__description {
-    display: block;
+    flex: 10000 1 auto;
     padding: 25px;
     font-size: 1.3rem;
-    margin-top: 15px;
-    background-image: url(../../app/img/dojo/img-half-ukedon.png);
-    background-repeat: no-repeat;
-    background-size: auto 100%;
-    background-position: 20px;
-    padding-left: 150px;
-    display: none;
-}
-
-.dojo-level-list-container .dojo-level-item:last-child .dojo-level-item__description {
-    display: block;
 }
 
 /**
@@ -319,7 +353,7 @@
 }
 
 .dojo-watched-state__description {
-    display: inline-block;
+    display: table-cell;
     vertical-align: middle;
     font-size: 1.2rem;
 }
