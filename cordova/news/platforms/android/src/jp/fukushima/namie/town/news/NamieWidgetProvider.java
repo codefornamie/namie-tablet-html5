@@ -5,7 +5,9 @@ package jp.fukushima.namie.town.news;
 
 import java.util.Calendar;
 
+import jp.fukushima.namie.town.news.WidgetContentManager.MessageStyle;
 import jp.fukushima.namie.town.news.PublishStatus.ArticleExists;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -19,7 +21,6 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
 import android.widget.RemoteViews;
 
 /**
@@ -36,31 +37,26 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     // 既読チェックインターバル(ms)
     private static final int READ_CHECK_INTERVAL = 30 * 60 * 1000;
 
-    // フレームインデックス
-    private static int frameIndex = 0;
-    // 表示メッセージを切り替えるまでのフレーム数
-    private static final int MESSAGE_ACTION_FRAME = 16;
-    // メッセージを非表示とするフレームインデックス
-    private static final int SHOW_MESSAGE_FRAME = 14;
-
+    // 新聞配信の基本情報と状態
     private static PublishStatus publishStatus = null;
     // 未読状態の最終チェック時刻
     private static long lastUnreadCheckTime = 0;
 
-    private static int imageIndex = 0;
-    private static int[] images = { R.drawable.img_ukedon_1, R.drawable.img_ukedon_2};
-    private static int messageIndex = 0;
-    private static String[] messages = null;
+    // ウィジェット表示情報管理オブジェクト
+    private static WidgetContentManager contentManager = null;
 
     public NamieWidgetProvider() {
-        if (publishStatus == null) {
-            publishStatus = new PublishStatus();
-        }
     }
 
     @Override
     public void onEnabled(Context context) {
         Log.d(TAG, "NamieWidgetProvider#onEnabled()");
+
+        if (publishStatus == null) {
+            publishStatus = new PublishStatus();
+        }
+        lastUnreadCheckTime = 0;
+        contentManager = null;
 
         // ウィジット更新用アラームの登録
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -80,6 +76,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
         alarmManager.cancel(pendingIntent);
 
+        publishStatus = null;
+        lastUnreadCheckTime = 0;
+        contentManager = null;
+
         super.onDisabled(context);
     };
 
@@ -93,18 +93,19 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "NamieWidgetProvider#onReceive()");
 
+        if (contentManager == null) {
+            contentManager = new WidgetContentManager(context);
+        }
+
         String action = intent.getAction();
         if (action.equals(WIDGET_UPDATE_ACTION)) {
-            if(messages == null){
-                messages = context.getResources().getStringArray(R.array.messages);
-            }
-
             // 新聞の発行、未読状態を更新
             updateNewspaperStatus(context);
 
             // ウィジェットの表示更新
             updateWidget(context);
         }
+
         super.onReceive(context, intent);
     }
 
@@ -117,6 +118,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     }
 
     private void updateNewspaperStatus(Context context) {
+        if (publishStatus == null) {
+            return;
+        }
+
         // 日付が変更されていた場合、新聞発行情報を初期化
         if (!publishStatus.isDailyUpdated()) {
             // 連続して呼び出されないように一旦最終処理日時をセットしておく
@@ -158,7 +163,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      */
     private void initPublishStatus(Context context) {
-        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this);
+        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this, contentManager);
         if (requestThread != null) {
             requestThread.start();
         }
@@ -169,7 +174,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      */
     private void checkRecentArticleExists(Context context) {
-        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this);
+        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this, contentManager);
         if (requestThread != null) {
             requestThread.start();
         }
@@ -195,32 +200,24 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         ComponentName componentName = new ComponentName(context, NamieWidgetProvider.class);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
-        // キャラの更新
-        imageIndex = (imageIndex + 1) % images.length;
-        remoteViews.setImageViewResource(R.id.chara, images[imageIndex]);
+        // フレーム毎の表示情報を更新
+        contentManager.nextFrame();
 
-        // 新聞発行の有無に応じて新聞アイコンを変更
-        if (publishStatus.isPublished && !publishStatus.isReaded) {
-            setApplicationIcon(remoteViews, R.id.link_news, R.drawable.button_news_2);
-        } else {
-            setApplicationIcon(remoteViews, R.id.link_news, R.drawable.button_news);
-        }
+        // キャラの更新
+        remoteViews.setImageViewResource(R.id.chara, contentManager.getImageId());
 
         // メッセージ更新
-        if (frameIndex == 0) {
-            messageIndex = (messageIndex + 1) % messages.length;
-        }
-        if ((frameIndex < SHOW_MESSAGE_FRAME)) {
-            // ・文章更新
-            remoteViews.setTextViewText(R.id.fukidashi, Html.fromHtml(messages[messageIndex]));
-            remoteViews.setViewVisibility(R.id.fukidashi, View.VISIBLE);
-        } else {
-            // 一時非表示
-            remoteViews.setViewVisibility(R.id.fukidashi, View.INVISIBLE);
-        }
-        frameIndex = (frameIndex + 1) % MESSAGE_ACTION_FRAME;
+        setMessageViewStyle(context, remoteViews, contentManager.getMessageStyle());
+        remoteViews.setTextViewText(R.id.fukidashi, Html.fromHtml(contentManager.getMessage()));
+        remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
 
-        // アイコンタップ時のPendingIntent設定
+        // 新聞発行の有無に応じて新聞アイコンを変更
+        if (publishStatus != null) {
+            boolean published = publishStatus.isPublished && !publishStatus.isReaded;
+            setApplicationIcon(remoteViews, R.id.link_news, contentManager.getNewsIcon(published));
+        }
+
+        // PendingIntent設定
         setPendingIntents(context, remoteViews);
 
         widgetManager.updateAppWidget(componentName, remoteViews);
@@ -230,16 +227,16 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * メッセージの表示スタイルを変更する.
      * @param context コンテキスト
      * @param remoteViews 更新対象のRemoteViews
-     * @param type 0:吹き出し 1:記事切り抜き
+     * @param style メッセージの表示スタイル
      */
-    private void setMessageViewStyle(Context context, RemoteViews remoteViews, int type) {
+    private void setMessageViewStyle(Context context, RemoteViews remoteViews, MessageStyle style) {
         Resources resources = context.getResources();
         float density = resources.getDisplayMetrics().density;
         Configuration config = resources.getConfiguration();
 
         switch(config.orientation) {
         case Configuration.ORIENTATION_PORTRAIT:
-            if (type == 0) {
+            if (style == MessageStyle.STYLE_BUBBLE) {
                 remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_fukidashi_v);
                 remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 32), 0, dpToPx(density, 16), 0);
             } else {
@@ -249,7 +246,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
             break;
         case Configuration.ORIENTATION_LANDSCAPE:
         default :
-            if (type == 0) {
+            if (style == MessageStyle.STYLE_BUBBLE) {
                 remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_fukidashi);
                 remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 60), 0, dpToPx(density, 30), 0);
             } else {
@@ -292,7 +289,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     }
 
     /**
-     * ウィジェット更新要のPendingIntentのインスタンスを返す.
+     * ウィジェット更新用のPendingIntentのインスタンスを返す.
      * @param context コンテキスト
      * @return PendingIntent
      */
