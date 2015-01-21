@@ -68,7 +68,9 @@ define(function(require, exports, module) {
             var nextCount = 0;
             // 現在表示しようとしている帯画面のレベルまでユーザが達しているかどうかを判断
             if (this.dojoEditionModel.get("contentCollection").getNotAchievementedLevel() < this.level.get("level")) {
+                // まだ当該帯色までレベルが達していない場合
                 nextCount = 2;
+                $("[data-remained-num]").text("このコースは" + Code.DOJO_LEVELS[this.level.get("level")].levelName + "の動画を全部修得すると再生できます");
             }
 
             _(this.models).each($.proxy(function(model) {
