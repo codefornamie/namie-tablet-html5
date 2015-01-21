@@ -69,18 +69,6 @@ define(function(require, exports, module) {
          * @memberOf DojoLevelListView#
          */
         afterRendered : function() {
-            this.updateLevelVisibility();
-        },
-
-        /**
-         * コースの表示/非表示を切り替える
-         * @memberOf DojoLevelListView#
-         */
-        updateLevelVisibility: function () {
-            var notAchievementedLevel = this.collection.getNotAchievementedLevel();
-            for (var i = 0, max = parseInt(notAchievementedLevel); i <= max; i++) {
-                $("#dojo-level-" + i).show();
-            }
         },
 
         /**
