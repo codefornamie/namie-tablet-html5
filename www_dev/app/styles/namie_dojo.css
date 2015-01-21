@@ -742,3 +742,12 @@
 .dojo-introduction-dialog__body {
     text-align: center;
 }
+
+.dojo-introduction-dialog__body .button {
+    padding: 0 34px;
+    margin-bottom: 0;
+    height: 68px;
+    line-height: 68px;
+    border-radius: 34px;
+    font-size: 1.5rem;
+}
