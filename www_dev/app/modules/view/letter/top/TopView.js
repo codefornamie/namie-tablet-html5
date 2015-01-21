@@ -177,7 +177,7 @@ define(function(require, exports, module) {
 
             this.showLoading();
             articleCollection.fetch({
-                cache : false,
+                cache : app.useCache,
                 success : $.proxy(function() {
                     this.hideLoading();
                     // 検索にヒットした件数が3件以上の場合は投稿させない

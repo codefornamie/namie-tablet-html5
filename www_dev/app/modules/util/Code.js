@@ -65,7 +65,7 @@ define(function(require, exports, module) {
             "5", "9", "10", "6", "3", "4"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_LETTER] = [
-            "6"
+        "6"
     ];
 
     // 記事ステータス
@@ -107,7 +107,7 @@ define(function(require, exports, module) {
     Code.IMAGE_TYPE_PIO = 2;
     Code.IMAGE_TYPE_URL = 1;
     Code.IMAGE_TYPE_NONE = 0;
-    
+
     // 写真投稿アプリ: 投稿した記事の掲載期間(日数)
     Code.LETTER_PUB_PERIOD = 7;
 
@@ -137,35 +137,47 @@ define(function(require, exports, module) {
     /**
      * 道場の級情報
      */
-    Code.DOJO_LEVELS = [{
-        id: "0",
-        className: "none",
-        levelName: "",
-        label: "白帯",
-        description: "初めてタブレットをさわる方のためのコースです。（文言未決定）",
-        iconPath: ""
-    },{
-        id: "1",
-        className: "white",
-        levelName: "白帯",
-        label: "茶帯",
-        description: "茶帯コースです。（文言未決定）",
-        iconPath: ""
-    },{
-        id: "2",
-        className: "brown",
-        levelName: "茶帯",
-        label: "黒帯",
-        description: "黒帯コースです。（文言未決定）",
-        iconPath: ""
-    },{
-        id: "3",
-        className: "black",
-        levelName: "黒帯",
-        label: "",
-        description: "",
-        iconPath: ""
-    }];
+    Code.DOJO_LEVELS = [
+            {
+                id : "0",
+                className : "none",
+                levelName : "",
+                label : "白帯",
+                description : "初めてタブレットをさわる方のためのコースです。（文言未決定）",
+                iconPath : ""
+            }, {
+                id : "1",
+                className : "white",
+                levelName : "白帯",
+                label : "茶帯",
+                description : "茶帯コースです。（文言未決定）",
+                iconPath : ""
+            }, {
+                id : "2",
+                className : "brown",
+                levelName : "茶帯",
+                label : "黒帯",
+                description : "黒帯コースです。（文言未決定）",
+                iconPath : ""
+            }, {
+                id : "3",
+                className : "black",
+                levelName : "黒帯",
+                label : "",
+                description : "",
+                iconPath : ""
+            }
+    ];
 
+    /**
+     * アプリモード毎に、キャッシュを有効にするかどうか定義する。
+     */
+    Code.CACHE_MODE = {
+        "news" : true,
+        "ope" : false,
+        "letter" : false,
+        "posting" : false,
+        "dojo" : false
+    };
     module.exports = Code;
 });
