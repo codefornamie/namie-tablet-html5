@@ -28,11 +28,6 @@ define(function(require, exports, module) {
          */
         feedListElement : '#article_list',
         /**
-         * 記事一覧取得のキャッシュ有効の有無
-         * @memberOf OpeNewsView#
-         */
-        cache : false,
-        /**
          * このViewのイベント
          * @memberOf OpeNewsView#
          */
@@ -157,7 +152,7 @@ define(function(require, exports, module) {
          *  @memberOf OpeNewsView#
          */
         onClickOpePreviewBackButton: function () {
-            this.closePreview();
+            this.setDate(new Date(this.targetDate));
         },
         /**
          *  プレビュー表示を閉じる
