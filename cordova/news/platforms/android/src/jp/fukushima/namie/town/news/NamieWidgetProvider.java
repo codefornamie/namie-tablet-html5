@@ -37,13 +37,6 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     // 既読チェックインターバル(ms)
     private static final int READ_CHECK_INTERVAL = 30 * 60 * 1000;
 
-//    // フレームインデックス
-//    private static int frameIndex = 0;
-//    // 表示メッセージを切り替えるまでのフレーム数
-//    private static final int MESSAGE_ACTION_FRAME = 16;
-//    // メッセージを非表示とするフレームインデックス
-//    private static final int SHOW_MESSAGE_FRAME = 14;
-
     private static PublishStatus publishStatus = null;
     // 未読状態の最終チェック時刻
     private static long lastUnreadCheckTime = 0;
@@ -158,7 +151,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      */
     private void initPublishStatus(Context context) {
-        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this);
+        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this, contentManager);
         if (requestThread != null) {
             requestThread.start();
         }
