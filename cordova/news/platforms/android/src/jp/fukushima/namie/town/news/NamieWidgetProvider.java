@@ -111,6 +111,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
     }
 
+    public WidgetContentManager getContentManager() {
+        return contentManager;
+    }
+
     public PublishStatus getPublishStatus() {
         return publishStatus;
     }
@@ -165,7 +169,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      */
     private void initPublishStatus(Context context) {
-        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this, contentManager);
+        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this);
         if (requestThread != null) {
             requestThread.start();
         }
@@ -176,7 +180,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      */
     private void checkRecentArticleExists(Context context) {
-        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this, contentManager);
+        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this);
         if (requestThread != null) {
             requestThread.start();
         }
