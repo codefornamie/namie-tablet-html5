@@ -5,13 +5,18 @@ package jp.fukushima.namie.town.news;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 
 public class WidgetContentManager {
+    private static final String TAG = "NamieNewspaper";
     private static final String RECOMMEND_ARTICLE_BEFORE = "<font color=\"red\">新しいニュース</font>があるよ！";
     private static final String RECOMMEND_ARTICLE_AFTER = "詳しくは新聞のアイコンをタップしてね";
+    private static final String RECOMMEND_ARTICLE_ERROR = "エラーが発生したよ！";
 
     // フレームインデックス
     private int frameIndex = 0;
@@ -42,16 +47,18 @@ public class WidgetContentManager {
     private int messageIndex = 0;
     private List<String> messages = null;
     private int recommendArticleIndex = 0;
-    private List<String> recommendArticles = null;
+    private List<Map<String, Object>> recommendArticles = null;
 
     private DisplayMode displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;;
     private MessageStyle messageStyle = MessageStyle.STYLE_BUBBLE;;
+    private String site = null;
     private String message = null;
+    private Bitmap thumbnail = null;
     private int messageVisiblity = View.VISIBLE;
 
     public WidgetContentManager(Context context) {
         if (recommendArticles == null) {
-            recommendArticles = new ArrayList<String>();
+            recommendArticles = new ArrayList<Map<String, Object>>();
         }
         if(messages == null){
             String[] messageArray = context.getResources().getStringArray(R.array.messages);
@@ -91,12 +98,24 @@ public class WidgetContentManager {
             }
 
             // 表示メッセージのスタイルとテキストを決める
+            site = null;
+            message = null;
+            thumbnail = null;
             if (displayMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
                 messageStyle = MessageStyle.STYLE_BUBBLE;
                 message = RECOMMEND_ARTICLE_BEFORE;
             } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND) {
                 messageStyle = MessageStyle.STYLE_ARTICLE;
-                message = recommendArticles.get(recommendArticleIndex);
+                Map<String, Object> article = recommendArticles.get(recommendArticleIndex);
+                site = (String) article.get("site");
+                message = (String) article.get("title");
+                thumbnail = (Bitmap) article.get("thumbnail");
+                if (message == null) {
+                    Log.e(TAG, "Article title is empty.");
+                    displayMode = DisplayMode.DISPLAY_RECOMMEND_AFTER;
+                    messageStyle = MessageStyle.STYLE_BUBBLE;
+                    message = RECOMMEND_ARTICLE_ERROR;
+                }
             } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND_AFTER) {
                 messageStyle = MessageStyle.STYLE_BUBBLE;
                 message = RECOMMEND_ARTICLE_AFTER;
@@ -126,11 +145,18 @@ public class WidgetContentManager {
     }
 
     /**
-     * ウィジェットに表示するおすすめ記事を追加する.
-     * @param message メッセージテキスト
+     * おすすめ記事をクリアする.
      */
-    public void addRecommendArticle(String message) {
-        recommendArticles.add(message);
+    public void clearRecommendArticle() {
+        recommendArticles.clear();
+    }
+
+    /**
+     * おすすめ記事を追加する.
+     * @param article 追加する記事情報
+     */
+    public void addRecommendArticle(Map<String, Object> article) {
+        recommendArticles.add(article);
     }
 
     /**
@@ -180,10 +206,26 @@ public class WidgetContentManager {
     }
 
     /**
+     * メッセージのソースを返す.
+     * @return メッセージソース。固定メッセージの場合はnull
+     */
+    public String getSite() {
+        return site;
+    }
+
+    /**
      * メッセージテキストを返す.
      * @return メッセージテキスト
      */
     public String getMessage() {
         return message;
+    }
+
+    /**
+     * サムネイル画像を返す.
+     * @return サムネイル画像。サムネイルが存在しない場合はnull
+     */
+    public Bitmap getThumbnail() {
+        return thumbnail;
     }
 }

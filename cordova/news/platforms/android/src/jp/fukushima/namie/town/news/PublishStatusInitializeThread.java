@@ -3,13 +3,15 @@
  */
 package jp.fukushima.namie.town.news;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.Map;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class PublishStatusInitializeThread extends Thread {
@@ -44,21 +46,43 @@ public class PublishStatusInitializeThread extends Thread {
         _mWidgetProvider.setPublishStatus(publishStatus);
 
         // おすすめ記事の取得
-        List<String> recommendArticles = personium.readRecommendArticles(_mContext);
+        _mWidgetContentManager.clearRecommendArticle();
+        List<Map<String, Object>> recommendArticles = personium.readRecommendArticles(_mContext);
         if (recommendArticles != null) {
-            for (String article : recommendArticles) {
-                try {
-                    JSONObject json = new JSONObject(article);
-                    String title = json.getString("title");
-                    if (title != null) {
-                        _mWidgetContentManager.addRecommendArticle(title);
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, "PersoniumRequestThread error." + e.getMessage());
+            for (Map<String, Object> article : recommendArticles) {
+                String title = (String) article.get("title");
+                if (title != null) {
+                    String imagePath = (String) article.get("imagePath");
+                    String thumbnailUrl = (String) article.get("imageThumbUrl");
+                    Bitmap thumbnail = getImage(imagePath, thumbnailUrl);
+                    article.put("thumbnail", thumbnail);
+                    _mWidgetContentManager.addRecommendArticle(article);
                 }
             }
         }
 
         Log.d(TAG, "PublishStatusInitializeThread completed.");
+    }
+
+    private Bitmap getImage(String imagePath, String thumbnailUrl) {
+        Bitmap bitmap = null;
+        try {
+            InputStream inputStream = null;
+            if (thumbnailUrl.startsWith("http://") || thumbnailUrl.startsWith("https://")) {
+                URL url = new URL(thumbnailUrl);
+                inputStream = url.openStream();
+            } else {
+                PersoniumModel personium = new PersoniumModel();
+                inputStream = personium.getThumbnailFromWebDav(_mContext, imagePath, thumbnailUrl);
+            }
+
+            // 元々サムネイルとして登録されている画像なのでリサイズせずにそのまま読み込む
+            bitmap = BitmapFactory.decodeStream(inputStream);
+
+            inputStream.close();
+            return bitmap;
+        } catch (Exception e) {
+            return bitmap;
+        }
     }
 }
