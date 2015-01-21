@@ -229,7 +229,8 @@ define(function(require, exports, module) {
                 baseUrl : this.app.config.basic.baseUrl,
                 cellName : this.app.config.basic.cellId,
                 schema : this.app.config.basic.schema,
-                boxName : this.app.config.basic.boxName
+                boxName : this.app.config.basic.boxName,
+                retryCount : this.app.config.basic.retryCount
             };
             Log.info("regist start to AccountManager param : " + JSON.stringify(param));
             this.androidAccountManager.addAccountExplicitly(this.packageName, id, pw, param, function(error, account) {

@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.fujitsu.dc.client.Accessor;
 import com.fujitsu.dc.client.Cell;
@@ -70,31 +71,47 @@ public class Authenticator extends AbstractAccountAuthenticator {
             String cellName = am.getUserData(account, "cellName");
             String schema = am.getUserData(account, "schema");
             String boxName = am.getUserData(account, "boxName");
-
+            String retryStr = am.getUserData(account, "retryCount");
+            int retryCount = 1;
+            if (retryStr != null) {
+                retryCount = Integer.valueOf(retryStr);
+            }
             DcContext dc = new DcContext(baseUrl, cellName, schema, boxName);
-            dc.setPlatform("android");
+            DcContext.setPlatform("android");
 
-            String authToken = "";
-            try {
-                Accessor ac = dc.getAccessorWithAccount(cellName, account.name, password);
-                Cell cell = ac.cell();
-                authToken = ac.getAccessToken();
-
-                Long expiresIn = ac.getExpiresIn().longValue();
-                Long now = Calendar.getInstance().getTimeInMillis();
-                Long expireDateTime = now + expiresIn * 1000;
-                am.setUserData(account, "ExpiresIn", String.valueOf(expireDateTime));
-            } catch (DaoException ex) {
-                String respCode = ex.getCode();
-                if (respCode.equals("0")) {
-                    throw new NetworkErrorException("msg:" + respCode);
-                } else {
-                    final Bundle result = new Bundle();
-                    result.putString(AccountManager.KEY_ERROR_CODE, respCode);
-                    result.putString(AccountManager.KEY_ERROR_MESSAGE, "msg:" + respCode);
-                    return result;
+            String authToken = null;
+            Accessor ac = null;
+            while (retryCount > 0) {
+                try {
+                    Log.d("Namie", "personium authentication start : retryCount(" + String.valueOf(retryCount) + ")");
+                    ac = dc.getAccessorWithAccount(cellName, account.name, password);
+                    ac.cell();
+                    authToken = ac.getAccessToken();
+                    break;
+                } catch (DaoException ex) {
+                    Log.d("Namie", "personium authentication faulure : " + ex.getMessage());
+                    String respCode = ex.getCode();
+                    if (respCode.equals("0")) {
+                        if ((retryCount - 1) > 0) {
+                            retryCount = retryCount - 1;
+                            continue;
+                        }
+                        throw new NetworkErrorException("msg:" + respCode);
+                    } else {
+                        final Bundle result = new Bundle();
+                        result.putString(AccountManager.KEY_ERROR_CODE, respCode);
+                        result.putString(AccountManager.KEY_ERROR_MESSAGE, "msg:" + respCode);
+                        return result;
+                    }
                 }
             }
+            if (authToken == null) {
+                throw new NetworkErrorException("msg:0");
+            }
+            Long expiresIn = ac.getExpiresIn().longValue();
+            Long now = Calendar.getInstance().getTimeInMillis();
+            Long expireDateTime = now + expiresIn * 1000;
+            am.setUserData(account, "ExpiresIn", String.valueOf(expireDateTime));
 
             if (!TextUtils.isEmpty(authToken)) {
                 final Bundle result = new Bundle();
@@ -111,7 +128,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
         // return bundle;
         return null;
     }
-
     @Override
     public String getAuthTokenLabel(String authTokenType) {
         // null means we don't support multiple authToken types
