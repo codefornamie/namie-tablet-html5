@@ -53,13 +53,14 @@ define(function(require, exports, module) {
             $("#snap-content").scrollTop(0);
 
             // 記事カテゴリ選択肢
-            var categories = _.filter(Code.ARTICLE_CATEGORY_LIST, function(category) {
-                return _.find(Code.ARTICLE_CATEGORY_LIST_BY_MODE[app.config.basic.mode], function(key) {
-                    return category.key === key;
-                });
-            });
-            _.each(categories, function(category) {
-                $("#articleCategory").append("<option value='" + category.key + "'>" + category.value + "</option>");
+            var mapCategory = _.indexBy(Code.ARTICLE_CATEGORY_LIST, "key");
+            _.each(Code.ARTICLE_CATEGORY_LIST_BY_MODE[app.config.basic.mode], function(key) {
+                var category = mapCategory[key];
+                var option = $("<option>");
+                option.attr("value", category.key);
+                option.text(category.detailValue || category.value);
+                option.data("site", category.value);
+                $("#articleCategory").append(option);
             });
 
             if (this.model) {
@@ -280,7 +281,7 @@ define(function(require, exports, module) {
             }
 
             this.model.set("type", $("#articleCategory").val());
-            this.model.set("site", $("#articleCategory option:selected").text());
+            this.model.set("site", $("#articleCategory option:selected").data("site"));
             this.model.set("title", $("#articleTitle").val());
 
             this.model.set("startDate", $("#articleDate1").val());

@@ -16,9 +16,9 @@
 
         <div class="dojo-level-item__progress">
         <% if (level.numContent - level.numSolved == 0) { %>
-        段位達成！！
+            <%= level.label %> 修得済み！！</div>
         <% } else { %>
-            あと<%= level.numContent - level.numSolved %>本で段位取得！！
+            あと<%= level.numContent - level.numSolved %>本で<%= level.label %>修得！！
         <% } %>
         </div>
 
