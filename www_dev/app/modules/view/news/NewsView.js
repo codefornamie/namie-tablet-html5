@@ -428,14 +428,23 @@ define(function(require, exports, module) {
                         return -1 * options.sortOrder;
                     }
                 });
+                // 写真投稿新着件数
+                var newArrivalsMsg = "";
+                if (type === "6") {
+                    var currentPublishLetters = articleDateMap[app.currentPublishDate];
+                    if (currentPublishLetters) {
+                        newArrivalsMsg = "<br>今日の新着写真投稿 " + currentPublishLetters.get("articles").length + "件";
+                    }
+                }
 
                 // まとめ記事画面を開くための記事を作成し、コレクションの先頭に登録
                 var folderArticle = new ArticleModel({
                     __id : options.idPreffex + DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
-                    site : articleDateList[0].get("site"),
+                    site : _.indexBy(app.serverConfig.COLOR_LABEL, "type")[type].label,
                     dispTitle : options.dispTitle,
                     type : type,
                     articles : articleDateList,
+                    newArrivalsMsg : newArrivalsMsg,
                     imagePath : imagePath,
                     imageThumbUrl : imageThumbUrl
                 });
