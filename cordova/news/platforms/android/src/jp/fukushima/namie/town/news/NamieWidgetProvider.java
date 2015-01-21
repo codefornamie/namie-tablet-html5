@@ -55,6 +55,8 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         if (publishStatus == null) {
             publishStatus = new PublishStatus();
         }
+        lastUnreadCheckTime = 0;
+        contentManager = null;
 
         // ウィジット更新用アラームの登録
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
