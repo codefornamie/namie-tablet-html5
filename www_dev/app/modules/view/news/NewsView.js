@@ -330,9 +330,6 @@ define(function(require, exports, module) {
             // GridListView初期化
             this.showGridListView();
 
-            // ArticleListView初期化
-            this.showArticleListView();
-
             this.hideLoading();
         },
         /**
