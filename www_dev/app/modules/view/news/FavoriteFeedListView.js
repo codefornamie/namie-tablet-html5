@@ -115,6 +115,13 @@ define(function(require, exports, module) {
                     template: template
                 });
                 break;
+            case "8":
+                template = require("ldsh!templates/{mode}/news/letterDetail");
+                ListItemView = new FavoriteArticleListItemView({
+                    model : this.articleModel,
+                    template: template
+                });
+                break;
             default:
                 template = require("ldsh!templates/{mode}/news/eventsListItem");
                 ListItemView = new FavoriteArticleListItemView({
