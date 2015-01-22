@@ -54,10 +54,10 @@ define(function(require, exports, module) {
                     });
                 }
                 // priorityをセットする
-                var pr = _.find(app.serverConfig.COLOR_LABEL, function(cl){
+                var pr = _.find(app.serverConfig.COLOR_LABEL, function(cl) {
                     return cl.type === res.type && cl.site === res.site;
                 });
-                if(pr){
+                if (pr) {
                     res.priority = pr.priority;
                 } else {
                     res.priority = Number.MAX_SAFE_INTEGER;
@@ -70,11 +70,11 @@ define(function(require, exports, module) {
                 // 順序付け(sequence)ありとなしで分ける
                 var sequenced = [];
                 var unsequenced = [];
-                for(var i = 0; i < response.length; i++){
-                    if(response.sequense >= "0"){
-                        sequenced.push(response[i]);
-                    } else {
+                for (var i = 0; i < response.length; i++) {
+                    if (isNaN(parseInt(response[i].sequence)) || response[i].publishedAt < app.currentDate) {
                         unsequenced.push(response[i]);
+                    } else {
+                        sequenced.push(response[i]);
                     }
                 }
                 // 最初に順序付けありのデータをその順序でresponseに設定
@@ -83,14 +83,16 @@ define(function(require, exports, module) {
                 });
                 // 順序付けなしは優先度 > 更新日時降順でソート
                 unsequenced = _.sortBy(unsequenced, function(res) {
-                    return [res.priority, -new Date(res.updatedAt)];
+                    return [
+                            res.priority, Number.MAX_SAFE_INTEGER - (new Date(res.updatedAt)).getTime()
+                    ];
                 });
                 // 順序付けなしのデータを適切な位置に差し込んでいく
                 _.each(unsequenced, function(ures) {
                     // response内でuresの優先度と同じエントリのうち、一番最後に出現するものを探す。
                     var lastIndex = response.length - 1;
-                    for(var j = lastIndex; j >= 0; j--){
-                        if(ures.priority === response[j]) {
+                    for (var j = lastIndex; j >= 0; j--) {
+                        if (ures.priority === response[j].priority) {
                             lastIndex = j;
                             break;
                         }
