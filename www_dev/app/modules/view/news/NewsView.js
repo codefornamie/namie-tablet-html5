@@ -318,13 +318,14 @@ define(function(require, exports, module) {
             this.summarizeArticle("8", {
                 targetDate : targetDate,
                 idPreffex : "condolence-",
-                dispTitle : (moment(targetDate).format("YYYY年M月DD日")) + "の" + "おくやみ"
+                dispTitle : (moment(targetDate).format("YYYY年M月DD日")) + "の" + "おくやみ",
+                sortOrder: -1
             });
             this.summarizeArticle("6", {
                 targetDate : targetDate,
                 idPreffex : "letter-",
-                dispTitle : "みんなで投稿！撮れたて写真館"
-
+                dispTitle : "みんなで投稿！撮れたて写真館",
+                sortOrder: 1
             });
 
             // GridListView初期化
@@ -365,12 +366,13 @@ define(function(require, exports, module) {
                 newsArticles.sort(function(a, b) {
                     var pa = a.get("publishedAt");
                     var pb = b.get("publishedAt");
-                    if (pa < pb) {
-                        return 1;
-                    } else if (pa > pb) {
-                        return -1;
-                    } else {
+                    if (pa === pb) {
                         return 0;
+                    }
+                    if (pa < pb) {
+                        return options.sortOrder;
+                    } else if (pa > pb) {
+                        return -1 * options.sortOrder;
                     }
                 });
 
@@ -380,14 +382,15 @@ define(function(require, exports, module) {
 
                 // newsCollectionからまとめる記事を削除し、配列に追加する
                 _.each(newsArticles, $.proxy(function(article) {
-                    if (article.get("type") !== type)
+                    if (article.get("type") !== type) {
                         return;
+                    }
 
                     var publishedAt = article.get("publishedAt");
                     var articleModel = articleDateMap[publishedAt];
                     if (!articleModel) {
                         articleModel = new ArticleModel({
-                            __id : options.idPreffex + DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
+                            __id : options.idPreffex + (moment(publishedAt).format("YYYY-MM-DD")),
                             site : article.get("site"),
                             dispTitle : (moment(publishedAt).format("YYYY年M月DD日")) + "の" + siteLabel,
                             type : type,
@@ -412,8 +415,22 @@ define(function(require, exports, module) {
                 _.each(articleDateMap, function(articleDate) {
                     articleDateList.push(articleDate);
                 });
+                // 日付順にソートする
+                articleDateList.sort(function(a, b) {
+                    var pa = a.get("__id");
+                    var pb = b.get("__id");
+                    if (pa === pb) {
+                        return 0;
+                    }
+                    if (pa < pb) {
+                        return options.sortOrder;
+                    } else if (pa > pb) {
+                        return -1 * options.sortOrder;
+                    }
+                });
+
                 // まとめ記事画面を開くための記事を作成し、コレクションの先頭に登録
-                var letterFolderArticle = new ArticleModel({
+                var folderArticle = new ArticleModel({
                     __id : options.idPreffex + DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
                     site : articleDateList[0].get("site"),
                     dispTitle : options.dispTitle,
@@ -422,8 +439,8 @@ define(function(require, exports, module) {
                     imagePath : imagePath,
                     imageThumbUrl : imageThumbUrl
                 });
-                this.newsCollection.unshift(letterFolderArticle);
-                this.articleCollection.unshift(letterFolderArticle);
+                this.newsCollection.unshift(folderArticle);
+                this.articleCollection.unshift(folderArticle);
             }
         },
         /**
