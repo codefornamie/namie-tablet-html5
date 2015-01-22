@@ -252,7 +252,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
                 remoteViews.setInt(R.id.message, "setBackgroundResource", R.drawable.img_fukidashi_v);
                 remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 32), 0, dpToPx(density, 16), 0);
             } else {
-                remoteViews.setInt(R.id.message, "setBackgroundResource", R.drawable.img_midashi);
+                remoteViews.setInt(R.id.message, "setBackgroundResource", R.drawable.bg_news);
                 remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 20), 0, dpToPx(density, 20), 0);
             }
             break;
