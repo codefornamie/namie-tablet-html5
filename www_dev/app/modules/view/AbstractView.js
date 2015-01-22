@@ -16,8 +16,8 @@ define(function(require, exports, module) {
      * @constructor
      */
     var AbstractView = Backbone.Layout.extend({
-        animation: null,
-        animationDeley: 0,
+        animation : null,
+        animationDeley : 0,
         serialize : function() {
             return {
                 model : this.model
@@ -42,8 +42,7 @@ define(function(require, exports, module) {
         /**
          * 描画前の処理を実装する。
          * <p>
-         * サブクラスは本メソッドをオーバライドして、
-         * 描画前の独自の処理を実装できる。
+         * サブクラスは本メソッドをオーバライドして、 描画前の独自の処理を実装できる。
          * </p>
          * @memberOf AbstractView#
          */
@@ -57,7 +56,7 @@ define(function(require, exports, module) {
             this.afterRendered();
             if (this.formId) {
                 var self = this;
-             // バリデーションを設定
+                // バリデーションを設定
                 $(this.formId).validate({
                     submitHandler : function() {
                         return false;
@@ -79,55 +78,53 @@ define(function(require, exports, module) {
         onValidateError : function() {
             var that = this;
             setTimeout(function() {
-                $("input.error").each(
-                    function() {
-                        if ($(this).css("display") == "none") {
-                            return true;
-                        }
-                        var scroller = $(this).closest(".scroller");
-                        var top = -10 - scroller.offset().top + scroller.scrollTop() + $(this).offset().top;
-                        scroller.animate({
-                            scrollTop : top
-                        }, 500, "swing");
-                        return false;
-                    }, this);
+                $("input.error").each(function() {
+                    if ($(this).css("display") == "none") {
+                        return true;
+                    }
+                    var scroller = $(this).closest(".scroller");
+                    var top = -10 - scroller.offset().top + scroller.scrollTop() + $(this).offset().top;
+                    scroller.animate({
+                        scrollTop : top
+                    }, 500, "swing");
+                    return false;
+                }, this);
             }, 0);
         },
         /**
          * 描画後の処理を実装する。
          * <p>
-         * サブクラスは本メソッドをオーバライドして、
-         * 描画後の独自の処理を実装できる。
+         * サブクラスは本メソッドをオーバライドして、 描画後の独自の処理を実装できる。
          * </p>
          * @memberOf AbstractView#
          */
         afterRendered : function() {
-            
+
         },
 
         /**
          * ローディングメッセージを表示する。
          * @memberOf AbstractView#
          */
-        showLoading : function () {
+        showLoading : function() {
             $.blockUI({
-                message: "しばらくお待ちください",
-                css: {
-                    border: 'none', 
-                    padding: '10px', 
-                    backgroundColor: '#000', 
-                    '-webkit-border-radius': '10px', 
-                    '-moz-border-radius': '10px', 
-                    opacity: 0.5, 
-                    color: '#fff' 
+                message : "しばらくお待ちください",
+                css : {
+                    border : 'none',
+                    padding : '10px',
+                    backgroundColor : '#000',
+                    '-webkit-border-radius' : '10px',
+                    '-moz-border-radius' : '10px',
+                    opacity : 0.5,
+                    color : '#fff'
                 }
-            }); 
+            });
         },
         /**
          * ローディングメッセージを閉じる
          * @memberOf AbstractView#
          */
-        hideLoading :function () {
+        hideLoading : function() {
             $.unblockUI();
         },
         /**
@@ -154,18 +151,31 @@ define(function(require, exports, module) {
         /**
          * 指定されたimg要素に、imgArrayパラメタで指定された画像のコンテンツを表示する。
          * 
-         * @param {String} imgElementSelector 画像を表示する要素のセレクタ。<br/>
-         * このセレクタで取得される要素の数と、imgArrayの要素数は一致していなければならない。
-         * @param {Array} imgArray 画像情報を含むオブジェクトの配列。<br/>
-         * 以下のプロパティを含める。<br/>
-         * imageUrl: 画像のDAVのファイルパス<br/>
-         * imageIndex: 画像のインデックス<br/>
+         * @param {String} imgElementSelector 画像を表示する要素のセレクタ。<br/> このセレクタで取得される要素の数と、imgArrayの要素数は一致していなければならない。
+         * @param {Array} imgArray 画像情報を含むオブジェクトの配列。<br/> 以下のプロパティを含める。<br/> imageUrl: 画像のDAVのファイルパス<br/> imageIndex:
+         *                画像のインデックス<br/>
          * @param {Boolean} isExpansion 画像拡大処理を設定するかどうか<br/>
          * @memberOf AbstractView#
          */
         showPIOImages : function(imgElementSelector, imgArray, isExpansion, saveFunc) {
             var $articleImage = $(this.el).find(imgElementSelector);
 
+            _.each(imgArray, $.proxy(function(item) {
+                var $targetElem = $articleImage.eq(item.imageIndex - 1);
+                this.showPIOImage($targetElem, item, isExpansion, saveFunc);
+            }, this));
+        },
+        /**
+         * 指定されたimg要素に、itemパラメタで指定された画像のコンテンツを表示する。
+         * @param imgElement 画像を表示する要素
+         * @param item 画像情報を含むオブジェクト。<br/> 以下のプロパティを含める。<br/>
+         * imageUrl: 画像のDAVのファイルパス
+         * @param isExpansion 画像拡大処理を設定するかどうか
+         * @param saveFunc 拡大表示画面の「画像保存」ボタン押下時に呼び出されるコールバック関数
+         * @memberOf AbstractView#
+         */
+        showPIOImage : function(imgElement, item, isExpansion, saveFunc) {
+            var $targetElem = imgElement;
             var onGetBinary = $.proxy(function(binary, item) {
                 var arrayBufferView = new Uint8Array(binary);
                 var blob = new Blob([
@@ -174,71 +184,69 @@ define(function(require, exports, module) {
                     type : "image/jpg"
                 });
                 var url = FileAPIUtil.createObjectURL(blob);
-
-                var $targetElem = $articleImage.eq(item.imageIndex - 1);
-
                 $targetElem.load($.proxy(function() {
                     if (isExpansion) {
                         $targetElem.wrap("<a class='expansionPicture' href='" + url + "'></a>");
-                        $(".expansionPicture").colorbox({
-                            closeButton : false,
-                            current : "",
-                            photo : true,
-                            maxWidth : "83%",
-                            maxHeight : "100%",
-                            onComplete : function() {
-                                $("#colorbox").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
-                                $("#colorbox").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
-                                $("#cboxCloseButton").click(function() {
-                                    $.colorbox.close();
+                        $(".expansionPicture").colorbox(
+                                {
+                                    closeButton : false,
+                                    current : "",
+                                    photo : true,
+                                    maxWidth : "83%",
+                                    maxHeight : "100%",
+                                    onComplete : function() {
+                                        $("#colorbox").append(
+                                                "<button id='cboxCloseButton' class='small button'>閉じる</button>");
+                                        $("#colorbox").append(
+                                                "<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                                        $("#cboxCloseButton").click(function() {
+                                            $.colorbox.close();
+                                        });
+                                        $("#cboxSaveButton").click(function(ev) {
+                                            saveFunc(ev);
+                                        });
+                                        $("#colorbox").find("img").data("blob", blob);
+                                    },
+                                    onClosed : function() {
+                                        $("#cboxSaveButton").remove();
+                                        $("#cboxCloseButton").remove();
+                                    }
                                 });
-                                $("#cboxSaveButton").click(function(ev) {
-                                    saveFunc(ev);
-                                });
-                                $("#colorbox").find("img").data("blob",blob);
-                            },
-                            onClosed : function() {
-                                $("#cboxSaveButton").remove();
-                                $("#cboxCloseButton").remove();
-                            }
-                        });
                     }
                     window.URL.revokeObjectURL($(this).attr("src"));
                 }, this, url, blob));
                 $targetElem.attr("src", url);
             }, this);
-            
-            var onError = function (resp, item) {
-                $articleImage.eq(item.imageIndex-1).triggerHandler("error", resp);
+
+            var onError = function(resp, item) {
+                $targetElem.triggerHandler("error", resp);
             };
-            
-            _.each(imgArray,$.proxy(function (item) {
-                try {
-                    if(item.imageUrl){
-                        var davModel = new WebDavModel();
-                        var path = this.model.get("imagePath");
 
-                        if (item.hasPath) {
-                            path = "";
-                        } else {
-                            path = path ? path + "/" : "";
-                        }
-                        davModel.id = path + item.imageUrl;
-                        davModel.fetch({
-                            success : function(model, binary) {
-                                onGetBinary(binary,item);
-                            },
+            try {
+                if (item.imageUrl) {
+                    var davModel = new WebDavModel();
+                    var path = this.model.get("imagePath");
 
-                            error: function (resp) {
-                                onError(resp, item);
-                            }
-                        });
+                    if (item.hasPath) {
+                        path = "";
+                    } else {
+                        path = path ? path + "/" : "";
                     }
-                } catch (e) {
-                    console.error(e);
-                    onError(e, item);
+                    davModel.id = path + item.imageUrl;
+                    davModel.fetch({
+                        success : function(model, binary) {
+                            onGetBinary(binary, item);
+                        },
+
+                        error : function(resp) {
+                            onError(resp, item);
+                        }
+                    });
                 }
-            },this));
+            } catch (e) {
+                console.error(e);
+                onError(e, item);
+            }
         },
         /**
          * ファイル名を元に、ユニークなID付きのファイル名を生成する
@@ -271,7 +279,7 @@ define(function(require, exports, module) {
          * @param {ByteArray} byteArray 元画像。
          * @param {Function} callback サムネイル生成後にコールバックされる。
          */
-        makeThmbnail : function(byteArray, callback){
+        makeThmbnail : function(byteArray, callback) {
             // サムネイルの長辺のサイズ
             var LONG_SIDE_SIZE = 256;
             var canvas = document.createElement('canvas');
@@ -283,7 +291,7 @@ define(function(require, exports, module) {
                 var ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                 if (canvas.toBlob) {
-                    canvas.toBlob(function(blob){
+                    canvas.toBlob(function(blob) {
                         var reader = new FileReader();
                         reader.onload = function(e) {
                             callback(e.target.result);
@@ -298,7 +306,7 @@ define(function(require, exports, module) {
          * base64データをバイナリデータに変換
          * 
          * @memberOf AbstractView#
-         * @param {ByteArray} s  元画像。
+         * @param {ByteArray} s 元画像。
          * @return {String} バイナリデータ
          */
         encodeBase64 : function(s) {
