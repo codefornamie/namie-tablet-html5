@@ -22,12 +22,12 @@ define(function(require, exports, module) {
          * 記事一覧を表示する要素のセレクタ
          * @memberOf FeedListView#
          */
-        listElementSelector: "#feedList",
+        listElementSelector : "#feedList",
         /**
          * このViewのイベント
          * @memberOf FeedListView#
          */
-        events: {
+        events : {
             "click .feedListItem" : "onClickFeedListItem"
         },
 
@@ -41,7 +41,15 @@ define(function(require, exports, module) {
         beforeRendered : function() {
             this.setFeedList();
         },
-
+        /**
+         * 記事種別ごとのListItemViewの定義
+         * <p>
+         * typeとviewをプロパティに持つObjectを指定する。
+         * typeで指定した記事の場合、viewプロパティに指定したListItemViewが利用される。
+         * </p>
+         * @memberOf FeedListView#
+         */
+        customListItemView : [],
         /**
          * 初期化処理
          * @memberOf FeedListView#
@@ -58,7 +66,7 @@ define(function(require, exports, module) {
          * @param {Object} Viewクラス
          * @memberOf FeedListView#
          */
-        setFeedListItemViewClass: function(itemViewClass) {
+        setFeedListItemViewClass : function(itemViewClass) {
             this.feedListItemViewClass = itemViewClass;
         },
         /**
@@ -70,10 +78,18 @@ define(function(require, exports, module) {
             var animationDeley = 0;
             this.collection.each($.proxy(function(model) {
                 var ItemView = self.feedListItemViewClass;
+                if (this.customListItemView) {
+                    var customListItemView = _.find(this.customListItemView, function(customView) {
+                        return model.get("type") === customView.type;
+                    });
+                    if (customListItemView) {
+                        ItemView = customListItemView.view;
+                    }
+                }
                 this.insertView(this.listElementSelector, new ItemView({
                     model : model,
                     animationDeley : animationDeley,
-                    parentView: this
+                    parentView : this
                 }));
                 animationDeley += 0.2;
             }, this));
@@ -94,9 +110,8 @@ define(function(require, exports, module) {
                 app.ga.trackEvent("ニュース", "記事参照", targetArticle.get("title"));
             }
 
-
             $(document).trigger('scrollToArticle', {
-                articleId: articleId
+                articleId : articleId
             });
         },
     });
