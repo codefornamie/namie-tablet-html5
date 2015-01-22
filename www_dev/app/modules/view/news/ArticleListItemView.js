@@ -16,9 +16,11 @@ define(function(require, exports, module) {
     var colorbox = require("colorbox");
 
     /**
-     * 記事一覧アイテムのViewを作成する。
-     * 
-     * @class 記事一覧アイテムのView
+     * 記事詳細画面のViewを作成する。
+     * <p>
+     * 記事一覧をタップし、記事詳細画面を表示する際に利用される。
+     * </p>
+     * @class 記事詳細画面のView
      * @exports ArticleListItemView
      * @constructor
      */
@@ -448,17 +450,18 @@ define(function(require, exports, module) {
 
             // ファイルシステムエラーハンドラ
             var onFileSystemError = function(e) {
-                app.logger.debug("FileSystemError: code=" + e.code);
+                app.logger.error("Failed saving image. FileSystemError: error=" + e.toString());
                 window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
             };
             // メディアスキャン
             var mediaScan = function(filePath) {
-                app.logger.debug("scanFile start. filePath: " + filePath);
+                app.logger.info("scanFile start. filePath: " + filePath);
                 window.MediaScanPlugin.scanFile(filePath, function(msg) {
                     window.plugins.toast.showLongBottom("画像を保存しました。");
+                    app.logger.info("Success saving image. filePath=" + filePath);
                 }, function(err) {
                     window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                    app.logger.debug(err);
+                    app.logger.error("Failed saving image. error=" + err.toString());
                 });
             };
 
@@ -475,7 +478,7 @@ define(function(require, exports, module) {
                             };
                             fileWriter.onerror = function(e) {
                                 window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                                app.logger.debug('Write failed: ' + e.toString());
+                                app.logger.error("Failed saving image (Blob). error=" + e.toString());
                             };
                             fileWriter.write(blob);
 
@@ -489,9 +492,10 @@ define(function(require, exports, module) {
                     mediaScan(filePath);
                 }, function(error) {
                     window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                    app.logger.debug("download error source: " + error.source);
-                    app.logger.debug("download error target: " + error.target);
-                    app.logger.debug("download error code: " + error.code);
+                    app.logger.error("Failed saving image (Blob). error=" + error.toString());
+                    app.logger.error("Failed saving image (Blob). source: " + error.source);
+                    app.logger.error("Failed saving image (Blob). target: " + error.target);
+                    app.logger.error("Failed saving image (Blob). code: " + error.code);
                 }, false, {});
             }
         }
