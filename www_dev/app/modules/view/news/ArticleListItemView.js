@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 
     /**
      * 記事一覧アイテムのViewを作成する。
-     *
+     * 
      * @class 記事一覧アイテムのView
      * @exports ArticleListItemView
      * @constructor
@@ -32,8 +32,12 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
+         * @memberOf ArticleListItemView#
          */
         afterRendered : function() {
+            // この記事内のimg要素のsrc属性に、personium.ioのWebDAVのパスが設定されているかどうか
+            this.isMinpoArticle = this.model.isMinpoScraping();
+
             this.showImage();
             this.afterRenderCommon();
             // タグリストの追加
@@ -43,40 +47,69 @@ define(function(require, exports, module) {
             this.tagListView.render();
         },
         /**
-         * このViewが表示している記事に関連する画像データの取得と表示を行う。
+         * 指定されたimg要素に、imageUrlで指定されたWebDAVの画像を設定する。
+         * @param {Object} articleImage img要素のjqueryオブジェクト
+         * @param {Object} displayControl 表示をコントールする要素。ここに指定された要素は、画像読み込み処理の前に非表示にされ、画像読み込み完了後、表示される
+         * @param {String} imageUrl 画像ファイル
+         * @memberOf ArticleListItemView#
          */
-        showImage : function() {
-            var self = this;
-            var imageElems = $(this.el).find("img");
-            this.setColorbox(imageElems);
-            var articleImage = $(this.el).find(".articleDetailImage");
+        showWebDAVImage : function(articleImage, displayControl, imageUrl) {
+            if (imageUrl && imageUrl.lastIndexOf('http', 0) === 0) {
+                articleImage.attr("src", imageUrl);
+                this.setColorbox(articleImage);
+            }
+            // 画像読み込み中は、img要素を非表示にする
+            displayControl.hide();
             var onGetBinary = function(binary) {
                 var arrayBufferView = new Uint8Array(binary);
-                var blob = new Blob([ arrayBufferView ], {
+                var blob = new Blob([
+                    arrayBufferView
+                ], {
                     type : "image/jpg"
                 });
                 var url = FileAPIUtil.createObjectURL(blob);
                 articleImage.load(function() {
-                    articleImage.parent().show();
-//                    window.URL.revokeObjectURL(articleImage.attr("src"));
+                    displayControl.show();
                 });
                 articleImage.attr("src", url);
                 articleImage.data("blob", blob);
-                self.setColorbox(articleImage);
-            };
+                this.setColorbox(articleImage);
+            }.bind(this);
+            try {
+                var imagePath = this.model.get("imagePath") ? this.model.get("imagePath") + "/" : "";
+                app.box.col("dav").getBinary(imagePath + imageUrl, {
+                    success : onGetBinary
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        /**
+         * このViewが表示している記事に関連する画像データの取得と表示を行う。
+         * @memberOf ArticleListItemView#
+         */
+        showImage : function() {
+            var self = this;
+            var imageElems = $(this.el).find("img");
+            // this.setColorbox(imageElems);
+
+            if (this.isMinpoArticle) {
+                // この記事のimg要素にはWebDAVのパスが設定されているため、取得しにいく
+                _.each(imageElems, function(imageElement) {
+                    if ($(imageElement).hasClass("articleDetailImage")) {
+                        return;
+                    }
+                    var imageUrl = $(imageElement).attr("src");
+                    this.showWebDAVImage($(imageElement), $(imageElement), imageUrl);
+                }.bind(this));
+            } else {
+                this.setColorbox(imageElems);
+            }
+
+            var articleImage = $(this.el).find(".articleDetailImage");
 
             if (this.model.get("imageUrl")) {
-                try {
-                    var imagePath = this.model.get("imagePath") ? this.model.get("imagePath") + "/" : "";
-                    app.box.col("dav").getBinary(imagePath + this.model.get("imageUrl"), {
-                        success : onGetBinary
-                    });
-                } catch (e) {
-                    console.error(e);
-                }
-                // iscroll.jsが正確に高さを把握できなくなるため,
-                // 後から画像が読み込まれる場合はhideしない
-                //articleImage.parent().hide();
+                this.showWebDAVImage(articleImage, articleImage.parent(), this.model.get("imageUrl"));
             } else {
                 // ArticleListViewでiscrollを初期化する際に
                 // 記事内のimgの読み込みを待機しているので
@@ -116,7 +149,7 @@ define(function(require, exports, module) {
                         $.colorbox.close();
                     });
                     $("#cboxSaveButton").click($.proxy(this.onClickImage, this));
-                },this),
+                }, this),
                 onClosed : function() {
                     $("#cboxSaveButton").remove();
                     $("#cboxCloseButton").remove();
@@ -132,7 +165,7 @@ define(function(require, exports, module) {
          * <li>タグの表示</li>
          * <li>画像クリックイベントのバインド<br/> 画像クリック時に、対象画像の保存処理を行うためのイベントをバインドする。 </li>
          * </p>
-         *
+         * @memberOf ArticleListItemView#
          */
         afterRenderCommon : function() {
             // 既にお気に入り登録されている記事のお気に入りボタンを非表示にする
@@ -166,6 +199,7 @@ define(function(require, exports, module) {
         },
         /**
          * 切り抜きボタン押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickFavoriteRegisterButton : function() {
             app.ga.trackEvent("ニュース", "切り抜き登録", this.model.get("title"));
@@ -186,13 +220,14 @@ define(function(require, exports, module) {
             this.favoriteModel.set("imageUrl", this.model.get("imageUrl"));
             // TODO 配信日が記事情報に設定されるようになった際には下記を書き換える
             this.favoriteModel.set("publishedAt", new Date().toLocaleDateString());
-            this.favoriteModel.set("isDelete",false);
+            this.favoriteModel.set("isDelete", false);
             this.favoriteModel.save(null, {
                 success : $.proxy(this.onFavoriteSave, this)
             });
         },
         /**
          * 切り抜き情報保存後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onFavoriteSave : function() {
             this.onChangeStatus("favorite");
@@ -201,33 +236,35 @@ define(function(require, exports, module) {
                     this.model.favorite = this.favoriteModel;
                     this.hideLoading();
                 }, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
          * 切り抜き削除ボタン押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickFavoriteDeleteButton : function() {
             app.ga.trackEvent("ニュース", "切り抜き削除", this.model.get("title"));
             // 確認ダイアログを表示
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.confirm({
-                message: 'この記事を切り抜きから削除しますが、よろしいですか？',
-                callback: $.proxy(function(value) {
+                message : 'この記事を切り抜きから削除しますが、よろしいですか？',
+                callback : $.proxy(function(value) {
                     if (value) {
                         this.showLoading();
                         var favoriteModel = this.model.favorite;
                         favoriteModel.set("isDelete", true);
                         favoriteModel.save(null, {
                             success : $.proxy(this.onFavoriteDelete, this),
-                            error: $.proxy(this.onFailure,this)
+                            error : $.proxy(this.onFailure, this)
                         });
                     }
-                },this)
-              });
+                }, this)
+            });
         },
         /**
          * 切り抜き情報削除後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onFavoriteDelete : function() {
             this.onChangeStatus("favorite");
@@ -235,11 +272,12 @@ define(function(require, exports, module) {
                 success : $.proxy(function() {
                     this.hideLoading();
                 }, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
          * おすすめボタン押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickRecommendRegisterButton : function() {
             app.ga.trackEvent("ニュース", "おすすめ登録", this.model.get("title"));
@@ -257,11 +295,12 @@ define(function(require, exports, module) {
             this.recommendModel.set("etag", "*");
             this.recommendModel.save(null, {
                 success : $.proxy(this.onRecommendSave, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
          * おすすめ情報保存後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onRecommendSave : function() {
             this.model.recommend = this.recommendModel;
@@ -271,19 +310,21 @@ define(function(require, exports, module) {
         },
         /**
          * おすすめ取消押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickRecommendDeleteButton : function() {
             app.ga.trackEvent("ニュース", "おすすめ削除", this.model.get("title"));
             this.recommendModel = this.model.recommend;
-            this.recommendModel.set("isDelete",true);
+            this.recommendModel.set("isDelete", true);
             this.recommendModel.set("etag", "*");
             this.recommendModel.save(null, {
                 success : $.proxy(this.onRecommendDelete, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
          * おすすめ情報削除後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onRecommendDelete : function() {
             this.model.recommend = this.recommendModel;
@@ -292,10 +333,10 @@ define(function(require, exports, module) {
             this.render();
         },
         /**
-         * 情報変更後に呼び出されるコールバック関数。
-         * ボタン表示非表示切り替え、および状態の切り替えを行う
-         *
+         * 情報変更後に呼び出されるコールバック関数。 ボタン表示非表示切り替え、および状態の切り替えを行う
+         * 
          * @params {String} type "favorite" or "recommend"
+         * @memberOf ArticleListItemView#
          */
         onChangeStatus : function(type) {
             if (type === "favorite") {
@@ -304,11 +345,12 @@ define(function(require, exports, module) {
                 this.model.set("isMyRecommend", !this.model.get("isMyRecommend"));
             }
             // 対応するボタンの切り替え
-            this.$el.find("[data-"+ type +"-register-button]").toggle();
-            this.$el.find("[data-"+ type +"-delete-button]").toggle();
+            this.$el.find("[data-" + type + "-register-button]").toggle();
+            this.$el.find("[data-" + type + "-delete-button]").toggle();
         },
         /**
          * タグ追加ボタン押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickTagAddButton : function() {
             if ($(this.el).find("#tagInput").val()) {
@@ -317,12 +359,13 @@ define(function(require, exports, module) {
                 $(this.el).find("#tagInput").val("");
                 this.model.save(null, {
                     success : $.proxy(this.onSave, this),
-                    error: $.proxy(this.onFailure,this)
+                    error : $.proxy(this.onFailure, this)
                 });
             }
         },
         /**
          * 記事情報更新完了後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onSave : function() {
             this.model.fetch({
@@ -330,21 +373,23 @@ define(function(require, exports, module) {
                     this.tagListView.tagsArray = this.model.get("tagsArray");
                     this.tagListView.render();
                 }, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
-         *  非同期通信失敗後のコールバック関数
+         * 非同期通信失敗後のコールバック関数
+         * @memberOf ArticleListItemView#
          */
-        onFailure: function (err) {
+        onFailure : function(err) {
             app.logger.error(err);
             this.hideLoading();
         },
 
         /**
          * タグボタン押下時に呼び出されるコールバック関数。
-         *
+         * 
          * @params {event} タグボタンのクリックイベント
+         * @memberOf ArticleListItemView#
          */
         onClickDeleteTag : function(ev) {
             if (!this.model.get("isNotArticle")) {
@@ -360,6 +405,7 @@ define(function(require, exports, module) {
          * <p>
          * 指定された画像をギャラリーに保存する。
          * </p>
+         * @memberOf ArticleListItemView#
          */
         onClickImage : function(ev) {
             var uri = $("#colorbox").find("img").attr("src");
@@ -376,20 +422,19 @@ define(function(require, exports, module) {
         },
         /**
          * 記事詳細内のアンカータグがクリックされた際のハンドラ
+         * @memberOf ArticleListItemView#
          */
-        onClickAnchorTag: function (ev) {
+        onClickAnchorTag : function(ev) {
             ev.preventDefault();
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.alert(this.model.getCategory() + "のHPを直接開いてリンクを参照してください。");
         },
         /**
          * 指定URiの画像データをストレージに保存する。
-         *
-         * @param {Object}
-         *            data 対象画像のURIまたはBlob
-         * @param {String}
-         *            filePath 保存先のストレージのパス
-         *
+         * 
+         * @param {Object} data 対象画像のURIまたはBlob
+         * @param {String} filePath 保存先のストレージのパス
+         * @memberOf ArticleListItemView#
          */
         saveImage : function(data, fileName) {
             app.logger.debug("scanFile start. filePath: " + fileName);
@@ -407,7 +452,7 @@ define(function(require, exports, module) {
                 window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
             };
             // メディアスキャン
-            var mediaScan = function(filePath){
+            var mediaScan = function(filePath) {
                 app.logger.debug("scanFile start. filePath: " + filePath);
                 window.MediaScanPlugin.scanFile(filePath, function(msg) {
                     window.plugins.toast.showLongBottom("画像を保存しました。");
@@ -417,11 +462,13 @@ define(function(require, exports, module) {
                 });
             };
 
-            if(data instanceof Blob){
+            if (data instanceof Blob) {
                 var blob = data;
-                window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-                window.requestFileSystem(LocalFileSystem.PERSISTENT, 50 * 1024 * 1024, $.proxy(function(fs){
-                    fs.root.getFile(picturePath + fileName, {create: true}, $.proxy(function(fileEntry) {
+                window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 50 * 1024 * 1024, $.proxy(function(fs) {
+                    fs.root.getFile(picturePath + fileName, {
+                        create : true
+                    }, $.proxy(function(fileEntry) {
                         fileEntry.createWriter($.proxy(function(fileWriter) {
                             fileWriter.onwriteend = function(e) {
                                 mediaScan(filePath);

@@ -81,6 +81,23 @@ define(function(require, exports, module) {
     Code.ARTICLE_STATUS_BEFORE_PUBLISH = "未掲載";
     Code.ARTICLE_STATUS_DEPUBLISHED = "配信停止中";
 
+    /**
+     * img要素のscr属性にpersonium.ioのWebDAVが格納されているサイトの情報定義
+     */
+    Code.MINPO_SCRAPING = [
+        {
+            site : "福島民報(トップニュース)",
+            scraping: "minpo"
+        },
+        {
+            site : "福島民報(県内ニュース)",
+            scraping: "minpo"
+        },
+        {
+            site : "福島民報(スポーツニュース)",
+            scraping: "minpo"
+        }
+    ];
     // 記事サイト
     Code.ARTICLE_SITE_LIST = [
             {
