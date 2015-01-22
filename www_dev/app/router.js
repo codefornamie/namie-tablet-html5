@@ -13,6 +13,7 @@ define(function(require, exports, module) {
 
     var LoginModel = require("modules/model/LoginModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
@@ -254,7 +255,7 @@ define(function(require, exports, module) {
                 });
             } else {
                 // 日付が設定されていない場合は配信日を計算する
-                BusinessUtil.calcConsiderSuspendPublication(new ArticleCollection(), $.proxy(function(considerDate) {
+                BusinessUtil.calcConsiderSuspendPublication(new NewspaperHolidayCollection(), $.proxy(function(considerDate) {
                     this.go("top", considerDate);
                 }, this));
             }
