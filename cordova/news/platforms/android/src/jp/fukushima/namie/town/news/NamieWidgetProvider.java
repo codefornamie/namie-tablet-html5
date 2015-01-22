@@ -54,12 +54,6 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onEnabled(Context context) {
         Log.d(TAG, "NamieWidgetProvider#onEnabled()");
 
-        if (publishStatus == null) {
-            publishStatus = new PublishStatus();
-        }
-        lastUnreadCheckTime = 0;
-        contentManager = null;
-
         // ウィジット更新用アラームの登録
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
@@ -78,16 +72,12 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
         alarmManager.cancel(pendingIntent);
 
-        publishStatus = null;
-        lastUnreadCheckTime = 0;
-        contentManager = null;
-
         super.onDisabled(context);
     };
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.d(TAG, "NamieWidgetProvider#onUpdate()");
+        Log.e(TAG, "NamieWidgetProvider#onUpdate()");
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
@@ -95,6 +85,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "NamieWidgetProvider#onReceive()");
 
+        if (publishStatus == null) {
+            publishStatus = new PublishStatus();
+            lastUnreadCheckTime = 0;
+        }
         if (contentManager == null) {
             contentManager = new WidgetContentManager(context);
         }

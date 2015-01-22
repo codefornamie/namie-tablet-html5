@@ -53,11 +53,52 @@ define(function(require, exports, module) {
                         res.tagsArray.push(decodeURIComponent(tag));
                     });
                 }
+                // priorityをセットする
+                var pr = _.find(app.serverConfig.COLOR_LABEL, function(cl) {
+                    return cl.type === res.type && cl.site === res.site;
+                });
+                if (pr) {
+                    res.priority = pr.priority;
+                } else {
+                    res.priority = Number.MAX_SAFE_INTEGER;
+                }
             });
 
             if (app.config.basic.mode === Code.APP_MODE_NEWS || app.config.basic.mode === Code.APP_MODE_OPE) {
-                response = _.sortBy(response, function(res) {
+                // responseをソートする
+                // 基本的にsequense順とするが、sequenceが設定されていない(==管理アプリでソート後に追加されたなど)
+                // 順序付け(sequence)ありとなしで分ける
+                var sequenced = [];
+                var unsequenced = [];
+                for (var i = 0; i < response.length; i++) {
+                    if (isNaN(parseInt(response[i].sequence)) || response[i].publishedAt < app.currentDate) {
+                        unsequenced.push(response[i]);
+                    } else {
+                        sequenced.push(response[i]);
+                    }
+                }
+                // 最初に順序付けありのデータをその順序でresponseに設定
+                response = _.sortBy(sequenced, function(res) {
                     return parseInt(res.sequence);
+                });
+                // 順序付けなしは優先度 > 更新日時降順でソート
+                unsequenced = _.sortBy(unsequenced, function(res) {
+                    return [
+                            res.priority, Number.MAX_SAFE_INTEGER - (new Date(res.updatedAt)).getTime()
+                    ];
+                });
+                // 順序付けなしのデータを適切な位置に差し込んでいく
+                _.each(unsequenced, function(ures) {
+                    // response内でuresの優先度と同じエントリのうち、一番最後に出現するものを探す。
+                    var lastIndex = response.length - 1;
+                    for (var j = lastIndex; j >= 0; j--) {
+                        if (ures.priority === response[j].priority) {
+                            lastIndex = j;
+                            break;
+                        }
+                    }
+                    // 見つけた要素の後ろ(見つからない場合は最後)に追加する
+                    response.splice(lastIndex + 1, 0, ures);
                 });
             }
 

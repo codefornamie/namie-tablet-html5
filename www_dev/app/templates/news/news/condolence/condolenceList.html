@@ -1,0 +1,15 @@
+<% if (!model) { %>
+おくやみ情報はありません
+<% } else { %>
+
+<article class='post post--<%= model.getSiteType() %>' id="<%= model.get('__id') %>">
+    
+    <section class='post__body'>
+        <div class="post-header">
+            <div class="post-header__title"><%=model.get("dispTitle") %></div>
+        </div>
+        <div id="condolenceList" class="row"></div>
+    </section>
+</article>
+
+<% } %>
