@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var JsSha = require("jsSha");
     var PersonalCollection = require("modules/collection/personal/PersonalCollection");
     var ConfigurationCollection = require("modules/collection/misc/ConfigurationCollection");
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
     var PersonalModel = require("modules/model/personal/PersonalModel");
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
@@ -211,7 +212,8 @@ define(function(require, exports, module) {
                 return;
             }
             async.parallel([
-                    $.proxy(this.loadPersonal, this), $.proxy(this.loadConfiguration, this)
+                    $.proxy(this.loadPersonal, this), $.proxy(this.loadConfiguration, this),
+                    $.proxy(this.loadNewspaperHoliday, this)
             ], $.proxy(this.onLogin, this));
 
         },
@@ -305,6 +307,27 @@ define(function(require, exports, module) {
                     // 取得に失敗
                     callback("設定情報の取得に失敗しました。再度ログインしてください。");
                     app.logger.error("設定情報の取得に失敗しました。再度ログインしてください。");
+                }, this)
+            });
+        },
+
+        /**
+         * 休刊日情報を読み込む
+         * @param {Function} callback トークン取得成功時のコールバック
+         * @memberOf LoginModel#
+         */
+        loadNewspaperHoliday : function(callback) {
+            // 設定情報の読み込み
+            var holidayCol = new NewspaperHolidayCollection();
+            holidayCol.fetch({
+                success : function(col, models) {
+                    app.newspaperHoliday = col;
+                    callback();
+                },
+                error : $.proxy(function() {
+                    // 取得に失敗
+                    callback("休刊日情報の取得に失敗しました。再度ログインしてください。");
+                    app.logger.error("休刊日情報の取得に失敗しました。再度ログインしてください。");
                 }, this)
             });
         },

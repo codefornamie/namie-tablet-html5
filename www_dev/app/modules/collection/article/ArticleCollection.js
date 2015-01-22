@@ -107,22 +107,36 @@ define(function(require, exports, module) {
 
         /**
          * 記事の検索条件を指定する。
-         * @param {Object} condition 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
-         * @memberOf ArticleCollection#
+         * @param {Date} fDate 検索範囲開始日
+         * @param {Date} tDate 検索範囲終了日
          */
-        setSearchCondition : function(condition) {
-            var targetDate = condition.targetDate;
-            var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
+        setSearchConditionRange : function(fDate, tDate) {
+            var f = moment(fDate).format("YYYY-MM-DD");
+            var t = moment(tDate).format("YYYY-MM-DD");
 
             this.condition.filters = [
                 new And([
                         new Or([
-                                new Equal("publishedAt", dateString), new And([
-                                        new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
+                                new And([
+                                        new Le("publishedAt", t), new Ge("depublishedAt", f)
+                                ]), new And([
+                                        new Or([
+                                                new IsNull("depublishedAt"), new Equal("depublishedAt", "")
+                                        ]), new Ge("publishedAt", f), new Le("publishedAt", t)
                                 ])
-                        ]), new IsNull("isDepublish"), new Or([new IsNull("deletedAt"), new Equal("deletedAt", "")])
+                        ]), new IsNull("isDepublish"), new Or([
+                                new IsNull("deletedAt"), new Equal("deletedAt", "")
+                        ])
                 ])
             ];
+        },
+        /**
+         * 記事の検索条件を指定する。
+         * @param {Object} condition 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @memberOf ArticleCollection#
+         */
+        setSearchCondition : function(condition) {
+            this.setSearchConditionRange(condition.targetDate, condition.targetDate);
         }
     });
 
