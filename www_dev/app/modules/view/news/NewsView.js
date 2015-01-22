@@ -433,7 +433,7 @@ define(function(require, exports, module) {
                 if (type === "6") {
                     var currentPublishLetters = articleDateMap[app.currentPublishDate];
                     if (currentPublishLetters) {
-                        newArrivalsMsg = "<br>今日の新着写真投稿 " + currentPublishLetters.get("articles").length + "件";
+                        newArrivalsMsg = "今日の新着写真投稿 " + currentPublishLetters.get("articles").length + "件";
                     }
                 }
 
