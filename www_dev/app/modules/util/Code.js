@@ -53,13 +53,21 @@ define(function(require, exports, module) {
                 key : "10",
                 value : "レポート",
                 detailValue : "レポート(役場)"
-            },
+            }, {
+                key : "11",
+                value : "イベント",
+                detailValue : "イベント"
+            }, {
+                key : "12",
+                value : "レポート",
+                detailValue : "レポート"
+            }
     ];
 
     // 各アプリで使用する記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST_BY_MODE = {};
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING] = [
-            "3", "4"
+            "11", "12"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_OPE] = [
             "5", "9", "10", "6", "3", "4"
