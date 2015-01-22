@@ -429,7 +429,7 @@ define(function(require, exports, module) {
                     }
                 });
                 // 写真投稿新着件数
-                var newArrivals = undefined;
+                var newArrivals;
                 if (type === "6") {
                     var currentPublishLetters = articleDateMap[app.currentPublishDate];
                     if (currentPublishLetters) {
