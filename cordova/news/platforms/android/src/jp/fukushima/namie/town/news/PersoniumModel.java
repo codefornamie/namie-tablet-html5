@@ -4,13 +4,18 @@
 package jp.fukushima.namie.town.news;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.fujitsu.dc.client.DaoException;
+import com.fujitsu.dc.client.DavCollection;
 import com.fujitsu.dc.client.DcContext;
 import com.fujitsu.dc.client.ODataCollection;
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerFuture;
@@ -168,16 +173,30 @@ public class PersoniumModel {
     }
 
     /**
-     * おすすめ記事のタイトル一覧を取得する。
+     * おすすめ記事の一覧を取得する。
      * @param odata ODataコレクション
-     * @return おすすめ記事タイトル一覧
+     * @return おすすめ記事一覧
      */
     @SuppressWarnings("unchecked")
-    private List<String> readRecommendArticle(ODataCollection odata) {
+    private List<Map<String, Object>> readRecommendArticle(ODataCollection odata) {
         Log.d(TAG, "start readRecommendArticle");
-        HashMap<String, Object> json = null;
+        List<Map<String, Object>> articles = new ArrayList<Map<String, Object>>();
 
-        String filter = "isRecommend eq 'true' and isDepublish eq null";
+        Calendar now = Calendar.getInstance();
+        // 発行時刻の取得
+        Calendar publishTime = getPublishTime(odata);
+        if (publishTime == null) {
+            return null;
+        }
+        // 現時刻と発行時刻のチェック
+        if (now.before(publishTime)) {
+            Log.d(TAG, "now < publishTime");
+            now.roll(Calendar.DAY_OF_MONTH, false);
+        }
+        String date = formatDate(now);
+
+        Map<String, Object> json = null;
+        String filter = "publishedAt eq '" + date + "' and isRecommend eq 'true' and isDepublish eq null";
         Log.d(TAG, "personium query : " + filter);
         try {
             json = odata.entitySet("article").query().top(RECOMMEND_FETCH_NUM).orderby("createdAt desc").filter(filter).run();
@@ -187,12 +206,11 @@ public class PersoniumModel {
         }
         Log.d(TAG, json.toString());
 
-        List<String> articles = new ArrayList<String>();
-        HashMap<String, Object> d = (HashMap<String, Object>) json.get("d");
+        Map<String, Object> d = (Map<String, Object>) json.get("d");
         List<Object> results = (List<Object>) d.get("results");
         if ((results != null) && (results.size() > 0)) {
             for (Object article : results) {
-                articles.add(article.toString());
+                articles.add((Map<String, Object>) article);
             }
         }
         Log.d(TAG, "end readRecommendArticle : " + articles.size());
@@ -281,7 +299,7 @@ public class PersoniumModel {
         return recentArticle;
     }
 
-    public List<String> readRecommendArticles(Context context) {
+    public List<Map<String, Object>> readRecommendArticles(Context context) {
         Log.d(TAG, "start readRecommendArticle");
 
         // Perosonium接続
@@ -292,7 +310,7 @@ public class PersoniumModel {
         }
 
         // おすすめ記事取得
-        List<String> articles = readRecommendArticle(odata);
+        List<Map<String, Object>> articles = readRecommendArticle(odata);
         Log.d(TAG, "end readRecommendArticle");
         return articles;
     }
@@ -443,5 +461,48 @@ public class PersoniumModel {
             Log.e(TAG, e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * AccountManagerからPersonium接続情報を取得し、Perosoniumの認証を行う。
+     * @param context コンテキスト
+     * @return ODataコレクション
+     */
+    public InputStream getThumbnailFromWebDav(Context context, String imagePath, String thumbnailUrl) {
+        Log.d(TAG, "start getFileFromWebDav");
+
+        fetchAccountManager(context);
+        if (account == null) {
+            Log.d(TAG, "personium failure : account not exists.");
+            return null;
+        }
+
+        String token = getAuthToken(context);
+        String baseUrl = manager.getUserData(account, "baseUrl");
+        String cellName = manager.getUserData(account, "cellName");
+        String boxName = manager.getUserData(account, "boxName");
+        userName = account.name;
+
+        Log.d(TAG, "userName : " + userName);
+        Log.d(TAG, "token : " + token);
+        Log.d(TAG, "baseUrl : " + baseUrl);
+        Log.d(TAG, "cellName : " + cellName);
+        Log.d(TAG, "bxoName :" + boxName);
+
+        dc = new DcContext(baseUrl, cellName, "", boxName);
+        DcContext.setPlatform("android");
+        InputStream inputStream = null;
+        try {
+            DavCollection dav = dc.withToken(token).cell().box().col("dav");
+            String[] pathArray = imagePath.split("/");
+            for (String path : pathArray) {
+                dav = dav.col(path);
+            }
+            inputStream = dav.getStream(thumbnailUrl);
+        } catch (DaoException e) {
+            Log.d(TAG, "personium failure : " + e.getMessage());
+            return null;
+        }
+        return inputStream;
     }
 }
