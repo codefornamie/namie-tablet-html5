@@ -380,7 +380,7 @@ define(function(require, exports, module) {
         onClickAnchorTag: function (ev) {
             ev.preventDefault();
             vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.alert(this.model.get("dispSite") + "のHPを直接開いてリンクを参照してください。");
+            vexDialog.alert(this.model.getCategory() + "のHPを直接開いてリンクを参照してください。");
         },
         /**
          * 指定URiの画像データをストレージに保存する。
