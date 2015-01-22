@@ -1534,6 +1534,7 @@ select#articleCategory {
     border-bottom-color: #ccc;
 }
 
+/* 新聞一覧のラベルカラーは、odataのconfiguration COLOR_LABELで指定するよう変更した
 .article-label--blog::after {
     border-right-color: #c66287;
     border-bottom-color: #c66287;
@@ -1554,6 +1555,8 @@ select#articleCategory {
     border-right-color: #9c9c9c;
     border-bottom-color: #9c9c9c;
 }
+*/
+
 .article-label__text {
 }
 

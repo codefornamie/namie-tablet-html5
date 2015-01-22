@@ -257,9 +257,10 @@ define(function(require, exports, module) {
         /**
          * 情報源タイプを判定する
          * @return {string} class文字列を返す
+         * @memberOf ArticleModel#
          */
         getSiteType: function() {
-            var dispSite = this.get("dispSite");
+            var dispSite = this.getCategory();
             var articleSite = null;
 
             articleSite = _.find(Code.ARTICLE_SITE_LIST, function(item) {
@@ -271,6 +272,55 @@ define(function(require, exports, module) {
             } else {
                 return Code.ARTICLE_SITE_NONE;
             }
+        },
+        /**
+         * この記事のカテゴリ表示制御オブジェクトを返す。
+         * @returns この記事のカテゴリ表示制御オブジェクト
+         * @memberOf ArticleModel#
+         */
+        getCategoryObj : function() {
+            var self = this;
+            var categoryConf = _.find(app.serverConfig.COLOR_LABEL, function(category) {
+                return category.type === self.get("type") && category.site === self.get("site");
+            });
+            return categoryConf;
+        },
+        /**
+         * 新聞紙面の記事に付くカテゴリ名を返す。
+         * @returns この記事のカテゴリ名
+         * @memberOf ArticleModel#
+         */
+        getCategory : function() {
+            var categoryConf = this.getCategoryObj();
+            if (categoryConf) {
+                return categoryConf.label;
+            } else {
+                return this.get("site");
+            }
+        },
+        /**
+         * 新聞紙面の記事に付くカテゴリ名のCSSクラス名を返す。
+         * @returns この記事に付くカテゴリ名のCSSクラス名
+         * @memberOf ArticleModel#
+         */
+        getCssClass : function() {
+            var categoryConf = this.getCategoryObj();
+            if (categoryConf) {
+                return "article-label--category" + categoryConf.id || "";
+            }
+            return "";
+        },
+        /**
+         * 新聞紙面の記事に付くカテゴリ名の色を返す。
+         * @returns この記事に付くカテゴリ名のカラー名またはカラーコード
+         * @memberOf ArticleModel#
+         */
+        getColor : function() {
+            var categoryConf = this.getCategoryObj();
+            if (categoryConf) {
+                return categoryConf.color;
+            }
+            return null;
         }
     });
 
