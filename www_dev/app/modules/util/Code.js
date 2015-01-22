@@ -144,6 +144,7 @@ define(function(require, exports, module) {
                 levelName : "",
                 label : "白帯",
                 description : "初めてタブレットをさわる方のためのコースです。（文言未決定）",
+                congratulations: "白帯コースの動画を全て閲覧しました。これでタブレットの基礎動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "1",
@@ -151,6 +152,7 @@ define(function(require, exports, module) {
                 levelName : "白帯",
                 label : "茶帯",
                 description : "茶帯コースです。（文言未決定）",
+                congratulations: "茶帯コースの動画を全て閲覧しました。これでタブレットの応用動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "2",
@@ -158,6 +160,7 @@ define(function(require, exports, module) {
                 levelName : "茶帯",
                 label : "黒帯",
                 description : "黒帯コースです。（文言未決定）",
+                congratulations: "黒帯コースの動画を全て閲覧しました。これでタブレットの全てをマスターできましたね。<br>「黒帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "3",
@@ -165,6 +168,7 @@ define(function(require, exports, module) {
                 levelName : "黒帯",
                 label : "",
                 description : "",
+                congratulations: "",
                 iconPath : ""
             }
     ];
