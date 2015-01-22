@@ -109,24 +109,47 @@ define(function(require, exports, module) {
          * 記事の検索条件を指定する。
          * @param {Date} fDate 検索範囲開始日
          * @param {Date} tDate 検索範囲終了日
+         * @param {boolean} isRange trueの場合、記事の掲載期間を考慮して検索する。
+         * falseの場合、記事の掲載開始日のみに基づく。
+         * @param {boolean} isDepublish trueの場合、検索結果に掲載中止を含める。
          */
-        setSearchConditionRange : function(fDate, tDate) {
+        setSearchConditionRange : function(fDate, tDate, isOnlyPublish, isDepublish) {
             var f = moment(fDate).format("YYYY-MM-DD");
             var t = moment(tDate).format("YYYY-MM-DD");
 
+            // 範囲の条件生成
+            var rangeCondition;
+            if (isDepublish) {
+                rangeCondition = new And([new Ge("publishedAt", f), new Le("publishedAt", t)]);
+            } else {
+                rangeCondition = new Or([
+                                         new And([
+                                                 new Le("publishedAt", t), new Ge("depublishedAt", f)
+                                         ]), new And([
+                                                 new Or([
+                                                         new IsNull("depublishedAt"), new Equal("depublishedAt", "")
+                                                 ]), new Ge("publishedAt", f), new Le("publishedAt", t)
+                                         ])
+                                 ]);
+            }
+            // 全体条件
+            var condition = [];
+            // 範囲
+            condition.push(rangeCondition);
+            // 削除を除く
+            condition.push(new Or([
+                                new IsNull("deletedAt"), new Equal("deletedAt", "")
+                        ]));
+            
+            if(!isDepublish){
+                // 掲載中止を 除く
+                condition.push(new IsNull("isDepublish"));
+            }
+            
+            // 条件を設定する
             this.condition.filters = [
                 new And([
-                        new Or([
-                                new And([
-                                        new Le("publishedAt", t), new Ge("depublishedAt", f)
-                                ]), new And([
-                                        new Or([
-                                                new IsNull("depublishedAt"), new Equal("depublishedAt", "")
-                                        ]), new Ge("publishedAt", f), new Le("publishedAt", t)
-                                ])
-                        ]), new IsNull("isDepublish"), new Or([
-                                new IsNull("deletedAt"), new Equal("deletedAt", "")
-                        ])
+                        condition
                 ])
             ];
         },
