@@ -429,11 +429,11 @@ define(function(require, exports, module) {
                     }
                 });
                 // 写真投稿新着件数
-                var newArrivalsMsg = "";
+                var newArrivals = undefined;
                 if (type === "6") {
                     var currentPublishLetters = articleDateMap[app.currentPublishDate];
                     if (currentPublishLetters) {
-                        newArrivalsMsg = "今日の新着写真投稿 " + currentPublishLetters.get("articles").length + "件";
+                        newArrivals = currentPublishLetters.get("articles").length;
                     }
                 }
 
@@ -444,7 +444,7 @@ define(function(require, exports, module) {
                     dispTitle : options.dispTitle,
                     type : type,
                     articles : articleDateList,
-                    newArrivalsMsg : newArrivalsMsg,
+                    newArrivals : newArrivals,
                     imagePath : imagePath,
                     imageThumbUrl : imageThumbUrl
                 });
