@@ -49,60 +49,20 @@ define(function(require, exports, module) {
             this.tagListView.render();
         },
         /**
-         * 指定されたimg要素に、imageUrlで指定されたWebDAVの画像を設定する。
-         * @param {Object} articleImage img要素のjqueryオブジェクト
-         * @param {Object} displayControl 表示をコントールする要素。ここに指定された要素は、画像読み込み処理の前に非表示にされ、画像読み込み完了後、表示される
-         * @param {String} imageUrl 画像ファイル
-         * @memberOf ArticleListItemView#
-         */
-        showWebDAVImage : function(articleImage, displayControl, imageUrl) {
-            if (imageUrl && imageUrl.lastIndexOf('http', 0) === 0) {
-                articleImage.attr("src", imageUrl);
-                this.setColorbox(articleImage);
-            }
-            // 画像読み込み中は、img要素を非表示にする
-            displayControl.hide();
-            var onGetBinary = function(binary) {
-                var arrayBufferView = new Uint8Array(binary);
-                var blob = new Blob([
-                    arrayBufferView
-                ], {
-                    type : "image/jpg"
-                });
-                var url = FileAPIUtil.createObjectURL(blob);
-                articleImage.load(function() {
-                    displayControl.show();
-                });
-                articleImage.attr("src", url);
-                articleImage.data("blob", blob);
-                this.setColorbox(articleImage);
-            }.bind(this);
-            try {
-                var imagePath = this.model.get("imagePath") ? this.model.get("imagePath") + "/" : "";
-                app.box.col("dav").getBinary(imagePath + imageUrl, {
-                    success : onGetBinary
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        /**
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
          * @memberOf ArticleListItemView#
          */
         showImage : function() {
             var self = this;
             var imageElems = $(this.el).find("img");
-            // this.setColorbox(imageElems);
 
             if (this.isMinpoArticle) {
                 // この記事のimg要素にはWebDAVのパスが設定されているため、取得しにいく
                 _.each(imageElems, function(imageElement) {
-                    if ($(imageElement).hasClass("articleDetailImage")) {
-                        return;
-                    }
                     var imageUrl = $(imageElement).attr("src");
-                    this.showWebDAVImage($(imageElement), $(imageElement), imageUrl);
+                    this.showPIOImage($(imageElement), {
+                        imageUrl : imageUrl
+                    }, true, $.proxy(this.onClickImage, this));
                 }.bind(this));
             } else {
                 this.setColorbox(imageElems);
@@ -111,7 +71,13 @@ define(function(require, exports, module) {
             var articleImage = $(this.el).find(".articleDetailImage");
 
             if (this.model.get("imageUrl")) {
-                this.showWebDAVImage(articleImage, articleImage.parent(), this.model.get("imageUrl"));
+                articleImage.on("error", function() {
+                    articleImage.hide();
+                });
+                var imageUrl = this.model.get("imageUrl");
+                this.showPIOImage(articleImage, {
+                    imageUrl : imageUrl
+                }, true, $.proxy(this.onClickImage, this));
             } else {
                 // ArticleListViewでiscrollを初期化する際に
                 // 記事内のimgの読み込みを待機しているので
