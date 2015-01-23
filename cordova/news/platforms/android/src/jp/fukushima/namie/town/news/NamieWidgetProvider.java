@@ -216,6 +216,11 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         remoteViews.setTextViewText(R.id.article_title, Html.fromHtml(contentManager.getMessage()));
         remoteViews.setTextViewText(R.id.article_title_with_thumbnail, Html.fromHtml(contentManager.getMessage()));
 
+        String siteName = contentManager.getSite();
+        if (siteName != null) {
+            remoteViews.setTextViewText(R.id.article_site, Html.fromHtml(siteName));
+        }
+
         Bitmap thumbnail = contentManager.getThumbnail();
         if (thumbnail != null) {
             remoteViews.setImageViewBitmap(R.id.thumb, thumbnail);

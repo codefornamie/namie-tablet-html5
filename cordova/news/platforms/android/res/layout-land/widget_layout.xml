@@ -64,31 +64,45 @@
                     android:layout_height="259px"
                     android:layout_gravity="right|center_vertical"
                     android:background="@drawable/bg_news"
-                    android:orientation="horizontal"
-                    android:paddingEnd="4px"
-                    android:paddingTop="44px">
+                    android:orientation="vertical"
+                    android:paddingEnd="4px">
                     <TextView
-                        android:id="@+id/article_title_with_thumbnail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="100px"
-                        android:layout_marginStart="4px"
-                        android:paddingStart="15px"
-                        android:paddingEnd="4px"
-                        android:layout_weight="0.64"
-                        android:ellipsize="end"
-                        android:gravity="center_vertical"
-                        android:maxLines="2"
-                        android:scrollHorizontally="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="33px" />
-                    <ImageView
-                        android:id="@+id/thumb"
-                        android:layout_width="208px"
-                        android:layout_height="189px"
-                        android:layout_gravity="end"
-                        android:adjustViewBounds="true"
-                        android:contentDescription="@string/character_name" />
+                        android:id="@+id/article_site"
+                        android:layout_width="match_parent"
+                        android:layout_height="44px"
+                        android:paddingTop="2px"
+                        android:paddingEnd="15px"
+                        android:gravity="right|center_vertical"
+                        android:textColor="@android:color/white"
+                        android:textSize="22px" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/article_title_with_thumbnail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="100px"
+                            android:layout_marginStart="4px"
+                            android:paddingStart="15px"
+                            android:paddingEnd="4px"
+                            android:layout_weight="0.64"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:maxLines="2"
+                            android:scrollHorizontally="true"
+                            android:textColor="@android:color/black"
+                            android:textSize="33px" />
+                        <ImageView
+                            android:id="@+id/thumb"
+                            android:layout_width="208px"
+                            android:layout_height="189px"
+                            android:layout_gravity="end"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/character_name" />
+                    </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
