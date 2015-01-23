@@ -586,12 +586,14 @@ define(function(require, exports, module) {
         },
 
         /**
-         * フッター部のボタンを設定する
+         * 新聞に戻るボタンを設定する
          * @memberOf NewsView#
          */
         updateFooterButtons : function() {
             var self = this;
             var $btnBack = this.$el.find("#news-action").find("[data-back]");
+            var currentMoment = moment(app.currentDate);
+            var currentDateStr = currentMoment.format("YYYY-MM-DD");
 
             $btnBack.on("click", function(ev) {
                 ev.preventDefault();
