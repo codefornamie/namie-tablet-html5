@@ -122,15 +122,19 @@ define(function(require, exports, module) {
             if (isOnlyPublish) {
                 rangeCondition = new And([new Ge("publishedAt", f), new Le("publishedAt", t)]);
             } else {
-                rangeCondition = new Or([
-                                         new And([
-                                                 new Le("publishedAt", t), new Ge("depublishedAt", f)
-                                         ]), new And([
-                                                 new Or([
-                                                         new IsNull("depublishedAt"), new Equal("depublishedAt", "")
-                                                 ]), new Ge("publishedAt", f), new Le("publishedAt", t)
-                                         ])
-                                 ]);
+                rangeCondition = new And([
+                    new Or([
+                            new And([
+                                    new Le("publishedAt", t), new Ge("depublishedAt", f)
+                            ]), new And([
+                                    new Or([
+                                            new IsNull("depublishedAt"), new Equal("depublishedAt", "")
+                                    ]), new Ge("publishedAt", f), new Le("publishedAt", t)
+                            ])
+
+                    ])
+                ]);
+                
             }
             // 全体条件
             var condition = [];
