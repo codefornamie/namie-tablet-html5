@@ -81,7 +81,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.e(TAG, "NamieWidgetProvider#onUpdate()");
+        Log.d(TAG, "NamieWidgetProvider#onUpdate()");
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
