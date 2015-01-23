@@ -3,45 +3,23 @@
  */
 package jp.fukushima.namie.town.news;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import jp.fukushima.namie.town.news.PublishStatus.ArticleExists;
 import android.content.Context;
 import android.util.Log;
 
-public class RecentArticleCheckThread extends Thread {
+public class RecentArticleCheckThread extends AbstractRequestThread {
     private static final String TAG = "NamieNewspaper";
-    private final Context _mContext;
-    private final NamieWidgetProvider _mWidgetProvider;
-    private final WidgetContentManager _mWidgetContentManager;
-    private final ArrayList<Integer> _mWidgets = new ArrayList<Integer>();
 
-    public RecentArticleCheckThread(Context context, NamieWidgetProvider widgetProvider, WidgetContentManager contentManager) {
-        super();
-        _mContext = context;
-        _mWidgetProvider = widgetProvider;
-        _mWidgetContentManager = contentManager;
-    }
-
-    public void add(int widget) {
-        _mWidgets.add(widget);
-    }
-
-    @Override
-    public void start() {
-        super.start();
+    public RecentArticleCheckThread(Context context, NamieWidgetProvider widgetProvider) {
+        super(context, widgetProvider);
     }
 
     @Override
     public void run() {
         Log.d(TAG, "CheckPublishRequestThread started.");
 
+        // 最新号の記事が存在するかどうかをチェックする
         PersoniumModel personium = new PersoniumModel();
-
         boolean isArticleExists = personium.isRecentArticleExists(_mContext);
         PublishStatus status = _mWidgetProvider.getPublishStatus();
         if (isArticleExists) {
@@ -51,21 +29,9 @@ public class RecentArticleCheckThread extends Thread {
         }
 
         // おすすめ記事の取得
-        List<String> recommendArticles = personium.readRecommendArticles(_mContext);
-        if (recommendArticles != null) {
-            for (String article : recommendArticles) {
-                try {
-                    JSONObject json = new JSONObject(article);
-                    String title = json.getString("title");
-                    if (title != null) {
-                        _mWidgetContentManager.addRecommendArticle(title);
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, "PersoniumRequestThread error." + e.getMessage());
-                }
-            }
-        }
+        WidgetContentManager contentManager = _mWidgetProvider.getContentManager();
+        getRecommendArticles(contentManager);
 
-        Log.d(TAG, "CheckPublishRequestThread completed.");
+        Log.d(TAG, "PersoniumRequestThread completed.");
     }
 }

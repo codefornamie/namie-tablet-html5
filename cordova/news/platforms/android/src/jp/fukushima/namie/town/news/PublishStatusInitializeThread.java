@@ -3,61 +3,28 @@
  */
 package jp.fukushima.namie.town.news;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.util.Log;
 
-public class PublishStatusInitializeThread extends Thread {
+public class PublishStatusInitializeThread extends AbstractRequestThread {
     private static final String TAG = "NamieNewspaper";
-    private final Context _mContext;
-    private final NamieWidgetProvider _mWidgetProvider;
-    private final WidgetContentManager _mWidgetContentManager;
-    private final List<Integer> _mWidgets = new ArrayList<Integer>();
 
-    public PublishStatusInitializeThread(Context context, NamieWidgetProvider widgetProvider, WidgetContentManager contentManager) {
-        super();
-        _mContext = context;
-        _mWidgetProvider = widgetProvider;
-        _mWidgetContentManager = contentManager;
-    }
-
-    public void add(int widget) {
-        _mWidgets.add(widget);
-    }
-
-    @Override
-    public void start() {
-        super.start();
+    public PublishStatusInitializeThread(Context context, NamieWidgetProvider widgetProvider) {
+        super(context, widgetProvider);
     }
 
     @Override
     public void run() {
         Log.d(TAG, "PublishStatusInitializeThread started.");
 
+        // 配信時刻と休刊日情報を取得し、既読済み情報などを初期化する
         PersoniumModel personium = new PersoniumModel();
         PublishStatus publishStatus = personium.initPublishStatus(_mContext);
         _mWidgetProvider.setPublishStatus(publishStatus);
 
         // おすすめ記事の取得
-        List<String> recommendArticles = personium.readRecommendArticles(_mContext);
-        if (recommendArticles != null) {
-            for (String article : recommendArticles) {
-                try {
-                    JSONObject json = new JSONObject(article);
-                    String title = json.getString("title");
-                    if (title != null) {
-                        _mWidgetContentManager.addRecommendArticle(title);
-                    }
-                } catch (JSONException e) {
-                    Log.e(TAG, "PersoniumRequestThread error." + e.getMessage());
-                }
-            }
-        }
+        WidgetContentManager contentManager = _mWidgetProvider.getContentManager();
+        getRecommendArticles(contentManager);
 
         Log.d(TAG, "PublishStatusInitializeThread completed.");
     }

@@ -17,10 +17,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 /**
@@ -52,11 +54,9 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onEnabled(Context context) {
         Log.d(TAG, "NamieWidgetProvider#onEnabled()");
 
-        if (publishStatus == null) {
-            publishStatus = new PublishStatus();
-        }
+        publishStatus = new PublishStatus();
+        contentManager = new WidgetContentManager(context);
         lastUnreadCheckTime = 0;
-        contentManager = null;
 
         // ウィジット更新用アラームの登録
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -76,10 +76,6 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
         alarmManager.cancel(pendingIntent);
 
-        publishStatus = null;
-        lastUnreadCheckTime = 0;
-        contentManager = null;
-
         super.onDisabled(context);
     };
 
@@ -93,6 +89,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "NamieWidgetProvider#onReceive()");
 
+        if (publishStatus == null) {
+            publishStatus = new PublishStatus();
+            lastUnreadCheckTime = 0;
+        }
         if (contentManager == null) {
             contentManager = new WidgetContentManager(context);
         }
@@ -107,6 +107,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         }
 
         super.onReceive(context, intent);
+    }
+
+    public WidgetContentManager getContentManager() {
+        return contentManager;
     }
 
     public PublishStatus getPublishStatus() {
@@ -163,7 +167,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      */
     private void initPublishStatus(Context context) {
-        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this, contentManager);
+        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this);
         if (requestThread != null) {
             requestThread.start();
         }
@@ -174,7 +178,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      */
     private void checkRecentArticleExists(Context context) {
-        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this, contentManager);
+        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this);
         if (requestThread != null) {
             requestThread.start();
         }
@@ -209,7 +213,13 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         // メッセージ更新
         setMessageViewStyle(context, remoteViews, contentManager.getMessageStyle());
         remoteViews.setTextViewText(R.id.fukidashi, Html.fromHtml(contentManager.getMessage()));
-        remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
+        remoteViews.setTextViewText(R.id.recommend, Html.fromHtml(contentManager.getMessage()));
+        remoteViews.setTextViewText(R.id.recommend2, Html.fromHtml(contentManager.getMessage()));
+
+        Bitmap thumbnail = contentManager.getThumbnail();
+        if (thumbnail != null) {
+            remoteViews.setImageViewBitmap(R.id.thumb, thumbnail);
+        }
 
         // 新聞発行の有無に応じて新聞アイコンを変更
         if (publishStatus != null) {
@@ -237,21 +247,29 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         switch(config.orientation) {
         case Configuration.ORIENTATION_PORTRAIT:
             if (style == MessageStyle.STYLE_BUBBLE) {
-                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_fukidashi_v);
+                remoteViews.setInt(R.id.message, "setBackgroundResource", R.drawable.img_fukidashi_v);
                 remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 32), 0, dpToPx(density, 16), 0);
             } else {
-                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_midashi);
+                remoteViews.setInt(R.id.message, "setBackgroundResource", R.drawable.img_midashi);
                 remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 20), 0, dpToPx(density, 20), 0);
             }
             break;
         case Configuration.ORIENTATION_LANDSCAPE:
         default :
             if (style == MessageStyle.STYLE_BUBBLE) {
-                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_fukidashi);
-                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 60), 0, dpToPx(density, 30), 0);
+                remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
+                remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
+                remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
             } else {
-                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_midashi);
-                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 20), 0, dpToPx(density, 20), 0);
+                remoteViews.setViewVisibility(R.id.fukidashi, View.INVISIBLE);
+                if (contentManager.getThumbnail() != null) {
+                    remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
+                    remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, contentManager.getMessageVisiblity());
+                } else {
+                    remoteViews.setViewVisibility(R.id.recommend, contentManager.getMessageVisiblity());
+                    remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
+                }
+
             }
             break;
         }
