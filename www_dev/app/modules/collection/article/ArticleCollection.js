@@ -109,7 +109,7 @@ define(function(require, exports, module) {
          * 記事の検索条件を指定する。
          * @param {Date} fDate 検索範囲開始日
          * @param {Date} tDate 検索範囲終了日
-         * @param {boolean} isRange trueの場合、記事の掲載期間を考慮して検索する。
+         * @param {boolean} isOnlyPublish trueの場合、記事の掲載期間を考慮して検索する。
          * falseの場合、記事の掲載開始日のみに基づく。
          * @param {boolean} isDepublish trueの場合、検索結果に掲載中止を含める。
          */
@@ -119,7 +119,7 @@ define(function(require, exports, module) {
 
             // 範囲の条件生成
             var rangeCondition;
-            if (isDepublish) {
+            if (isOnlyPublish) {
                 rangeCondition = new And([new Ge("publishedAt", f), new Le("publishedAt", t)]);
             } else {
                 rangeCondition = new Or([
