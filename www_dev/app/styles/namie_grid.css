@@ -106,6 +106,10 @@
     background-size: auto 90%;
 }
 
+.is-ope .grid-list>div:first-child li {
+    background-position: right 20px center;
+}
+
 @media only screen and (orientation:portrait) {
     .grid-list>div:first-child li {
         background-size: auto 120px;
