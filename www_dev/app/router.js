@@ -166,6 +166,7 @@ define(function(require, exports, module) {
             // Render to the page.
             console.log("Router initialized");
             this.layout = new Layout();
+            this.loginView = this.layout.views["#contents"];
             if (!app.noRendering) {
                 this.layout.render();
             }
