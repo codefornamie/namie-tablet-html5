@@ -128,6 +128,10 @@ define(function(require, exports, module) {
                 this.showLoading();
                 var holCol = new NewspaperHolidayCollection();
                 holCol.prevPublished(moment(this.selectedDate).toDate(), function(prev, isPublish, e) {
+                    if (this.selectedDate === app.currentDate) {
+                        this.hideLoading();
+                        this.trigger("closeModalCalendar");
+                    }
                     if (e) {
                         app.logger.error("error ModalCalendarView:holCol.prevPublished()");
                         vexDialog.defaultOptions.className = 'vex-theme-default';
@@ -143,7 +147,6 @@ define(function(require, exports, module) {
                         app.router.go("top", moment(this.selectedDate).format("YYYY-MM-DD"));
                     }
                 }.bind(this));
-
             }
         },
 
