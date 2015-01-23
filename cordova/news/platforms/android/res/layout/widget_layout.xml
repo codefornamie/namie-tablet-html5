@@ -42,68 +42,26 @@
                     android:gravity="center_vertical"
                     android:textColor="@android:color/black"
                     android:textSize="33px" />
-                <TextView
-                    android:id="@+id/article_title"
-                    android:visibility="invisible"
-                    android:background="@drawable/bg_news"
-                    android:layout_width="489px"
-                    android:layout_height="232px"
-                    android:paddingTop="44px"
-                    android:paddingBottom="100px"
-                    android:paddingStart="15px"
-                    android:paddingEnd="15px"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:scrollHorizontally="true"
-                    android:gravity="center_vertical"
-                    android:textColor="@android:color/black"
-                    android:textSize="33px" />
                 <LinearLayout
-                    android:id="@+id/recommend_with_thumbnail"
-                    android:visibility="visible"
-                    android:layout_width="489px"
-                    android:layout_height="232px"
-                    android:layout_gravity="right|center_vertical"
-                    android:background="@drawable/bg_news"
-                    android:orientation="vertical"
-                    android:paddingEnd="4px">
+                    android:id="@+id/recommend"
+                    android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
                     <TextView
-                        android:id="@+id/article_site"
-                        android:layout_width="match_parent"
-                        android:layout_height="44px"
-                        android:paddingTop="2px"
+                        android:id="@+id/article_title"
+                        android:background="@drawable/bg_news"
+                        android:layout_width="489px"
+                        android:layout_height="232px"
+                        android:paddingTop="44px"
+                        android:paddingBottom="100px"
+                        android:paddingStart="15px"
                         android:paddingEnd="15px"
-                        android:gravity="right|center_vertical"
-                        android:textColor="@android:color/white"
-                        android:textSize="22px" />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/article_title_with_thumbnail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="100px"
-                            android:layout_marginStart="4px"
-                            android:paddingStart="15px"
-                            android:paddingEnd="4px"
-                            android:layout_weight="0.64"
-                            android:ellipsize="end"
-                            android:gravity="center_vertical"
-                            android:maxLines="2"
-                            android:scrollHorizontally="true"
-                            android:textColor="@android:color/black"
-                            android:textSize="33px" />
-                        <ImageView
-                            android:id="@+id/thumb"
-                            android:layout_width="208px"
-                            android:layout_height="189px"
-                            android:layout_gravity="end"
-                            android:adjustViewBounds="true"
-                            android:contentDescription="@string/character_name" />
-                    </LinearLayout>
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:scrollHorizontally="true"
+                        android:gravity="center_vertical"
+                        android:textColor="@android:color/black"
+                        android:textSize="33px" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>

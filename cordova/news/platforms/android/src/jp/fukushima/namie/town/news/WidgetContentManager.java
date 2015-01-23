@@ -4,8 +4,14 @@
 package jp.fukushima.namie.town.news;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,7 +22,6 @@ public class WidgetContentManager {
     private static final String TAG = "NamieNewspaper";
     private static final String RECOMMEND_ARTICLE_BEFORE = "<font color=\"red\">新しいニュース</font>があるよ！";
     private static final String RECOMMEND_ARTICLE_AFTER = "詳しくは新聞のアイコンをタップしてね";
-    private static final String RECOMMEND_ARTICLE_ERROR = "エラーが発生したよ！";
 
     // フレームインデックス
     private int frameIndex = 0;
@@ -48,6 +53,7 @@ public class WidgetContentManager {
     private List<String> messages = null;
     private int recommendArticleIndex = 0;
     private List<Map<String, Object>> recommendArticles = null;
+    private Map<String, String> siteNameMap = null;
 
     private DisplayMode displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;;
     private MessageStyle messageStyle = MessageStyle.STYLE_BUBBLE;;
@@ -214,6 +220,25 @@ public class WidgetContentManager {
         recommendArticles.add(article);
     }
 
+    public void setSiteMap(String colorLabel) {
+        siteNameMap = new HashMap<String, String>();
+        JSONParser parser = new JSONParser();
+        try {
+            Object parsed = parser.parse(colorLabel);
+            JSONArray array = (JSONArray) parsed;
+            for (int i = 0; i < array.size(); i++) {
+                JSONObject obj = (JSONObject)array.get(i);
+                String site = (String) obj.get("site");
+                String label = (String) obj.get("label");
+                siteNameMap.put(site, label);
+            }
+        } catch (ParseException e) {
+            Log.e(TAG, "COLOR_LABEL Json parse failed.");
+            Log.e(TAG, colorLabel);
+        }
+        return;
+    }
+
     /**
      * 表示中のメッセージをスキップする.
      */
@@ -265,7 +290,11 @@ public class WidgetContentManager {
      * @return サイト名
      */
     public String getSite() {
-        return site;
+        String siteName = site;
+        if (siteNameMap != null && siteNameMap.containsKey(site)) {
+            siteName = siteNameMap.get(site);
+        }
+        return siteName;
     }
 
     /**

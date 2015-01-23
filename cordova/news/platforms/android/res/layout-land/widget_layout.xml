@@ -41,22 +41,46 @@
                     android:gravity="center_vertical"
                     android:textColor="@android:color/black"
                     android:textSize="33px" />
-                <TextView
-                    android:id="@+id/article_title"
+                <LinearLayout
+                    android:id="@+id/recommend"
                     android:visibility="invisible"
-                    android:background="@drawable/bg_news"
                     android:layout_width="659px"
                     android:layout_height="259px"
-                    android:paddingTop="44px"
-                    android:paddingBottom="100px"
-                    android:paddingStart="15px"
-                    android:paddingEnd="15px"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:scrollHorizontally="true"
-                    android:gravity="center_vertical"
-                    android:textColor="@android:color/black"
-                    android:textSize="33px" />
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@drawable/bg_news"
+                    android:orientation="vertical"
+                    android:paddingEnd="4px">
+                    <TextView
+                        android:id="@+id/article_site"
+                        android:layout_width="match_parent"
+                        android:layout_height="44px"
+                        android:paddingTop="2px"
+                        android:paddingEnd="15px"
+                        android:gravity="right|center_vertical"
+                        android:textColor="@android:color/white"
+                        android:textSize="22px" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/article_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="100px"
+                            android:layout_marginStart="4px"
+                            android:paddingStart="15px"
+                            android:paddingEnd="4px"
+                            android:layout_weight="0.64"
+                            android:ellipsize="end"
+                            android:gravity="center_vertical"
+                            android:maxLines="2"
+                            android:scrollHorizontally="true"
+                            android:textColor="@android:color/black"
+                            android:textSize="33px" />
+                    </LinearLayout>
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/recommend_with_thumbnail"
                     android:visibility="invisible"
@@ -67,7 +91,7 @@
                     android:orientation="vertical"
                     android:paddingEnd="4px">
                     <TextView
-                        android:id="@+id/article_site"
+                        android:id="@+id/article_site_with_thumbnail"
                         android:layout_width="match_parent"
                         android:layout_height="44px"
                         android:paddingTop="2px"
