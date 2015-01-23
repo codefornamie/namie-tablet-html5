@@ -99,6 +99,7 @@
                             android:id="@+id/thumb"
                             android:layout_width="208px"
                             android:layout_height="189px"
+                            android:scaleType="centerCrop"
                             android:layout_gravity="end"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/character_name" />
