@@ -765,3 +765,36 @@
 .dropdownList li:not(:last-child) {
     border-bottom: 1px solid #ccc;
 }
+
+/**
+ *  新聞アプリ記事詳細
+ */
+.letters-group {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.letters-article {
+    padding: 45px 0;
+    border-bottom: 1px solid #c4bfb1;
+}
+
+.letters-article:last-child {
+    border-bottom: none;
+}
+
+.letters-article .eventFileImage {
+    margin-bottom: 0;
+}
+
+.letters-article > .columns:first-child {
+    padding-left: 0;
+}
+
+.letters-article > .columns:last-child {
+    padding-right: 0;
+}
+
+.letters-group-heading {
+    margin: 15px 0;
+}
