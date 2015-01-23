@@ -2,86 +2,132 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="20dp"
-    android:paddingLeft="20dp"
-    android:paddingBottom="20dp"
-    android:paddingRight="20dp"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:orientation="vertical" >
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_gravity="top"
         android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/fukidashi"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="120dp"
-            android:layout_marginTop="10dp"
-            android:paddingStart="32dp"
-            android:paddingEnd="16dp"
-            android:ellipsize="end"
-            android:background="@drawable/img_fukidashi_v"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/black"
-            android:textSize="33px" />
-
-        <ImageView
-            android:id="@+id/chara"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/character_name" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal" >
-
-            <ImageButton
+            android:orientation="vertical" >
+            <ImageView
+                android:id="@+id/chara"
+                android:src="@drawable/img_ukedon_1"
+                android:layout_width="141px"
+                android:layout_height="180px"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/character_name" />
+            <FrameLayout
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20px" >
+                <TextView
+                    android:id="@+id/fukidashi"
+                    android:visibility="invisible"
+                    android:background="@drawable/bg_bubble"
+                    android:layout_width="493px"
+                    android:layout_height="191px"
+                    android:paddingStart="40px"
+                    android:paddingEnd="40px"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:scrollHorizontally="true"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"
+                    android:textSize="33px" />
+                <TextView
+                    android:id="@+id/article_title"
+                    android:visibility="invisible"
+                    android:background="@drawable/bg_news"
+                    android:layout_width="489px"
+                    android:layout_height="232px"
+                    android:paddingTop="44px"
+                    android:paddingBottom="100px"
+                    android:paddingStart="15px"
+                    android:paddingEnd="15px"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:scrollHorizontally="true"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"
+                    android:textSize="33px" />
+                <LinearLayout
+                    android:id="@+id/recommend_with_thumbnail"
+                    android:visibility="invisible"
+                    android:layout_width="489px"
+                    android:layout_height="232px"
+                    android:layout_gravity="right|center_vertical"
+                    android:background="@drawable/bg_news"
+                    android:orientation="horizontal"
+                    android:paddingEnd="4px"
+                    android:paddingTop="44px">
+                    <TextView
+                        android:id="@+id/article_title_with_thumbnail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="100px"
+                        android:layout_marginStart="4px"
+                        android:paddingStart="15px"
+                        android:paddingEnd="4px"
+                        android:layout_weight="0.64"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="2"
+                        android:scrollHorizontally="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="33px" />
+                    <ImageView
+                        android:id="@+id/thumb"
+                        android:layout_width="208px"
+                        android:layout_height="189px"
+                        android:layout_gravity="end"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/character_name" />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal" >
+            <LinearLayout
+                android:gravity="center_horizontal"
+                android:layout_width="200px"
+                android:layout_height="wrap_content">
+                <ImageButton
                 android:id="@+id/link_news"
                 android:background="@drawable/button_news"
+                android:layout_width="200px"
+                android:layout_height="222px"/>
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="250dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" />
-
-            <ImageButton
-                android:id="@+id/link_post"
-                android:background="@drawable/button_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="250dp"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="false"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" />
-
-            <ImageButton
-                android:id="@+id/link_dojo"
-                android:background="@drawable/button_dojyo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="250dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" />
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/link_post"
+                    android:background="@drawable/button_photo"
+                    android:layout_width="147px"
+                    android:layout_height="223px"/>
+            </LinearLayout>
+            <LinearLayout
+                android:gravity="center_horizontal"
+                android:layout_width="200px"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/link_dojo"
+                    android:background="@drawable/button_dojo"
+                    android:layout_width="190px"
+                    android:layout_height="222px"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
