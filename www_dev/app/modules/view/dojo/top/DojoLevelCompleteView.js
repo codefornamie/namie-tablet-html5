@@ -29,7 +29,7 @@ define(function(require, exports, module) {
             if (app.currentDojoLevel < this.getMaxDojoLevel() - 1) {
                 nextLevelButtonTitle = "次のコースへ進む";
             } else {
-                nextLevelButtonTitle = "最初の画面に戻る";
+                nextLevelButtonTitle = "コース選択画面に戻る";
             }
 
             return {

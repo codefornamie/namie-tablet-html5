@@ -9,7 +9,10 @@
     <div class="grid-cell--body">
         <div class="grid-description">
             <p class="grid-description__title">
-                <%= model.get("dispTitle") %>
+                <%= model.get("dispTitle") %> <br>
+                <% if (model.get("newArrivals")) { %>
+                    今日の新着写真投稿 <%= model.get("newArrivals") %> 件
+                <% }%>
             </p>
         </div>
         

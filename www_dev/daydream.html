@@ -203,6 +203,7 @@ body {
     window.javaToJs = function(token) {
         log("start refreshJavaToJs");
         if (!token) {
+            ohSnap('認証処理でエラーが発生しました。', 'red');
             return;
         }
         _token = token;
@@ -333,6 +334,7 @@ body {
     function getImageBinary(fname, callback) {
         log("start getImageBinary. fname=" + fname);
         if (fname === undefined) {
+            // エラーメッセージは呼び出し元で表示
             callback(null);
             return;
         }
@@ -348,11 +350,13 @@ body {
                     callback(binary);
                 },
                 error : function(e) {
+                    // エラーメッセージは呼び出し元で表示
                     log("personium request failure : " + e.toString());
                     callback(null);
                 }
             });
         } catch (e) {
+            // エラーメッセージは呼び出し元で表示
             log("Personium load file failure : " + e.toString());
             callback(null);
         }

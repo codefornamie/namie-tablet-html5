@@ -31,6 +31,8 @@
             android:paddingStart="60dp"
             android:paddingEnd="30dp"
             android:ellipsize="end"
+            android:maxLines="2"
+            android:scrollHorizontally="true"
             android:background="@drawable/img_fukidashi"
             android:gravity="center_vertical"
             android:textColor="@android:color/black"

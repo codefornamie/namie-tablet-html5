@@ -53,13 +53,21 @@ define(function(require, exports, module) {
                 key : "10",
                 value : "レポート",
                 detailValue : "レポート(役場)"
-            },
+            }, {
+                key : "11",
+                value : "イベント",
+                detailValue : "イベント"
+            }, {
+                key : "12",
+                value : "レポート",
+                detailValue : "レポート"
+            }
     ];
 
     // 各アプリで使用する記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST_BY_MODE = {};
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING] = [
-            "3", "4"
+            "11", "12"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_OPE] = [
             "5", "9", "10", "6", "3", "4"
@@ -73,6 +81,23 @@ define(function(require, exports, module) {
     Code.ARTICLE_STATUS_BEFORE_PUBLISH = "未掲載";
     Code.ARTICLE_STATUS_DEPUBLISHED = "配信停止中";
 
+    /**
+     * img要素のscr属性にpersonium.ioのWebDAVが格納されているサイトの情報定義
+     */
+    Code.MINPO_SCRAPING = [
+        {
+            site : "福島民報(トップニュース)",
+            scraping: "minpo"
+        },
+        {
+            site : "福島民報(県内ニュース)",
+            scraping: "minpo"
+        },
+        {
+            site : "福島民報(スポーツニュース)",
+            scraping: "minpo"
+        }
+    ];
     // 記事サイト
     Code.ARTICLE_SITE_LIST = [
             {
@@ -144,6 +169,7 @@ define(function(require, exports, module) {
                 levelName : "",
                 label : "白帯",
                 description : "初めてタブレットをさわる方のためのコースです。（文言未決定）",
+                congratulations: "白帯コースの動画を全て閲覧しました。これでタブレットの基礎動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "1",
@@ -151,6 +177,7 @@ define(function(require, exports, module) {
                 levelName : "白帯",
                 label : "茶帯",
                 description : "茶帯コースです。（文言未決定）",
+                congratulations: "茶帯コースの動画を全て閲覧しました。これでタブレットの応用動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "2",
@@ -158,6 +185,7 @@ define(function(require, exports, module) {
                 levelName : "茶帯",
                 label : "黒帯",
                 description : "黒帯コースです。（文言未決定）",
+                congratulations: "黒帯コースの動画を全て閲覧しました。これでタブレットの全てをマスターできましたね。<br>「黒帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "3",
@@ -165,6 +193,7 @@ define(function(require, exports, module) {
                 levelName : "黒帯",
                 label : "",
                 description : "",
+                congratulations: "",
                 iconPath : ""
             }
     ];
