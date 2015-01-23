@@ -84,7 +84,7 @@ define(function(require, exports, module) {
                     // 休刊日
                     vexDialog.defaultOptions.className = 'vex-theme-default';
                     vexDialog.alert("休刊日です。");
-                    $("[data-date]").removeClass("current")
+                    $("[data-date]").removeClass("current");
                     this.hideLoading();
                 }
             }.bind(this));

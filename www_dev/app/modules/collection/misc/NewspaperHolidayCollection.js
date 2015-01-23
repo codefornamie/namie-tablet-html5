@@ -60,7 +60,6 @@ define(function(require, exports, module) {
                     var isPublish = !map[md.format("YYYY-MM-DD")];
                     for(var i = 1; i < Code.LIMIT_CONSECUTIVE_HOLIDAY; i++){
                         md.add(-1, "d");
-                        var map = col.indexBy("__id");
                         if(!map[md.format("YYYY-MM-DD")]) {
                             callback(md.toDate(), isPublish, null);
                             return;
@@ -71,7 +70,7 @@ define(function(require, exports, module) {
                 error : function(e) {
                     callback(null, false, e);
                 },
-            })
+            });
         }
     });
 
