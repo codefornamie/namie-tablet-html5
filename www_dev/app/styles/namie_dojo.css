@@ -4,14 +4,12 @@
 .page-dojo {
     background-color: #efeeec;
     background-image: url(../../app/img/dojo/img-bg.png);
-    background-size: contain;
 }
 
 .page-dojo .contents {
     height: auto;
     background-color: #efeeec;
     background-image: url(../../app/img/dojo/img-bg.png);
-    background-size: 100% auto;
     color: rgb(115, 73, 41);
 }
 
@@ -215,15 +213,20 @@
     background-color: white;
     margin-bottom: 10px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
-    padding: 20px 0;
+    padding: 25px 0 23px 255px;
+    background-image: url("../../app/img/dojo/img-list-header-select.png");
+    background-repeat: no-repeat;
+    background-position: 70px center;
+    background-size: auto 47%;
+    font-size: 1.4rem;
 }
 
 .dojo-level-list-container {
-    padding: 20px;
+    padding: 0 130px;
 }
 .dojo-level-list-container .dojo-level-item {
-    padding: 10px;
-    margin-bottom: 15px;
+    padding: 12px;
+    margin-bottom: 12px;
     display: flex;
     align-items: stretch;
 }
@@ -234,6 +237,9 @@
 
 /* 帯 */
 .dojo-level-list-container .dojo-level--introduction {
+    display: block;
+    padding: 0;
+    margin-bottom: 8px;
     background: -webkit-linear-gradient(-90deg, #d0915b 0%, #af7b4c 100%);
     background: -moz-linear-gradient(-90deg, #d0915b 0%, #af7b4c 100%);
     background: -o-linear-gradient(-90deg, #d0915b 0%, #af7b4c 100%);
@@ -242,9 +248,20 @@
     border-bottom: 5px solid #7e4f23;
     color: rgb(115, 73, 41);
 }
+.dojo-level-list-container .dojo-level--introduction .dojo-level-item__inner {
+    padding: 12px;
+    display: flex;
+    align-items: stretch;
+    background-image: url(../../app/img/dojo/text-introduction.png);
+    background-repeat: no-repeat;
+    background-position: 20px bottom;
+    background-size: auto 95%;
+}
 .dojo-level-list-container .dojo-level--introduction .dojo-level-item__header {
 }
 .dojo-level-list-container .dojo-level--introduction .dojo-level-item__description {
+    padding-top: 8px;
+    padding-bottom: 8px;
     background-color: rgb(255, 245, 234);
     border-top: 1px solid #7e4f23;
     border-bottom: 1px solid #d6b86f;
@@ -257,7 +274,6 @@
     background: -ms-linear-gradient(-90deg, #fff6cb 0%, #fec574 100%);
     background: linear-gradient(180deg, #fff6cb 0%, #fec574 100%);
     border-bottom: 5px solid #d59500;
-    color: rgb(115, 73, 41);
 }
 .dojo-level-list-container .dojo-level--none .dojo-level-item__header {
     color: rgb(120, 76, 47);
@@ -267,6 +283,7 @@
     background-color: rgb(255, 252, 234);
     border-top: 1px solid #d59500;
     border-bottom: 1px solid #ffe5bd;
+    color: rgb(120, 78, 60);
 }
 
 .dojo-level-list-container .dojo-level--white {
@@ -276,7 +293,6 @@
     background: -ms-linear-gradient(-90deg, #ffc2c7 0%, #c95b5c 100%);
     background: linear-gradient(180deg, #ffc2c7 0%, #c95b5c 100%);
     border-bottom: 5px solid #9c3e3f;
-    color: rgb(115, 73, 41);
 }
 .dojo-level-list-container .dojo-level--white .dojo-level-item__header {
     color: white;
@@ -286,6 +302,7 @@
     background-color: rgb(255, 249, 251);
     border-top: 1px solid #9c3e3f;
     border-bottom: 1px solid #e79695;
+    color: rgb(111, 43, 44);
 }
 
 .dojo-level-list-container .dojo-level--brown {
@@ -295,7 +312,6 @@
     background: -ms-linear-gradient(-90deg, #74a6e3 0%, #395dbb 100%);
     background: linear-gradient(180deg, #74a6e3 0%, #395dbb 100%);
     border-bottom: 5px solid #182d62;
-    color: rgb(115, 73, 41);
 }
 .dojo-level-list-container .dojo-level--brown .dojo-level-item__header {
     color: white;
@@ -305,6 +321,7 @@
     background-color: rgb(241, 247, 255);
     border-top: 1px solid #182d62;
     border-bottom: 1px solid #5e98e2;
+    color: rgb(29, 46, 89);
 }
 
 .dojo-level-item__icon {
@@ -316,6 +333,10 @@
     background-repeat: no-repeat;
     background-position: center;
     margin-right: 15px;
+}
+
+.dojo-level-item__icon[data-dojo-level=introduction] {
+    height: 50px;
 }
 
 .dojo-level-item__icon[data-dojo-level=none] {
@@ -347,7 +368,7 @@
     font-size: 1.6rem;
     font-weight: bold;
     vertical-align: middle;
-    margin: 10px 15px 10px;
+    margin: 8px 15px 4px;
 }
 
 .dojo-level-item__num {
@@ -358,8 +379,8 @@
 
 .dojo-level-item__description {
     flex: 10000 1 auto;
-    padding: 25px;
-    font-size: 1.3rem;
+    padding: 15px 20px;
+    line-height: 1.6;
 }
 
 /**
