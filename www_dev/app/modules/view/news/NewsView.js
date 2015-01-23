@@ -586,21 +586,13 @@ define(function(require, exports, module) {
         },
 
         /**
-         * YYYY年MM月DD日版の新聞に戻るボタンの日付を更新する
+         * フッター部のボタンを設定する
          * @memberOf NewsView#
          */
         updateFooterButtons : function() {
             var self = this;
-            var $btnGoTop = this.$el.find("#news-action").find("[data-gotop]");
             var $btnBack = this.$el.find("#news-action").find("[data-back]");
-            var currentMoment = moment(app.currentDate);
-            var currentDateStr = currentMoment.format("YYYY-MM-DD");
 
-            $btnGoTop.on("click", function() {
-                self.setScrollTop(0);
-            });
-
-            $btnBack.text(currentMoment.format("YYYY年MM月DD日版の新聞に戻る"));
             $btnBack.on("click", function(ev) {
                 ev.preventDefault();
                 app.router.go("top", currentDateStr);
