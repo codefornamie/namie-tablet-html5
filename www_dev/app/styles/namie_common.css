@@ -1563,3 +1563,15 @@ select#articleCategory {
 .text--localnews {
     color: #61b152;
 }
+
+/**
+ *  おくやみ
+ */
+.condolenceListItem {
+}
+
+.condolenceListItem .post-header__title {
+    border-left: 5px solid rgb(35, 136, 215);
+    padding: 15px 0 15px 30px;
+    color: rgb(35, 136, 215);
+}

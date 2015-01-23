@@ -1,13 +1,21 @@
 <div data-condolence-id="<%= model.get('__id') %>" class="condolenceListItem large-12 columns">
-    <div class="panel radius post-main">
-        <h2 class="condolenceTitle">
-            <%=model.get("dispTitle") %>
-        </h2>
-        <span class="post-main__description">
-            <%=model.get("rawHTML") %>
-            <%=model.get("rawHTML2") %>
-            <%=model.get("rawHTML3") %>
-        </span>
-    </div>
+    <div>
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="post-header">
+                    <div class="post-header__title">
+                        <%= model.get("dispTitle") %>
+                    </div>
+                </div>
+            </div>
 
+            <div id="articleDetailImageArea" class='post-main__image'>
+                <img class="articleDetailImage" class="nehan-float-start">
+            </div>
+        </div>
+
+        <%= model.get("rawHTML") %>
+        <%= model.get("rawHTML2") %>
+        <%= model.get("rawHTML3") %>
+    </div>
 </div>
