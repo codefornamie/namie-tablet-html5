@@ -36,8 +36,8 @@
                     android:background="@drawable/bg_bubble"
                     android:layout_width="669px"
                     android:layout_height="237px"
-                    android:paddingStart="60dp"
-                    android:paddingEnd="30dp"
+                    android:paddingStart="80px"
+                    android:paddingEnd="40px"
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:scrollHorizontally="true"
@@ -50,8 +50,10 @@
                     android:background="@drawable/bg_news"
                     android:layout_width="659px"
                     android:layout_height="259px"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
+                    android:paddingTop="44px"
+                    android:paddingBottom="100px"
+                    android:paddingStart="15px"
+                    android:paddingEnd="15px"
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:scrollHorizontally="true"
@@ -61,14 +63,14 @@
 
                 <LinearLayout
                     android:id="@+id/recommend_with_thumbnail"
+                    android:visibility="invisible"
                     android:layout_width="659px"
                     android:layout_height="259px"
                     android:layout_gravity="right|center_vertical"
                     android:background="@drawable/bg_news"
                     android:orientation="horizontal"
                     android:paddingEnd="4px"
-                    android:paddingTop="44px"
-                    android:visibility="visible" >
+                    android:paddingTop="44px">
 
                         <TextView
                             android:id="@+id/recommend2"
