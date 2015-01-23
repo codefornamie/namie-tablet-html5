@@ -1,19 +1,11 @@
-<div data-condolence-id="<%= model.get('__id') %>" class="condolenceListItem large-12 columns">
-    <div>
-        <div class="row">
-            <div class="large-12 columns">
-                <div class="post-header">
-                    <div class="post-header__title">
-                        <%= model.get("dispTitle") %>
-                    </div>
-                </div>
-            </div>
-
-            <div id="articleDetailImageArea" class='post-main__image'>
-                <img class="articleDetailImage" class="nehan-float-start">
-            </div>
+<div data-condolence-id="<%= model.get('__id') %>" class="condolenceListItem">
+    <div class="post-header">
+        <div class="post-header__title">
+            <%= model.get("dispTitle") %>
         </div>
+    </div>
 
+    <div class="condolence__body">
         <%= model.get("rawHTML") %>
         <%= model.get("rawHTML2") %>
         <%= model.get("rawHTML3") %>
