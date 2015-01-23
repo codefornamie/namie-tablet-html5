@@ -16,9 +16,11 @@ define(function(require, exports, module) {
     var colorbox = require("colorbox");
 
     /**
-     * 記事一覧アイテムのViewを作成する。
-     *
-     * @class 記事一覧アイテムのView
+     * 記事詳細画面のViewを作成する。
+     * <p>
+     * 記事一覧をタップし、記事詳細画面を表示する際に利用される。
+     * </p>
+     * @class 記事詳細画面のView
      * @exports ArticleListItemView
      * @constructor
      */
@@ -32,8 +34,12 @@ define(function(require, exports, module) {
          * <p>
          * 記事に関連する画像ファイルの取得と表示を行う。
          * </p>
+         * @memberOf ArticleListItemView#
          */
         afterRendered : function() {
+            // この記事内のimg要素のsrc属性に、personium.ioのWebDAVのパスが設定されているかどうか
+            this.isMinpoArticle = this.model.isMinpoScraping();
+
             this.showImage();
             this.afterRenderCommon();
             // タグリストの追加
@@ -44,39 +50,34 @@ define(function(require, exports, module) {
         },
         /**
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
+         * @memberOf ArticleListItemView#
          */
         showImage : function() {
             var self = this;
             var imageElems = $(this.el).find("img");
-            this.setColorbox(imageElems);
+
+            if (this.isMinpoArticle) {
+                // この記事のimg要素にはWebDAVのパスが設定されているため、取得しにいく
+                _.each(imageElems, function(imageElement) {
+                    var imageUrl = $(imageElement).attr("src");
+                    this.showPIOImage($(imageElement), {
+                        imageUrl : imageUrl
+                    }, true, $.proxy(this.onClickImage, this));
+                }.bind(this));
+            } else {
+                this.setColorbox(imageElems);
+            }
+
             var articleImage = $(this.el).find(".articleDetailImage");
-            var onGetBinary = function(binary) {
-                var arrayBufferView = new Uint8Array(binary);
-                var blob = new Blob([ arrayBufferView ], {
-                    type : "image/jpg"
-                });
-                var url = FileAPIUtil.createObjectURL(blob);
-                articleImage.load(function() {
-                    articleImage.parent().show();
-//                    window.URL.revokeObjectURL(articleImage.attr("src"));
-                });
-                articleImage.attr("src", url);
-                articleImage.data("blob", blob);
-                self.setColorbox(articleImage);
-            };
 
             if (this.model.get("imageUrl")) {
-                try {
-                    var imagePath = this.model.get("imagePath") ? this.model.get("imagePath") + "/" : "";
-                    app.box.col("dav").getBinary(imagePath + this.model.get("imageUrl"), {
-                        success : onGetBinary
-                    });
-                } catch (e) {
-                    console.error(e);
-                }
-                // iscroll.jsが正確に高さを把握できなくなるため,
-                // 後から画像が読み込まれる場合はhideしない
-                //articleImage.parent().hide();
+                articleImage.on("error", function() {
+                    articleImage.hide();
+                });
+                var imageUrl = this.model.get("imageUrl");
+                this.showPIOImage(articleImage, {
+                    imageUrl : imageUrl
+                }, true, $.proxy(this.onClickImage, this));
             } else {
                 // ArticleListViewでiscrollを初期化する際に
                 // 記事内のimgの読み込みを待機しているので
@@ -116,7 +117,7 @@ define(function(require, exports, module) {
                         $.colorbox.close();
                     });
                     $("#cboxSaveButton").click($.proxy(this.onClickImage, this));
-                },this),
+                }, this),
                 onClosed : function() {
                     $("#cboxSaveButton").remove();
                     $("#cboxCloseButton").remove();
@@ -132,7 +133,7 @@ define(function(require, exports, module) {
          * <li>タグの表示</li>
          * <li>画像クリックイベントのバインド<br/> 画像クリック時に、対象画像の保存処理を行うためのイベントをバインドする。 </li>
          * </p>
-         *
+         * @memberOf ArticleListItemView#
          */
         afterRenderCommon : function() {
             // 既にお気に入り登録されている記事のお気に入りボタンを非表示にする
@@ -166,6 +167,7 @@ define(function(require, exports, module) {
         },
         /**
          * 切り抜きボタン押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickFavoriteRegisterButton : function() {
             app.ga.trackEvent("ニュース", "切り抜き登録", this.model.get("title"));
@@ -186,13 +188,14 @@ define(function(require, exports, module) {
             this.favoriteModel.set("imageUrl", this.model.get("imageUrl"));
             // TODO 配信日が記事情報に設定されるようになった際には下記を書き換える
             this.favoriteModel.set("publishedAt", new Date().toLocaleDateString());
-            this.favoriteModel.set("isDelete",false);
+            this.favoriteModel.set("isDelete", false);
             this.favoriteModel.save(null, {
                 success : $.proxy(this.onFavoriteSave, this)
             });
         },
         /**
          * 切り抜き情報保存後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onFavoriteSave : function() {
             this.onChangeStatus("favorite");
@@ -201,33 +204,35 @@ define(function(require, exports, module) {
                     this.model.favorite = this.favoriteModel;
                     this.hideLoading();
                 }, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
          * 切り抜き削除ボタン押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickFavoriteDeleteButton : function() {
             app.ga.trackEvent("ニュース", "切り抜き削除", this.model.get("title"));
             // 確認ダイアログを表示
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.confirm({
-                message: 'この記事を切り抜きから削除しますが、よろしいですか？',
-                callback: $.proxy(function(value) {
+                message : 'この記事を切り抜きから削除しますが、よろしいですか？',
+                callback : $.proxy(function(value) {
                     if (value) {
                         this.showLoading();
                         var favoriteModel = this.model.favorite;
                         favoriteModel.set("isDelete", true);
                         favoriteModel.save(null, {
                             success : $.proxy(this.onFavoriteDelete, this),
-                            error: $.proxy(this.onFailure,this)
+                            error : $.proxy(this.onFailure, this)
                         });
                     }
-                },this)
-              });
+                }, this)
+            });
         },
         /**
          * 切り抜き情報削除後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onFavoriteDelete : function() {
             this.onChangeStatus("favorite");
@@ -235,11 +240,12 @@ define(function(require, exports, module) {
                 success : $.proxy(function() {
                     this.hideLoading();
                 }, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
          * おすすめボタン押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickRecommendRegisterButton : function() {
             app.ga.trackEvent("ニュース", "おすすめ登録", this.model.get("title"));
@@ -257,11 +263,12 @@ define(function(require, exports, module) {
             this.recommendModel.set("etag", "*");
             this.recommendModel.save(null, {
                 success : $.proxy(this.onRecommendSave, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
          * おすすめ情報保存後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onRecommendSave : function() {
             this.model.recommend = this.recommendModel;
@@ -271,19 +278,21 @@ define(function(require, exports, module) {
         },
         /**
          * おすすめ取消押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickRecommendDeleteButton : function() {
             app.ga.trackEvent("ニュース", "おすすめ削除", this.model.get("title"));
             this.recommendModel = this.model.recommend;
-            this.recommendModel.set("isDelete",true);
+            this.recommendModel.set("isDelete", true);
             this.recommendModel.set("etag", "*");
             this.recommendModel.save(null, {
                 success : $.proxy(this.onRecommendDelete, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
          * おすすめ情報削除後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onRecommendDelete : function() {
             this.model.recommend = this.recommendModel;
@@ -292,10 +301,10 @@ define(function(require, exports, module) {
             this.render();
         },
         /**
-         * 情報変更後に呼び出されるコールバック関数。
-         * ボタン表示非表示切り替え、および状態の切り替えを行う
-         *
+         * 情報変更後に呼び出されるコールバック関数。 ボタン表示非表示切り替え、および状態の切り替えを行う
+         * 
          * @params {String} type "favorite" or "recommend"
+         * @memberOf ArticleListItemView#
          */
         onChangeStatus : function(type) {
             if (type === "favorite") {
@@ -304,11 +313,12 @@ define(function(require, exports, module) {
                 this.model.set("isMyRecommend", !this.model.get("isMyRecommend"));
             }
             // 対応するボタンの切り替え
-            this.$el.find("[data-"+ type +"-register-button]").toggle();
-            this.$el.find("[data-"+ type +"-delete-button]").toggle();
+            this.$el.find("[data-" + type + "-register-button]").toggle();
+            this.$el.find("[data-" + type + "-delete-button]").toggle();
         },
         /**
          * タグ追加ボタン押下時に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onClickTagAddButton : function() {
             if ($(this.el).find("#tagInput").val()) {
@@ -317,12 +327,13 @@ define(function(require, exports, module) {
                 $(this.el).find("#tagInput").val("");
                 this.model.save(null, {
                     success : $.proxy(this.onSave, this),
-                    error: $.proxy(this.onFailure,this)
+                    error : $.proxy(this.onFailure, this)
                 });
             }
         },
         /**
          * 記事情報更新完了後に呼び出されるコールバック関数。
+         * @memberOf ArticleListItemView#
          */
         onSave : function() {
             this.model.fetch({
@@ -330,21 +341,23 @@ define(function(require, exports, module) {
                     this.tagListView.tagsArray = this.model.get("tagsArray");
                     this.tagListView.render();
                 }, this),
-                error: $.proxy(this.onFailure,this)
+                error : $.proxy(this.onFailure, this)
             });
         },
         /**
-         *  非同期通信失敗後のコールバック関数
+         * 非同期通信失敗後のコールバック関数
+         * @memberOf ArticleListItemView#
          */
-        onFailure: function (err) {
+        onFailure : function(err) {
             app.logger.error(err);
             this.hideLoading();
         },
 
         /**
          * タグボタン押下時に呼び出されるコールバック関数。
-         *
+         * 
          * @params {event} タグボタンのクリックイベント
+         * @memberOf ArticleListItemView#
          */
         onClickDeleteTag : function(ev) {
             if (!this.model.get("isNotArticle")) {
@@ -360,6 +373,7 @@ define(function(require, exports, module) {
          * <p>
          * 指定された画像をギャラリーに保存する。
          * </p>
+         * @memberOf ArticleListItemView#
          */
         onClickImage : function(ev) {
             var uri = $("#colorbox").find("img").attr("src");
@@ -376,20 +390,19 @@ define(function(require, exports, module) {
         },
         /**
          * 記事詳細内のアンカータグがクリックされた際のハンドラ
+         * @memberOf ArticleListItemView#
          */
-        onClickAnchorTag: function (ev) {
+        onClickAnchorTag : function(ev) {
             ev.preventDefault();
             vexDialog.defaultOptions.className = 'vex-theme-default';
             vexDialog.alert(this.model.getCategory() + "のHPを直接開いてリンクを参照してください。");
         },
         /**
          * 指定URiの画像データをストレージに保存する。
-         *
-         * @param {Object}
-         *            data 対象画像のURIまたはBlob
-         * @param {String}
-         *            filePath 保存先のストレージのパス
-         *
+         * 
+         * @param {Object} data 対象画像のURIまたはBlob
+         * @param {String} filePath 保存先のストレージのパス
+         * @memberOf ArticleListItemView#
          */
         saveImage : function(data, fileName) {
             app.logger.debug("scanFile start. filePath: " + fileName);
@@ -403,32 +416,35 @@ define(function(require, exports, module) {
 
             // ファイルシステムエラーハンドラ
             var onFileSystemError = function(e) {
-                app.logger.debug("FileSystemError: code=" + e.code);
+                app.logger.error("Failed saving image. FileSystemError: error=" + e.toString());
                 window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
             };
             // メディアスキャン
-            var mediaScan = function(filePath){
-                app.logger.debug("scanFile start. filePath: " + filePath);
+            var mediaScan = function(filePath) {
+                app.logger.info("scanFile start. filePath: " + filePath);
                 window.MediaScanPlugin.scanFile(filePath, function(msg) {
                     window.plugins.toast.showLongBottom("画像を保存しました。");
+                    app.logger.info("Success saving image. filePath=" + filePath);
                 }, function(err) {
                     window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                    app.logger.debug(err);
+                    app.logger.error("Failed saving image. error=" + err.toString());
                 });
             };
 
-            if(data instanceof Blob){
+            if (data instanceof Blob) {
                 var blob = data;
-                window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-                window.requestFileSystem(LocalFileSystem.PERSISTENT, 50 * 1024 * 1024, $.proxy(function(fs){
-                    fs.root.getFile(picturePath + fileName, {create: true}, $.proxy(function(fileEntry) {
+                window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+                window.requestFileSystem(LocalFileSystem.PERSISTENT, 50 * 1024 * 1024, $.proxy(function(fs) {
+                    fs.root.getFile(picturePath + fileName, {
+                        create : true
+                    }, $.proxy(function(fileEntry) {
                         fileEntry.createWriter($.proxy(function(fileWriter) {
                             fileWriter.onwriteend = function(e) {
                                 mediaScan(filePath);
                             };
                             fileWriter.onerror = function(e) {
                                 window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                                app.logger.debug('Write failed: ' + e.toString());
+                                app.logger.error("Failed saving image (Blob). error=" + e.toString());
                             };
                             fileWriter.write(blob);
 
@@ -442,9 +458,10 @@ define(function(require, exports, module) {
                     mediaScan(filePath);
                 }, function(error) {
                     window.plugins.toast.showLongBottom("画像の保存に失敗しました。");
-                    app.logger.debug("download error source: " + error.source);
-                    app.logger.debug("download error target: " + error.target);
-                    app.logger.debug("download error code: " + error.code);
+                    app.logger.error("Failed saving image (Blob). error=" + error.toString());
+                    app.logger.error("Failed saving image (Blob). source: " + error.source);
+                    app.logger.error("Failed saving image (Blob). target: " + error.target);
+                    app.logger.error("Failed saving image (Blob). code: " + error.code);
                 }, false, {});
             }
         }

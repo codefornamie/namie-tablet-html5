@@ -10,7 +10,7 @@ define(function(require, exports, module) {
 
     /**
      * 記事情報のモデルクラスを作成する。
-     *
+     * 
      * @class 記事情報のモデルクラス
      * @exports EventsModel
      * @constructor
@@ -34,7 +34,7 @@ define(function(require, exports, module) {
             response.dispSite = CommonUtil.sanitizing(response.site);
             if (!response.title && response.description) {
                 // 写真投稿などのタイトルがないものは本文の先頭10文字をタイトルとする
-                response.title = response.description.substr(0,10);
+                response.title = response.description.substr(0, 10);
                 if (response.description.length > 10) {
                     response.title += "...";
                 }
@@ -71,10 +71,10 @@ define(function(require, exports, module) {
             } else {
                 response.dispDescriptionSummary = response.dispDescription;
             }
-            
+
             // サムネイルがないデータは、本画像をサムネイルとする。
             response.imageThumbUrl = response.imageThumbUrl || response.imageUrl;
-            
+
             return response;
         },
         /**
@@ -149,7 +149,7 @@ define(function(require, exports, module) {
             if (this.get("isDepublish")) {
                 return Code.ARTICLE_STATUS_DEPUBLISHED;
             }
-            
+
             var currentPubDate = DateUtil.formatDate(BusinessUtil.getCurrentPublishDate(), "yyyy-MM-dd");
             if (currentPubDate > new Date(this.get("publishedAt"))) {
                 return Code.ARTICLE_STATUS_PUBLISHED;
@@ -211,7 +211,7 @@ define(function(require, exports, module) {
          * @return {Boolean} personium.ioに保存されている画像の場合、<code>true</code>を返す。
          * @memberOf ArticleModel#
          */
-        isPIOImage: function() {
+        isPIOImage : function() {
             // 記事タイプが1 or 2 の場合、imageUrlの画像がインターネットの画像
             // それ以外は、personium.io の画像
             if (this.get("type") === "1" || this.get("type") === "2") {
@@ -226,7 +226,7 @@ define(function(require, exports, module) {
          * @return {Number} Code.IMAGE_TYPE_* を返す
          * @memberOf ArticleModel#
          */
-        getImageType: function () {
+        getImageType : function() {
             if (this.isPIOImage()) {
                 return Code.IMAGE_TYPE_PIO;
             }
@@ -259,7 +259,7 @@ define(function(require, exports, module) {
          * @return {string} class文字列を返す
          * @memberOf ArticleModel#
          */
-        getSiteType: function() {
+        getSiteType : function() {
             var dispSite = this.getCategory();
             var articleSite = null;
 
@@ -321,6 +321,21 @@ define(function(require, exports, module) {
                 return categoryConf.color;
             }
             return null;
+        },
+        /**
+         * この記事の本文に対して、クローラーが"minpo"スクレイピングを実施しているかどうかを判定する。
+         * <p>
+         * クローラーが"minpo"スクレイピングを実施している場合、,<code>true</code>を返却する。<br>
+         * その場合、この記事のrawHTMLプロパティ内のimg要素のsrc属性には、personium.ioのWebDAVの画像ファイルパスが設定されていることを示す。
+         * </p>
+         * @returns {Boolean} クローラーが"minpo"スクレイピングを実施している場合、,<code>true</code>を返却する
+         * @memberOf ArticleModel#
+         */
+        isMinpoScraping : function() {
+            var scrapingConfig = _.find(Code.MINPO_SCRAPING, function(scrapingConfig) {
+                return scrapingConfig.site === this.get("site");
+            }.bind(this));
+            return scrapingConfig && scrapingConfig.scraping === "minpo";
         }
     });
 

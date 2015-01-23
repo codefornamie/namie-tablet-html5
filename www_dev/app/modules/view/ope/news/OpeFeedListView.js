@@ -17,6 +17,11 @@ define(function(require, exports, module) {
             "click .feedListItem" : "onClickFeedListItem",
             "onRecommendFetch .today-recommend-radio" : "onRecommendFetch"
         },
+        /**
+         * 記事種別ごとのListItemViewの定義
+         * @memberOf OpeFeedListView
+         */
+        customListItemView: [],
         afterRendered : function() {
             // ドラッグアンドドロップによるテーブルの並び替えを行うための設定
             this.$('.sortable').sortable({

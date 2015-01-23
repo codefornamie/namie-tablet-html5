@@ -46,7 +46,7 @@ define(function(require, exports, module) {
          */
         onClickUpdateLetter : function(ev) {
             alert("更新しました(DUMMY)");
-            app.router.go("/letters/dummy_id/modified");
+            app.router.go("letters/dummy_id/modified");
         }
     });
 
