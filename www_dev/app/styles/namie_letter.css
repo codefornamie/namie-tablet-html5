@@ -787,6 +787,13 @@
     margin-bottom: 0;
 }
 
+@media only screen and (orientation:portrait) {
+    .letters-article .eventFileImage {
+        margin-bottom: 30px;
+        max-width: none;
+    }
+}
+
 .letters-article > .columns:first-child {
     padding-left: 0;
 }
