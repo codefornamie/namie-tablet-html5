@@ -142,6 +142,7 @@ define(function(require, exports, module) {
          * @memberOf DojoLayout#
          */
         showIntroduction: function (param) {
+            this.dojoIntroductionView.isFirst = param.isFirst;
             this.setView(DojoLayout.SELECTOR_INTRODUCTION, this.dojoIntroductionView);
         },
 
@@ -429,7 +430,7 @@ define(function(require, exports, module) {
 
             // 「どの動画も達成されていない場合」にのみ初回説明画面を表示する
             if (!isSolved) {
-                app.router.navigate("dojo-introduction", true);
+                app.router.navigate("dojo-introduction?first", true);
             }
         },
         
@@ -536,7 +537,9 @@ define(function(require, exports, module) {
                 break;
 
             case "dojoIntroduction":
-                this.layout.showIntroduction();
+                this.layout.showIntroduction({
+                    isFirst : !!params[0]
+                });
                 break;
 
             default:
