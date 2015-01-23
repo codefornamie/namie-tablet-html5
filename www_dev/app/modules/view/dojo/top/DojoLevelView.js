@@ -79,7 +79,7 @@ define(function(require, exports, module) {
                     level: this.level
                 });
 
-                this.setView("#dojo-level-list-container", dojoListView).render();
+                this.setView("#dojo-list-container", dojoListView).render();
             }
         }
     });
