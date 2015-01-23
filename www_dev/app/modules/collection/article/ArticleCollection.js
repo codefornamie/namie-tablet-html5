@@ -137,9 +137,11 @@ define(function(require, exports, module) {
             // 範囲
             condition.push(rangeCondition);
             // 削除を除く
-            condition.push(new Or([
-                                new IsNull("deletedAt"), new Equal("deletedAt", "")
-                        ]));
+            condition.push(new And([
+                new Or([
+                        new IsNull("deletedAt"), new Equal("deletedAt", "")
+                ])
+            ]));
             
             if(!isDepublish){
                 // 掲載中止を 除く

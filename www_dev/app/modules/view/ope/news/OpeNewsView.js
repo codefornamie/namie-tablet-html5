@@ -61,6 +61,8 @@ define(function(require, exports, module) {
          */
         setDate : function(targetDate) {
             this.closePreview();
+            // 変更される前のtargetDateを保存する
+            this.prevSelectedTargetDate = this.targetDate;
 
             // 休刊日情報の読み込み
             var holCol = new NewspaperHolidayCollection();
@@ -72,8 +74,10 @@ define(function(require, exports, module) {
                     this.hideLoading();
                     return;
                 }
+                // 休刊日かどうか
                 if (isPublish) {
-                    this.targetDate = targetDate;
+                    // 発刊日の場合
+                    this.targetDate = moment(targetDate).format("YYYY-MM-DD");
                     this.$el.find("#targetDate").text(
                             DateUtil.formatDate(targetDate, "yyyy年MM月dd日") + app.serverConfig.PUBLISH_TIME);
                     // 記事読み込み範囲設定
@@ -81,6 +85,9 @@ define(function(require, exports, module) {
                     // 記事読み込み   
                     this.searchArticles();
                 } else {
+                    // 休刊日の場合
+                    // 前に選択していた日付に戻す。
+                    this.targetDate = this.prevSelectedTargetDate;
                     // 休刊日
                     vexDialog.defaultOptions.className = 'vex-theme-default';
                     vexDialog.alert("休刊日です。");
