@@ -54,6 +54,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onEnabled(Context context) {
         Log.d(TAG, "NamieWidgetProvider#onEnabled()");
 
+        publishStatus = new PublishStatus();
+        contentManager = new WidgetContentManager(context);
+        lastUnreadCheckTime = 0;
+
         // ウィジット更新用アラームの登録
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
