@@ -213,8 +213,8 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         // メッセージ更新
         setMessageViewStyle(context, remoteViews, contentManager.getMessageStyle());
         remoteViews.setTextViewText(R.id.fukidashi, Html.fromHtml(contentManager.getMessage()));
-        remoteViews.setTextViewText(R.id.recommend, Html.fromHtml(contentManager.getMessage()));
-        remoteViews.setTextViewText(R.id.recommend2, Html.fromHtml(contentManager.getMessage()));
+        remoteViews.setTextViewText(R.id.article_title, Html.fromHtml(contentManager.getMessage()));
+        remoteViews.setTextViewText(R.id.article_title_with_thumbnail, Html.fromHtml(contentManager.getMessage()));
 
         Bitmap thumbnail = contentManager.getThumbnail();
         if (thumbnail != null) {
@@ -247,29 +247,31 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         switch(config.orientation) {
         case Configuration.ORIENTATION_PORTRAIT:
             if (style == MessageStyle.STYLE_BUBBLE) {
-                remoteViews.setInt(R.id.message, "setBackgroundResource", R.drawable.img_fukidashi_v);
-                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 32), 0, dpToPx(density, 16), 0);
+                remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
+                remoteViews.setViewVisibility(R.id.article_title, View.INVISIBLE);
+                remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
             } else {
-                remoteViews.setInt(R.id.message, "setBackgroundResource", R.drawable.bg_news);
-                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 20), 0, dpToPx(density, 20), 0);
+                // ポートレートの場合は常にサムネイル表示なし
+                remoteViews.setViewVisibility(R.id.fukidashi, View.INVISIBLE);
+                remoteViews.setViewVisibility(R.id.article_title, contentManager.getMessageVisiblity());
+                remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
             }
             break;
         case Configuration.ORIENTATION_LANDSCAPE:
         default :
             if (style == MessageStyle.STYLE_BUBBLE) {
                 remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
-                remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
+                remoteViews.setViewVisibility(R.id.article_title, View.INVISIBLE);
                 remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
             } else {
                 remoteViews.setViewVisibility(R.id.fukidashi, View.INVISIBLE);
                 if (contentManager.getThumbnail() != null) {
-                    remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
+                    remoteViews.setViewVisibility(R.id.article_title, View.INVISIBLE);
                     remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, contentManager.getMessageVisiblity());
                 } else {
-                    remoteViews.setViewVisibility(R.id.recommend, contentManager.getMessageVisiblity());
+                    remoteViews.setViewVisibility(R.id.article_title, contentManager.getMessageVisiblity());
                     remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
                 }
-
             }
             break;
         }

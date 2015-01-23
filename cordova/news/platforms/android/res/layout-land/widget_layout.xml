@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical" >
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,7 +15,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:orientation="horizontal" >
-
             <ImageView
                 android:id="@+id/chara"
                 android:src="@drawable/img_ukedon_1"
@@ -25,7 +23,6 @@
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/character_name" />
-
             <FrameLayout
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
@@ -36,7 +33,7 @@
                     android:background="@drawable/bg_bubble"
                     android:layout_width="669px"
                     android:layout_height="237px"
-                    android:paddingStart="80px"
+                    android:paddingStart="120px"
                     android:paddingEnd="40px"
                     android:ellipsize="end"
                     android:maxLines="2"
@@ -45,7 +42,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="33px" />
                 <TextView
-                    android:id="@+id/recommend"
+                    android:id="@+id/article_title"
                     android:visibility="invisible"
                     android:background="@drawable/bg_news"
                     android:layout_width="659px"
@@ -60,7 +57,6 @@
                     android:gravity="center_vertical"
                     android:textColor="@android:color/black"
                     android:textSize="33px" />
-
                 <LinearLayout
                     android:id="@+id/recommend_with_thumbnail"
                     android:visibility="invisible"
@@ -71,34 +67,31 @@
                     android:orientation="horizontal"
                     android:paddingEnd="4px"
                     android:paddingTop="44px">
-
-                        <TextView
-                            android:id="@+id/recommend2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="100px"
-                            android:layout_marginStart="4px"
-                            android:paddingStart="15px"
-                            android:paddingEnd="4px"
-                            android:layout_weight="0.64"
-                            android:ellipsize="end"
-                            android:gravity="center_vertical"
-                            android:maxLines="2"
-                            android:scrollHorizontally="true"
-                            android:textColor="@android:color/black"
-                            android:textSize="33px" />
-
-                        <ImageView
-                            android:id="@+id/thumb"
-                            android:layout_width="208px"
-                            android:layout_height="189px"
-                            android:layout_gravity="end"
-                            android:adjustViewBounds="true"
-                            android:contentDescription="@string/character_name" />
+                    <TextView
+                        android:id="@+id/article_title_with_thumbnail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="100px"
+                        android:layout_marginStart="4px"
+                        android:paddingStart="15px"
+                        android:paddingEnd="4px"
+                        android:layout_weight="0.64"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:maxLines="2"
+                        android:scrollHorizontally="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="33px" />
+                    <ImageView
+                        android:id="@+id/thumb"
+                        android:layout_width="208px"
+                        android:layout_height="189px"
+                        android:layout_gravity="end"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/character_name" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,21 +115,21 @@
                 android:gravity="center_horizontal"
                 android:layout_width="207px"
                 android:layout_height="wrap_content">
-            <ImageButton
-                android:id="@+id/link_post"
-                android:background="@drawable/button_photo"
-                android:layout_width="147px"
-                android:layout_height="235px"/>
+                <ImageButton
+                    android:id="@+id/link_post"
+                    android:background="@drawable/button_photo"
+                    android:layout_width="147px"
+                    android:layout_height="235px"/>
             </LinearLayout>
             <LinearLayout
                 android:gravity="center_horizontal"
                 android:layout_width="207px"
                 android:layout_height="wrap_content">
-            <ImageButton
-                android:id="@+id/link_dojo"
-                android:background="@drawable/button_dojyo"
-                android:layout_width="206px"
-                android:layout_height="235px"/>
+                <ImageButton
+                    android:id="@+id/link_dojo"
+                    android:background="@drawable/button_dojo"
+                    android:layout_width="206px"
+                    android:layout_height="235px"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
