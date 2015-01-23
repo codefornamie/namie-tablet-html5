@@ -1560,3 +1560,17 @@ select#articleCategory {
 .text--localnews {
     color: #61b152;
 }
+
+/**
+ *  円形の枠に囲われた数字
+ */
+.circle-number {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 34px;
+    font-size: 38px;
+    color: #784e3c;
+    border: 3px solid #784e3c;
+    border-radius: 20px;
+}

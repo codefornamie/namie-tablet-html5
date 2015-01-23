@@ -81,26 +81,13 @@ define(function(require, exports, module) {
             var levels = _.clone(Code.DOJO_LEVELS);
 
             return levels;
-//            var levels = {};
-//            // 級の名称を収集し、重複を削除する
-//            var levelValues = this.collection.map(function(model) {
-//                return model.get("level");
-//            });
-//            levelValues = _.uniq(levelValues);
-//
-//            // 「級の名称=>インデックス」の対応を格納する
-//            _.each(levelValues, function(levelValue, index) {
-//                levels[levelValue] = index;
-//            });
-//
-//            return levels;
         },
 
         /**
          * 段位情報が更新されたら呼ばれる
          * @memberOf DojoLevelListView#
          */
-        onUpdateLevel: function () {
+        onUpdateLevel : function () {
             this.renderCurrentLevel();
         }
     });

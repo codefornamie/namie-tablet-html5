@@ -1,8 +1,16 @@
 <div class="dojo-item is-<%= model.getSolvedState() %> is-<%= model.getWatchedState() %>">
     <div class="dojo-item__header">
-        <span>
-            <%= model.get("title") %>
-        </span>
+        <div class="row">
+            <div class="columns small-2">
+                <div class="circle-number">
+                    1
+                </div>
+            </div>
+
+            <div class="columns small-10">
+                <%= model.get("title") %>
+            </div>
+        </div>
     </div>
 
     <div class="dojo-item__thumbnail">
