@@ -197,6 +197,9 @@ define(function(require, exports, module) {
                 iconPath : ""
             }
     ];
+    
+    // 道場のイントロダクション動画のID
+    Code.DOJO_INTORODUCTION_VIDEO_ID = "z3fR5w_DLpI";
 
     /**
      * アプリモード毎に、キャッシュを有効にするかどうか定義する。
