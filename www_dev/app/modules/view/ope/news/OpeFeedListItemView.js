@@ -139,13 +139,15 @@ define(function(require, exports, module) {
                 }
                 app.router.opeArticleDetail({
                     model : this.model,
-                    template : template
+                    template : template,
+                    targetDate : this.parentView.targetDate
                 });
                 break;
             case "2":
                 app.router.opeYouTubeDetail({
                     model : this.model,
-                    recommendArticle : this.parentView.recommendArticle
+                    recommendArticle : this.parentView.recommendArticle,
+                    targetDate : this.parentView.targetDate
                 });
                 break;
             case "3":
@@ -153,13 +155,15 @@ define(function(require, exports, module) {
             case "5":
                 app.router.opeEventDetail({
                     model : this.model,
-                    recommendArticle : this.parentView.recommendArticle
+                    recommendArticle : this.parentView.recommendArticle,
+                    targetDate : this.parentView.targetDate
                 });
                 break;
             default:
                 app.router.opeEventDetail({
                     model : this.model,
-                    recommendArticle : this.parentView.recommendArticle
+                    recommendArticle : this.parentView.recommendArticle,
+                    targetDate : this.parentView.targetDate
                 });
                 break;
             }
