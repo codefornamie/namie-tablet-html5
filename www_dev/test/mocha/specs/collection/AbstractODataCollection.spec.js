@@ -14,7 +14,7 @@ define(function(require) {
         });
 
         it("TEST-02 AbstractODataCollection#fetch", function(done) {
-            this.timeout(15000);
+            this.timeout(20000);
             var collection = new AbstractODataCollection();
             collection.entity = "article";
             collection.fetch({

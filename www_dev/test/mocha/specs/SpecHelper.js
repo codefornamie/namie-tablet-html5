@@ -40,14 +40,14 @@ define(function(require, exports, module) {
     SpecHelper.before = function(spec, done) {
         app.logger.debug("Start SpecHelper.before().");
 
-        app.noRendering = false;
+        app.noRendering = true;
         app.logger.debug("Setting personium.io enveironments.");
         app.config.basic.mode = "news";
         // テスト用セル
         app.config.basic.cellId = "kizunatest02";
         app.logger.debug("app.config.basic:" + JSON.stringify(app.config.basic));
         // タイムアウト値を拡大
-        spec.timeout(15000);
+        spec.timeout(20000);
         // 認証
         app.pcsManager.accessToken = null;
         var loginModel = new LoginModel();
@@ -70,7 +70,7 @@ define(function(require, exports, module) {
      */
     SpecHelper.beforeEach = function(spec, done) {
         // タイムアウト値を拡大
-        spec.timeout(15000);
+        spec.timeout(20000);
     };
     /**
      * テストで作成した一時データを削除する。
