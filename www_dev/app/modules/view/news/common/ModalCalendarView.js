@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var foundationCalendar = require("foundation-calendar");
     var AbstractView = require("modules/view/AbstractView");
     var BusinessUtil = require("modules/util/BusinessUtil");
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
+    var vexDialog = require("vexDialog");
 
     require("moment/locale/ja");
 
@@ -123,7 +125,28 @@ define(function(require, exports, module) {
         onClickDate: function (ev) {
             // クリックしたセルが（未配信日等の）無効な日付でない場合は遷移する
             if (!$(ev.target).is(".rd-day-disabled")) {
-                app.router.go("top", moment(this.selectedDate).format("YYYY-MM-DD"));
+                this.showLoading();
+                var holCol = new NewspaperHolidayCollection();
+                holCol.prevPublished(moment(this.selectedDate).toDate(), function(prev, isPublish, e) {
+                    if (this.selectedDate === app.currentDate) {
+                        this.hideLoading();
+                        this.trigger("closeModalCalendar");
+                    }
+                    if (e) {
+                        app.logger.error("error ModalCalendarView:holCol.prevPublished()");
+                        vexDialog.defaultOptions.className = 'vex-theme-default';
+                        vexDialog.alert("休刊日の取得に失敗しました。");
+                        this.hideLoading();
+                    }
+                    if (!isPublish) {
+                        // 休刊日
+                        vexDialog.defaultOptions.className = 'vex-theme-default';
+                        vexDialog.alert("その日は休刊日のため、記事はありません。");
+                        this.hideLoading();
+                    } else {
+                        app.router.go("top", moment(this.selectedDate).format("YYYY-MM-DD"));
+                    }
+                }.bind(this));
             }
         },
 

@@ -133,6 +133,9 @@ define(function(require, exports, module) {
     Code.IMAGE_TYPE_URL = 1;
     Code.IMAGE_TYPE_NONE = 0;
 
+    // 許される連続した休刊日の最大(日)
+    Code.LIMIT_CONSECUTIVE_HOLIDAY = 20;
+    
     // 写真投稿アプリ: 投稿した記事の掲載期間(日数)
     Code.LETTER_PUB_PERIOD = 7;
 
@@ -197,6 +200,9 @@ define(function(require, exports, module) {
                 iconPath : ""
             }
     ];
+    
+    // 道場のイントロダクション動画のID
+    Code.DOJO_INTORODUCTION_VIDEO_ID = "z3fR5w_DLpI";
 
     /**
      * アプリモード毎に、キャッシュを有効にするかどうか定義する。
