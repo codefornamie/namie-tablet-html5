@@ -343,7 +343,8 @@ define(function(require, exports, module) {
                 targetDate : targetDate,
                 idPreffex : "letter-",
                 dispTitle : "みんなで投稿！撮れたて写真館",
-                sortOrder: 1
+                sortOrder: 1,
+                isFirst : true
             });
 
             // GridListView初期化
@@ -357,10 +358,12 @@ define(function(require, exports, module) {
          * 指定された記事タイプの記事を１つの記事にまとめて、ArticleCollectionの先頭に挿入する。<br>
          * optionsパラメタに、まとめられた記事に関する、以下の情報を設定する。
          * <ul>
-         * <li>idPreffex<br>
+         * <li>{String} idPreffex<br>
          * 作成する記事情報のIDのプレフィック</li>
-         * <li>dispTitle<br>
+         * <li>{String} dispTitle<br>
          * 記事一覧に表示される記事タイトル</li>
+         * <li>{Boolean} isFirst<br>
+         * まとめた記事を常に先頭に追加する場合はtrueを指定。(デフォルトはfalse)</li>
          * </ul>
          * </p>
          * @param {String} type 記事タイプ
@@ -368,6 +371,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         summarizeArticle : function(type, options) {
+            var isFirst = options && options.isFirst;
             if (app.config.basic.mode === Code.APP_MODE_NEWS || this.isPreview) {
                 
                 // 指定された記事タイプのカテゴリ名を取得
@@ -463,8 +467,8 @@ define(function(require, exports, module) {
                     imagePath : imagePath,
                     imageThumbUrl : imageThumbUrl
                 });
-                // 写真投稿は先頭に配置する。
-                if (type === "6") {
+                // isFirst指定がある場合は先頭に配置する。
+                if (isFirst) {
                     firstArticleIdx = 0;
                 }
                 this.newsCollection.models.splice(firstArticleIdx, 0, folderArticle);
