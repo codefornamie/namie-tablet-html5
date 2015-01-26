@@ -9,11 +9,34 @@
     <div class="dojo-introduction-dialog__header">
     </div>
 
-    <div id="dojo-introduction__content" class="dojo-lesson__content"></div>
+    <div id="dojo-introduction-dialog__guide" class="dojo-introduction-dialog__guide">
+        ここはタブレットの使い方を学べる道場だよ。<br>
+        まずは町長からのメッセージを見てみよう！<br>
+        「再生する」を押してね！
+    </div>
 
-    <div class="dojo-introduction-dialog__body">
-        <button class='button' data-dojo-introduction-closer>
-            コース選択画面へ行く
-        </button>
+    <div id="dojo-introduction-dialog__player" class="dojo-introduction-dialog__player">
+        <div id="dojo-introduction-dialog__content" class="dojo-introduction-dialog__content"></div>
+    </div>
+
+    <div id="dojo-introduction-dialog__body" class="dojo-introduction-dialog__body">
+        <div class="row dojo-introduction-dialog__movie-control">
+            <div class="columns large-12">
+                <button class="dojo-item__button button button--default" data-play-movie>
+                    再生する
+                </button>
+                <button class="dojo-item__button button button--default" data-pause-movie>
+                    一時停止する
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="columns large-12">
+                <button class='dojo-item__button button' data-dojo-introduction-closer>
+                    入門する
+                </button>
+            </div>
+        </div>
     </div>
 </div>

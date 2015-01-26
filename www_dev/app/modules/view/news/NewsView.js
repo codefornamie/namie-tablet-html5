@@ -23,6 +23,7 @@ define(function(require, exports, module) {
     var RecommendCollection = require("modules/collection/article/RecommendCollection");
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
     var EventsCollection = require("modules/collection/events/EventsCollection");
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     // util
     var DateUtil = require("modules/util/DateUtil");
@@ -77,11 +78,28 @@ define(function(require, exports, module) {
             this.targetDate = this.targetDate || options.date;
             this.initialScrollTop = options.scrollTop || 0;
 
-            this.setArticleSearchCondition({
-                targetDate : new Date(this.targetDate)
-            });
-
-            this.searchArticles();
+            // 休刊日情報の読み込み
+            var holCol = new NewspaperHolidayCollection();
+            holCol.prevPublished(this.targetDate, function(prev, isPublish, err) {
+                if (err) {
+                    app.logger.error("error NewsView:holCol.prevPublished()");
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("休刊日の取得に失敗しました。");
+                    this.hideLoading();
+                    return;
+                }
+                if (isPublish) {
+                    // 記事読み込み範囲設定
+                    this.setArticleSearchCondition(moment(prev).add(1, "d").toDate(), new Date(this.targetDate));
+                    // 記事読み込み   
+                    this.searchArticles();
+                } else {
+                    // 休刊日
+                    this.hideLoading();
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("休刊日です。");
+                }
+            }.bind(this));
             this.initEvents();
         },
 
@@ -90,10 +108,10 @@ define(function(require, exports, module) {
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
          * @memberOf NewsView#
          */
-        setArticleSearchCondition : function(condition) {
-            this.articleCollection.setSearchCondition(condition);
-            this.recommendCollection.setSearchCondition(condition);
-            this.eventsCollection.setSearchCondition(condition);
+        setArticleSearchCondition : function(from, to) {
+            this.articleCollection.setSearchConditionRange(from, to);
+            this.recommendCollection.setSearchCondition({targetDate: from});
+            this.eventsCollection.setSearchCondition({targetDate: from});
         },
 
         /**

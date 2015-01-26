@@ -30,7 +30,7 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             if(!this.isFirst) {
-                $("[data-dojo-introduction-closer]").text("コース一覧へ");
+                $("#dojo-introduction-dialog__body").find("[data-dojo-introduction-closer]").text("コース一覧へ");
             }
             this.setYouTubePlayer();
 
@@ -68,8 +68,8 @@ define(function(require, exports, module) {
          */
         setYouTubePlayer : function() {
             if (YT.Player) {
-                this.player = new YT.Player("dojo-introduction__content", {
-                    height : '400',
+                this.player = new YT.Player("dojo-introduction-dialog__content", {
+                    height : '300',
                     playerVars : {
                         'autoplay' : 0,
                         'controls' : 1,
@@ -86,8 +86,16 @@ define(function(require, exports, module) {
                         "onStateChange" : $.proxy(function(event) {
                             app.logger.debug("Youtube state change. state=" + event.data);
                             if (event.data === YT.PlayerState.PLAYING) {
-                                // 動画開始されたら動画再生ボタンを表示
+                                // 動画が再生可能になったらボタンを有効化する
+                                $(".dojo-introduction-dialog__movie-control").css("visibility", "visible");
+
+                                // 動画再生したら動画停止ボタンを表示
+                                $("[data-play-movie]").hide();
+                                $("[data-pause-movie]").show();
+                            } else if (event.data === YT.PlayerState.PAUSED) {
+                                // 動画停止したら動画再生ボタンを表示
                                 $("[data-play-movie]").show();
+                                $("[data-pause-movie]").hide();
                             }
                         }, this)
                     }

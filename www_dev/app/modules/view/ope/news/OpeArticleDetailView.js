@@ -46,7 +46,7 @@ define(function(require, exports, module) {
          * @memberOf OpeArticleDetailView#
          */
         onClickGotoCancel : function() {
-            app.router.go("ope-top",this.model.get("publishedAt"));
+            app.router.go("ope-top",this.targetDate);
         }
 
     });
