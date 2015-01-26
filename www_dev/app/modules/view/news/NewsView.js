@@ -380,30 +380,24 @@ define(function(require, exports, module) {
                 }
 
                 var newsArticles = this.newsCollection.toArray().concat();
-                // 記事の掲載日の降順でソートする
-                newsArticles.sort(function(a, b) {
-                    var pa = a.get("publishedAt");
-                    var pb = b.get("publishedAt");
-                    if (pa === pb) {
-                        return 0;
-                    }
-                    if (pa < pb) {
-                        return options.sortOrder;
-                    } else if (pa > pb) {
-                        return -1 * options.sortOrder;
-                    }
-                });
 
                 var articleDateMap = {};
                 var imagePath;
                 var imageThumbUrl;
 
                 // newsCollectionからまとめる記事を削除し、配列に追加する
-                _.each(newsArticles, $.proxy(function(article) {
+                var firstArticleIdx = -1;
+                _.each(newsArticles, $.proxy(function(article, idx) {
                     if (article.get("type") !== type) {
                         return;
                     }
 
+                    // 最初に出現した位置を記憶する。
+                    if (firstArticleIdx < 0) {
+                        firstArticleIdx = idx;
+                    }
+
+                    // 日付ごとのマップに入れ替える。
                     var publishedAt = article.get("publishedAt");
                     var articleModel = articleDateMap[publishedAt];
                     if (!articleModel) {
@@ -455,7 +449,7 @@ define(function(require, exports, module) {
                     }
                 }
 
-                // まとめ記事画面を開くための記事を作成し、コレクションの先頭に登録
+                // まとめ記事画面を開くための記事を作成し、コレクションの適切な位置に追加
                 var folderArticle = new ArticleModel({
                     __id : options.idPreffex + DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
                     site : _.indexBy(app.serverConfig.COLOR_LABEL, "type")[type].label,
@@ -466,8 +460,11 @@ define(function(require, exports, module) {
                     imagePath : imagePath,
                     imageThumbUrl : imageThumbUrl
                 });
-                this.newsCollection.unshift(folderArticle);
-                this.articleCollection.unshift(folderArticle);
+                if (firstArticleIdx < 0) {
+                    firstArticleIdx = this.newsCollection.size();
+                }
+                this.newsCollection.models.splice(firstArticleIdx, 0, folderArticle);
+                this.articleCollection.models.splice(firstArticleIdx, 0, folderArticle);
             }
         },
         /**
