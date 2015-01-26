@@ -422,6 +422,9 @@ define(function(require, exports, module) {
                         imageThumbUrl = article.get("imageThumbUrl");
                     }
                 }, this));
+                if (firstArticleIdx < 0) {
+                    firstArticleIdx = this.newsCollection.size();
+                }
 
                 var articleDateList = [];
                 _.each(articleDateMap, function(articleDate) {
@@ -460,8 +463,9 @@ define(function(require, exports, module) {
                     imagePath : imagePath,
                     imageThumbUrl : imageThumbUrl
                 });
-                if (firstArticleIdx < 0) {
-                    firstArticleIdx = this.newsCollection.size();
+                // 写真投稿は先頭に配置する。
+                if (type === "6") {
+                    firstArticleIdx = 0;
                 }
                 this.newsCollection.models.splice(firstArticleIdx, 0, folderArticle);
                 this.articleCollection.models.splice(firstArticleIdx, 0, folderArticle);
