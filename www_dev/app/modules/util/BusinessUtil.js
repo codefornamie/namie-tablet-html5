@@ -53,7 +53,7 @@ define(function(require, exports, module) {
                 // 現在の日付が休刊日の場合
                 considerDate = moment(prevPublishDate).format("YYYY-MM-DD");
             }
-            app.currentPublishDate = moment(publishDate).format("YYYY-MM-DD");
+            app.currentPublishDate = considerDate;
             // 既読管理のためにパーソナル情報を更新。
             app.user.updateShowLastPublished();
             callback(considerDate);
