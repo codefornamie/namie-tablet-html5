@@ -150,7 +150,32 @@ define(function(require, exports, module) {
                 self.remove();
                 app.router.back();
             }, 300);
+        },
+        /**
+         * Viewが破棄された際に呼び出されるコールバック関数。
+         * <p>
+         * YouTube動画プレイヤーのインスタンスを破棄する。
+         * </p>
+         * @memberOf DojoIntroductionView#
+         */
+        cleanup : function() {
+            try {
+                if(this.onPause){
+                    document.removeEventListener("pause", this.onPause, false);
+                    this.onPause = null;
+                }
+                $("[data-play-movie]").unbind("click");
+                $("[data-pause-movie]").unbind("click");
+                if (this.player) {
+                    this.player.destroy();
+                }
+         } catch (e) {
+                app.logger.debug(e);
+            }
+
+            $(document).trigger("close:modal");
         }
+
     });
 
     module.exports = DojoIntroductionView;
