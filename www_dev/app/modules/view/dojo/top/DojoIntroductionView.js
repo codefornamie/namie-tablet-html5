@@ -30,7 +30,7 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             if(!this.isFirst) {
-                $("[data-dojo-introduction-closer]").text("コース一覧へ");
+                $("#dojo-introduction-dialog__body").find("[data-dojo-introduction-closer]").text("コース一覧へ");
             }
             this.setYouTubePlayer();
 

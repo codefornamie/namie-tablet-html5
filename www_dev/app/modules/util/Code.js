@@ -171,7 +171,7 @@ define(function(require, exports, module) {
                 className : "none",
                 levelName : "",
                 label : "白帯",
-                description : "初めてタブレットをさわる方のためのコースです。（文言未決定）",
+                description : "このコースでは、なみえタブレットとは何か、なみえタブレットでできること、使用上の注意、 箱から出して電源を入れるまで、タブレットの画面の見方、なみえ新聞の見方を学べるよ。",
                 congratulations: "白帯コースの動画を全て閲覧しました。これでタブレットの基礎動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
             }, {
@@ -179,7 +179,7 @@ define(function(require, exports, module) {
                 className : "white",
                 levelName : "白帯",
                 label : "茶帯",
-                description : "茶帯コースです。（文言未決定）",
+                description : "このコースでは、写真の撮影・閲覧、文字入力の方法、浪江町のホームページの見方、Googleマップの見方、YouTubeの見方、インターネット（Google検索、Yahoo）の使い方を学べるよ。",
                 congratulations: "茶帯コースの動画を全て閲覧しました。これでタブレットの応用動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
             }, {
@@ -187,7 +187,7 @@ define(function(require, exports, module) {
                 className : "brown",
                 levelName : "茶帯",
                 label : "黒帯",
-                description : "黒帯コースです。（文言未決定）",
+                description : "このコースでは、なみえ新聞に投稿する方法、LINEの使い方、その他アプリ（手書きメモ、スケジュール、ネットラジオ、連絡帳）の使い方を学べるよ。",
                 congratulations: "黒帯コースの動画を全て閲覧しました。これでタブレットの全てをマスターできましたね。<br>「黒帯」を進呈します！",
                 iconPath : ""
             }, {

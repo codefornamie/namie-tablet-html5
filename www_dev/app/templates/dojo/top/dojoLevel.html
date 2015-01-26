@@ -1,22 +1,41 @@
-<div class="row">
-    <div class="columns small-12">
-        <div class="dojo-watched-state right">
-            <div class="dojo-watched-state__description">
-                <span data-content-num>--</span>本の動画があります
-            </div>
-
-            <div class="dojo-watched-state__progress">
-                <span data-remained-num>--</span>
-            </div>
+<div
+    id="dojo-level-header"
+    class="dojo-level-header"
+>
+    <div class="row">
+        <div class="columns large-4">
+            <a
+                href="dojo-top"
+                class="button button--default"
+            >
+                コース選択に戻る
+            </a>
         </div>
 
-        <h2 class="dojo-edition-title">
-            <div class="dojo-level-item__icon" data-dojo-level="<%= dojoLevel.className %>"></div>
-        </h2>
+        <div class="columns large-4">
+            <h2 class="dojo-edition-title">
+                <div class="dojo-level-header__icon" data-dojo-level="<%= level.className %>"></div>
+            </h2>
+        </div>
+
+        <div class="columns large-4">
+            <div class="dojo-watched-state right">
+                <div class="dojo-watched-state__progress">
+                    <% if (level.numContent - level.numSolved == 0) { %>
+                        <b><%= level.label %> 習得済み！！</b>
+                    <% } else { %>
+                        あと<b><%= level.numContent - level.numSolved %></b>本見ると習得です
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     </div>
 </div>
 
+
 <div
-    id="dojo-level-list-container"
-    class="dojo-level-list-container"
+    id="dojo-list-container"
+    class="dojo-list-container"
 ></div>
