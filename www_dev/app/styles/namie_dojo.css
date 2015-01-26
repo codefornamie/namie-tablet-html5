@@ -107,6 +107,7 @@
     display: inline-block;
     margin: 0 20px;
     color: white;
+    -webkit-text-size-adjust: 100%;
 }
 
 .dojo-account__level[data-dojo-level=none] {
