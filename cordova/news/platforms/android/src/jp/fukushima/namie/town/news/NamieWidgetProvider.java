@@ -7,7 +7,6 @@ import java.util.Calendar;
 
 import jp.fukushima.namie.town.news.WidgetContentManager.MessageStyle;
 import jp.fukushima.namie.town.news.PublishStatus.ArticleExists;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -43,7 +42,6 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     private static PublishStatus publishStatus = null;
     // 未読状態の最終チェック時刻
     private static long lastUnreadCheckTime = 0;
-
     // ウィジェット表示情報管理オブジェクト
     private static WidgetContentManager contentManager = null;
 
@@ -214,11 +212,24 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         setMessageViewStyle(context, remoteViews, contentManager.getMessageStyle());
         remoteViews.setTextViewText(R.id.fukidashi, Html.fromHtml(contentManager.getMessage()));
         remoteViews.setTextViewText(R.id.article_title, Html.fromHtml(contentManager.getMessage()));
-        remoteViews.setTextViewText(R.id.article_title_with_thumbnail, Html.fromHtml(contentManager.getMessage()));
 
-        Bitmap thumbnail = contentManager.getThumbnail();
-        if (thumbnail != null) {
-            remoteViews.setImageViewBitmap(R.id.thumb, thumbnail);
+        Resources resources = context.getResources();
+        Configuration config = resources.getConfiguration();
+
+        // ランドスケープの場合のみ表示する項目を更新
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            remoteViews.setTextViewText(R.id.article_title_with_thumbnail, Html.fromHtml(contentManager.getMessage()));
+
+            String siteName = contentManager.getSite();
+            if (siteName != null) {
+                remoteViews.setTextViewText(R.id.article_site, siteName);
+                remoteViews.setTextViewText(R.id.article_site_with_thumbnail, siteName);
+            }
+
+            Bitmap thumbnail = contentManager.getThumbnail();
+            if (thumbnail != null) {
+                remoteViews.setImageViewBitmap(R.id.thumb, thumbnail);
+            }
         }
 
         // 新聞発行の有無に応じて新聞アイコンを変更
@@ -241,35 +252,31 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      */
     private void setMessageViewStyle(Context context, RemoteViews remoteViews, MessageStyle style) {
         Resources resources = context.getResources();
-        float density = resources.getDisplayMetrics().density;
         Configuration config = resources.getConfiguration();
 
         switch(config.orientation) {
         case Configuration.ORIENTATION_PORTRAIT:
             if (style == MessageStyle.STYLE_BUBBLE) {
                 remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
-                remoteViews.setViewVisibility(R.id.article_title, View.INVISIBLE);
-                remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
+                remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
             } else {
-                // ポートレートの場合は常にサムネイル表示なし
                 remoteViews.setViewVisibility(R.id.fukidashi, View.INVISIBLE);
-                remoteViews.setViewVisibility(R.id.article_title, contentManager.getMessageVisiblity());
-                remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
+                remoteViews.setViewVisibility(R.id.recommend, contentManager.getMessageVisiblity());
             }
             break;
         case Configuration.ORIENTATION_LANDSCAPE:
         default :
             if (style == MessageStyle.STYLE_BUBBLE) {
                 remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
-                remoteViews.setViewVisibility(R.id.article_title, View.INVISIBLE);
+                remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
                 remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
             } else {
                 remoteViews.setViewVisibility(R.id.fukidashi, View.INVISIBLE);
                 if (contentManager.getThumbnail() != null) {
-                    remoteViews.setViewVisibility(R.id.article_title, View.INVISIBLE);
+                    remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
                     remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, contentManager.getMessageVisiblity());
                 } else {
-                    remoteViews.setViewVisibility(R.id.article_title, contentManager.getMessageVisiblity());
+                    remoteViews.setViewVisibility(R.id.recommend, contentManager.getMessageVisiblity());
                     remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
                 }
             }
@@ -285,16 +292,6 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      */
     private void setApplicationIcon(RemoteViews remoteViews, int buttonId, int resourceId) {
         remoteViews.setInt(buttonId, "setBackgroundResource", resourceId);
-    }
-
-    /**
-     * dpの値からpxを求めて返す.
-     * @param density density
-     * @param dp dp
-     * @return ピクセル値
-     */
-    private int dpToPx(float density, float dp) {
-        return (int) (dp * density + 0.5f);
     }
 
     /**

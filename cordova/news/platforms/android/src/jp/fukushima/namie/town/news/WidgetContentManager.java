@@ -4,8 +4,14 @@
 package jp.fukushima.namie.town.news;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,7 +22,6 @@ public class WidgetContentManager {
     private static final String TAG = "NamieNewspaper";
     private static final String RECOMMEND_ARTICLE_BEFORE = "<font color=\"red\">新しいニュース</font>があるよ！";
     private static final String RECOMMEND_ARTICLE_AFTER = "詳しくは新聞のアイコンをタップしてね";
-    private static final String RECOMMEND_ARTICLE_ERROR = "エラーが発生したよ！";
 
     // フレームインデックス
     private int frameIndex = 0;
@@ -48,9 +53,11 @@ public class WidgetContentManager {
     private List<String> messages = null;
     private int recommendArticleIndex = 0;
     private List<Map<String, Object>> recommendArticles = null;
+    private Map<String, String> siteNameMap = null;
 
     private DisplayMode displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;;
     private MessageStyle messageStyle = MessageStyle.STYLE_BUBBLE;;
+    private String site = null;
     private String message = null;
     private Bitmap thumbnail = null;
     private int messageVisiblity = View.VISIBLE;
@@ -88,8 +95,9 @@ public class WidgetContentManager {
 
             // 表示メッセージのスタイルとテキストを決める
             messageStyle =  getMessageStyle(displayMode);
-            message = getMessageText(displayMode);
-            thumbnail = getThumbnail(displayMode);
+            site = getSiteFromArticle(displayMode);
+            message = getTitleFromArticle(displayMode);
+            thumbnail = getThumbnailFromArticle(displayMode);
 
             // メッセージの取得に失敗した場合は固定メッセージ表示とする
             if (message == null) {
@@ -98,28 +106,6 @@ public class WidgetContentManager {
                 messageStyle = MessageStyle.STYLE_BUBBLE;
                 message = messages.get(messageIndex);
             }
-
-//            if (displayMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
-//                messageStyle = MessageStyle.STYLE_BUBBLE;
-//                message = RECOMMEND_ARTICLE_BEFORE;
-//            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND) {
-//                messageStyle = MessageStyle.STYLE_ARTICLE;
-//                Map<String, Object> article = recommendArticles.get(recommendArticleIndex);
-//                message = (String) article.get("title");
-//                thumbnail = (Bitmap) article.get("thumbnail");
-//                if (message == null) {
-//                    Log.e(TAG, "Article title is empty.");
-//                    displayMode = DisplayMode.DISPLAY_RECOMMEND_AFTER;
-//                    messageStyle = MessageStyle.STYLE_BUBBLE;
-//                    message = RECOMMEND_ARTICLE_ERROR;
-//                }
-//            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND_AFTER) {
-//                messageStyle = MessageStyle.STYLE_BUBBLE;
-//                message = RECOMMEND_ARTICLE_AFTER;
-//            } else {
-//                messageStyle = MessageStyle.STYLE_BUBBLE;
-//                message = messages.get(messageIndex);
-//            }
         }
 
         // 吹き出しの表示／非表示
@@ -177,7 +163,16 @@ public class WidgetContentManager {
         return style;
     }
 
-    private String getMessageText(DisplayMode currentMode) {
+    private String getSiteFromArticle(DisplayMode currentMode) {
+        String site = null;
+        if (currentMode == DisplayMode.DISPLAY_RECOMMEND) {
+            Map<String, Object> article = recommendArticles.get(recommendArticleIndex);
+            site = (String) article.get("site");
+        }
+        return site;
+    }
+
+    private String getTitleFromArticle(DisplayMode currentMode) {
         String messageText = null;
 
         if (currentMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
@@ -193,7 +188,7 @@ public class WidgetContentManager {
         return messageText;
     }
 
-    private Bitmap getThumbnail(DisplayMode currentMode) {
+    private Bitmap getThumbnailFromArticle(DisplayMode currentMode) {
         Bitmap bitmap = null;
         if (currentMode == DisplayMode.DISPLAY_RECOMMEND) {
             Map<String, Object> article = recommendArticles.get(recommendArticleIndex);
@@ -223,6 +218,25 @@ public class WidgetContentManager {
      */
     public void addRecommendArticle(Map<String, Object> article) {
         recommendArticles.add(article);
+    }
+
+    public void setSiteMap(String colorLabel) {
+        siteNameMap = new HashMap<String, String>();
+        JSONParser parser = new JSONParser();
+        try {
+            Object parsed = parser.parse(colorLabel);
+            JSONArray array = (JSONArray) parsed;
+            for (int i = 0; i < array.size(); i++) {
+                JSONObject obj = (JSONObject)array.get(i);
+                String site = (String) obj.get("site");
+                String label = (String) obj.get("label");
+                siteNameMap.put(site, label);
+            }
+        } catch (ParseException e) {
+            Log.e(TAG, "COLOR_LABEL Json parse failed.");
+            Log.e(TAG, colorLabel);
+        }
+        return;
     }
 
     /**
@@ -269,6 +283,18 @@ public class WidgetContentManager {
      */
     public MessageStyle getMessageStyle() {
         return messageStyle;
+    }
+
+    /**
+     * おすすめ記事のソースサイト名を返す.
+     * @return サイト名
+     */
+    public String getSite() {
+        String siteName = site;
+        if (siteNameMap != null && siteNameMap.containsKey(site)) {
+            siteName = siteNameMap.get(site);
+        }
+        return siteName;
     }
 
     /**

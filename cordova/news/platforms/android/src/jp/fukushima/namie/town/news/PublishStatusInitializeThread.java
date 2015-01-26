@@ -26,6 +26,10 @@ public class PublishStatusInitializeThread extends AbstractRequestThread {
         WidgetContentManager contentManager = _mWidgetProvider.getContentManager();
         getRecommendArticles(contentManager);
 
+        // 設定情報(COLOR_LABEL)の取得
+        String colorLabel = personium.getColorLabel(_mContext);
+        contentManager.setSiteMap(colorLabel);
+
         Log.d(TAG, "PublishStatusInitializeThread completed.");
     }
 }

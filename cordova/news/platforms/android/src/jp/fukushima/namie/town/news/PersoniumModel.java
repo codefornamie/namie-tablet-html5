@@ -505,4 +505,31 @@ public class PersoniumModel {
         }
         return inputStream;
     }
+
+    /**
+     * 設定情報(COLOR_LABEL)を取得する。
+     * @param context コンテキスト
+     * @return COLOR_LABEL
+     */
+    public String getColorLabel(Context context) {
+        Log.d(TAG, "start getColorLabel");
+
+        // Perosonium接続
+        ODataCollection odata = initializePersonium(context);
+        if (odata == null) {
+            Log.w(TAG, "perosonium initialize error");
+            return null;
+        }
+
+        HashMap<String, Object> json;
+        try {
+            json = odata.entitySet("configuration").retrieveAsJson("COLOR_LABEL");
+        } catch (DaoException e) {
+            Log.w(TAG, "configuration.COLOR_LABEL not defined : " + e.getMessage());
+            return null;
+        }
+        String value = (String) json.get("value");
+        Log.d(TAG, "COLOR_LABEL : " + value);
+        return value;
+    }
 }
