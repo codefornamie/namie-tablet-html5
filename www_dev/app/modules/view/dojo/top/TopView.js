@@ -346,7 +346,6 @@ define(function(require, exports, module) {
          */
         searchDojoMovieList : function() {
             this.youtubeCollection = new YouTubeCollection();
-            // TODO 実際の道場動画チャンネルが作成されたら正しいチャンネルIDに変更する
             this.youtubeCollection.channelId = "UCSeFpozPKXTm_frDTqccxpQ";
             this.youtubeCollection.fetch({
                 success : $.proxy(function() {
