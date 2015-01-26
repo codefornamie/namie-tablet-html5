@@ -343,7 +343,8 @@ define(function(require, exports, module) {
                 targetDate : targetDate,
                 idPreffex : "letter-",
                 dispTitle : "みんなで投稿！撮れたて写真館",
-                sortOrder: 1
+                sortOrder: 1,
+                isFirst : true
             });
 
             // GridListView初期化
@@ -357,10 +358,12 @@ define(function(require, exports, module) {
          * 指定された記事タイプの記事を１つの記事にまとめて、ArticleCollectionの先頭に挿入する。<br>
          * optionsパラメタに、まとめられた記事に関する、以下の情報を設定する。
          * <ul>
-         * <li>idPreffex<br>
+         * <li>{String} idPreffex<br>
          * 作成する記事情報のIDのプレフィック</li>
-         * <li>dispTitle<br>
+         * <li>{String} dispTitle<br>
          * 記事一覧に表示される記事タイトル</li>
+         * <li>{Boolean} isFirst<br>
+         * まとめた記事を常に先頭に追加する場合はtrueを指定。(デフォルトはfalse)</li>
          * </ul>
          * </p>
          * @param {String} type 記事タイプ
@@ -368,6 +371,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         summarizeArticle : function(type, options) {
+            var isFirst = options && options.isFirst;
             if (app.config.basic.mode === Code.APP_MODE_NEWS || this.isPreview) {
                 
                 // 指定された記事タイプのカテゴリ名を取得
@@ -380,30 +384,24 @@ define(function(require, exports, module) {
                 }
 
                 var newsArticles = this.newsCollection.toArray().concat();
-                // 記事の掲載日の降順でソートする
-                newsArticles.sort(function(a, b) {
-                    var pa = a.get("publishedAt");
-                    var pb = b.get("publishedAt");
-                    if (pa === pb) {
-                        return 0;
-                    }
-                    if (pa < pb) {
-                        return options.sortOrder;
-                    } else if (pa > pb) {
-                        return -1 * options.sortOrder;
-                    }
-                });
 
                 var articleDateMap = {};
                 var imagePath;
                 var imageThumbUrl;
 
                 // newsCollectionからまとめる記事を削除し、配列に追加する
-                _.each(newsArticles, $.proxy(function(article) {
+                var firstArticleIdx = -1;
+                _.each(newsArticles, $.proxy(function(article, idx) {
                     if (article.get("type") !== type) {
                         return;
                     }
 
+                    // 最初に出現した位置を記憶する。
+                    if (firstArticleIdx < 0) {
+                        firstArticleIdx = idx;
+                    }
+
+                    // 日付ごとのマップに入れ替える。
                     var publishedAt = article.get("publishedAt");
                     var articleModel = articleDateMap[publishedAt];
                     if (!articleModel) {
@@ -428,6 +426,9 @@ define(function(require, exports, module) {
                         imageThumbUrl = article.get("imageThumbUrl");
                     }
                 }, this));
+                if (firstArticleIdx < 0) {
+                    firstArticleIdx = this.newsCollection.size();
+                }
 
                 var articleDateList = [];
                 _.each(articleDateMap, function(articleDate) {
@@ -455,7 +456,7 @@ define(function(require, exports, module) {
                     }
                 }
 
-                // まとめ記事画面を開くための記事を作成し、コレクションの先頭に登録
+                // まとめ記事画面を開くための記事を作成し、コレクションの適切な位置に追加
                 var folderArticle = new ArticleModel({
                     __id : options.idPreffex + DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
                     site : _.indexBy(app.serverConfig.COLOR_LABEL, "type")[type].label,
@@ -466,8 +467,12 @@ define(function(require, exports, module) {
                     imagePath : imagePath,
                     imageThumbUrl : imageThumbUrl
                 });
-                this.newsCollection.unshift(folderArticle);
-                this.articleCollection.unshift(folderArticle);
+                // isFirst指定がある場合は先頭に配置する。
+                if (isFirst) {
+                    firstArticleIdx = 0;
+                }
+                this.newsCollection.models.splice(firstArticleIdx, 0, folderArticle);
+                this.articleCollection.models.splice(firstArticleIdx, 0, folderArticle);
             }
         },
         /**

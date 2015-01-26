@@ -70,8 +70,14 @@ define(function(require, exports, module) {
                 // 順序付け(sequence)ありとなしで分ける
                 var sequenced = [];
                 var unsequenced = [];
+                var fromDateString = app.currentDate;
+                if (this.searchConditionFromDate) {
+                    // 記事の検索が範囲指定のばあい、その範囲の開始日とする。
+                    // この日付以前の記事は、sequenceを無視する。
+                    fromDateString = moment(this.searchConditionFromDate).format("YYYY-MM-DD");
+                }
                 for (var i = 0; i < response.length; i++) {
-                    if (isNaN(parseInt(response[i].sequence)) || response[i].publishedAt < app.currentDate) {
+                    if (isNaN(parseInt(response[i].sequence)) || response[i].publishedAt < fromDateString) {
                         unsequenced.push(response[i]);
                     } else {
                         sequenced.push(response[i]);
@@ -114,6 +120,7 @@ define(function(require, exports, module) {
          * @param {boolean} isDepublish trueの場合、検索結果に掲載中止を含める。
          */
         setSearchConditionRange : function(fDate, tDate, isOnlyPublish, isDepublish) {
+            this.searchConditionFromDate = fDate;
             var f = moment(fDate).format("YYYY-MM-DD");
             var t = moment(tDate).format("YYYY-MM-DD");
 

@@ -173,11 +173,11 @@ define(function(require, exports, module) {
                             "<span class='rd-month-label__month'>" + month + "月</span>";
                     });
                     // 今日の日付の要素にclass rd-today をつける。
-                    var today = BusinessUtil.getCurrentPublishDate();
+                    var today = new Date(app.currentPublishDate);
                     var selectedDate = moment(self.selectedDate);
-                    if (year === today.getFullYear() &&
-                            month === today.getMonth() + 1) {
-                        $('.rd-day-body:contains(' + today.getDate() + ')').addClass("rd-today");
+                    if (year === today.getFullYear() && month === today.getMonth() + 1) {
+                        $('.rd-day-body:not(.rd-day-prev-month):not(.rd-day-next-month)').eq(today.getDate() - 1)
+                                .addClass("rd-today");
                     }
                 }
             }, 0);
