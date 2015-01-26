@@ -26,7 +26,7 @@ public class WidgetContentManager {
     private static final int SHOW_MESSAGE_FRAME = 14;
 
     // メッセージをスキップするかどうか
-    private static boolean messageSkip = false;
+    private boolean messageSkip = false;
 
     // メッセージの表示モード
     private static enum DisplayMode {
@@ -250,7 +250,7 @@ public class WidgetContentManager {
     public int getNewsIcon(boolean published) {
         int id = R.drawable.button_news;
         if (published) {
-            id = R.drawable.button_news_2;
+            id = R.drawable.button_news_new;
         }
         return id;
     }

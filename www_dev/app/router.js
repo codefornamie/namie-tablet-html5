@@ -13,6 +13,7 @@ define(function(require, exports, module) {
 
     var LoginModel = require("modules/model/LoginModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
@@ -255,7 +256,7 @@ define(function(require, exports, module) {
                 });
             } else {
                 // 日付が設定されていない場合は配信日を計算する
-                BusinessUtil.calcConsiderSuspendPublication(new ArticleCollection(), $.proxy(function(considerDate) {
+                BusinessUtil.calcConsiderSuspendPublication(new NewspaperHolidayCollection(), $.proxy(function(considerDate) {
                     this.go("top", considerDate);
                 }, this));
             }
@@ -360,9 +361,15 @@ define(function(require, exports, module) {
          * ---------- 管理アプリ ----------
          */
         opeTop : function(targetDate) {
-            this.layout.showView(new TopView({targetDate:targetDate}));
-            this.layout.setHeader(new common.HeaderView());
-            this.layout.setFooter(new common.FooterView());
+            if( targetDate ) {
+                this.layout.showView(new TopView({targetDate:targetDate}));
+                this.layout.setHeader(new common.HeaderView());
+                this.layout.setFooter(new common.FooterView());
+            } else {
+                BusinessUtil.calcNextPublication(function(dateString){
+                    this.go("ope-top", dateString);
+                }.bind(this));
+            }
         },
 
         /**
