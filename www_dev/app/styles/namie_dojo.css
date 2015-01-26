@@ -223,7 +223,7 @@
 }
 
 .dojo-level-list-container {
-    padding: 0 130px;
+    padding: 0 100px;
 }
 .dojo-level-list-container .dojo-level-item {
     padding: 12px;
@@ -233,7 +233,7 @@
 }
 
 .dojo-level-item__header {
-    flex: 1 0 320px;
+    flex: 1 0 300px;
 }
 
 /* 帯 */
@@ -976,6 +976,17 @@
     letter-spacing: -3px;
     line-height: 1.4;
     color: #532c08;
+}
+
+.ico-youtube-play {
+    display: inline-block;
+    width: 41px;
+    height: 28px;
+    background-image: url(../../app/img/dojo/img-youtube-play.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    vertical-align: middle;
+    margin: -5px 5px 0 5px;
 }
 
 .dojo-introduction-dialog__player {
