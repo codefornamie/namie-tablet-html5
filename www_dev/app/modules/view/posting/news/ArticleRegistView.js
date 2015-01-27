@@ -58,7 +58,7 @@ define(function(require, exports, module) {
                 var category = mapCategory[key];
                 var option = $("<option>");
                 option.attr("value", category.key);
-                option.text(category.detailValue || category.value);
+                option.text((category.valueByMode ? category.valueByMode[app.config.basic.mode] : null) || category.value);
                 option.data("site", category.value);
                 $("#articleCategory").append(option);
             });

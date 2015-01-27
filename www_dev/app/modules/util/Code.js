@@ -28,11 +28,15 @@ define(function(require, exports, module) {
             }, {
                 key : "3",
                 value : "イベント",
-                detailValue : "イベント(町民代理投稿)"
+                valueByMode : {
+                    "ope" : "イベント(町民代理投稿)",
+                } 
             }, {
                 key : "4",
                 value : "レポート",
-                detailValue : "レポート(町民代理投稿)"
+                valueByMode : {
+                    "ope" : "レポート(町民代理投稿)",
+                } 
             }, {
                 key : "5",
                 value : "記事"
@@ -48,26 +52,22 @@ define(function(require, exports, module) {
             }, {
                 key : "9",
                 value : "イベント",
-                detailValue : "イベント(役場)"
+                valueByMode : {
+                    "ope" : "イベント(役場)",
+                } 
             }, {
                 key : "10",
                 value : "レポート",
-                detailValue : "レポート(役場)"
-            }, {
-                key : "11",
-                value : "イベント",
-                detailValue : "イベント"
-            }, {
-                key : "12",
-                value : "レポート",
-                detailValue : "レポート"
+                valueByMode : {
+                    "ope" : "レポート(役場)",
+                } 
             }
     ];
 
     // 各アプリで使用する記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST_BY_MODE = {};
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING] = [
-            "11", "12"
+            "3", "4"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_OPE] = [
             "5", "9", "10", "6", "3", "4"
