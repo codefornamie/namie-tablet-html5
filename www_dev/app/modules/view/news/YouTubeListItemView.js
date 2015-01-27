@@ -44,7 +44,7 @@ define(function(require, exports, module) {
                     callback();
                 }
                 counter += 1;
-            }, 100);
+            }, 300);
         },
 
         /**
