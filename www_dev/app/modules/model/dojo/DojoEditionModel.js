@@ -45,7 +45,7 @@ define(function(require, exports, module) {
 
             // sequenceでソートする
             col = col.sortBy(function(model) {
-                return model.get("sequence");
+                return parseInt(model.get("sequence"));
             });
 
             // levelで絞り込む
