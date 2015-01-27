@@ -28,6 +28,7 @@ define(function(require, exports, module) {
          * </p>
          */
         afterRendered : function() {
+            this.isMinpoArticle = this.model.isMinpoScraping();
             this.showImage();
             this.afterRenderCommon();
             this.hideLoading();
