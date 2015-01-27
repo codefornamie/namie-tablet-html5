@@ -171,6 +171,14 @@ define(function(require, exports, module) {
             if (!app.noRendering) {
                 this.layout.render();
             }
+
+            // ライトボックスを閉じたタイミングで
+            // 呼ばれることを想定している。
+            // ライトボックスオープン時に
+            // location.hashを変更している必要あり
+            $(window).on("hashchange", function () {
+                app.trigger("closeLightBox");
+            });
         },
 
         routes : {
