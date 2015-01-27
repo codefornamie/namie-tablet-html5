@@ -187,8 +187,7 @@ define(function(require, exports, module) {
                 $targetElem.load($.proxy(function() {
                     if (isExpansion) {
                         $targetElem.wrap("<a class='expansionPicture' href='" + url + "'></a>");
-
-                        var $colorbox = $(".expansionPicture").colorbox(
+                        var $colorbox = $targetElem.parent().colorbox(
                                 {
                                     closeButton : false,
                                     current : "",
