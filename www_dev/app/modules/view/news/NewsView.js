@@ -620,7 +620,7 @@ define(function(require, exports, module) {
 
             $btnBack.on("click", function(ev) {
                 ev.preventDefault();
-                app.router.go("top", currentDateStr);
+                app.router.back();
             });
         },
 
@@ -699,7 +699,9 @@ define(function(require, exports, module) {
                 $("#main").addClass("is-backnumber");
             }
 
-            this.updateFooterButtons();
+            if ( route !== "top" ) {
+                this.updateFooterButtons();
+            }
         },
 
         /**
