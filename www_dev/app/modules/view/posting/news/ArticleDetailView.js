@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var vexDialog = require("vexDialog");
     var AbstractView = require("modules/view/AbstractView");
     var WebDavModel = require("modules/model/WebDavModel");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
@@ -29,6 +30,7 @@ define(function(require, exports, module) {
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * @memberOf ArticleDetailView#
          */
         afterRendered : function() {
             $("#snap-content").scrollTop(0);
@@ -39,6 +41,7 @@ define(function(require, exports, module) {
 
         /**
          *  Viewを初期化する
+         * @memberOf ArticleDetailView#
          */
         initialize : function() {
             console.assert(this.model, 'model is not defined');
@@ -46,6 +49,7 @@ define(function(require, exports, module) {
 
         /**
          * このViewが表示している記事に関連する画像データの取得と表示を行う。
+         * @memberOf ArticleDetailView#
          */
         showImage: function () {
             var onGetBinary = $.proxy(function(binary,item) {
@@ -104,6 +108,7 @@ define(function(require, exports, module) {
 
         /**
          *  編集ボタンをクリックしたら呼ばれる
+         * @memberOf ArticleDetailView#
          */
         onClickGotoEdit: function () {
             this.showLoading();
@@ -113,12 +118,47 @@ define(function(require, exports, module) {
         },
 
         /**
-         *  削除ボタンをクリックしたら呼ばれる
+         * 削除ボタンをクリックしたら呼ばれる
+         * @param {Event} ev
+         * @memberOf ArticleDetailView#
          */
-        onClickGotoDelete: function () {
+        onClickGotoDelete : function(ev) {
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.buttons.YES.text = 'はい';
+            vexDialog.buttons.NO.text = 'いいえ';
+            vexDialog.open({
+                message : 'この投稿（' + moment(this.model.get('publishedAt')).format('YYYY年MM月DD日') + '配信）を削除していいですか？',
+                callback : $.proxy(function(value) {
+                    if (value) {
+                        this.showLoading();
+                        this.deleteArticle();
+                    }
+                    return;
+                }, this)
+            });
+        },
+        /**
+         * 写真投稿削除関数
+         * @memberOf ArticleDetailView#
+         */
+        deleteArticle : function() {
+            this.model.set("isDelete", true);
+            this.model.save(null, {
+                success : $.proxy(function() {
+                    this.hideLoading();
+                    this.model.set("isDeleted", true);
+                    app.router.back();
+                }, this),
+                error : $.proxy(function(e) {
+                    this.hideLoading();
+                    vexDialog.alert("削除に失敗しました。");
+                    app.logger.error("error LetterListItemView:deleteLetter()");
+                }, this)
+            });
         },
         /**
          *  キャンセルボタンをクリックしたら呼ばれる
+         * @memberOf ArticleDetailView#
          */
         onClickGotoCancel: function () {
         }
