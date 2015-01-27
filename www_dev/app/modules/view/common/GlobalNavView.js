@@ -279,8 +279,16 @@ define(function(require, exports, module) {
             this.setView(GlobalNavView.SELECTOR_MODAL_CALENDAR, modalCalendarView);
             this.listenTo(modalCalendarView, "closeModalCalendar", function () {
                 modalCalendarView.remove();
+                // URLを元に戻す
+                app.router.back();
             });
             modalCalendarView.render();
+
+            // ヘルプ画面用URLに遷移
+            app.router.navigate("calendar", {
+                trigger: true,
+                replace: false
+            });
         },
 
         /**
