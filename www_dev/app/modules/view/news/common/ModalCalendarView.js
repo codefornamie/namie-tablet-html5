@@ -79,6 +79,7 @@ define(function(require, exports, module) {
          */
         events : {
             "click #modal-calendar-overlay" : "onClickOverlay",
+            "click [data-close]" : "onClickCloser",
             "click .rd-day-body" : "onClickDate"
         },
 
@@ -101,6 +102,15 @@ define(function(require, exports, module) {
                 return;
             }
 
+            this.trigger("closeModalCalendar");
+        },
+
+        /**
+         * 閉じるボタンをクリックした時に呼ばれる
+         * @memberOf ModalCalendarView#
+         * @param {Event} ev
+         */
+        onClickCloser : function (ev) {
             this.trigger("closeModalCalendar");
         },
 
