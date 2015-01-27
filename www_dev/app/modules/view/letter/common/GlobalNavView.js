@@ -42,27 +42,24 @@ define(function(require, exports, module) {
          *  @memberOf GlobalNavView#
          */
         events: {
-            "click a" : "onClickMenuButton"
+            "click [data-back-home]" : "onClickBackButton"
         },
 
         /**
-         * メニュー項目ボタンのaタグをクリックした際の挙動を
+         * 前に戻るボタンのaタグをクリックした際の挙動を
          * ブラウザデフォルトではなく
          * pushStateに変更する
          * @memberOf GlobalNavView#
          */
-        onClickMenuButton: function (evt) {
+        onClickBackButton: function (evt) {
+            // TODO NAM-874 の問題により他のanchorとは違う処理を行っている。
+            evt.preventDefault();
             var $target = $(evt.currentTarget);
             var href = { prop: $target.prop("href"), attr: $target.attr("href") };
-            var root = location.protocol + "//" + location.host + app.root;
-
-            if (href.prop && href.prop.slice(0, root.length) === root) {
-                evt.preventDefault();
-                app.router.navigate(href.attr, {
-                    trigger: true,
-                    replace: false
-                });
-            }
+            app.router.navigate(href.attr, {
+                trigger: true,
+                replace: false
+            });
         },
 
         /**
