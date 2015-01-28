@@ -284,7 +284,7 @@ define(function(require, exports, module) {
             });
             modalCalendarView.render();
 
-            // ヘルプ画面用URLに遷移
+            // カレンダー画面用URLに遷移
             app.router.navigate("calendar", {
                 trigger: true,
                 replace: false

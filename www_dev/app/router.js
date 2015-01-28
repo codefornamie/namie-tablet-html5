@@ -189,7 +189,7 @@ define(function(require, exports, module) {
             // 新聞アプリ
             "top" : "top",
             "top/:date" : "top",
-            "article/:id" : "showArticle",
+            "top/:date/article/:id" : "showArticle",
             'scrap' : 'scrap',
             'backnumber' : 'backnumber',
             'backnumber/:date' : 'backnumberDate',
@@ -277,9 +277,18 @@ define(function(require, exports, module) {
          * `this.layout.showView`を使うと記事一覧のViewをリセットしてしまうため、 記事詳細は記事一覧の上にかぶせる形で表示する。
          * </p>
          * 
+         * @param {String} date
          * @param {String} articleId
          */
-        showArticle : function(articleId) {
+        showArticle : function(date, articleId) {
+            // TODO check date
+            if (date != app.currentDate) {
+                setTimeout(function () {
+                    this.go("top", date);
+                }.bind(this), 0);
+                return;
+            }
+            
             // TODO appに刺さずに別の場所で管理する
             app.scrollTop = (app.newsView) ? app.newsView.getScrollTop() : 0;
 
