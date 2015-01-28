@@ -3,8 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport"
-	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<meta name="viewport" content="target-densitydpi=device-dpi,width=device-width,initial-scale=1">
 <link rel="stylesheet" href="bower_components/animate.css/animate.css">
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="lib/dao/dc1-client.js"></script>
@@ -29,20 +28,17 @@ body {
 }
 
 #message {
-	padding: 30px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	width: 50%;
-	height: 30%;
-	margin-left: -25%;
-	margin-top: -15%;
+	height: 228px;
+	width: 1321px;
+	margin-left: -660px;
+	margin-top: -114px;
 	adisplay: relative;
 	display: none;
-	background-color: #ffff00;
 	z-index: 100;
 	vertical-align: middle;
-	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.4);
 }
 
 #icon {
@@ -74,6 +70,27 @@ body {
 .alert-red {
 	color: white;
 	background-color: #DA4453;
+}
+
+.popup {
+	background-image: url('app/img/bg-text-slide-show.png');
+	background-repeat: no-repeat;
+	height: 228px;
+	width: 1321px;
+}
+
+.popup span {
+	position: relative;
+	top: 37px;
+	font-size: 52px;
+}
+
+.popup #month {
+	left: 227px;
+}
+
+.popup #date {
+	left: 282px;
 }
 </style>
 <script>
@@ -204,6 +221,7 @@ body {
     window.javaToJs = function(token) {
         log("start refreshJavaToJs");
         if (!token) {
+            ohSnap('認証処理でエラーが発生しました。', 'red');
             return;
         }
         _token = token;
@@ -334,6 +352,7 @@ body {
     function getImageBinary(fname, callback) {
         log("start getImageBinary. fname=" + fname);
         if (fname === undefined) {
+            // エラーメッセージは呼び出し元で表示
             callback(null);
             return;
         }
@@ -349,11 +368,13 @@ body {
                     callback(binary);
                 },
                 error : function(e) {
+                    // エラーメッセージは呼び出し元で表示
                     log("personium request failure : " + e.toString());
                     callback(null);
                 }
             });
         } catch (e) {
+            // エラーメッセージは呼び出し元で表示
             log("Personium load file failure : " + e.toString());
             callback(null);
         }
@@ -418,8 +439,16 @@ body {
      */
     function showPopup() {
         log("show popup message");
-        var msg = (_publishTime.getMonth() + 1) + "月" + _publishTime.getDate() + "日版のなみえ新聞が発行されました";
-        $("#msg").text(msg);
+        var month = _publishTime.getMonth() + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        var date = _publishTime.getDate();
+        if (date < 10) {
+            date = "0" + date;
+        }
+        $("#month").text(month);
+        $("#date").text(date);
         $("#message").fadeIn("slow");
     }
 
@@ -489,10 +518,9 @@ body {
 <body>
 	<div id="container" style="font-size: 1.5em;"></div>
 	<div id="message">
-		<div>
-			<img id="icon" src="app/img/img-character01.png" />
+		<div id="msg" class="popup">
+			<span id="month"></span> <span id="date"></span>
 		</div>
-		<div id="msg"></div>
 	</div>
 	<div id="ohsnap"></div>
 </body>

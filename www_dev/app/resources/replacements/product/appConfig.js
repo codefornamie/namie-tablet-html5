@@ -5,6 +5,7 @@ define(function(require, exports, module) {
             "cellId" : "kizuna",
             "boxName" : "data",
             "odataName" : "odata",
+            "retryCount" : "3",
             // view category (ex. news, dojo, letter, posting, ope ..).
             "mode" : "news"
         },

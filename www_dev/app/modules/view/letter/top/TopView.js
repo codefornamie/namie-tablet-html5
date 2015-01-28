@@ -11,19 +11,21 @@ define(function(require, exports, module) {
     var LetterEditView = require("modules/view/letter/edit/LetterEditView");
     var LetterEditCompleteView = require("modules/view/letter/edit/LetterEditCompleteView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var BusinessUtil = require("modules/util/BusinessUtil");
     var Equal = require("modules/util/filter/Equal");
     var Ge = require("modules/util/filter/Ge");
     var Le = require("modules/util/filter/Le");
     var And = require("modules/util/filter/And");
     var IsNull = require("modules/util/filter/IsNull");
     var Code = require("modules/util/Code");
+    var vexDialog = require("vexDialog");
 
     /**
      * 町民投稿アプリのトップ画面を表示するためのLayoutクラスを作成する。
      * @class
      * @constructor
      */
-    var LetterTopLayout = Backbone.Layout.extend({
+    var LetterTopLayout = AbstractView.extend({
         /**
          * このLayoutのテンプレートファイルパス
          * @memberOf LetterTopLayout#
@@ -154,22 +156,48 @@ define(function(require, exports, module) {
          * aタグをクリックした際の挙動を ブラウザデフォルトではなく pushStateに変更する
          * @memberOf LetterTopLayout#
          */
-        // TODO onClickAnchorメソッドが色々なファイルにコピペされているので、どこかにまとめる
         onClickAnchor : function(evt) {
-            var $target = $(evt.currentTarget);
-            var href = {
-                prop : $target.prop("href"),
-                attr : $target.attr("href")
-            };
-            var root = location.protocol + "//" + location.host + app.root;
-
-            if (href.prop && href.attr[0] !== "#" && href.prop.slice(0, root.length) === root) {
-                evt.preventDefault();
-                app.router.navigate(href.attr, {
-                    trigger : true,
-                    replace : false
-                });
+            evt.preventDefault();
+            if(evt.currentTarget.id !== "post_new_letter") {
+                // 新規投稿ボタン以外は、そのまま画面遷移する。
+                this.followAnchor(evt);
+                return;
             }
+            // 新規投稿ボタンの場合、遷移する前に自身の本日中の投稿数制限にかかっていないかをチェックする必要がある。
+            // PIOへ本日分の記事を検索する
+            var articleCollection = new ArticleCollection();
+            var prePublishedAt = BusinessUtil.getCurrentPublishDate();
+            var dateString = moment(prePublishedAt).add(1, "d").format("YYYY-MM-DD");
+            articleCollection.condition.top = Code.LETTER_PUBLISH_LIMIT;
+            articleCollection.condition.filters = [
+                    new Equal("publishedAt", dateString),
+                    new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_LETTER]),
+                    new Equal("createUserId", app.user.get("__id")), new IsNull("deletedAt")
+            ];
+
+            this.showLoading();
+            articleCollection.fetch({
+                cache : app.useCache,
+                success : $.proxy(function() {
+                    this.hideLoading();
+                    // 検索にヒットした件数が3件以上の場合は投稿させない
+                    if (articleCollection.length >= Code.LETTER_PUBLISH_LIMIT) {
+                        vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+                        vexDialog.buttons.YES.text = 'OK';
+                        vexDialog.alert("一日に投稿できる件数は" + Code.LETTER_PUBLISH_LIMIT + "件までです。");
+                        return;
+                    }
+                    // 画面遷移を行う
+                    this.followAnchor(evt);
+                }, this),
+                error : $.proxy(function onErrorLoadArticle() {
+                    app.logger.error("Articleの読み込みに失敗。");
+                    vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+                    vexDialog.buttons.YES.text = 'OK';
+                    vexDialog.alert("情報の読み込みに失敗しました。");
+                    this.hideLoading();
+                }, this)
+            });
         }
     }, {
         /**
@@ -238,8 +266,7 @@ define(function(require, exports, module) {
             this.letterCollection.condition.filters = [
                     new Ge("publishedAt", dateFrom), new Le("publishedAt", dateTo),
                     new Equal("type", Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_LETTER]),
-                    new Equal("createUserId", app.user.get("__id")),
-                    new IsNull("deletedAt")
+                    new Equal("createUserId", app.user.get("__id")), new IsNull("deletedAt")
             ];
 
             this.letterCollection.fetch();
@@ -265,8 +292,8 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
-            this.listenTo(this.letterCollection, "sync", this.onSyncLetter);
-            this.listenTo(this.letterCollection, "error", this.onErrorLetter);
+            this.listenTo(this.letterCollection, "sync", this.onSyncLetter.bind(this));
+            this.listenTo(this.letterCollection, "error", this.onErrorLetter.bind(this));
         },
 
         /**
@@ -330,7 +357,7 @@ define(function(require, exports, module) {
             var listViewLayout = this.layout.getView("#letter-list-container");
             var listItems = [];
             if (listViewLayout) {
-                listItems = listViewLayout.getViews("#letter-list").value();
+                listItems = listViewLayout.getViews("#letter-list") ? listViewLayout.getViews("#letter-list").value() : [];
             }
             var deletedItems = _.filter(listItems, function(item) {
                 return item.model.get("isDeleted");

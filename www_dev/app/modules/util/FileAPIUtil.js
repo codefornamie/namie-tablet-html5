@@ -96,6 +96,10 @@ define(function(require, exports, module) {
         FileAPIUtil.bindFileInputImpl(el);
     };
     /**
+     * ギャラリー画像ファイル読み込み時、画像のリサイズをするかどうか
+     */
+    FileAPIUtil.IMAGE_RESIZE = true;
+    /**
      * カメラで撮影した実機内ギャラリー一覧のデータを取得する
      * @param {Function} callback コールバック関数
      * @memberOf FileAPIUtil#
@@ -116,6 +120,10 @@ define(function(require, exports, module) {
                         var files = _.filter(entries, function(entry) {
                             return entry.isFile === true;
                         });
+                        // 画像ファイルのみでフィルタする
+                        files = _.filter(files, function(file) {
+                            return file.name.match(/\.jpg$/i);
+                        });
 
                         _.each(files, function(fileEntry) {
                             FileAPIUtil.getFileEntry(directoryEntry, fileEntry.name, function(file) {
@@ -126,13 +134,15 @@ define(function(require, exports, module) {
                                     fileArray = _.sortBy(fileArray, function(fileItem) {
                                         return -fileItem.lastModifiedDate;
                                     });
-                                    fileArray = _.filter(fileArray, function(file) {
-                                        return file.name.match(/\.jpg$/i);
+                                    // callback(fileArray.slice(0, FileAPIUtil.GET_GALLERY_MAX));
+                                    // 最新８枚の画像のみにフィルタ
+                                    fileArray = fileArray.slice(0, FileAPIUtil.GET_GALLERY_MAX);
+                                    FileAPIUtil.setFileUrls(fileArray, function() {
+                                        callback(fileArray);
                                     });
-                                    callback(fileArray.slice(0, FileAPIUtil.GET_GALLERY_MAX));
                                 }
                             });
-                        });
+                        }.bind(this));
                         // ファイルが無い場合は空配列を返す
                         if (files.length === 0) {
                             callback(fileArray);
@@ -152,17 +162,85 @@ define(function(require, exports, module) {
         }, false);
     };
     /**
+     * 指定されたFileEntryの配列のBlobURLを生成し、FileEntryに紐づける。 FileAPIUtil.IMAGE_RESIZEプロパティが<code>true</code>の場合、
+     * 画像のリサイズ処理を行い、その画像のデータを示すDataURLをFileEntryに設定する。
+     * @param {Array} fileArray FileEntryの配列
+     * @param {Function} onCreate fileArrayに指定されたすべてのFileEntryに対する処理が完了した際に呼び出される。
+     * @memberOf FileAPIUtil#
+     */
+    FileAPIUtil.setFileUrls = function(fileArray, onCreate) {
+        var counter = 0;
+
+        _.each(fileArray, function(fileEntry) {
+            var fileName = fileEntry.name;
+            var file = fileEntry.fileObject;
+            if (FileAPIUtil.getFileEntryCache[fileName]) {
+                app.logger.debug("fileEntry used cache." + fileName);
+                fileEntry.url = FileAPIUtil.getFileEntryCache[fileName];
+                counter++;
+                if (counter >= fileArray.length) {
+                    onCreate();
+                }
+                return;
+            }
+            if (FileAPIUtil.IMAGE_RESIZE) {
+                // png形式にしないと、リサイズ後の画像が壊れる
+                file.type = "image/png";
+                canvasResize(file, {
+                    width : 600,
+                    height : 0,
+                    crop : false,
+                    quality : 80,
+                    // rotate: 90,
+                    rotate : -1,
+                    callback : $.proxy(function(fileEntry, data, width, height) {
+
+                        fileEntry.url = data;
+                        FileAPIUtil.getFileEntryCache[fileName] = fileEntry.url;
+                        counter++;
+                        if (counter >= fileArray.length) {
+                            onCreate();
+                        }
+                    }, this, fileEntry)
+                });
+            } else {
+                var reader = new FileReader();
+                reader.onload = $.proxy(function(fileEntry, fileEvent) {
+                    var binary = fileEvent.target.result;
+                    var uint8array = new Uint8Array(binary);
+                    var blob = new Blob([
+                        uint8array
+                    ], {
+                        type : file.type
+                    });
+                    var url = FileAPIUtil.createObjectURL(blob);
+                    fileEntry.url = url;
+                    FileAPIUtil.getFileEntryCache[fileName] = fileEntry.url;
+                    counter++;
+                    if (counter >= fileArray.length) {
+                        onCreate();
+                    }
+                }, this, fileEntry);
+                reader.readAsArrayBuffer(file);
+            }
+        }.bind(this));
+
+    };
+
+    FileAPIUtil.getFileEntryCache = {};
+    /**
      * ファイル名からfileEntryオブジェクトを取得
      * @param {Object} directoryEntry DirecotryEntryオブジェクト
      * @param {Object} fileName ファイル名
      * @param {Function} callback コールバック関数
      * @memberOf FileAPIUtil#
      */
-    FileAPIUtil.getFileEntry = function(directoryEntry, fileName, callback) {
+    FileAPIUtil.getFileEntry = function(directoryEntry, fileName, callback, resize) {
         directoryEntry.getFile(fileName, null, function(fileEntry) {
             fileEntry.file(function(file) {
                 // 画像登録日時を取得する
                 fileEntry.lastModifiedDate = file.lastModifiedDate;
+                fileEntry.fileObject = file;
                 callback(fileEntry);
             }, function(e) {
                 // fileでエラー

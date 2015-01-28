@@ -2,8 +2,8 @@
 <manifest android:hardwareAccelerated="true" android:versionCode="901" android:versionName="0.9.1" package="jp.fukushima.namie.town.letter" xmlns:android="http://schemas.android.com/apk/res/android">
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" android:xlargeScreens="true" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <application android:hardwareAccelerated="true" android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="@string/activity_name" android:launchMode="singleTop" android:name="NamieTabletLetter" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="adjustResize">
+    <application android:hardwareAccelerated="true" android:icon="@drawable/icon" android:label="@string/app_name" android:largeHeap="true">
+        <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="@string/activity_name" android:launchMode="singleTop" android:name="NamieTabletLetter" android:screenOrientation="landscape" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="adjustResize">
             <intent-filter android:label="@string/launcher_name">
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -23,7 +23,7 @@
         </service>
         <activity android:exported="true" android:label="@string/app_name" android:name="jp.fukushima.namie.town.PcsAccountManagerPlugin.LoginActivity" />
     </application>
-    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19" />
+    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

@@ -53,13 +53,14 @@ define(function(require, exports, module) {
             $("#snap-content").scrollTop(0);
 
             // 記事カテゴリ選択肢
-            var categories = _.filter(Code.ARTICLE_CATEGORY_LIST, function(category) {
-                return _.find(Code.ARTICLE_CATEGORY_LIST_BY_MODE[app.config.basic.mode], function(key) {
-                    return category.key === key;
-                });
-            });
-            _.each(categories, function(category) {
-                $("#articleCategory").append("<option value='" + category.key + "'>" + category.value + "</option>");
+            var mapCategory = _.indexBy(Code.ARTICLE_CATEGORY_LIST, "key");
+            _.each(Code.ARTICLE_CATEGORY_LIST_BY_MODE[app.config.basic.mode], function(key) {
+                var category = mapCategory[key];
+                var option = $("<option>");
+                option.attr("value", category.key);
+                option.text((category.valueByMode ? category.valueByMode[app.config.basic.mode] : null) || category.value);
+                option.data("site", category.value);
+                $("#articleCategory").append(option);
             });
 
             if (this.model) {
@@ -104,9 +105,11 @@ define(function(require, exports, module) {
             if (articleCategory === "6") {
                 $("#articleTitle").removeClass("required");
                 $("#articleDetail").addClass("required");
+                $("#articleNickname").addClass("required");
             } else {
                 $("#articleTitle").addClass("required");
                 $("#articleDetail").removeClass("required");
+                $("#articleNickname").removeClass("required");
             }
         },
 
@@ -118,7 +121,7 @@ define(function(require, exports, module) {
             "click #articleConfirmButton" : "onClickArticleConfirmButton",
             "click #articleCancelButton" : "onClickArticleCancelButton",
             "change #articleMultiDate" : "chageMultiDateCheckbox",
-            "change #articleCategory" : "setValidator"
+            "change #articleCategory" : "onChangeCategory"
         },
         /**
          * 編集時にデータを各フォームにセットする
@@ -136,6 +139,7 @@ define(function(require, exports, module) {
             $("#articleTime2").val(this.model.get("endTime"));
             $("#articlePlace").val(this.model.get("place"));
             $("#articleDetail").val(this.model.get("description"));
+            $("#articleNickname").val(this.model.get("nickname"));
             $("#articleContact").val(this.model.get("contactInfo"));
             $("#articleRangeDate1").val(this.model.get("publishedAt"));
             $("#articleRangeDate2").val(this.model.get("depublishedAt"));
@@ -204,6 +208,18 @@ define(function(require, exports, module) {
             }
         },
         /**
+         * カテゴリを変更された際に呼び出されるコールバック関数
+         */
+        onChangeCategory : function() {
+            var articleCategory = $("#articleCategory").val();
+            if (articleCategory === "6") {
+                if ($("#fileArea").children().size() >= 1) {
+                    $("#addFileForm").hide();
+                }
+            }
+            this.setValidator();
+        },
+        /**
          * 画像を追加ボタンを押された際のコールバック関数
          */
         onAddFileForm : function() {
@@ -256,6 +272,11 @@ define(function(require, exports, module) {
                 this.model = new ArticleModel();
                 this.model.id = AbstractModel.createNewId();
             }
+            if (this.model.get("type") === "2") {
+                this.model.set("title", $("#articleTitle").val());
+                this.model.set("description", $("#articleDetail").val());
+                return;
+            }
             if(!this.model.get("imagePath")){
                 this.model.set("imagePath", this.generateFilePath());
             }
@@ -265,7 +286,7 @@ define(function(require, exports, module) {
             }
 
             this.model.set("type", $("#articleCategory").val());
-            this.model.set("site", $("#articleCategory option:selected").text());
+            this.model.set("site", $("#articleCategory option:selected").data("site"));
             this.model.set("title", $("#articleTitle").val());
 
             this.model.set("startDate", $("#articleDate1").val());
@@ -279,6 +300,7 @@ define(function(require, exports, module) {
 
             this.model.set("place", $("#articlePlace").val());
             this.model.set("description", $("#articleDetail").val());
+            this.model.set("nickname", $("#articleNickname").val());
             this.model.set("contactInfo", $("#articleContact").val());
 
             this.model.set("publishedAt", $("#articleRangeDate1").val());

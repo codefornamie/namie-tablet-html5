@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var DojoEditionModel = require("modules/model/dojo/DojoEditionModel");
     var DojoContentModel = require("modules/model/dojo/DojoContentModel");
     var AchievementModel = require("modules/model/misc/AchievementModel");
+    var Code = require("modules/util/Code");
     var vexDialog = require("vexDialog");
 
     /**
@@ -22,6 +23,7 @@ define(function(require, exports, module) {
         /**
          * テンプレートに渡す情報をシリアライズする
          * @return {Object}
+         * @memberOf DojoLessonLayout#
          */
         serialize : function() {
             return {
@@ -30,10 +32,25 @@ define(function(require, exports, module) {
             };
         },
 
+        /**
+         * Layoutの描画処理の終了後に呼び出されるコールバック関数。
+         * @memberOf DojoLessonLayout#
+         */
         afterRender : function() {
             this.dojoLessonSiblingsView.render();
             this.setYouTubePlayer();
             $('.is-grayedout').unblock(); 
+
+            $(document).trigger("open:modal");
+
+            // アプリがバックグラウンドになった場合、youtubeを一時停止する
+            var self = this;
+            this.onPause = function () {
+                if(self.player){
+                    self.player.pauseVideo();
+                }
+            };
+            document.addEventListener("pause", this.onPause, false);
         },
         /**
          * イベント一覧
@@ -44,11 +61,42 @@ define(function(require, exports, module) {
             "click [data-uncomplete-lesson]" : "onClickUncompleteLesson",
             "click [data-back]" : "onClickBack"
         },
+
+        /**
+         * 現在のコースが制覇されているかどうかを返す
+         * <p>
+         * onClickCompleteLesson内から呼び出す
+         * </p>
+         * @memberOf DojoLessonLayout#
+         * @return {boolean}
+         */
+        isLevelCompleted : function() {
+            var contentCollection = this.dojoEditionModel.get('contentCollection');
+            var modelArray;
+            var solvedModelCount;
+
+            // 現在のコース内の動画を抽出
+            modelArray = contentCollection.filter(function(item) {
+                return item.get("level") === app.currentDojoLevel;
+            });
+
+            // 習得済みモデル数をカウントする
+            solvedModelCount = _.filter(modelArray, function(model) {
+                return model.getSolvedState() === Code.DOJO_STATUS_SOLVED;
+            }).length;
+
+            // 現在のコース内の動画が全て習得されているかどうかを返す
+            return solvedModelCount === modelArray.length;
+        },
+
         /**
          * はいボタンを押したら呼ばれる
          * @memberOf DojoLessonLayout#
+         * @param {Event} ev
          */
         onClickCompleteLesson : function(ev) {
+            var isLevelCompletedBefore;
+
             if (this.dojoContentModel.achievementModels) {
                 var solvedAchievement = _.find(this.dojoContentModel.achievementModels, function(achievement) {
                     return achievement.get("type") === "dojo_solved";
@@ -60,6 +108,9 @@ define(function(require, exports, module) {
                 }
             }
 
+            // 現在の動画を修得する前にレベル制覇していたかどうかを取得
+            isLevelCompletedBefore = this.isLevelCompleted();
+
             // 習得済みとしてセーブする
             var achievementModel = new AchievementModel();
             achievementModel.set("type", "dojo_solved");
@@ -69,7 +120,14 @@ define(function(require, exports, module) {
             achievementModel.save(null, {
                 success : $.proxy(function() {
                     this.onSaveAchievement(achievementModel);
-                    this.onClickBack(ev);
+
+                    // 現在の動画を習得した時点で現在のコースを制覇した場合は、コース制覇画面へ遷移する
+                    // そうでない場合は、動画一覧へ戻る
+                    if (!isLevelCompletedBefore && this.isLevelCompleted()) {
+                        app.router.go("dojo", "levels", app.currentDojoLevel, "finished");
+                    } else {
+                        this.onClickBack(ev);
+                    }
                 }, this)
             });
         },
@@ -111,6 +169,7 @@ define(function(require, exports, module) {
         /**
          * 動画一覧へ戻るボタンを押したら呼ばれる
          * @memberOf DojoLessonLayout#
+         * @param {Event} ev
          */
         onClickBack : function(ev) {
             ev.preventDefault();
@@ -120,6 +179,7 @@ define(function(require, exports, module) {
 
         /**
          * 初期化
+         * @memberOf DojoLessonLayout#
          * @param {Object} param
          */
         initialize : function(param) {
@@ -159,18 +219,24 @@ define(function(require, exports, module) {
                             this.player.removeEventListener("onReady");
                             gapi.client.load('youtube', 'v3', $.proxy(this.onLoadYoutubePlayer, this));
                         }, this),
+
                         "onStateChange" : $.proxy(function(event) {
                             app.logger.debug("Youtube state change. state=" + event.data);
+
                             if (event.data === YT.PlayerState.PLAYING) {
-                                // タブレットのホームボタンを押下された場合、youtubeを一時停止する
-                                var self = this;
-                                document.addEventListener("pause", function onPause() {
-                                    self.player.pauseVideo();
-                                    document.removeEventListener("pause", onPause, false);
-                                    }, false);
-                                // 動画開始されたら動画再生ボタンを表示
+                                // 動画が再生可能になったらボタンを有効化する
                                 $("[data-play-movie]").show();
+                                $("[data-pause-movie]").show();
+
+                                // 動画再生したら動画停止ボタンを表示
+                                $("#cell-play-movie").hide();
+                                $("#cell-pause-movie").show();
+                            } else {
+                                // 動画停止したら動画再生ボタンを表示
+                                $("#cell-play-movie").show();
+                                $("#cell-pause-movie").hide();
                             }
+
                             if (event.data === YT.PlayerState.ENDED) {
                                 // 動画終了時に習得確認テキストを出す
                                 this.onEndYouTube();
@@ -241,7 +307,7 @@ define(function(require, exports, module) {
             achievementModel.save(null, {
                 success : $.proxy(function() {
                     app.logger.info("success dojo_watched save. videoId=" + this.dojoContentModel.get("videoId"));
-                    if (this.dojoContentModel.achievementModels && this.dojoContentModel.achievementModels.length > 0) {
+                    if (this.dojoContentModel.achievementModels) {
                         this.dojoContentModel.achievementModels.push(achievementModel);
                     } else {
                         this.dojoContentModel.achievementModels = [achievementModel];
@@ -258,16 +324,23 @@ define(function(require, exports, module) {
          * <p>
          * YouTube動画プレイヤーのインスタンスを破棄する。
          * </p>
+         * @memberOf DojoLessonLayout#
          */
         cleanup : function() {
             try {
+                if(this.onPause){
+                    document.removeEventListener("pause", this.onPause, false);
+                    this.onPause = null;
+                }
                 $("[data-play-movie]").unbind("click");
                 $("[data-pause-movie]").unbind("click");
                 $("[data-slider]").unbind("change.fndtn.slider");
                 this.player.destroy();
-            } catch (e) {
+         } catch (e) {
                 app.logger.debug(e);
             }
+
+            $(document).trigger("close:modal");
         }
     }, {
         /**
@@ -297,7 +370,7 @@ define(function(require, exports, module) {
                 dojoEditionModel : dojoEditionModel,
                 dojoContentModel : dojoContentModel
             });
-        },
+        }
     });
 
     module.exports = DojoLessonView;

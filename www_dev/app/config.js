@@ -34,7 +34,10 @@ require.config({
         "backbone-fetch-cache": "../bower_components/backbone-fetch-cache/backbone.fetch-cache",
         "rome" : "../bower_components/rome/dist/rome.standalone",
         "moment/locale/ja" : "../bower_components/moment/locale/ja",
-        "canvas-to-blob" : "../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob"
+        "canvas-to-blob" : "../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob",
+        "canvasResize": "../lib/canvasResize/canvasResize",
+        "binaryajax": "../lib/canvasResize/binaryajax",
+        "exif": "../lib/canvasResize/exif"
     },
 
     deps : [ "main" ],
@@ -64,6 +67,7 @@ require.config({
         "jquery-steps" : [ "jquery" ],
         "backbone-fetch-cache" : [ "backbone" ],
         "rome" : [ "moment" ],
-        "moment/locale/ja" : [ "moment" ]
+        "moment/locale/ja" : [ "moment" ],
+        "canvasResize": ["binaryajax", "exif"]
     }
 });

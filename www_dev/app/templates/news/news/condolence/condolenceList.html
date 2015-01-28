@@ -1,0 +1,31 @@
+<% if (!model) { %>
+<div
+    class="not-found"
+    style="display: block;"
+>
+    おくやみ情報はありません
+</div>
+<% } else { %>
+
+<article class='post post--<%= model.getSiteType() %>' id="<%= model.get('__id') %>">
+    <section class='post__body'>
+        <div class="post-header">
+            <div class="post-header__title">
+                福島県内のおくやみ一覧
+            </div>
+
+            <div class="post-header__site">
+                <div class="post-label">
+                    <div class="article-label left">
+                        <span class='article-label__text'>
+                            <%= model.getCategory() %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="condolenceList"></div>
+    </section>
+</article>
+
+<% } %>

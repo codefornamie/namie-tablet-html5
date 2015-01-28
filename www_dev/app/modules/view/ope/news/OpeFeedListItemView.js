@@ -32,7 +32,7 @@ define(function(require, exports, module) {
          * </p>
          */
         afterRendered : function() {
-            if (this.model.get("type") === "1" || this.model.get("type") === "7") {
+            if (this.model.get("type") === "1" || this.model.get("type") === "7" || this.model.get("type") === "8") {
                 // RSS収集記事は編集ボタンを非表示にする
                 this.$el.find("[data-article-edit-button]").hide();
             }
@@ -106,19 +106,20 @@ define(function(require, exports, module) {
             this.showLoading();
             $("[data-sequence-register-button]").hide();
             $("#sequenceConfirm").hide();
-            if (this.model.get("type") === "2") {
-                app.router.opeYouTubeRegist({
-                    model : this.model,
-                    recommendArticle : this.parentView.recommendArticle,
-                    targetDate : this.parentView.targetDate
-                });
-            } else {
+            // TODO デプロイ時にYouTube編集が開けない問題の暫定対処
+//            if (this.model.get("type") === "2") {
+//                app.router.opeYouTubeRegist({
+//                    model : this.model,
+//                    recommendArticle : this.parentView.recommendArticle,
+//                    targetDate : this.parentView.targetDate
+//                });
+//            } else {
                 app.router.opeArticleRegist({
                     model : this.model,
                     recommendArticle : this.parentView.recommendArticle,
                     targetDate : this.parentView.targetDate
                 });
-            }
+//            }
             $("#contents__primary").scrollTop(0);
         },
         /**
@@ -132,6 +133,7 @@ define(function(require, exports, module) {
             switch (this.model.get("type")) {
             case "1":
             case "7":
+            case "8":
                 var template = require("ldsh!templates/{mode}/news/articleDetail");
 
                 if (this.model.get("rawHTML")) {
@@ -139,27 +141,32 @@ define(function(require, exports, module) {
                 }
                 app.router.opeArticleDetail({
                     model : this.model,
-                    template : template
+                    template : template,
+                    targetDate : this.parentView.targetDate
                 });
                 break;
-            case "2":
-                app.router.opeYouTubeDetail({
-                    model : this.model,
-                    recommendArticle : this.parentView.recommendArticle
-                });
-                break;
+                // TODO デプロイ時にYouTube編集が開けない問題の暫定対処
+//            case "2":
+//                app.router.opeYouTubeDetail({
+//                    model : this.model,
+//                    recommendArticle : this.parentView.recommendArticle,
+//                    targetDate : this.parentView.targetDate
+//                });
+//                break;
             case "3":
             case "4":
             case "5":
                 app.router.opeEventDetail({
                     model : this.model,
-                    recommendArticle : this.parentView.recommendArticle
+                    recommendArticle : this.parentView.recommendArticle,
+                    targetDate : this.parentView.targetDate
                 });
                 break;
             default:
                 app.router.opeEventDetail({
                     model : this.model,
-                    recommendArticle : this.parentView.recommendArticle
+                    recommendArticle : this.parentView.recommendArticle,
+                    targetDate : this.parentView.targetDate
                 });
                 break;
             }

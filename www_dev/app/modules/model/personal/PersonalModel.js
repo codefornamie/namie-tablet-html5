@@ -31,7 +31,7 @@ define(function(require, exports, module) {
         updateShowLastPublished : function(published) {
             published = published || app.currentPublishDate;
             var prev = this.get("showLastPublished");
-            if (!prev || published > prev) {
+            if (!prev || published !== prev) {
                 this.set("showLastPublished", published);
                 var self = this;
                 this.save(null, {

@@ -13,6 +13,7 @@ define(function(require, exports, module) {
 
     var LoginModel = require("modules/model/LoginModel");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     var common = require("modules/view/common/index");
     var postingCommon = require("modules/view/posting/common/index");
@@ -35,7 +36,6 @@ define(function(require, exports, module) {
 
     var DojoTopView = require("modules/view/dojo/top/TopView");
     var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
-    var DojoHeaderView = require("modules/view/dojo/top/HeaderView");
     var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
 
     var LetterTopView = require("modules/view/letter/top/TopView");
@@ -167,9 +167,18 @@ define(function(require, exports, module) {
             // Render to the page.
             console.log("Router initialized");
             this.layout = new Layout();
+            this.loginView = this.layout.views["#contents"];
             if (!app.noRendering) {
                 this.layout.render();
             }
+
+            // ライトボックスを閉じたタイミングで
+            // 呼ばれることを想定している。
+            // ライトボックスオープン時に
+            // location.hashを変更している必要あり
+            $(window).on("hashchange", function () {
+                app.trigger("closeLightBox");
+            });
         },
 
         routes : {
@@ -180,7 +189,7 @@ define(function(require, exports, module) {
             // 新聞アプリ
             "top" : "top",
             "top/:date" : "top",
-            "article/:id" : "showArticle",
+            "top/:date/article/:id" : "showArticle",
             'scrap' : 'scrap',
             'backnumber' : 'backnumber',
             'backnumber/:date' : 'backnumberDate',
@@ -198,6 +207,7 @@ define(function(require, exports, module) {
             'dojo-top' : 'dojoTop',
             "dojo/levels/:id" : "dojoLevel",
             "dojo/lessons/:id" : "dojoLesson",
+            "dojo/levels/:id/finished" : "dojoLevelComplete",
             'dojo-introduction' : 'dojoIntroduction',
 
             // 町民投稿アプリ
@@ -254,7 +264,7 @@ define(function(require, exports, module) {
                 });
             } else {
                 // 日付が設定されていない場合は配信日を計算する
-                BusinessUtil.calcConsiderSuspendPublication(new ArticleCollection(), $.proxy(function(considerDate) {
+                BusinessUtil.calcConsiderSuspendPublication(new NewspaperHolidayCollection(), $.proxy(function(considerDate) {
                     this.go("top", considerDate);
                 }, this));
             }
@@ -267,9 +277,18 @@ define(function(require, exports, module) {
          * `this.layout.showView`を使うと記事一覧のViewをリセットしてしまうため、 記事詳細は記事一覧の上にかぶせる形で表示する。
          * </p>
          * 
+         * @param {String} date
          * @param {String} articleId
          */
-        showArticle : function(articleId) {
+        showArticle : function(date, articleId) {
+            // TODO check date
+            if (date != app.currentDate) {
+                setTimeout(function () {
+                    this.go("top", date);
+                }.bind(this), 0);
+                return;
+            }
+            
             // TODO appに刺さずに別の場所で管理する
             app.scrollTop = (app.newsView) ? app.newsView.getScrollTop() : 0;
 
@@ -359,9 +378,15 @@ define(function(require, exports, module) {
          * ---------- 管理アプリ ----------
          */
         opeTop : function(targetDate) {
-            this.layout.showView(new TopView({targetDate:targetDate}));
-            this.layout.setHeader(new common.HeaderView());
-            this.layout.setFooter(new common.FooterView());
+            if( targetDate ) {
+                this.layout.showView(new TopView({targetDate:targetDate}));
+                this.layout.setHeader(new common.HeaderView());
+                this.layout.setFooter(new common.FooterView());
+            } else {
+                BusinessUtil.calcNextPublication(function(dateString){
+                    this.go("ope-top", dateString);
+                }.bind(this));
+            }
         },
 
         /**
@@ -418,14 +443,16 @@ define(function(require, exports, module) {
          * 道場：トップページ
          */
         dojoTop : function() {
-            this.layout.setHeader(new dojoCommon.HeaderView());
-
             // 実際の描画処理はdojo/TopViewに書かれている
             // アプリのライフサイクルの中で、DojoTopViewの初期化は1度だけ行う
             if (!app.dojoTopView) {
                 app.dojoTopView = new DojoTopView();
                 this.layout.showView(app.dojoTopView.layout);
             }
+
+            this.layout.setHeader(new dojoCommon.HeaderView({
+                dojoContentCollection: app.dojoTopView.dojoContentCollection
+            }));
         },
 
         /**
@@ -440,6 +467,14 @@ define(function(require, exports, module) {
          * 道場：個別ページ
          */
         dojoLesson : function() {
+            // 実際の描画処理はdojo/TopViewに書かれている
+        },
+
+        /**
+         * 道場：コース制覇ページ
+         */
+        dojoLevelFinish : function() {
+            app.logger.debug("[route] dojoLevelComplete");
             // 実際の描画処理はdojo/TopViewに書かれている
         },
 

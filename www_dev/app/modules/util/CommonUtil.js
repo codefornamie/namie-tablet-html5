@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
     "use strict";
+    var Code = require("modules/util/Code");
 
     /**
      * 汎用ユーティリティクラス
@@ -55,6 +56,19 @@ define(function(require, exports, module) {
     CommonUtil.isCordovaRunning = function() {
         console.log("window.device:" + window.device);
         return CommonUtil.isCordova() && window.device !== undefined;
+    };
+    /**
+     * アプリモードごとに、キャッシュの有効無効を判定する。
+     * 
+     * @return {String} mode アプリモード
+     * @memberOf CommonUtil#
+     */
+    CommonUtil.useCache = function(mode) {
+        var useCache = Code.CACHE_MODE[mode];
+        if (useCache === undefined) {
+            useCache = false;
+        }
+        return useCache;
     };
     module.exports = CommonUtil;
 });

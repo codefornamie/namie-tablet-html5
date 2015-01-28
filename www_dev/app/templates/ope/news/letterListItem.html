@@ -1,0 +1,28 @@
+<li
+    data-article-id="<%= model.get('__id') %>"
+    class="grid-list__item"
+>
+    <div class="grid-cell--image">
+        <img class="articleImage">
+    </div>
+    
+    <div class="grid-cell--body">
+        <div class="grid-description">
+            <p class="grid-description__title">
+                <%= model.get("dispTitle") %> <br>
+            </p>
+
+            <p class="grid-description__new-arrivals">
+                <% if (model.get("newArrivals")) { %>
+                    今日の新着写真投稿 <b><%= model.get("newArrivals") %></b> 件
+                <% }%>
+            </p>
+        </div>
+        
+        <div class="article-label <%= model.getCssClass() %>">
+            <span class='article-label__text '>
+                <%= model.getCategory() %>
+            </span>
+        </div>
+    </div>
+</li>

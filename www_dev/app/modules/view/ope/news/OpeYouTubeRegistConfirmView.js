@@ -13,7 +13,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var OpeYouTubeRegistConfirmView = YouTubeListItemView.extend({
-        template : require("ldsh!templates/{mode}/news/youtubeRegistConfirm"),
+        template : require("ldsh!templates/ope/news/youtubeRegistConfirm"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * <p>
@@ -73,17 +73,19 @@ define(function(require, exports, module) {
          * YouTube動画プレイヤーの設定を行う。
          */
         setYouTubePlayer : function() {
-            this.player = new YT.Player('youtubePlayer', {
-                width : '640',
-                height : '390',
-                playerVars : {
-                    'autoplay' : 0,
-                    'controls' : 1
-                },
-                events : {
-                    "onReady" : $.proxy(this.onSetYouTubePlayer, this)
-                }
-            });
+            this.waitReadyYoutube($.proxy(function() {
+                this.player = new YT.Player('youtubePlayer', {
+                    width : '640',
+                    height : '390',
+                    playerVars : {
+                        'autoplay' : 0,
+                        'controls' : 1
+                    },
+                    events : {
+                        "onReady" : $.proxy(this.onSetYouTubePlayer, this)
+                    }
+                });
+            }, this));
         },
     });
     module.exports = OpeYouTubeRegistConfirmView;

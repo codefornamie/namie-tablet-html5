@@ -27,10 +27,16 @@ define(function(require, exports, module) {
                 value : "YouTube"
             }, {
                 key : "3",
-                value : "イベント"
+                value : "イベント",
+                valueByMode : {
+                    "ope" : "イベント(町民代理投稿)",
+                } 
             }, {
                 key : "4",
-                value : "レポート"
+                value : "レポート",
+                valueByMode : {
+                    "ope" : "レポート(町民代理投稿)",
+                } 
             }, {
                 key : "5",
                 value : "記事"
@@ -40,6 +46,21 @@ define(function(require, exports, module) {
             }, {
                 key : "7",
                 value : "Facebook"
+            }, {
+                key : "8",
+                value : "おくやみ"
+            }, {
+                key : "9",
+                value : "イベント",
+                valueByMode : {
+                    "ope" : "イベント(役場)",
+                } 
+            }, {
+                key : "10",
+                value : "レポート",
+                valueByMode : {
+                    "ope" : "レポート(役場)",
+                } 
             }
     ];
 
@@ -49,10 +70,10 @@ define(function(require, exports, module) {
             "3", "4"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_OPE] = [
-            "3", "4", "5", "6"
+            "5", "9", "10", "6", "3", "4"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_LETTER] = [
-            "6"
+        "6"
     ];
 
     // 記事ステータス
@@ -60,6 +81,23 @@ define(function(require, exports, module) {
     Code.ARTICLE_STATUS_BEFORE_PUBLISH = "未掲載";
     Code.ARTICLE_STATUS_DEPUBLISHED = "配信停止中";
 
+    /**
+     * img要素のscr属性にpersonium.ioのWebDAVが格納されているサイトの情報定義
+     */
+    Code.MINPO_SCRAPING = [
+        {
+            site : "福島民報(トップニュース)",
+            scraping: "minpo"
+        },
+        {
+            site : "福島民報(県内ニュース)",
+            scraping: "minpo"
+        },
+        {
+            site : "福島民報(スポーツニュース)",
+            scraping: "minpo"
+        }
+    ];
     // 記事サイト
     Code.ARTICLE_SITE_LIST = [
             {
@@ -94,9 +132,15 @@ define(function(require, exports, module) {
     Code.IMAGE_TYPE_PIO = 2;
     Code.IMAGE_TYPE_URL = 1;
     Code.IMAGE_TYPE_NONE = 0;
+
+    // 許される連続した休刊日の最大(日)
+    Code.LIMIT_CONSECUTIVE_HOLIDAY = 20;
     
     // 写真投稿アプリ: 投稿した記事の掲載期間(日数)
     Code.LETTER_PUB_PERIOD = 7;
+
+    // 写真投稿アプリ: 一日の投稿記事の上限数
+    Code.LETTER_PUBLISH_LIMIT = 3;
 
     // 道場動画カテゴリ
     // TODO 仮並び順
@@ -121,25 +165,54 @@ define(function(require, exports, module) {
     /**
      * 道場の級情報
      */
-    Code.DOJO_LEVELS = [{
-        id: "0",
-        className: "white",
-        label: "白帯編",
-        description: "初めてタブレットをさわる方のためのコースです。（文言未決定）",
-        iconPath: ""
-    },{
-        id: "1",
-        className: "brown",
-        label: "茶帯編",
-        description: "茶帯コースです。（文言未決定）",
-        iconPath: ""
-    },{
-        id: "2",
-        className: "black",
-        label: "黒帯編",
-        description: "黒帯コースです。（文言未決定）",
-        iconPath: ""
-    }];
+    Code.DOJO_LEVELS = [
+            {
+                id : "0",
+                className : "none",
+                levelName : "",
+                label : "白帯",
+                description : "このコースでは、なみえタブレットとは何か、なみえタブレットでできること、使用上の注意、 箱から出して電源を入れるまで、タブレットの画面の見方、なみえ新聞の見方を学べるよ。",
+                congratulations: "白帯コースの動画を全て閲覧しました。これでタブレットの基礎動作はマスターできましたね。<br>「茶帯」を進呈します！",
+                iconPath : ""
+            }, {
+                id : "1",
+                className : "white",
+                levelName : "白帯",
+                label : "茶帯",
+                description : "このコースでは、写真の撮影・閲覧、文字入力の方法、浪江町のホームページの見方、Googleマップの見方、YouTubeの見方、インターネット（Google検索、Yahoo）の使い方を学べるよ。",
+                congratulations: "茶帯コースの動画を全て閲覧しました。これでタブレットの応用動作はマスターできましたね。<br>「茶帯」を進呈します！",
+                iconPath : ""
+            }, {
+                id : "2",
+                className : "brown",
+                levelName : "茶帯",
+                label : "黒帯",
+                description : "このコースでは、なみえ新聞に投稿する方法、LINEの使い方、その他アプリ（手書きメモ、スケジュール、ネットラジオ、連絡帳）の使い方を学べるよ。",
+                congratulations: "黒帯コースの動画を全て閲覧しました。これでタブレットの全てをマスターできましたね。<br>「黒帯」を進呈します！",
+                iconPath : ""
+            }, {
+                id : "3",
+                className : "black",
+                levelName : "黒帯",
+                label : "",
+                description : "",
+                congratulations: "",
+                iconPath : ""
+            }
+    ];
+    
+    // 道場のイントロダクション動画のID
+    Code.DOJO_INTORODUCTION_VIDEO_ID = "NgVzppfZ-4Q";
 
+    /**
+     * アプリモード毎に、キャッシュを有効にするかどうか定義する。
+     */
+    Code.CACHE_MODE = {
+        "news" : true,
+        "ope" : false,
+        "letter" : false,
+        "posting" : false,
+        "dojo" : false
+    };
     module.exports = Code;
 });

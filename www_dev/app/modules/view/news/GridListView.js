@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var FeedListView = require("modules/view/news/FeedListView");
     var GridListItemView = require("modules/view/news/GridListItemView");
     var Super = FeedListView;
+    var LetterListItemView = require("modules/view/news/LetterListItemView");
 
     /**
      * 記事一覧(メニュー用)のViewクラスを作成する。
@@ -28,6 +29,20 @@ define(function(require, exports, module) {
          */
         template : require("ldsh!templates/news/news/gridList"),
 
+        /**
+         * 記事種別ごとのListItemViewの定義
+         * <p>
+         * typeとviewをプロパティに持つObjectを指定する。
+         * typeで指定した記事の場合、viewプロパティに指定したListItemViewが利用される。
+         * </p>
+         * @memberOf GridListView#
+         */
+        customListItemView : [
+            {
+                "type" : "6",
+                "view" : LetterListItemView
+            }
+        ],
         /**
          * このViewのイベント
          * @memberOf GridListView#
@@ -59,14 +74,11 @@ define(function(require, exports, module) {
             var $list = $("#grid-list");
             var $item = $list.children().eq(1);
 
-            this.masonry = new Masonry(
-                $list[0],
-                {
-                    columnWidth: $item[0],
-                    itemSelector: ".grid-list-item-div",
-                    transitionDuration: 0
-                }
-            );
+            this.masonry = new Masonry($list[0], {
+                columnWidth : $item[0],
+                itemSelector : ".grid-list-item-div",
+                transitionDuration : 0
+            });
         },
 
         /**

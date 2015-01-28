@@ -196,6 +196,12 @@ define(function(require, exports, module) {
                         vexDialog.alert("画像が未選択です。");
                         isInvalid = true;
                     }
+                    if (currentIndex === 2 && $("#letter-wizard-form__nickname").val().length > 20) {
+                        vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+                        vexDialog.buttons.YES.text = 'OK';
+                        vexDialog.alert("お名前は20文字以内で入力してください。");
+                        isInvalid = true;
+                    }
                 } else {
                     isInvalid = true;
                 }
@@ -278,7 +284,7 @@ define(function(require, exports, module) {
                             $(this.el).find("img").click($.proxy(this.onClickGallery, this));
                         }
                     }, this));
-                    element.find("img").attr("src", file.toURL());
+                    element.find("img").attr("src", file.url);
                     element.find("img").data("fileEntry", file);
                     $("#gallery-list").append(element);
                 } else {
@@ -507,7 +513,7 @@ define(function(require, exports, module) {
                 success : $.proxy(function() {
                     $("#gallery-list").empty();
                     this.hideLoading();
-                    app.router.go('/letters/posted');
+                    app.router.go('letters/posted');
                 }, this),
                 error : function(e) {
                     this.hideLoading();

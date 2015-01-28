@@ -1,11 +1,15 @@
 // Kick off the application.
 require([
-        "app", "router", "modules/util/VersionChecker", "modules/util/CommonUtil"
-], function(app, Router, VersionChecker, CommonUtil) {
+        "app", "router", "modules/util/VersionChecker", "modules/util/CommonUtil", "modules/util/Code"
+], function(app, Router, VersionChecker, CommonUtil, Code) {
     // Cordova初期化中のCordova Plugin読み込みエラー時にalertが表示されるのを抑止する
     var _alert = window.alert;
-    window.alert = function() {};
+    window.alert = function() {
+    };
     var goRoute = function() {
+        // キャッシュの有無
+        app.useCache = CommonUtil.useCache(app.config.basic.mode);
+
         window.alert = _alert;
         // Define your master router on the application namespace and trigger all
         // navigation from this instance.
@@ -17,6 +21,14 @@ require([
             pushState : true,
             root : app.root
         });
+
+        // 新聞アプリがバックグラウンドとなった場合は、トップ画面へリロードする
+        if (app.config.basic.mode === Code.APP_MODE_NEWS) {
+            document.addEventListener("resume", function() {
+                app.router.loginView.goNextView();
+            }, false);
+        }
+
     };
     var main = function() {
         VersionChecker.check(function(result) {

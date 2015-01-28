@@ -13,6 +13,7 @@ define(function(require, exports, module) {
     var ArticleListItemView = require("modules/view/news/ArticleListItemView");
     var EventListItemView = require("modules/view/news/EventListItemView");
     var YouTubeListItemView = require("modules/view/news/YouTubeListItemView");
+    var CondolenceListView = require("modules/view/news/condolence/CondolenceListView");
 
     // models
     var ArticleModel = require("modules/model/article/ArticleModel");
@@ -22,6 +23,7 @@ define(function(require, exports, module) {
     var RecommendCollection = require("modules/collection/article/RecommendCollection");
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
     var EventsCollection = require("modules/collection/events/EventsCollection");
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     // util
     var DateUtil = require("modules/util/DateUtil");
@@ -58,6 +60,12 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            var self = this;
+            _.each(app.serverConfig.COLOR_LABEL, function(c) {
+                self.$el.prepend("<style>.article-label--category" + c.id + "::after{" + 
+                        "border-right-color: " + c.color + ";" +
+                        "border-bottom-color: " + c.color + "}</style>");
+            });
         },
 
         /**
@@ -70,11 +78,28 @@ define(function(require, exports, module) {
             this.targetDate = this.targetDate || options.date;
             this.initialScrollTop = options.scrollTop || 0;
 
-            this.setArticleSearchCondition({
-                targetDate : new Date(this.targetDate)
-            });
-
-            this.searchArticles();
+            // 休刊日情報の読み込み
+            var holCol = new NewspaperHolidayCollection();
+            holCol.prevPublished(this.targetDate, function(prev, isPublish, err) {
+                if (err) {
+                    app.logger.error("error NewsView:holCol.prevPublished()");
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("休刊日の取得に失敗しました。");
+                    this.hideLoading();
+                    return;
+                }
+                if (isPublish) {
+                    // 記事読み込み範囲設定
+                    this.setArticleSearchCondition(moment(prev).add(1, "d").toDate(), new Date(this.targetDate));
+                    // 記事読み込み   
+                    this.searchArticles();
+                } else {
+                    // 休刊日
+                    this.hideLoading();
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("休刊日です。");
+                }
+            }.bind(this));
             this.initEvents();
         },
 
@@ -83,10 +108,10 @@ define(function(require, exports, module) {
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
          * @memberOf NewsView#
          */
-        setArticleSearchCondition : function(condition) {
-            this.articleCollection.setSearchCondition(condition);
-            this.recommendCollection.setSearchCondition(condition);
-            this.eventsCollection.setSearchCondition(condition);
+        setArticleSearchCondition : function(from, to) {
+            this.articleCollection.setSearchConditionRange(from, to);
+            this.recommendCollection.setSearchCondition({targetDate: from});
+            this.eventsCollection.setSearchCondition({targetDate: from});
         },
 
         /**
@@ -95,6 +120,8 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(app.router, "route", this.onRoute);
+            $(document).on("open:modal", this.onOpenModal.bind(this));
+            $(document).on("close:modal", this.onCloseModal.bind(this));
         },
 
         /**
@@ -167,10 +194,7 @@ define(function(require, exports, module) {
          */
         loadArticle : function(callback) {
             var self = this;
-            var cache = true;
-            if (self.cache !== undefined && !self.cache) {
-                cache = self.cache;
-            }
+            var cache = app.useCache;
 
             this.articleCollection.fetch({
                 cache : cache,
@@ -196,7 +220,7 @@ define(function(require, exports, module) {
             ];
 
             this.favoriteCollection.fetch({
-                cache : true,
+                cache : app.useCache,
 
                 success : function() {
                     callback();
@@ -216,7 +240,7 @@ define(function(require, exports, module) {
         loadEvents : function(callback) {
             this.eventsCollection.reset();
             this.eventsCollection.fetch({
-                cache : true,
+                cache : app.useCache,
 
                 success : function() {
                     callback();
@@ -234,7 +258,7 @@ define(function(require, exports, module) {
          */
         loadRecommend : function(callback) {
             this.recommendCollection.fetch({
-                cache : true,
+                cache : app.useCache,
 
                 success : function() {
                     callback();
@@ -308,40 +332,84 @@ define(function(require, exports, module) {
                 this.$(".recommendArticleContainer").hide();
             }
 
-            // 新聞アプリおよび管理アプリプレビュー表示の場合、写真投稿全件を1件の表示するための処理を行う
+            // 新聞アプリおよび管理アプリプレビュー表示の場合、写真投稿、おくやみを1件の表示するための処理を行う
+            this.summarizeArticle("8", {
+                targetDate : targetDate,
+                idPreffex : "condolence-",
+                dispTitle : (moment(targetDate).format("YYYY年M月DD日")) + "の" + "おくやみ",
+                sortOrder: -1
+            });
+            this.summarizeArticle("6", {
+                targetDate : targetDate,
+                idPreffex : "letter-",
+                dispTitle : "みんなで投稿！撮れたて写真館",
+                sortOrder: 1,
+                isFirst : true
+            });
+
+            // GridListView初期化
+            this.showGridListView();
+
+            this.hideLoading();
+        },
+        /**
+         * 指定された記事タイプの記事を、１つの記事にまとめる
+         * <p>
+         * 指定された記事タイプの記事を１つの記事にまとめて、ArticleCollectionの先頭に挿入する。<br>
+         * optionsパラメタに、まとめられた記事に関する、以下の情報を設定する。
+         * <ul>
+         * <li>{String} idPreffex<br>
+         * 作成する記事情報のIDのプレフィック</li>
+         * <li>{String} dispTitle<br>
+         * 記事一覧に表示される記事タイトル</li>
+         * <li>{Boolean} isFirst<br>
+         * まとめた記事を常に先頭に追加する場合はtrueを指定。(デフォルトはfalse)</li>
+         * </ul>
+         * </p>
+         * @param {String} type 記事タイプ
+         * @param {Object} options 記事作成時のオプション情報
+         * @memberOf NewsView#
+         */
+        summarizeArticle : function(type, options) {
+            var isFirst = options && options.isFirst;
             if (app.config.basic.mode === Code.APP_MODE_NEWS || this.isPreview) {
-                // 写真投稿記事が存在する場合の処理
-                var newsArticles = this.newsCollection.toArray().concat();
-                // 写真投稿記事の掲載日の降順でソートする
-                newsArticles.sort(function(a, b) {
-                    var pa = a.get("publishedAt");
-                    var pb = b.get("publishedAt");
-                    if (pa < pb) {
-                        return 1;
-                    } else if (pa > pb) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
+                
+                // 指定された記事タイプのカテゴリ名を取得
+                var articleCategory = _.find(Code.ARTICLE_CATEGORY_LIST, function(category) {
+                    return category.key === type;
                 });
+                var siteLabel;
+                if (articleCategory) {
+                    siteLabel = articleCategory.value;
+                }
+
+                var newsArticles = this.newsCollection.toArray().concat();
 
                 var articleDateMap = {};
                 var imagePath;
                 var imageThumbUrl;
 
-                // newsCollectionから写真投稿記事を削除し、配列に追加する
-                _.each(newsArticles, $.proxy(function(article) {
-                    if (article.get("type") !== "6")
+                // newsCollectionからまとめる記事を削除し、配列に追加する
+                var firstArticleIdx = -1;
+                _.each(newsArticles, $.proxy(function(article, idx) {
+                    if (article.get("type") !== type) {
                         return;
+                    }
 
+                    // 最初に出現した位置を記憶する。
+                    if (firstArticleIdx < 0) {
+                        firstArticleIdx = idx;
+                    }
+
+                    // 日付ごとのマップに入れ替える。
                     var publishedAt = article.get("publishedAt");
                     var articleModel = articleDateMap[publishedAt];
                     if (!articleModel) {
                         articleModel = new ArticleModel({
-                            __id : "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
-                            dispSite : "写真投稿",
-                            dispTitle : (moment(publishedAt).format("YYYY年M月DD日")) + "の写真投稿",
-                            type : "6",
+                            __id : options.idPreffex + (moment(publishedAt).format("YYYY-MM-DD")),
+                            site : article.get("site"),
+                            dispTitle : (moment(publishedAt).format("YYYY年M月DD日")) + "の" + siteLabel,
+                            type : type,
                             articles : []
                         });
                         articleDateMap[article.get("publishedAt")] = articleModel;
@@ -351,39 +419,61 @@ define(function(require, exports, module) {
                     this.newsCollection.remove(article);
                     articleList.push(article);
 
-                    // 一番最初の写真投稿のサムネイルを
+                    // 一番最初の記事のサムネイルを
                     // まとめた後の記事のサムネイルとして設定する
                     if (!imagePath) {
                         imagePath = article.get("imagePath");
                         imageThumbUrl = article.get("imageThumbUrl");
                     }
                 }, this));
+                if (firstArticleIdx < 0) {
+                    firstArticleIdx = this.newsCollection.size();
+                }
 
                 var articleDateList = [];
                 _.each(articleDateMap, function(articleDate) {
                     articleDateList.push(articleDate);
                 });
-                // 写真投稿画面を開くための記事を作成し、コレクションの先頭に登録
-                var letterFolderArticle = new ArticleModel({
-                    __id : "letter-" + DateUtil.formatDate(targetDate, "yyyy-MM-dd"),
-                    dispSite : "写真投稿",
-                    dispTitle : "写真投稿コーナー",
-                    type : "6",
+                // 日付順にソートする
+                articleDateList.sort(function(a, b) {
+                    var pa = a.get("__id");
+                    var pb = b.get("__id");
+                    if (pa === pb) {
+                        return 0;
+                    }
+                    if (pa < pb) {
+                        return options.sortOrder;
+                    } else if (pa > pb) {
+                        return -1 * options.sortOrder;
+                    }
+                });
+                // 写真投稿新着件数
+                var newArrivals;
+                if (type === "6") {
+                    var currentPublishLetters = articleDateMap[app.currentPublishDate];
+                    if (currentPublishLetters) {
+                        newArrivals = currentPublishLetters.get("articles").length;
+                    }
+                }
+
+                // まとめ記事画面を開くための記事を作成し、コレクションの適切な位置に追加
+                var folderArticle = new ArticleModel({
+                    __id : options.idPreffex + DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
+                    site : _.indexBy(app.serverConfig.COLOR_LABEL, "type")[type].label,
+                    dispTitle : options.dispTitle,
+                    type : type,
                     articles : articleDateList,
+                    newArrivals : newArrivals,
                     imagePath : imagePath,
                     imageThumbUrl : imageThumbUrl
                 });
-                this.newsCollection.unshift(letterFolderArticle);
-                this.articleCollection.unshift(letterFolderArticle);
+                // isFirst指定がある場合は先頭に配置する。
+                if (isFirst) {
+                    firstArticleIdx = 0;
+                }
+                this.newsCollection.models.splice(firstArticleIdx, 0, folderArticle);
+                this.articleCollection.models.splice(firstArticleIdx, 0, folderArticle);
             }
-
-            // GridListView初期化
-            this.showGridListView();
-
-            // ArticleListView初期化
-            this.showArticleListView();
-
-            this.hideLoading();
         },
         /**
          * 記事一覧Viewを表示する要素のセレクタ
@@ -451,7 +541,7 @@ define(function(require, exports, module) {
         onClickGridItem : function(ev, param) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
             app.newsView = this;
-            app.router.go("article", articleId);
+            app.router.go("top", moment(app.currentDate).format("YYYY-MM-DD"), "article", articleId);
         },
 
         /**
@@ -490,6 +580,10 @@ define(function(require, exports, module) {
                 template = require("ldsh!templates/{mode}/news/letterDetail");
                 ListItemView = EventListItemView;
                 break;
+            case "8": // おくやみ
+                template = require("ldsh!templates/{mode}/news/condolence/condolenceList");
+                ListItemView = CondolenceListView;
+                break;
             default:
                 template = require("ldsh!templates/{mode}/news/eventsDetail");
                 ListItemView = EventListItemView;
@@ -515,24 +609,18 @@ define(function(require, exports, module) {
         },
 
         /**
-         * YYYY年MM月DD日版の新聞に戻るボタンの日付を更新する
+         * 新聞に戻るボタンを設定する
          * @memberOf NewsView#
          */
         updateFooterButtons : function() {
             var self = this;
-            var $btnGoTop = this.$el.find("#news-action").find("[data-gotop]");
             var $btnBack = this.$el.find("#news-action").find("[data-back]");
             var currentMoment = moment(app.currentDate);
             var currentDateStr = currentMoment.format("YYYY-MM-DD");
 
-            $btnGoTop.on("click", function() {
-                self.setScrollTop(0);
-            });
-
-            $btnBack.text(currentMoment.format("YYYY年MM月DD日版の新聞に戻る"));
             $btnBack.on("click", function(ev) {
                 ev.preventDefault();
-                app.router.go("top", currentDateStr);
+                app.router.back();
             });
         },
 
@@ -570,6 +658,22 @@ define(function(require, exports, module) {
         },
 
         /**
+         * モーダルウィンドウが開いた後に呼ばれる
+         * @memberOf TopView#
+         */
+        onOpenModal : function() {
+            $("body").addClass("has-modal");
+        },
+
+        /**
+         * モーダルウィンドウが閉じた後に呼ばれる
+         * @memberOf TopView#
+         */
+        onCloseModal : function() {
+            $("body").removeClass("has-modal");
+        },
+
+        /**
          * 記事詳細ページ以外では、記事詳細の要素を隠す
          * @memberOf NewsView#
          */
@@ -595,7 +699,9 @@ define(function(require, exports, module) {
                 $("#main").addClass("is-backnumber");
             }
 
-            this.updateFooterButtons();
+            if ( route !== "top" ) {
+                this.updateFooterButtons();
+            }
         },
 
         /**

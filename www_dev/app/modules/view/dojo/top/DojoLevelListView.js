@@ -26,22 +26,22 @@ define(function(require, exports, module) {
          */
         serialize: function () {
             var self = this;
-            var levels = this.extractLevels();
+            var levels = _.initial(this.extractLevels());
 
             // 描画用に視聴済み動画の数を計算する
             _(levels).each(function (level) {
                 var contents = self.dojoEditionModel.getModelsByLevel(level.id);
-                var numWatched = 0;
+                var numSolved = 0;
 
                 level.numContent = contents.length;
 
                 _(contents).each(function (content) {
-                    if (content.getWatchedState() === Code.DOJO_STATUS_WATCHED) {
-                        numWatched++;
+                    if (content.getSolvedState() === Code.DOJO_STATUS_SOLVED) {
+                        numSolved++;
                     }
                 });
 
-                level.numWatched = numWatched;
+                level.numSolved = numSolved;
             });
 
             return {
@@ -60,6 +60,8 @@ define(function(require, exports, module) {
             console.assert(this.collection, "DojoLevelListView should have a collection");
 
             this.dojoEditionModel = param.dojoEditionModel;
+
+            this.listenTo(this.collection, "achievement", this.onUpdateLevel);
         },
 
         /**
@@ -67,10 +69,6 @@ define(function(require, exports, module) {
          * @memberOf DojoLevelListView#
          */
         afterRendered : function() {
-            var notAchievementedLevel = this.collection.getNotAchievementedLevel();
-            for (var i = 0; i <= parseInt(notAchievementedLevel); i++) {
-                $("#dojo-level-" + i).show();
-            }
         },
 
         /**
@@ -80,23 +78,18 @@ define(function(require, exports, module) {
         extractLevels : function() {
             // 定義されている級のリストを取得する
             // TODO: 将来的には、級の定義情報はperosnium.ioに定義する
-            var levels = Code.DOJO_LEVELS;
+            var levels = _.clone(Code.DOJO_LEVELS);
 
             return levels;
-//            var levels = {};
-//            // 級の名称を収集し、重複を削除する
-//            var levelValues = this.collection.map(function(model) {
-//                return model.get("level");
-//            });
-//            levelValues = _.uniq(levelValues);
-//
-//            // 「級の名称=>インデックス」の対応を格納する
-//            _.each(levelValues, function(levelValue, index) {
-//                levels[levelValue] = index;
-//            });
-//
-//            return levels;
         },
+
+        /**
+         * 段位情報が更新されたら呼ばれる
+         * @memberOf DojoLevelListView#
+         */
+        onUpdateLevel : function () {
+            this.renderCurrentLevel();
+        }
     });
 
     module.exports = DojoLevelListView;

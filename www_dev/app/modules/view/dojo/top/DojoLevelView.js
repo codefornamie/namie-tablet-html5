@@ -25,8 +25,24 @@ define(function(require, exports, module) {
          * @return {Object}
          */
         serialize : function() {
+            var level = _.clone(Code.DOJO_LEVELS[this.level.get("level")]);
+            var contents = this.dojoEditionModel.getModelsByLevel(this.level.get("level"));
+            var numContent = 0;
+            var numSolved = 0;
+
+            numContent = contents.length;
+
+            _(contents).each(function (content) {
+                if (content.getSolvedState() === Code.DOJO_STATUS_SOLVED) {
+                    numSolved++;
+                }
+            });
+
+            level.numContent = numContent;
+            level.numSolved = numSolved;
+
             return {
-                dojoLevel: Code.DOJO_LEVELS[this.level.get("level")]
+                level : level
             };
         },
 
@@ -58,28 +74,13 @@ define(function(require, exports, module) {
          */
         afterRender : function() {
             if (this.dojoEditionModel && this.dojoEditionModel.get("contentCollection")) {
-                this.updateNumberOfContent(this.dojoEditionModel);
-
                 var dojoListView = new DojoListView({
-                    //collection: this.dojoEditionModel.get("contentCollection"),
                     dojoEditionModel: this.dojoEditionModel,
                     level: this.level
                 });
 
-                this.setView("#dojo-level-list-container", dojoListView).render();
+                this.setView("#dojo-list-container", dojoListView).render();
             }
-        },
-
-        /**
-         * 道場コンテンツの視聴状況を描画する
-         * @param {DojoEditionModel} edition
-         * @memberOf DojoLevelView#
-         */
-        updateNumberOfContent : function(edition) {
-            var collection = edition.get("contentCollection");
-
-            this.$el.find("[data-content-num]").text(collection.length);
-            this.$el.find("[data-watched-num]").text(edition.getWatchedModels().length);
         }
     });
 

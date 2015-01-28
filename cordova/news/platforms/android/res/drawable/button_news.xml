@@ -3,12 +3,12 @@
     <item
         android:state_pressed="true"
         android:state_enabled="true"
-        android:drawable="@drawable/img_news"/>
+        android:drawable="@drawable/icon_news"/>
     <item
         android:state_focused="true"
         android:state_enabled="true"
-        android:drawable="@drawable/img_news"/>
+        android:drawable="@drawable/icon_news"/>
     <item
         android:state_enabled="true"
-        android:drawable="@drawable/img_news"/>
+        android:drawable="@drawable/icon_news"/>
 </selector>

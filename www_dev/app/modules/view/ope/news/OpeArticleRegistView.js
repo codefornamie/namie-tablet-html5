@@ -21,7 +21,11 @@ define(function(require, exports, module) {
          */
         setData: function () {
             $("#articleRegistTitle").text("記事編集");
-            $("#articleCategory").val(this.model.get("type"));
+            if (this.model.get("type") === "2") {
+                $("#articleCategory").val("5");
+            } else {
+                $("#articleCategory").val(this.model.get("type"));
+            }
             $("#articleTitle").val(this.model.get("title"));
             $("#articleDate1").val(this.model.get("startDate"));
             if (this.model.get("endDate")) {
@@ -32,6 +36,7 @@ define(function(require, exports, module) {
             $("#articleTime2").val(this.model.get("endTime"));
             $("#articlePlace").val(this.model.get("place"));
             $("#articleDetail").val(this.model.get("description"));
+            $("#articleNickname").val(this.model.get("nickname"));
             $("#articleContact").val(this.model.get("contactInfo"));
             $("#articleRangeDate1").val(this.model.get("publishedAt"));
             $("#articleRangeDate2").val(this.model.get("depublishedAt"));
@@ -82,6 +87,8 @@ define(function(require, exports, module) {
                         }
                     },this));
                 },this));
+            } else {
+                this.hideLoading();
             }
         },
         /**
@@ -114,6 +121,10 @@ define(function(require, exports, module) {
          * @return {String} バリデーションメッセージ
          */
         validate : function() {
+            if (this.model && this.model.get("type") === "2") {
+                return null;
+            }
+
             if ($("#articleMultiDate").is(":checked")) {
                 if ($("#articleDate1").val() > $("#articleDate2").val()) {
                     return "日時の日付が開始と終了で逆になっています。";
@@ -127,6 +138,12 @@ define(function(require, exports, module) {
                     $("#articleRangeDate1").val() > $("#articleRangeDate2").val()) {
                 return "掲載期間の日付が開始と終了で逆になっています。";
             }
+            
+            var articleCategory = $("#articleCategory").val();
+            if (articleCategory === "6" && !$(this.el).find("#previewFile").attr("src")) {
+                return "写真投稿は写真の登録が必須です。";
+            }
+            
             return null;
         },
         /**

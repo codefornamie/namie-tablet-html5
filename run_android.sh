@@ -3,9 +3,9 @@
 echo "Check attached Devices"
 adb devices
 echo "----------------"
-devices=`adb devices | wc -l`
+devices=`adb devices | grep device | wc -l`
 devices=`expr ${devices} - 1`
-if [ ${devices} -lt 2 ]
+if [ ${devices} -lt 1 ]
 then
     echo "attached device not found."
     echo "exit run android process."

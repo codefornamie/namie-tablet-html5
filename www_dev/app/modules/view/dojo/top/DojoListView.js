@@ -66,8 +66,14 @@ define(function(require, exports, module) {
 
             // 次に見るべき動画とグレーアウトする動画を判断するカウント変数
             var nextCount = 0;
+            // 現在表示しようとしている帯画面のレベルまでユーザが達しているかどうかを判断
+            if (this.dojoEditionModel.get("contentCollection").getNotAchievementedLevel() < this.level.get("level")) {
+                // まだ当該帯色までレベルが達していない場合
+                nextCount = 2;
+                $("[data-remained-num]").text("このコースは" + Code.DOJO_LEVELS[this.level.get("level")].levelName + "の動画を全部修得すると再生できます");
+            }
 
-            _(this.models).each($.proxy(function(model) {
+            _(this.models).each($.proxy(function(model, index) {
                 var solvedItem = _.find(model.achievementModels,function(ach){
                     return ach.get("type") === "dojo_" + Code.DOJO_STATUS_SOLVED;
                 });
@@ -82,6 +88,7 @@ define(function(require, exports, module) {
                     model : model,
                     animationDeley : animationDeley,
                     parentView: this,
+                    index: index,
                     isNext: nextCount === 1,
                     isGrayedOut: nextCount > 1
                 }));

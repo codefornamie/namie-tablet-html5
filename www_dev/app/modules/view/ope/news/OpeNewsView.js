@@ -3,11 +3,15 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var colorbox = require("colorbox");
+    var vexDialog = require("vexDialog");
+    
     var DateUtil = require("modules/util/DateUtil");
     var NewsView = require("modules/view/news/NewsView");
     var OpeFeedListView = require("modules/view/ope/news/OpeFeedListView");
     var OpeFeedListItemView = require("modules/view/ope/news/OpeFeedListItemView");
     var OpeNewsPreviewView = require("modules/view/ope/news/OpeNewsPreviewView");
+
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     var And = require("modules/util/filter/And");
     var Equal = require("modules/util/filter/Equal");
@@ -28,11 +32,6 @@ define(function(require, exports, module) {
          */
         feedListElement : '#article_list',
         /**
-         * 記事一覧取得のキャッシュ有効の有無
-         * @memberOf OpeNewsView#
-         */
-        cache : false,
-        /**
          * このViewのイベント
          * @memberOf OpeNewsView#
          */
@@ -52,10 +51,6 @@ define(function(require, exports, module) {
 
             this.targetDate = this.targetDate || options.date;
 
-            this.setArticleSearchCondition({
-                targetDate : new Date(this.targetDate)
-            });
-
             this.initEvents();
         },
 
@@ -66,31 +61,50 @@ define(function(require, exports, module) {
          */
         setDate : function(targetDate) {
             this.closePreview();
-            
-            this.$el.find("#targetDate").text(
-                    DateUtil.formatDate(targetDate, "yyyy年MM月dd日") + app.config.PUBLISH_TIME);
+            // 変更される前のtargetDateを保存する
+            this.prevSelectedTargetDate = this.targetDate;
 
-            this.setArticleSearchCondition({
-                targetDate : targetDate
-            });
-            this.searchArticles();
+            // 休刊日情報の読み込み
+            var holCol = new NewspaperHolidayCollection();
+            holCol.prevPublished(targetDate, function(prev, isPublish, e) {
+                if (e) {
+                    app.logger.error("error OpeNewsView:holCol.prevPublished()");
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("休刊日の取得に失敗しました。");
+                    this.hideLoading();
+                    return;
+                }
+                // 休刊日かどうか
+                if (isPublish) {
+                    // 発刊日の場合
+                    this.targetDate = moment(targetDate).format("YYYY-MM-DD");
+                    this.$el.find("#targetDate").text(
+                            DateUtil.formatDate(targetDate, "yyyy年MM月dd日") + app.serverConfig.PUBLISH_TIME);
+                    // 記事読み込み範囲設定
+                    this.setArticleSearchCondition(moment(prev).add(1, "d").toDate(), new Date(targetDate));
+                    // 記事読み込み   
+                    this.searchArticles();
+                } else {
+                    // 休刊日の場合
+                    // 前に選択していた日付に戻す。
+                    this.targetDate = this.prevSelectedTargetDate;
+                    // 休刊日
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("休刊日です。");
+                    $("[data-date]").removeClass("current");
+                    this.hideLoading();
+                }
+            }.bind(this));
         },
         
         /**
          * 記事の検索条件を指定する。
-         * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
+         * @param {Date} from 検索条件範囲の開始
+         * @param {Date} to 検索条件範囲の終了
          * @memberOf OpeNewsView#
          */
-        setArticleSearchCondition : function(condition) {
-            var targetDate = condition.targetDate;
-            var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
-            this.articleCollection.condition.filters = [
-                new And([
-                        new Equal("publishedAt", dateString), new Or([
-                                new IsNull("deletedAt"), new Equal("deletedAt", "")
-                        ])
-                ])
-            ];
+        setArticleSearchCondition : function(from, to) {
+            this.articleCollection.setSearchConditionRange(from, to, true, true);
         },
         /**
          * 左ペインの記事一覧メニューを表示する。
@@ -157,7 +171,7 @@ define(function(require, exports, module) {
          *  @memberOf OpeNewsView#
          */
         onClickOpePreviewBackButton: function () {
-            this.closePreview();
+            this.setDate(new Date(this.targetDate));
         },
         /**
          *  プレビュー表示を閉じる
