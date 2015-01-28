@@ -21,7 +21,11 @@ define(function(require, exports, module) {
          */
         setData: function () {
             $("#articleRegistTitle").text("記事編集");
-            $("#articleCategory").val(this.model.get("type"));
+            if (this.model.get("type") === "2") {
+                $("#articleCategory").val("5");
+            } else {
+                $("#articleCategory").val(this.model.get("type"));
+            }
             $("#articleTitle").val(this.model.get("title"));
             $("#articleDate1").val(this.model.get("startDate"));
             if (this.model.get("endDate")) {
@@ -83,6 +87,8 @@ define(function(require, exports, module) {
                         }
                     },this));
                 },this));
+            } else {
+                this.hideLoading();
             }
         },
         /**
@@ -115,6 +121,10 @@ define(function(require, exports, module) {
          * @return {String} バリデーションメッセージ
          */
         validate : function() {
+            if (this.model && this.model.get("type") === "2") {
+                return null;
+            }
+
             if ($("#articleMultiDate").is(":checked")) {
                 if ($("#articleDate1").val() > $("#articleDate2").val()) {
                     return "日時の日付が開始と終了で逆になっています。";

@@ -39,23 +39,25 @@ define(function(require, exports, module) {
             // 連絡先
             $("#articleContactInfo").html(CommonUtil.sanitizing(this.model.get("contactInfo")));
 
-            // 画像
-            var $figure = this.$el.find('[data-figure]');
-            var images = this.model.get('images');
-            var imgIndex = 0;
+            if (this.model.get("type") !== "2") {
+                // 画像
+                var $figure = this.$el.find('[data-figure]');
+                var images = this.model.get('images');
+                var imgIndex = 0;
 
-            $figure.each(function (i) {
-                var $image = $(this).find('[data-figure-image]');
-                var $caption = $(this).find('[data-figure-caption]');
-                var image = images[i];
+                $figure.each(function (i) {
+                    var $image = $(this).find('[data-figure-image]');
+                    var $caption = $(this).find('[data-figure-caption]');
+                    var image = images[i];
 
-                if (!image) {
-                    return true;
-                }
+                    if (!image) {
+                        return true;
+                    }
 
-                $image.attr('src', image.src);
-                $caption.text(image.comment);
-            });
+                    $image.attr('src', image.src);
+                    $caption.text(image.comment);
+                });
+            }
 
             // おすすめ
             $("#articleRecommend").text($("#articleRecommendCheck").is(":checked") ? "する":"しない");
@@ -87,7 +89,11 @@ define(function(require, exports, module) {
          */
         onClickArticleRegistButton : function() {
             this.showLoading();
-            this.saveArticlePicture();
+            if (this.model.get("type") !== "2") {
+                this.saveArticlePicture();
+            } else {
+                this.saveModel();
+            }
         },
         /**
          * 添付された画像をdavへ登録する

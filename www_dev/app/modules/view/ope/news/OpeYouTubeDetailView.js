@@ -13,7 +13,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var OpeYouTubeDetailView = OpeYouTubeRegistConfirmView.extend({
-        template : require("ldsh!templates/{mode}/news/youtubeDetail"),
+        template : require("ldsh!templates/ope/news/youtubeDetail"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * @memberOf OpeYouTubeDetailView#
