@@ -106,19 +106,20 @@ define(function(require, exports, module) {
             this.showLoading();
             $("[data-sequence-register-button]").hide();
             $("#sequenceConfirm").hide();
-            if (this.model.get("type") === "2") {
-                app.router.opeYouTubeRegist({
-                    model : this.model,
-                    recommendArticle : this.parentView.recommendArticle,
-                    targetDate : this.parentView.targetDate
-                });
-            } else {
+            // TODO デプロイ時にYouTube編集が開けない問題の暫定対処
+//            if (this.model.get("type") === "2") {
+//                app.router.opeYouTubeRegist({
+//                    model : this.model,
+//                    recommendArticle : this.parentView.recommendArticle,
+//                    targetDate : this.parentView.targetDate
+//                });
+//            } else {
                 app.router.opeArticleRegist({
                     model : this.model,
                     recommendArticle : this.parentView.recommendArticle,
                     targetDate : this.parentView.targetDate
                 });
-            }
+//            }
             $("#contents__primary").scrollTop(0);
         },
         /**
@@ -143,13 +144,14 @@ define(function(require, exports, module) {
                     targetDate : this.parentView.targetDate
                 });
                 break;
-            case "2":
-                app.router.opeYouTubeDetail({
-                    model : this.model,
-                    recommendArticle : this.parentView.recommendArticle,
-                    targetDate : this.parentView.targetDate
-                });
-                break;
+                // TODO デプロイ時にYouTube編集が開けない問題の暫定対処
+//            case "2":
+//                app.router.opeYouTubeDetail({
+//                    model : this.model,
+//                    recommendArticle : this.parentView.recommendArticle,
+//                    targetDate : this.parentView.targetDate
+//                });
+//                break;
             case "3":
             case "4":
             case "5":

@@ -272,6 +272,11 @@ define(function(require, exports, module) {
                 this.model = new ArticleModel();
                 this.model.id = AbstractModel.createNewId();
             }
+            if (this.model.get("type") === "2") {
+                this.model.set("title", $("#articleTitle").val());
+                this.model.set("description", $("#articleDetail").val());
+                return;
+            }
             if(!this.model.get("imagePath")){
                 this.model.set("imagePath", this.generateFilePath());
             }
