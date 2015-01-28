@@ -154,7 +154,10 @@ define(function(require, exports, module) {
                         vexDialog.alert("その日は休刊日のため、記事はありません。");
                         this.hideLoading();
                     } else {
-                        app.router.go("top", moment(this.selectedDate).format("YYYY-MM-DD"));
+                        app.router.navigate("top/" + moment(this.selectedDate).format("YYYY-MM-DD"), {
+                            trigger: true,
+                            replace: true
+                        });
                     }
                 }.bind(this));
             }
