@@ -1,7 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
-<manifest android:hardwareAccelerated="true" android:versionCode="901" android:versionName="0.9.1" package="jp.fukushima.namie.town.letter" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest android:hardwareAccelerated="true" android:versionCode="10000" android:versionName="1.0.0" package="jp.fukushima.namie.town.letter" xmlns:android="http://schemas.android.com/apk/res/android">
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" android:xlargeScreens="true" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-sdk android:minSdkVersion="17" />
     <application android:hardwareAccelerated="true" android:icon="@drawable/icon" android:label="@string/app_name" android:largeHeap="true">
         <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="@string/activity_name" android:launchMode="singleTop" android:name="NamieTabletLetter" android:screenOrientation="landscape" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="adjustResize">
             <intent-filter android:label="@string/launcher_name">
@@ -23,10 +29,4 @@
         </service>
         <activity android:exported="true" android:label="@string/app_name" android:name="jp.fukushima.namie.town.PcsAccountManagerPlugin.LoginActivity" />
     </application>
-    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="19" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>
