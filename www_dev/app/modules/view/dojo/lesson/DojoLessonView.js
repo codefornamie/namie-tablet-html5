@@ -124,7 +124,16 @@ define(function(require, exports, module) {
                     // 現在の動画を習得した時点で現在のコースを制覇した場合は、コース制覇画面へ遷移する
                     // そうでない場合は、動画一覧へ戻る
                     if (!isLevelCompletedBefore && this.isLevelCompleted()) {
-                        app.router.go("dojo", "levels", app.currentDojoLevel, "finished");
+                        app.router.go(
+                            "dojo",
+                            "levels",
+                            app.currentDojoLevel,
+                            "finished",
+                            {
+                                trigger : true,
+                                replace : true
+                            }
+                        );
                     } else {
                         this.onClickBack(ev);
                     }
@@ -174,7 +183,7 @@ define(function(require, exports, module) {
         onClickBack : function(ev) {
             ev.preventDefault();
 
-            app.router.go("dojo", "levels", app.currentDojoLevel);
+            app.router.back();
         },
 
         /**
