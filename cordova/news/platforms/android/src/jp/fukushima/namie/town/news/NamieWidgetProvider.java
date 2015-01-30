@@ -56,11 +56,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         contentManager = new WidgetContentManager(context);
         lastUnreadCheckTime = 0;
 
-        // ウィジット更新用アラームの登録
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
-        long startDelay = System.currentTimeMillis() + TIMER_START_DELAY;
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, UPDATE_INTERVAL , pendingIntent);
+        setUpdateAlarm(context);
 
         super.onEnabled(context);
     }
@@ -69,13 +65,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onDisabled(Context context) {
         Log.d(TAG, "NamieWidgetProvider#onDisalbed()");
 
-        // ウィジット更新用アラームの解除
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
-        alarmManager.cancel(pendingIntent);
+        cancelUpdateAlarm(context);
 
         super.onDisabled(context);
-    };
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -96,7 +89,13 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         }
 
         String action = intent.getAction();
-        if (action.equals(WIDGET_UPDATE_ACTION)) {
+        if (action.equals(Intent.ACTION_DATE_CHANGED) ||
+            action.equals(Intent.ACTION_TIMEZONE_CHANGED) ||
+            action.equals(Intent.ACTION_TIME_CHANGED) ||
+            action.equals(Intent.ACTION_PACKAGE_REPLACED)) {
+            cancelUpdateAlarm(context);
+            setUpdateAlarm(context);
+        } else if (action.equals(WIDGET_UPDATE_ACTION)) {
             // 新聞の発行、未読状態を更新
             updateNewspaperStatus(context);
 
@@ -293,6 +292,21 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     private void setApplicationIcon(RemoteViews remoteViews, int buttonId, int resourceId) {
         remoteViews.setInt(buttonId, "setBackgroundResource", resourceId);
     }
+
+    private void setUpdateAlarm(Context context) {
+        // ウィジット更新用アラームの登録
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
+        long startDelay = System.currentTimeMillis() + TIMER_START_DELAY;
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, UPDATE_INTERVAL , pendingIntent);
+    }
+
+    private void cancelUpdateAlarm(Context context) {
+        // ウィジット更新用アラームの解除
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
+        alarmManager.cancel(pendingIntent);
+    };
 
     /**
      * アプリ起動用のPendingIntentを設定する.
