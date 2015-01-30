@@ -65,9 +65,23 @@ define(function(require, exports, module) {
 
             // 次のコースへ進む。上位レベルがない場合は、トップ画面に戻る
             if (app.currentDojoLevel < this.getMaxDojoLevel() - 1) {
-                app.router.go("dojo", "levels", parseInt(app.currentDojoLevel) + 1);
+                app.router.go(
+                    "dojo",
+                    "levels",
+                    parseInt(app.currentDojoLevel) + 1,
+                    {
+                        trigger : true,
+                        replace : true
+                    }
+                );
             } else {
-                app.router.go("dojo-top");
+                app.router.go(
+                    "dojo-top",
+                    {
+                        trigger : true,
+                        replace : true
+                    }
+                );
             }
         },
 
