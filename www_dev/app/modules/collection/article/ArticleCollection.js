@@ -71,11 +71,13 @@ define(function(require, exports, module) {
                 var sequenced = [];
                 var unsequenced = [];
                 var fromDateString = app.currentDate;
+
                 if (this.searchConditionFromDate) {
                     // 記事の検索が範囲指定のばあい、その範囲の開始日とする。
                     // この日付以前の記事は、sequenceを無視する。
                     fromDateString = moment(this.searchConditionFromDate).format("YYYY-MM-DD");
                 }
+
                 for (var i = 0; i < response.length; i++) {
                     if (isNaN(parseInt(response[i].sequence)) || response[i].publishedAt < fromDateString) {
                         unsequenced.push(response[i]);
@@ -83,29 +85,37 @@ define(function(require, exports, module) {
                         sequenced.push(response[i]);
                     }
                 }
-                // 最初に順序付けありのデータをその順序でresponseに設定
-                response = _.sortBy(sequenced, function(res) {
-                    return parseInt(res.sequence);
+
+                // 最初に順序付けありのデータをその順序でソート
+                sequenced = _.sortBy(sequenced, function(res) {
+                    return parseInt(res.sequence, 10);
                 });
-                // 順序付けなしは優先度 > 更新日時降順でソート
+
+                // 次に順序付けなしのデータを優先度 > 更新日時降順でソート
                 unsequenced = _.sortBy(unsequenced, function(res) {
                     return [
-                            res.priority, Number.MAX_SAFE_INTEGER - (new Date(res.updatedAt)).getTime()
+                        res.priority,
+                        - new Date(res.updatedAt)
                     ];
                 });
+
                 // 順序付けなしのデータを適切な位置に差し込んでいく
                 _.each(unsequenced, function(ures) {
-                    // response内でuresの優先度と同じエントリのうち、一番最後に出現するものを探す。
-                    var lastIndex = response.length - 1;
+                    // sequenced内でuresの優先度と同じエントリのうち、一番最後に出現するものを探す。
+                    var lastIndex = sequenced.length - 1;
+
                     for (var j = lastIndex; j >= 0; j--) {
-                        if (ures.priority === response[j].priority) {
+                        if (ures.priority === sequenced[j].priority) {
                             lastIndex = j;
                             break;
                         }
                     }
+
                     // 見つけた要素の後ろ(見つからない場合は最後)に追加する
-                    response.splice(lastIndex + 1, 0, ures);
+                    sequenced.splice(lastIndex + 1, 0, ures);
                 });
+
+                response = sequenced;
             }
 
             return response;
