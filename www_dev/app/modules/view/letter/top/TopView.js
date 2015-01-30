@@ -158,6 +158,11 @@ define(function(require, exports, module) {
          */
         onClickAnchor : function(evt) {
             evt.preventDefault();
+            if ($(evt.currentTarget).is('#letter-wizard .steps [role="tablist"] [role="tab"] a') ||
+                    $(evt.currentTarget).is('#letter-wizard .actions [role="menu"] a')) {
+                // ウィザードのページ切り替え時であれば、何もしない
+                return;
+            }
             if(evt.currentTarget.id !== "post_new_letter") {
                 // 新規投稿ボタン以外は、そのまま画面遷移する。
                 this.followAnchor(evt);
