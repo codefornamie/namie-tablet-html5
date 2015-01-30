@@ -350,6 +350,10 @@ define(function(require, exports, module) {
             // GridListView初期化
             this.showGridListView();
 
+            // 初期スクロール位置が指定されている場合、スクロールする
+            this.initScrollTop();
+
+            // ローディング画面を閉じる
             this.hideLoading();
         },
         /**

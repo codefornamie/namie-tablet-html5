@@ -248,7 +248,14 @@ define(function(require, exports, module) {
          */
         top : function(date) {
             app.logger.debug("It's a top page.");
+
             var targetDate = app.previewTargetDate ? app.previewTargetDate : date;
+
+            // 日付が変わったら保存されているスクロール位置を削除する
+            if (date !== app.currentDate) {
+                app.scrollTop = 0;
+            }
+
             if (targetDate) {
                 // 現在の日付を記録する
                 app.currentDate = targetDate;
@@ -281,14 +288,13 @@ define(function(require, exports, module) {
          * @param {String} articleId
          */
         showArticle : function(date, articleId) {
-            // TODO check date
             if (date != app.currentDate) {
                 setTimeout(function () {
                     this.go("top", date);
                 }.bind(this), 0);
                 return;
             }
-            
+
             // TODO appに刺さずに別の場所で管理する
             app.scrollTop = (app.newsView) ? app.newsView.getScrollTop() : 0;
 
