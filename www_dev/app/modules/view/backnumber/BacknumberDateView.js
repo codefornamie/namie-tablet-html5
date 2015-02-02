@@ -36,7 +36,7 @@ define(function(require, exports, module) {
          * @memberOf BacknumberDateView#
          */
         afterRendered : function() {
-            app.ga.trackPageView("BackNoList","新聞アプリ/バックナンバー記事一覧ページ");
+            app.ga.trackPageView("BackNoList","バックナンバー記事一覧ページ");
 
             this.updateDateLabel();
         },

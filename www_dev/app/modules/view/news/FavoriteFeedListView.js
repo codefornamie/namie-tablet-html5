@@ -29,7 +29,7 @@ define(function(require, exports, module) {
             this.showLoading();
 
             var articleId = $(ev.currentTarget).attr("data-article-id");
-            app.ga.trackEvent("新聞アプリ/切り抜き一覧", "記事の閲覧", articleId);
+            app.ga.trackEvent("切り抜き一覧", "記事の閲覧", articleId);
 
             // クリックされたフィードに対応するarticle情報取得
             var targetView = _.find(this.views["#feedList"],function(view) {

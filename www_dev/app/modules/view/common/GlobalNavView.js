@@ -164,7 +164,7 @@ define(function(require, exports, module) {
          *  @param {Event} ev
          */
         onClickDrawerOpener: function (ev) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー","");
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニュー","");
             ev.preventDefault();
             this.snapper.open('left');
         },
@@ -187,7 +187,7 @@ define(function(require, exports, module) {
 
             var $target = $(ev.currentTarget);
             var size = parseInt($target.attr('data-font-size'), 10);
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "文字サイズ選択", parseInt(size));
+            app.ga.trackEvent("全ページ共通", "文字サイズ選択", parseInt(size));
             $('html, body').css('font-size', size + 'px');
 
             $(document).trigger('didChangeFontSize');
@@ -243,7 +243,7 @@ define(function(require, exports, module) {
          * @memberOf GlobalNavView#
          */
         onClickHelp : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニューボタンの項目押下「ヘルプ」","");
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニューボタンの項目押下「ヘルプ」","");
 
             var tutorialView = new TutorialView();
 
@@ -267,14 +267,14 @@ define(function(require, exports, module) {
          * @memberOf GlobalNavView#
          */
         onClickBackno : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「バックナンバー」","");
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニュー内の項目「バックナンバー」","");
         },
         /**
          * 設定がクリックされたら呼ばれる
          * @memberOf GlobalNavView#
          */
         onClickSetting : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「設定」","");
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニュー内の項目「設定」","");
         },
 
         /**
@@ -282,7 +282,7 @@ define(function(require, exports, module) {
          * @memberOf GlobalNavView#
          */
         onClickCalendar : function (evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニューボタンの項目押下「過去の新聞を読む」","");
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニューボタンの項目押下「過去の新聞を読む」","");
 
             var modalCalendarView = new ModalCalendarView();
 

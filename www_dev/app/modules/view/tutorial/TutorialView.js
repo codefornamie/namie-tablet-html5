@@ -13,7 +13,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-            app.ga.trackPageView("News/Help","新聞アプリ/ヘルプページ");
+            app.ga.trackPageView("Help","ヘルプページ");
 
             this.$step = this.$el.find(TutorialView.SELECTOR_GLOBAL_HELP).steps({
                 headerTag : "h3",
@@ -60,7 +60,7 @@ define(function(require, exports, module) {
          * @param {number} currentIndex
          */
         onInit: function (ev, currentIndex) {
-            app.ga.trackEvent("新聞アプリ/ヘルプページ", "ヘルプ記事参照", currentIndex + 1);
+            app.ga.trackEvent("ヘルプページ", "ヘルプ記事参照", currentIndex + 1);
         },
 
         /**
@@ -71,7 +71,7 @@ define(function(require, exports, module) {
          * @param {number} priorIndex
          */
         onStepChanged: function (ev, currentIndex, priorIndex) {
-            app.ga.trackEvent("新聞アプリ/ヘルプページ", "ヘルプ記事参照", currentIndex + 1);
+            app.ga.trackEvent("ヘルプページ", "ヘルプ記事参照", currentIndex + 1);
         },
 
         /**
@@ -85,7 +85,7 @@ define(function(require, exports, module) {
                 return;
             }
 
-            app.ga.trackEvent("新聞アプリ/ヘルプページ", "閉じる（右上）", "");
+            app.ga.trackEvent("ヘルプページ", "閉じる（右上）", "");
 
             this.trigger("closeGlobalHelp");
         },
@@ -97,9 +97,9 @@ define(function(require, exports, module) {
          */
         onFinishing: function (ev) {
             if (ev.currentTarget.id === "global-help-pages") {
-                app.ga.trackEvent("新聞アプリ/ヘルプページ", "ヘルプ記事内の項目「閉じる」", "");
+                app.ga.trackEvent("ヘルプページ", "ヘルプ記事内の項目「閉じる」", "");
             } else {
-                app.ga.trackEvent("新聞アプリ/ヘルプページ", "閉じる（右上）", "");
+                app.ga.trackEvent("ヘルプページ", "閉じる（右上）", "");
             }
 
             this.trigger("closeGlobalHelp");
