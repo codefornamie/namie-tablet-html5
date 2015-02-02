@@ -243,7 +243,7 @@ define(function(require, exports, module) {
          * @memberOf GlobalNavView#
          */
         onClickHelp : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「ヘルプ」","");
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニューボタンの項目押下「ヘルプ」","");
 
             var tutorialView = new TutorialView();
 
@@ -262,9 +262,17 @@ define(function(require, exports, module) {
             });
         },
 
+        /**
+         * バックナンバーがクリックされたら呼ばれる
+         * @memberOf GlobalNavView#
+         */
         onClickBackno : function(evt) {
             app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「バックナンバー」","");
         },
+        /**
+         * 設定がクリックされたら呼ばれる
+         * @memberOf GlobalNavView#
+         */
         onClickSetting : function(evt) {
             app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「設定」","");
         },
@@ -274,6 +282,8 @@ define(function(require, exports, module) {
          * @memberOf GlobalNavView#
          */
         onClickCalendar : function (evt) {
+            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニューボタンの項目押下「過去の新聞を読む」","");
+
             var modalCalendarView = new ModalCalendarView();
 
             this.setView(GlobalNavView.SELECTOR_MODAL_CALENDAR, modalCalendarView);

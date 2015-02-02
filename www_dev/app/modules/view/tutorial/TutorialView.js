@@ -25,6 +25,7 @@ define(function(require, exports, module) {
                     finish : "閉じる"
                 },
                 //onStepChanging : this.onStepChanging.bind(this),
+                onStepChanged : this.onStepChanged.bind(this),
                 onFinishing : this.onFinishing.bind(this),
                 //onFinished : this.onFinished.bind(this),
             });
@@ -52,6 +53,17 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ページが移動した時に呼ばれる
+         * @memberOf TutorialView#
+         * @param {Event} ev
+         * @param {number} currentIndex
+         * @param {number} priorIndex
+         */
+        onStepChanged: function (ev, currentIndex, priorIndex) {
+            app.ga.trackEvent("新聞アプリ/ヘルプページ", "ヘルプ記事参照", this.$step.steps("getCurrentIndex") + 1);
+        },
+
+        /**
          * オーバレイをクリックした時に呼ばれる
          * @memberOf TutorialView#
          * @param {Event} ev
@@ -62,6 +74,8 @@ define(function(require, exports, module) {
                 return;
             }
 
+            app.ga.trackEvent("新聞アプリ/ヘルプページ", "閉じる（右上）", "");
+
             this.trigger("closeGlobalHelp");
         },
 
@@ -71,6 +85,12 @@ define(function(require, exports, module) {
          * @param {Event} ev
          */
         onFinishing: function (ev) {
+            if (ev.currentTarget.id === "global-help-pages") {
+                app.ga.trackEvent("新聞アプリ/ヘルプページ", "ヘルプ記事内の項目「閉じる」", "");
+            } else {
+                app.ga.trackEvent("新聞アプリ/ヘルプページ", "閉じる（右上）", "");
+            }
+
             this.trigger("closeGlobalHelp");
         }
     }, {

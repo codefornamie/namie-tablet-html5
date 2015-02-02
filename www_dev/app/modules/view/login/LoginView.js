@@ -72,7 +72,7 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             Log.info("LoginView initialize");
-            app.ga.trackPageView("Login", "ログイン");
+            app.ga.trackPageView("News/Login", "新聞アプリ/ログインページ");
             this.model = new LoginModel();
         },
 
@@ -83,7 +83,7 @@ define(function(require, exports, module) {
          */
         onClickLoginButton : function() {
             Log.info("onClickButton(Login button click handler) called ");
-            app.ga.trackEvent("ニュース", "ログイン");
+            app.ga.trackEvent("新聞アプリ/ログインページ", "ログイン");
 
             var loginId = $("#loginId").val();
             var password = $("#password").val();

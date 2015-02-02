@@ -107,7 +107,7 @@ define(function(require, exports, module) {
                 return model.get("__id") === articleId;
             });
             if (targetArticle) {
-                app.ga.trackEvent("ニュース", "記事参照", targetArticle.get("title"));
+                app.ga.trackEvent("新聞アプリ/TOPページ", "記事参照", targetArticle.get("publishedAt") + "/" + targetArticle.get("title"));
             }
 
             $(document).trigger('scrollToArticle', {
