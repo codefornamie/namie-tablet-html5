@@ -549,10 +549,24 @@ define(function(require, exports, module) {
          * ---------- ユーティリティ ----------
          */
         /**
-         * 引数をURLに展開してnavigateする
+         * 引数をURLに展開してnavigateする。
+         * 最後の引数がオブジェクトであれば
+         * Router#navigateのオプションとして渡す
          */
         go : function() {
-            return this.navigate(_.toArray(arguments).join("/"), true);
+            var last = _.last(arguments);
+            var opt;
+            var fragment;
+
+            if (_.isObject(last)) {
+                opt = last;
+                fragment = _.initial(arguments).join("/");
+            } else {
+                opt = true;
+                fragment = _.toArray(arguments).join("/");
+            }
+
+            return this.navigate(fragment, opt);
         },
 
         /**
