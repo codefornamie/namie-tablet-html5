@@ -633,7 +633,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         initScrollTop : function() {
-            if (Number.isInteger(this.initialScrollTop)) {
+            if (this.initialScrollTop || this.initialScrollTop === 0) {
                 this.setScrollTop(this.initialScrollTop);
             }
         },
