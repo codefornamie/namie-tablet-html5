@@ -100,15 +100,6 @@ define(function(require, exports, module) {
         },
 
         /**
-         * 記事リストアイテムをクリックされたときのコールバック関数
-         * 
-         * @param {Event} ev
-         * @memberOf GridListView#
-         */
-        onClickFeedListItem : function(ev) {
-        },
-
-        /**
          * 子ビューで画像読み込みに失敗したときに呼ばれる
          * 
          * @memberOf GridListView#

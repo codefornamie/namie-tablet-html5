@@ -37,6 +37,8 @@ define(function(require, exports, module) {
          * @memberOf ModalCalendarView#
          */
         afterRendered : function() {
+            app.ga.trackPageView("News/Calendar","新聞アプリ/過去の新聞を読む 日付選択ページ");
+
             var self = this;
             var latestPublishDate = moment(BusinessUtil.getCurrentPublishDate()).startOf('day');
 
@@ -80,6 +82,8 @@ define(function(require, exports, module) {
         events : {
             "click #modal-calendar-overlay" : "onClickOverlay",
             "click [data-close]" : "onClickCloser",
+            "click .rd-back" : "onClickMonth",
+            "click .rd-next" : "onClickMonth",
             "click .rd-day-body" : "onClickDate"
         },
 
@@ -102,6 +106,8 @@ define(function(require, exports, module) {
                 return;
             }
 
+            app.ga.trackEvent("新聞アプリ/過去の新聞を読む 日付選択ページ", "閉じる", "");
+
             this.trigger("closeModalCalendar");
         },
 
@@ -111,7 +117,18 @@ define(function(require, exports, module) {
          * @param {Event} ev
          */
         onClickCloser : function (ev) {
+            app.ga.trackEvent("新聞アプリ/過去の新聞を読む 日付選択ページ", "閉じる", "");
+
             this.trigger("closeModalCalendar");
+        },
+
+        /**
+         * 月が変更された後に呼ばれる
+         * @memberOf ModalCalendarView#
+         * @param {Event} ev
+         */
+        onClickMonth: function (ev) {
+            app.ga.trackEvent("新聞アプリ/過去の新聞を読む 日付選択ページ", "表示月切り替え", this.calendar.getMoment().format("YYYY-MM"));
         },
 
         /**
@@ -154,6 +171,8 @@ define(function(require, exports, module) {
                         vexDialog.alert("その日は休刊日のため、記事はありません。");
                         this.hideLoading();
                     } else {
+                        app.ga.trackEvent("新聞アプリ/過去の新聞を読む 日付選択ページ", "日付項目", moment(this.selectedDate).format("YYYY-MM-DD"));
+
                         app.router.navigate("top/" + moment(this.selectedDate).format("YYYY-MM-DD"), {
                             trigger: true,
                             replace: true
