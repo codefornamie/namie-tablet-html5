@@ -83,7 +83,6 @@ define(function(require, exports, module) {
          */
         onClickLoginButton : function() {
             Log.info("onClickButton(Login button click handler) called ");
-            app.ga.trackEvent("ログインページ", "ログイン");
 
             var loginId = $("#loginId").val();
             var password = $("#password").val();
@@ -107,6 +106,7 @@ define(function(require, exports, module) {
          */
         onLogin : function(msg) {
             Log.info("onLogin callback called");
+            app.ga.trackEvent("ログインページ", "ログイン完了");
             if (!msg) {
                 app.logger.info("Success Login process.");
                 this.goNextView();

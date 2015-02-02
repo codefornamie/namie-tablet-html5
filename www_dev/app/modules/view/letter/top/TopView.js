@@ -159,10 +159,12 @@ define(function(require, exports, module) {
         onClickAnchor : function(evt) {
             evt.preventDefault();
             if(evt.currentTarget.id !== "post_new_letter") {
+                app.ga.trackEvent("TOPページ", "「編集する」ボタン押下");
                 // 新規投稿ボタン以外は、そのまま画面遷移する。
                 this.followAnchor(evt);
                 return;
             }
+            app.ga.trackEvent("TOPページ", "「新しく投稿する」ボタン押下");
             // 新規投稿ボタンの場合、遷移する前に自身の本日中の投稿数制限にかかっていないかをチェックする必要がある。
             // PIOへ本日分の記事を検索する
             var articleCollection = new ArticleCollection();
