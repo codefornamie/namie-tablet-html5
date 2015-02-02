@@ -221,6 +221,7 @@ define(function(require, exports, module) {
          * @memberOf TopView#
          */
         afterRendered : function() {
+            app.ga.trackPageView("Top", "コース選択ページ表示");
         },
 
         /**

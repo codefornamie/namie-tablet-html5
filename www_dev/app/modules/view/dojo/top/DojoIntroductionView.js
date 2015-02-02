@@ -29,6 +29,7 @@ define(function(require, exports, module) {
          *  @memberOf DojoIntroductionView#
          */
         afterRendered : function() {
+            app.ga.trackPageView("Introduction", "「なみえタブレット道場へようこそ」ページ表示");
             if(!this.isFirst) {
                 $("#dojo-introduction-dialog__body").find("[data-dojo-introduction-closer]").text("コース一覧へ");
             }

@@ -51,6 +51,7 @@ define(function(require, exports, module) {
                 }
             };
             document.addEventListener("pause", this.onPause, false);
+            app.ga.trackPageView("Movie/movie=" + this.dojoContentModel.get("videoId"), "動画再生ページ表示/動画ID=" + this.dojoContentModel.get("videoId"));
         },
         /**
          * イベント一覧

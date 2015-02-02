@@ -80,6 +80,7 @@ define(function(require, exports, module) {
                 });
 
                 this.setView("#dojo-list-container", dojoListView).render();
+                app.ga.trackPageView("Cource/cource=" + this.level.get("level"), "コース内の動画選択ページ表示/コース番号=" + this.level.get("level"));
             }
         }
     });
