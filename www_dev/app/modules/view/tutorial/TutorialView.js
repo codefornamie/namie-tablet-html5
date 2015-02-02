@@ -24,6 +24,7 @@ define(function(require, exports, module) {
                     previous : "前に戻る",
                     finish : "閉じる"
                 },
+                onInit : this.onInit.bind(this),
                 //onStepChanging : this.onStepChanging.bind(this),
                 onStepChanged : this.onStepChanged.bind(this),
                 onFinishing : this.onFinishing.bind(this),
@@ -53,6 +54,16 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ウィザードの初期化が完了した時に呼ばれる
+         * @memberOf TutorialView#
+         * @param {Event} ev
+         * @param {number} currentIndex
+         */
+        onInit: function (ev, currentIndex) {
+            app.ga.trackEvent("新聞アプリ/ヘルプページ", "ヘルプ記事参照", currentIndex + 1);
+        },
+
+        /**
          * ページが移動した時に呼ばれる
          * @memberOf TutorialView#
          * @param {Event} ev
@@ -60,7 +71,7 @@ define(function(require, exports, module) {
          * @param {number} priorIndex
          */
         onStepChanged: function (ev, currentIndex, priorIndex) {
-            app.ga.trackEvent("新聞アプリ/ヘルプページ", "ヘルプ記事参照", this.$step.steps("getCurrentIndex") + 1);
+            app.ga.trackEvent("新聞アプリ/ヘルプページ", "ヘルプ記事参照", currentIndex + 1);
         },
 
         /**
