@@ -44,6 +44,9 @@ define(function(require, exports, module) {
 
             this.initCollection();
             this.initEvents();
+
+            // ローディングを停止
+            this.hideLoading();
         },
 
         /**

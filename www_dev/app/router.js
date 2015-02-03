@@ -54,6 +54,7 @@ define(function(require, exports, module) {
      *  @return {Object}
      */
     var getLoginViews = function() {
+        // TODO add description here
         var params = StringUtil.parseQueryString(location.href.split("?")[1]);
         var mode = app.config.basic.mode = params.mode || app.config.basic.mode;
 
@@ -622,10 +623,8 @@ define(function(require, exports, module) {
          */
         radTop : function () {
             var radTopView = new RadTopView();
-            var radGlobalNavView = new RadGlobalNavView();
 
             this.layout.showView(radTopView);
-            this.layout.setGlobalNav(radGlobalNavView);
         },
 
         /**
