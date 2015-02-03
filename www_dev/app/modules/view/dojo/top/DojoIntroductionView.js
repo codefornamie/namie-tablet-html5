@@ -98,7 +98,9 @@ define(function(require, exports, module) {
                                 // 動画停止したら動画再生ボタンを表示
                                 $("[data-play-movie]").show();
                                 $("[data-pause-movie]").hide();
-                                app.ga.trackEvent("「なみえタブレット道場へようこそ」ページ", "動画一時停止ボタン押下");
+                                if (this.player.getCurrentTime() !== this.player.getDuration()) {
+                                    app.ga.trackEvent("「なみえタブレット道場へようこそ」ページ", "動画一時停止ボタン押下");
+                                }
                             }
                         }, this)
                     }
@@ -153,7 +155,12 @@ define(function(require, exports, module) {
                 self.remove();
                 app.router.back();
             }, 300);
-            app.ga.trackEvent("「なみえタブレット道場へようこそ」ページ", "「閉じる」ボタン押下");
+            if ($(ev.target).hasClass("dojo-lesson__back")) {
+                app.ga.trackEvent("「なみえタブレット道場へようこそ」ページ", "「閉じる」ボタン押下");
+            } else {
+                app.ga.trackEvent("「なみえタブレット道場へようこそ」ページ", $(event.target).text());
+            }
+            
         },
         /**
          * Viewが破棄された際に呼び出されるコールバック関数。
