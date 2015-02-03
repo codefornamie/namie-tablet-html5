@@ -351,6 +351,10 @@ define(function(require, exports, module) {
             // GridListView初期化
             this.showGridListView();
 
+            // 初期スクロール位置が指定されている場合、スクロールする
+            this.initScrollTop();
+
+            // ローディング画面を閉じる
             this.hideLoading();
         },
         /**
@@ -634,7 +638,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         initScrollTop : function() {
-            if (this.initialScrollTop) {
+            if (this.initialScrollTop || this.initialScrollTop === 0) {
                 this.setScrollTop(this.initialScrollTop);
             }
         },

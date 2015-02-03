@@ -30,10 +30,18 @@ define(function(require, exports, module) {
          */
         isChangeImage : false,
 
+        /**
+         * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         * @memberOf ArticleRegistFileItemView#
+         */
         beforeRendered : function() {
 
         },
 
+        /**
+         * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * @memberOf ArticleRegistFileItemView#
+         */
         afterRendered : function() {
             var self = this;
             // エレメントに自分自身を保持する。
@@ -79,8 +87,13 @@ define(function(require, exports, module) {
 
         },
 
+        /**
+         * 初期化する
+         * @memberOf ArticleRegistFileItemView#
+         */
         initialize : function() {
         },
+
         events : {
             "change #articleFile" : "onChangeFileData",
             "click #fileInputButton" : "onClickFileInputButton",
@@ -88,6 +101,7 @@ define(function(require, exports, module) {
         },
         /**
          * 画像選択ボタン押下時のハンドラ
+         * @memberOf ArticleRegistFileItemView#
          */
         onClickFileInputButton : function() {
             $(this.el).find("#articleFile")[0].click();
@@ -104,6 +118,7 @@ define(function(require, exports, module) {
         },
         /**
          * ファイル選択時のハンドラ
+         * @memberOf ArticleRegistFileItemView#
          */
         onChangeFileData : function(event) {
             this.fireAnalyticsLogOnChangeFileData(event);
@@ -131,12 +146,13 @@ define(function(require, exports, module) {
               var reader = new FileReader();
               reader.onload = (function(img) {
                   return function(e) {
-                      img.attr("src", e.target.result);
+                      var imageDataURL = e.target.result;
+                      img.attr("src", imageDataURL);
                       var reader = new FileReader();
                       reader.onload = function(e) {
                           inputFile.data = e.target.result;
                           self.imageByteArray = inputFile.data;
-                          self.onLoadFileExtend(e, file, img);
+                          self.onLoadFileExtend(e, file, imageDataURL, img);
                       };
                       reader.readAsArrayBuffer(file);
                   };
@@ -154,6 +170,7 @@ define(function(require, exports, module) {
         },
         /**
          * 削除ボタン押下時のハンドラ
+         * @memberOf ArticleRegistFileItemView#
          */
         onClickFileDeleteButton : function(e) {
             $(this.el).find("#articleFile").val("");
