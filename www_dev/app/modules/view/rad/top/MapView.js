@@ -2,42 +2,54 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var leaflet = require("leaflet");
     var AbstractView = require("modules/view/AbstractView");
-    var RadMapView = require("modules/view/rad/top/MapView");
 
     /**
-     * 放射線アプリのトップ画面を表示するためのViewクラスを作成する。
+     * 放射線アプリの地図を表示するためのView
      *
-     * @class 放射線アプリのトップ画面を表示するためのView
-     * @exports RadTopView
+     * @class 放射線アプリの地図を表示するためのView
+     * @exports RadMapView
      * @constructor
      */
-    var RadTopView = AbstractView.extend({
+    var RadMapView = AbstractView.extend({
         /**
          * このViewのテンプレートファイルパス
          */
-        template : require("ldsh!templates/{mode}/top/top"),
+        template : require("ldsh!templates/rad/top/map"),
 
         /**
          * Viewの描画処理の開始前に呼び出されるコールバック関数。
          * <p>
          * 記事一覧の表示処理を開始する。
          * </p>
-         * @memberOf RadTopView#
+         * @memberOf RadMapView#
          */
         beforeRendered : function() {
         },
 
         /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
-         * @memberOf RadTopView#
+         * @memberOf RadMapView#
          */
         afterRendered : function() {
+            // create a map in the "map" div, set the view to a given place and zoom
+            var map = leaflet.map('map').setView([51.505, -0.09], 13);
+
+            // add an OpenStreetMap tile layer
+            leaflet.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // add a marker in the given location, attach some popup content to it and open the popup
+            leaflet.marker([51.5, -0.09]).addTo(map)
+                .bindPopup('A pretty CSS3 popup. <br> Easily customizable.')
+                .openPopup();
         },
 
         /**
          * 初期化
-         * @memberOf RadTopView#
+         * @memberOf RadMapView#
          */
         initialize : function() {
             // ローディングを開始
@@ -46,26 +58,24 @@ define(function(require, exports, module) {
             this.initCollection();
             this.initEvents();
 
-            this.setView("#map-container", new RadMapView());
-
             // ローディングを停止
             this.hideLoading();
         },
 
         /**
          * collectionを初期化する
-         * @memberOf RadTopView#
+         * @memberOf RadMapView#
          */
         initCollection : function () {
         },
 
         /**
          * イベントを初期化する
-         * @memberOf RadTopView#
+         * @memberOf RadMapView#
          */
         initEvents : function() {
         }
     });
 
-    module.exports = RadTopView;
+    module.exports = RadMapView;
 });
