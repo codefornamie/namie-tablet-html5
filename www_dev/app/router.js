@@ -47,16 +47,17 @@ define(function(require, exports, module) {
     // 放射線
     login.rad = require("modules/view/rad/login/index");
     var radCommon = require("modules/view/rad/common/index");
-    var RadTopView = require("modules/view/rad/top/index");
+    var RadTopView = require("modules/view/rad/top/TopView");
 
     /**
-     * ログイン画面のviewを取得する
-     * @return {Object}
+     *  アプリごとの共通viewを取得する
+     *  @return {Object}
      */
-    var getViews = function() {
+    var getLoginViews = function() {
         var params = StringUtil.parseQueryString(location.href.split("?")[1]);
-        app.config.basic.mode = params.mode || app.config.basic.mode;
-        if (_.isEmpty(app.config.basic.mode) || app.config.basic.mode === "news") {
+        var mode = app.config.basic.mode = params.mode || app.config.basic.mode;
+
+        if (_.isEmpty(mode) || mode === Code.APP_MODE_NEWS) {
             return {
                 "#header" : new login.HeaderView(),
                 "#global-nav" : new login.GlobalNavView(),
@@ -64,79 +65,135 @@ define(function(require, exports, module) {
                 "#contents" : new login.LoginView(),
                 "#footer" : new login.FooterView()
             };
-        } else if (app.config.basic.mode === Code.APP_MODE_DOJO) {
+        } else if (mode === Code.APP_MODE_DOJO) {
             return {
                 "#header" : new login.HeaderView(),
                 "#contents" : new login.dojo.LoginView(),
             };
-        } else if (app.config.basic.mode === Code.APP_MODE_POSTING) {
+        } else if (mode === Code.APP_MODE_POSTING) {
             return {
                 "#header" : new login.HeaderView(),
                 "#contents" : new login.posting.LoginView(),
             };
-        } else if (app.config.basic.mode === Code.APP_MODE_LETTER) {
+        } else if (mode === Code.APP_MODE_LETTER) {
             return {
                 "#header" : new login.HeaderView(),
                 "#contents" : new login.letter.LoginView(),
             };
-        } else if (app.config.basic.mode === Code.APP_MODE_OPE) {
+        } else if (mode === Code.APP_MODE_OPE) {
             return {
                 "#contents" : new login.ope.LoginView(),
                 "#footer" : new login.FooterView()
             };
-        } else if (app.config.basic.mode === Code.APP_MODE_RAD) {
+        } else if (mode === Code.APP_MODE_RAD) {
             return {
-                "#contents" : new login.rad.LoginView(),
-                "#footer" : new login.FooterView()
+                "#contents" : new login.rad.LoginView()
             };
         }
     };
 
-    // Defining the application router.
-    var Layout = Backbone.Layout.extend({
+    /**
+     *  画面全体のLayout
+     *
+     *  @class
+     *  @constructor
+     */
+    var AppLayout = Backbone.Layout.extend({
+        /**
+         *  画面全体の要素
+         *  @memberOf AppLayout#
+         */
         el : "main",
 
-        template : require("ldsh!templates/{mode}/main"),
+        /**
+         *  画面全体のテンプレート
+         *  @memberOf AppLayout#
+         */
+        template : null,
 
+        /**
+         *  アプリごとにtemplateの値を差し替えるためのディクショナリ
+         *  @memberOf AppLayout#
+         */
         templateMap : {
             news : require("ldsh!templates/news/main"),
             ope : require("ldsh!templates/ope/main"),
             posting : require("ldsh!templates/posting/main"),
             letter : require("ldsh!templates/letter/main"),
             dojo : require("ldsh!templates/dojo/main"),
+            rad : require("ldsh!templates/rad/main")
         },
 
         /**
-         * 描画目に実行する処理。
-         * @memberOf router#
+         *  描画前に実行する処理。
+         *  @memberOf AppLayout#
          */
         beforeRender : function() {
             this.template = this.templateMap[app.config.basic.mode];
         },
-        views : getViews(),
 
+        /**
+         *  ログイン画面のview
+         *  @memberOf AppLayout#
+         */
+        views : getLoginViews(),
+
+        /**
+         *  ヘッダのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} headerView
+         */
         setHeader : function(headerView) {
             this.setView("#header", headerView).render();
         },
+
+        /**
+         *  グローバルナビのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} globalNavView
+         */
         setGlobalNav : function(globalNavView) {
             this.setView("#global-nav", globalNavView).render();
         },
+
+        /**
+         *  フッタのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} footerView
+         */
         setFooter : function(footerView) {
             this.setView("#footer", footerView).render();
         },
+
+        /**
+         *  メニューのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} menuView
+         */
         setMenu : function(menuView) {
             this.setView("#menu", menuView).render();
         },
+
+        /**
+         *  設定画面のviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} settingsView
+         */
         setSettings : function(settingsView) {
             this.setView("#settings", settingsView).render();
         },
+
+        /**
+         *  メインのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} view
+         */
         showView : function(view) {
             this.setView("#contents", view).render();
         },
 
         /**
          * セレクタで指定したviewをremoveする
-         * 
          * @param {String} viewName
          */
         removeViewByName : function(viewName) {
@@ -149,17 +206,23 @@ define(function(require, exports, module) {
     });
 
     /**
-     * ルーター
-     * @class
-     * @exports Router
-     * @constructor
+     *  ルーター
+     *  @class
+     *  @exports Router
+     *  @constructor
      */
     var Router = Backbone.Router.extend({
+        /**
+         *  初期化
+         *  @memberOf Router#
+         */
         initialize : function() {
             // Render to the page.
             console.log("Router initialized");
-            this.layout = new Layout();
+
+            this.layout = new AppLayout();
             this.loginView = this.layout.views["#contents"];
+
             if (!app.noRendering) {
                 this.layout.render();
             }
@@ -173,6 +236,10 @@ define(function(require, exports, module) {
             });
         },
 
+        /**
+         *  ルーティングテーブル
+         *  @memberOf Router#
+         */
         routes : {
             "" : "index",
             "redirect?*queryString" : "redirect",
@@ -215,9 +282,16 @@ define(function(require, exports, module) {
             "rad" : "radTop"
         },
 
+        /**
+         *  初期画面
+         *  @memberOf Router#
+         *  @param {String} queryString
+         */
         index : function(queryString) {
             app.logger.debug("Welcome to your / route.");
-            if(queryString){
+
+            // TODO add description here
+            if (queryString) {
                 var params = StringUtil.parseQueryString(queryString);
                 app.config.basic.mode = params.mode;
                 app.preview = params.preview;
