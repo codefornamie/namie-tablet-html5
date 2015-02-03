@@ -340,6 +340,10 @@
     padding: 40px 20px 0 0;
 }
 
+.page-letter .confirm-letter {
+    word-break: break-all;
+}
+
 /**
  *  機能選択ページ
  */
@@ -725,6 +729,10 @@
 
 .letter-form #confirmNickname {
     margin-bottom: 30px;
+}
+
+.letter-form .confirm-letter {
+    word-break: break-all;
 }
 
 .gallery-list {

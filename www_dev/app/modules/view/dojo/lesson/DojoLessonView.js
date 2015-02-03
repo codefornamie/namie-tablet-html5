@@ -51,6 +51,7 @@ define(function(require, exports, module) {
                 }
             };
             document.addEventListener("pause", this.onPause, false);
+            app.ga.trackPageView("Movie/movie=" + this.dojoContentModel.get("videoId"), "動画再生ページ表示/動画ID=" + this.dojoContentModel.get("videoId"));
         },
         /**
          * イベント一覧
@@ -95,6 +96,7 @@ define(function(require, exports, module) {
          * @param {Event} ev
          */
         onClickCompleteLesson : function(ev) {
+            app.ga.trackEvent("動画再生ページ", "「習得した」ボタン押下", this.dojoContentModel.get("videoId"));
             var isLevelCompletedBefore;
 
             if (this.dojoContentModel.achievementModels) {
@@ -103,7 +105,7 @@ define(function(require, exports, module) {
                 });
 
                 if (solvedAchievement) {
-                    this.onClickBack(ev);
+                    this.onClickBack(ev, true);
                     return;
                 }
             }
@@ -135,7 +137,7 @@ define(function(require, exports, module) {
                             }
                         );
                     } else {
-                        this.onClickBack(ev);
+                        this.onClickBack(ev, true);
                     }
                 }, this)
             });
@@ -158,6 +160,7 @@ define(function(require, exports, module) {
          * @memberOf DojoLessonLayout#
          */
         onClickPlaybackLesson: function () {
+            app.ga.trackEvent("動画再生ページ", "「まだよく分からない」ボタン押下", this.dojoContentModel.get("videoId"));
             this.$el.find("#dojo-lesson")
                 .removeClass("is-ended")
                 .addClass("is-ready");
@@ -180,10 +183,13 @@ define(function(require, exports, module) {
          * @memberOf DojoLessonLayout#
          * @param {Event} ev
          */
-        onClickBack : function(ev) {
+        onClickBack : function(ev, action) {
             ev.preventDefault();
 
             app.router.back();
+            if (action === undefined) {
+                app.ga.trackEvent("動画再生ページ", "「閉じる」ボタン押下", this.dojoContentModel.get("videoId"));
+            }
         },
 
         /**
@@ -240,10 +246,17 @@ define(function(require, exports, module) {
                                 // 動画再生したら動画停止ボタンを表示
                                 $("#cell-play-movie").hide();
                                 $("#cell-pause-movie").show();
+                                app.ga.trackEvent("動画再生ページ", "動画再生ボタン押下", this.dojoContentModel.get("videoId"));
                             } else {
                                 // 動画停止したら動画再生ボタンを表示
                                 $("#cell-play-movie").show();
                                 $("#cell-pause-movie").hide();
+                            }
+                            if (event.data === YT.PlayerState.PAUSED) {
+                                if (this.player.getCurrentTime() !== this.player.getDuration()) {
+                                    // 最後まで再生した後の一時停止イベントではログは記録しない
+                                    app.ga.trackEvent("動画再生ページ", "動画一時停止ボタン押下", this.dojoContentModel.get("videoId"));
+                                }
                             }
 
                             if (event.data === YT.PlayerState.ENDED) {

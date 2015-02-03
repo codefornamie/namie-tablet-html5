@@ -18,6 +18,15 @@ define(function(require, exports, module) {
     Code.APP_MODE_DOJO = "dojo";
     Code.APP_MODE_RAD = "rad";
 
+    // アプリモードとアプリ名とのマッピング
+    Code.APP_NAME = {
+        "news" : "なみえ新聞",
+        "letter" : "なみえ写真投稿",
+        "posting" : "なみえ新聞ライター",
+        "ope" : "浪江町アプリ管理ツール",
+        "dojo" : "なみえ道場"
+    };
+
     // 記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST = [
             {
@@ -31,13 +40,13 @@ define(function(require, exports, module) {
                 value : "イベント",
                 valueByMode : {
                     "ope" : "イベント(町民代理投稿)",
-                } 
+                }
             }, {
                 key : "4",
                 value : "レポート",
                 valueByMode : {
                     "ope" : "レポート(町民代理投稿)",
-                } 
+                }
             }, {
                 key : "5",
                 value : "記事"
@@ -55,13 +64,13 @@ define(function(require, exports, module) {
                 value : "イベント",
                 valueByMode : {
                     "ope" : "イベント(役場)",
-                } 
+                }
             }, {
                 key : "10",
                 value : "レポート",
                 valueByMode : {
                     "ope" : "レポート(役場)",
-                } 
+                }
             }
     ];
 
@@ -86,18 +95,16 @@ define(function(require, exports, module) {
      * img要素のscr属性にpersonium.ioのWebDAVが格納されているサイトの情報定義
      */
     Code.MINPO_SCRAPING = [
-        {
-            site : "福島民報(トップニュース)",
-            scraping: "minpo"
-        },
-        {
-            site : "福島民報(県内ニュース)",
-            scraping: "minpo"
-        },
-        {
-            site : "福島民報(スポーツニュース)",
-            scraping: "minpo"
-        }
+            {
+                site : "福島民報(トップニュース)",
+                scraping : "minpo"
+            }, {
+                site : "福島民報(県内ニュース)",
+                scraping : "minpo"
+            }, {
+                site : "福島民報(スポーツニュース)",
+                scraping : "minpo"
+            }
     ];
     // 記事サイト
     Code.ARTICLE_SITE_LIST = [
@@ -136,7 +143,7 @@ define(function(require, exports, module) {
 
     // 許される連続した休刊日の最大(日)
     Code.LIMIT_CONSECUTIVE_HOLIDAY = 20;
-    
+
     // 写真投稿アプリ: 投稿した記事の掲載期間(日数)
     Code.LETTER_PUB_PERIOD = 7;
 
@@ -173,15 +180,16 @@ define(function(require, exports, module) {
                 levelName : "",
                 label : "白帯",
                 description : "このコースでは、なみえタブレットとは何か、なみえタブレットでできること、使用上の注意、 箱から出して電源を入れるまで、タブレットの画面の見方、なみえ新聞の見方を学べるよ。",
-                congratulations: "白帯コースの動画を全て閲覧しました。これでタブレットの基礎動作はマスターできましたね。<br>「茶帯」を進呈します！",
+                congratulations : "白帯コースの動画を全て閲覧しました。これでタブレットの基礎動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
-            }, {
+            },
+            {
                 id : "1",
                 className : "white",
                 levelName : "白帯",
                 label : "茶帯",
                 description : "このコースでは、写真の撮影・閲覧、文字入力の方法、浪江町のホームページの見方、Googleマップの見方、YouTubeの見方、インターネット（Google検索、Yahoo）の使い方を学べるよ。",
-                congratulations: "茶帯コースの動画を全て閲覧しました。これでタブレットの応用動作はマスターできましたね。<br>「茶帯」を進呈します！",
+                congratulations : "茶帯コースの動画を全て閲覧しました。これでタブレットの応用動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "2",
@@ -189,7 +197,7 @@ define(function(require, exports, module) {
                 levelName : "茶帯",
                 label : "黒帯",
                 description : "このコースでは、なみえ新聞に投稿する方法、LINEの使い方、その他アプリ（手書きメモ、スケジュール、ネットラジオ、連絡帳）の使い方を学べるよ。",
-                congratulations: "黒帯コースの動画を全て閲覧しました。これでタブレットの全てをマスターできましたね。<br>「黒帯」を進呈します！",
+                congratulations : "黒帯コースの動画を全て閲覧しました。これでタブレットの全てをマスターできましたね。<br>「黒帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "3",
@@ -197,11 +205,11 @@ define(function(require, exports, module) {
                 levelName : "黒帯",
                 label : "",
                 description : "",
-                congratulations: "",
+                congratulations : "",
                 iconPath : ""
             }
     ];
-    
+
     // 道場のイントロダクション動画のID
     Code.DOJO_INTORODUCTION_VIDEO_ID = "NgVzppfZ-4Q";
 

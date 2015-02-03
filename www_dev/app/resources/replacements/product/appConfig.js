@@ -16,7 +16,7 @@ define(function(require, exports, module) {
             "useConsoleLog" : false
         },
         "googleAnalytics" : {
-            "trackingId" : "UA-56712876-2"
+            "trackingId" : "UA-56712876-3"
         }
     };
 });

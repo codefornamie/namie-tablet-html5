@@ -20,6 +20,10 @@ define(function(require, exports, module) {
          */
         template : require("ldsh!templates/{mode}/top/dojoLevel"),
 
+        events: {"click #dojoTopAnchor": "clickDojoTop"},
+        clickDojoTop: function() {
+            app.ga.trackEvent("コース内の動画選択ページ", "「コース選択に戻る」ボタン押下");
+        },
         /**
          * テンプレートに渡す情報をシリアライズする
          * @return {Object}
