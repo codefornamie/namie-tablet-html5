@@ -136,10 +136,18 @@ define(function(require, exports, module) {
 
                 // 各要素に対する保存処理
                 function fn(model, done) {
-                    model.save(null, {
-                        success : function () { done(); },
-                        error : function (err) { done(err); }
-                    });
+                    model
+                        .save()
+                        .then(function () {
+                            // ETagを更新する
+                            return model.fetch();
+                        })
+                        .done(function () {
+                            done();
+                        })
+                        .fail(function (err) {
+                            done(err);
+                        });
                 },
 
                 // 保存処理が全て完了したら呼ばれる
