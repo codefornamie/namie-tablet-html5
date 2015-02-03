@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var Code = require("modules/util/Code");
+    var StringUtil = require("modules/util/StringUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
 
     var LoginModel = require("modules/model/LoginModel");
@@ -53,7 +54,7 @@ define(function(require, exports, module) {
      * @return {Object}
      */
     var getViews = function() {
-        var params = parseQueryString(location.href.split("?")[1]);
+        var params = StringUtil.parseQueryString(location.href.split("?")[1]);
         app.config.basic.mode = params.mode || app.config.basic.mode;
         if (_.isEmpty(app.config.basic.mode) || app.config.basic.mode === "news") {
             return {
@@ -89,30 +90,6 @@ define(function(require, exports, module) {
                 "#footer" : new login.FooterView()
             };
         }
-    };
-
-    /**
-     * URLのクエリ文字列をパースする。
-     * @param {String} queryString クエリ文字列
-     * @return {Object} queryStringをパースした結果のマップオブジェクト。
-     */
-    var parseQueryString = function(queryString) {
-        var params = {};
-        if (queryString) {
-            _.each(_.map(decodeURI(queryString).split(/&/g), function(el, i) {
-                var aux = el.split('='), o = {};
-                if (aux.length >= 1) {
-                    var val;
-                    if (aux.length == 2)
-                        val = aux[1];
-                    o[aux[0]] = val;
-                }
-                return o;
-            }), function(o) {
-                _.extend(params, o);
-            });
-        }
-        return params;
     };
 
     // Defining the application router.
@@ -241,7 +218,7 @@ define(function(require, exports, module) {
         index : function(queryString) {
             app.logger.debug("Welcome to your / route.");
             if(queryString){
-                var params = parseQueryString(queryString);
+                var params = StringUtil.parseQueryString(queryString);
                 app.config.basic.mode = params.mode;
                 app.preview = params.preview;
                 app.loginId = params.loginId;
@@ -619,9 +596,7 @@ define(function(require, exports, module) {
          */
         back : function() {
             window.history.back();
-        },
-
-        parseQueryString: parseQueryString
+        }
     });
 
     module.exports = Router;
