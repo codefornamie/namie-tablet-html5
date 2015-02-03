@@ -46,6 +46,8 @@ define(function(require, exports, module) {
                         imgElement.load(function() {
                         });
                         imgElement.attr("src", url);
+                        // 編集画面の写真表示箇所にも適用
+                        $(".letter-edit-form .letterPicture-" + this.model.get('__id')).attr("src", url);
                     },this),
                     error: $.proxy(function () {
                         app.logger.error("画像の取得に失敗しました");

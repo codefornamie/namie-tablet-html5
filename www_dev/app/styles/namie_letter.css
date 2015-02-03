@@ -662,6 +662,10 @@
     min-width: 180px;
 }
 
+.letter-edit-form .letterPicture {
+    margin-bottom: 1rem;
+}
+
 /**
  *  ----------
  *  3. Cosmetic
