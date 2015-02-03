@@ -107,7 +107,8 @@ define(function(require, exports, module) {
                 return model.get("__id") === articleId;
             });
             if (targetArticle) {
-                app.ga.trackEvent("新聞アプリ/TOPページ", "記事参照", targetArticle.get("publishedAt") + "/" + targetArticle.get("title"));
+                app.ga.trackEvent("TOPページ", "記事参照", targetArticle.get("publishedAt") + "/" + targetArticle.get("title"));
+                app.ga.trackEvent("TOPページ", "記事種別", targetArticle.get("publishedAt") + "/" + targetArticle.get("site"));
             }
 
             $(document).trigger('scrollToArticle', {

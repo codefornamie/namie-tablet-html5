@@ -46,6 +46,8 @@ define(function(require, exports, module) {
             $('.is-grayedout').unblock(); 
 
             $(document).trigger("open:modal");
+
+            app.ga.trackPageView("Finished/cource=" + this.level.get("level"), "コース習得ページ/コース番号=" + this.level.get("level"));
         },
         /**
          * イベント一覧

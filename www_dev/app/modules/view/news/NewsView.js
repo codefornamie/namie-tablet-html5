@@ -622,7 +622,7 @@ define(function(require, exports, module) {
             var currentDateStr = currentMoment.format("YYYY-MM-DD");
 
             $btnBack.on("click", function(ev) {
-                app.ga.trackEvent("新聞アプリ/記事詳細ページ", "一覧に戻る","");
+                app.ga.trackEvent("記事詳細ページ", "一覧に戻る","");
 
                 ev.preventDefault();
                 app.router.back();
@@ -723,7 +723,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         trackPageView : function() {
-            app.ga.trackPageView("News/Top","新聞アプリ/TOPページ");
+            app.ga.trackPageView("Top","TOPページ");
         }
     }, {
         /**

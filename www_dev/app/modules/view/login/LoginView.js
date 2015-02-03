@@ -72,7 +72,7 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             Log.info("LoginView initialize");
-            app.ga.trackPageView("News/Login", "新聞アプリ/ログインページ");
+            app.ga.trackPageView("Login", "ログインページ");
             this.model = new LoginModel();
         },
 
@@ -83,7 +83,6 @@ define(function(require, exports, module) {
          */
         onClickLoginButton : function() {
             Log.info("onClickButton(Login button click handler) called ");
-            app.ga.trackEvent("新聞アプリ/ログインページ", "ログイン");
 
             var loginId = $("#loginId").val();
             var password = $("#password").val();
@@ -107,6 +106,7 @@ define(function(require, exports, module) {
          */
         onLogin : function(msg) {
             Log.info("onLogin callback called");
+            app.ga.trackEvent("ログインページ", "ログイン完了");
             if (!msg) {
                 app.logger.info("Success Login process.");
                 this.goNextView();
