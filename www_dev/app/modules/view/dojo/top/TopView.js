@@ -157,7 +157,13 @@ define(function(require, exports, module) {
             var $target = $(evt.currentTarget);
             var href = { prop: $target.prop("href"), attr: $target.attr("href") };
             var root = location.protocol + "//" + location.host + app.root;
-
+            if (href.attr) {
+                var params = href.attr.split("/");
+                if (params[1] === "levels") {
+                    // コース選択がクリックされた場合
+                    app.ga.trackEvent("コース選択ページ", "コース選択", params[2]);
+                }
+            }
             if (href.prop && href.prop.slice(0, root.length) === root) {
                 evt.preventDefault();
                 app.router.navigate(href.attr, {
@@ -165,6 +171,7 @@ define(function(require, exports, module) {
                     replace: false
                 });
             }
+
         }
     }, {
         /**
@@ -504,11 +511,12 @@ define(function(require, exports, module) {
             switch (route) {
             case "dojoTop":
                 this.layout.hideLesson();
+                app.ga.trackPageView("Top", "コース選択ページ表示");
                 break;
 
             case "dojoLevel":
                 level = params[0];
-
+                app.ga.trackPageView("Cource/cource=" + level, "コース内の動画選択ページ表示/コース番号=" + level);
                 app.currentDojoLevel = level;
 
                 this.layout.hideLesson();
@@ -525,6 +533,7 @@ define(function(require, exports, module) {
                     dojoEditionModel: this.currentEditionModel,
                     dojoContentModel: dojoContentModel
                 });
+                app.ga.trackEvent("コース内の動画選択ページ", "「再生する」ボタン押下", dojoContentModel.get("videoId"));
                 break;
 
             case "dojoLevelComplete":
@@ -539,6 +548,7 @@ define(function(require, exports, module) {
                 this.layout.showIntroduction({
                     isFirst : !!params[0]
                 });
+                app.ga.trackEvent("コース選択ページ", "「初めての方へ」選択");
                 break;
 
             default:

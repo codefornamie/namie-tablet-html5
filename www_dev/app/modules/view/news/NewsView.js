@@ -342,6 +342,7 @@ define(function(require, exports, module) {
             this.summarizeArticle("6", {
                 targetDate : targetDate,
                 idPreffex : "letter-",
+                title : "みんなで投稿！撮れたて写真館",
                 dispTitle : "みんなで投稿！撮れたて写真館",
                 sortOrder: 1,
                 isFirst : true
@@ -464,7 +465,9 @@ define(function(require, exports, module) {
                 var folderArticle = new ArticleModel({
                     __id : options.idPreffex + DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
                     site : _.indexBy(app.serverConfig.COLOR_LABEL, "type")[type].label,
+                    title : options.title,
                     dispTitle : options.dispTitle,
+                    publishedAt : DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
                     type : type,
                     articles : articleDateList,
                     newArrivals : newArrivals,
@@ -623,6 +626,8 @@ define(function(require, exports, module) {
             var currentDateStr = currentMoment.format("YYYY-MM-DD");
 
             $btnBack.on("click", function(ev) {
+                app.ga.trackEvent("記事詳細ページ", "一覧に戻る","");
+
                 ev.preventDefault();
                 app.router.back();
             });
@@ -722,7 +727,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         trackPageView : function() {
-            app.ga.trackPageView("/NewsView", "ニュース");
+            app.ga.trackPageView("Top","TOPページ");
         }
     }, {
         /**

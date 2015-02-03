@@ -163,11 +163,17 @@ define(function(require, exports, module) {
                 // ウィザードのページ切り替え時であれば、何もしない
                 return;
             }
+            if (evt.currentTarget.id === "edit_letter") {
+                    app.ga.trackEvent("TOPページ", "「編集する」ボタン押下");
+            } else if(evt.currentTarget.id === "post_new_letter") {
+                app.ga.trackEvent("TOPページ", "「新しく投稿する」ボタン押下");
+            }
             if(evt.currentTarget.id !== "post_new_letter") {
                 // 新規投稿ボタン以外は、そのまま画面遷移する。
                 this.followAnchor(evt);
                 return;
             }
+            
             // 新規投稿ボタンの場合、遷移する前に自身の本日中の投稿数制限にかかっていないかをチェックする必要がある。
             // PIOへ本日分の記事を検索する
             var articleCollection = new ArticleCollection();
@@ -312,10 +318,12 @@ define(function(require, exports, module) {
 
             switch (route) {
             case "letterSelect":
+                app.ga.trackPageView("Top", "TOPページ");
                 this.layout.showSelect();
                 break;
 
             case "letterList":
+                app.ga.trackPageView("List", "過去の投稿ページ");
                 this.layout.showList();
                 break;
 

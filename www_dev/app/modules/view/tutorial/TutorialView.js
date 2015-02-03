@@ -13,7 +13,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-            app.ga.trackPageView("News/Help","新聞アプリ/ヘルプページ");
+            app.ga.trackPageView("Help","ヘルプページ");
 
             this.$step = this.$el.find(TutorialView.SELECTOR_GLOBAL_HELP).steps({
                 headerTag : "h3",
@@ -24,7 +24,9 @@ define(function(require, exports, module) {
                     previous : "前に戻る",
                     finish : "閉じる"
                 },
+                onInit : this.onInit.bind(this),
                 //onStepChanging : this.onStepChanging.bind(this),
+                onStepChanged : this.onStepChanged.bind(this),
                 onFinishing : this.onFinishing.bind(this),
                 //onFinished : this.onFinished.bind(this),
             });
@@ -52,6 +54,27 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ウィザードの初期化が完了した時に呼ばれる
+         * @memberOf TutorialView#
+         * @param {Event} ev
+         * @param {number} currentIndex
+         */
+        onInit: function (ev, currentIndex) {
+            app.ga.trackEvent("ヘルプページ", "ヘルプ記事参照", currentIndex + 1);
+        },
+
+        /**
+         * ページが移動した時に呼ばれる
+         * @memberOf TutorialView#
+         * @param {Event} ev
+         * @param {number} currentIndex
+         * @param {number} priorIndex
+         */
+        onStepChanged: function (ev, currentIndex, priorIndex) {
+            app.ga.trackEvent("ヘルプページ", "ヘルプ記事参照", currentIndex + 1);
+        },
+
+        /**
          * オーバレイをクリックした時に呼ばれる
          * @memberOf TutorialView#
          * @param {Event} ev
@@ -62,6 +85,8 @@ define(function(require, exports, module) {
                 return;
             }
 
+            app.ga.trackEvent("ヘルプページ", "閉じる（右上）", "");
+
             this.trigger("closeGlobalHelp");
         },
 
@@ -71,6 +96,12 @@ define(function(require, exports, module) {
          * @param {Event} ev
          */
         onFinishing: function (ev) {
+            if (ev.currentTarget.id === "global-help-pages") {
+                app.ga.trackEvent("ヘルプページ", "ヘルプ記事内の項目「閉じる」", "");
+            } else {
+                app.ga.trackEvent("ヘルプページ", "閉じる（右上）", "");
+            }
+
             this.trigger("closeGlobalHelp");
         }
     }, {

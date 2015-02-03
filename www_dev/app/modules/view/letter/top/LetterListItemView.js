@@ -86,6 +86,7 @@ define(function(require, exports, module) {
                 message : 'この投稿（' + moment(this.model.get('publishedAt')).format('YYYY年MM月DD日') + '配信）を削除していいですか？',
                 callback : $.proxy(function(value) {
                     if (value) {
+                        app.ga.trackEvent("過去の投稿ページ", "「削除」ボタン押下");
                         this.showLoading();
                         this.deleteLetter();
                     }

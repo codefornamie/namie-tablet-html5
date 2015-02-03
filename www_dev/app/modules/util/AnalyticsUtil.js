@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
     "use strict";
     var app = require("app");
+    var Code =require("modules/util/Code");
 
     /**
      * コンストラクタ。
@@ -27,6 +28,11 @@ define(function(require, exports, module) {
      * @memberOf AnalyticsUtil#
      */
     AnalyticsUtil.trackPageView = function(path, title) {
+        // AnalyticsのPath情報を、mode/path (ex. news/Login) に変換する
+        path = this.app.config.basic.mode + "/" + path;
+        // titleにアプリ名をつける
+        title = Code.APP_NAME[this.app.config.basic.mode] + "/" + title;
+
         this.ga._trackPageview(path, title);
         if (this.app.logger) {
             // アプリログを記録する
@@ -43,6 +49,7 @@ define(function(require, exports, module) {
      * @memberOf AnalyticsUtil#
      */
     AnalyticsUtil.trackEvent = function(category, action, label, value) {
+        category = Code.APP_NAME[this.app.config.basic.mode] + "/" + category;
         this.ga._trackEvent(category, action, label, value);
         if (this.app.logger) {
             // アプリログを記録する

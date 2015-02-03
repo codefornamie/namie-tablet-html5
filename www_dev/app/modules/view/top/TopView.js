@@ -13,7 +13,7 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
-            app.ga.trackPageView("News/Top","新聞アプリ/TOPページ");
+            app.ga.trackPageView("Top","TOPページ");
         },
     });
 
