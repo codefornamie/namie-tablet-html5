@@ -157,31 +157,8 @@ define(function(require, exports, module) {
          */
         update : function(method, model, options, complete) {
             Log.info("AbstractODataModel update");
-            /**
-             *  * 問題点 *
-             *  personium.ioではリソースのupdate時にETagをチェックしているため、
-             *  ここで付与するETagが古いと、412 Precondition Failedを返されてしまう
-             */
             this.entityset.update(this.get("__id"), this.getSaveData(), this.get("etag"), {
                 complete : function(response) {
-                    /**
-                     *  * 問題点 *
-                     *  並び替え後の順序をPUTした後にここに来る。
-                     *  本来ならばここで`response.getHeader("ETag")`を読んで
-                     *  ModelのETagを最新のものに更新したいところだが、
-                     *  CORSの制約によりレスポンスヘッダのEtagを読み出すことができない。
-                     *  よって、次回の並び替え時に古いEtagが送信されてしまう。
-                     *
-                     *  * 解決策 *
-                     *  localhostなどのローカル環境からレスポンスヘッダのEtagを読み出すには
-                     *  以下の2つの方法が考えられる。
-                     *
-                     *  1. サーバー側でAccess-Control-Expose-Headerレスポンスヘッダを付与する
-                     *  2. レスポンスボディにETagを含める
-                     *
-                     *  * 参考 *
-                     *  http://www.w3.org/TR/cors/#handling-a-response-to-a-cross-origin-request
-                     */
                     Log.info("AbstractODataModel update complete");
                     complete(response);
                 }
