@@ -3,30 +3,29 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var Code = require("modules/util/Code");
-    var login = require("modules/view/login/index");
-    login.letter = require("modules/view/letter/login/index");
-    login.posting = require("modules/view/posting/login/index");
-    login.ope = require("modules/view/ope/login/index");
-    login.dojo = require("modules/view/dojo/login/index");
-
     var BusinessUtil = require("modules/util/BusinessUtil");
 
     var LoginModel = require("modules/model/LoginModel");
-    var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     var common = require("modules/view/common/index");
-    var postingCommon = require("modules/view/posting/common/index");
-    var dojoCommon = require("modules/view/dojo/common/index");
-    var NewsView = require("modules/view/news/NewsView");
+    var login = require("modules/view/login/index");
 
+    // 新聞
+    var NewsView = require("modules/view/news/NewsView");
     var ScrapView = require("modules/view/scrap/ScrapView");
     var BacknumberView = require("modules/view/backnumber/BacknumberView");
     var BacknumberDateView = require("modules/view/backnumber/BacknumberDateView");
 
+    // ライター
+    login.posting = require("modules/view/posting/login/index");
+    var postingCommon = require("modules/view/posting/common/index");
     var EventNewsView = require("modules/view/posting/news/NewsView");
     var ArticleDetailView = require("modules/view/posting/news/ArticleDetailView");
     var ArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
+
+    // 運用管理
+    login.ope = require("modules/view/ope/login/index");
     var TopView = require("modules/view/ope/top/TopView");
     var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
     var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
@@ -34,14 +33,25 @@ define(function(require, exports, module) {
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
 
+    // 道場
+    login.dojo = require("modules/view/dojo/login/index");
+    var dojoCommon = require("modules/view/dojo/common/index");
     var DojoTopView = require("modules/view/dojo/top/TopView");
-    var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
-    var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
 
+    // 写真投稿
+    login.letter = require("modules/view/letter/login/index");
     var LetterTopView = require("modules/view/letter/top/TopView");
     var LetterGlobalNavView = require("modules/view/letter/common/GlobalNavView");
 
-    // Use main layout and set Views.
+    // 放射線
+    login.rad = require("modules/view/rad/login/index");
+    var radCommon = require("modules/view/rad/common/index");
+    var RadTopView = require("modules/view/rad/top/index");
+
+    /**
+     * ログイン画面のviewを取得する
+     * @return {Object}
+     */
     var getViews = function() {
         var params = parseQueryString(location.href.split("?")[1]);
         app.config.basic.mode = params.mode || app.config.basic.mode;
@@ -71,6 +81,11 @@ define(function(require, exports, module) {
         } else if (app.config.basic.mode === Code.APP_MODE_OPE) {
             return {
                 "#contents" : new login.ope.LoginView(),
+                "#footer" : new login.FooterView()
+            };
+        } else if (app.config.basic.mode === Code.APP_MODE_RAD) {
+            return {
+                "#contents" : new login.rad.LoginView(),
                 "#footer" : new login.FooterView()
             };
         }
@@ -217,7 +232,10 @@ define(function(require, exports, module) {
             "letters/posted" : "letterWizardComplete",
             "letters/:id" : "letterDetail",
             "letters/:id/edit" : "letterEdit",
-            "letters/:id/modified" : "letterEditComplete"
+            "letters/:id/modified" : "letterEditComplete",
+
+            // 放射線アプリ
+            "rad" : "radTop"
         },
 
         index : function(queryString) {
@@ -543,6 +561,20 @@ define(function(require, exports, module) {
          * 町民投稿：新規投稿ウィザード完了ページ
          */
         letterWizardComplete : function() {
+        },
+
+        /**
+         * ---------- 放射線 ----------
+         */
+        /**
+         * 放射線：トップ
+         */
+        radTop : function () {
+            var radTopView = new RadTopView();
+            var radGlobalNavView = new RadGlobalNavView();
+
+            this.layout.showView(radTopView);
+            this.layout.setGlobalNav(radGlobalNavView);
         },
 
         /**

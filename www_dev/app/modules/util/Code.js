@@ -16,6 +16,7 @@ define(function(require, exports, module) {
     Code.APP_MODE_POSTING = "posting";
     Code.APP_MODE_OPE = "ope";
     Code.APP_MODE_DOJO = "dojo";
+    Code.APP_MODE_RAD = "rad";
 
     // 記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST = [
