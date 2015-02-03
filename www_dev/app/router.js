@@ -448,6 +448,8 @@ define(function(require, exports, module) {
             if (!app.dojoTopView) {
                 app.dojoTopView = new DojoTopView();
                 this.layout.showView(app.dojoTopView.layout);
+            } else {
+                app.ga.trackEvent("コース内の動画選択ページ", "「コース選択に戻る」ボタン押下");
             }
 
             this.layout.setHeader(new dojoCommon.HeaderView({

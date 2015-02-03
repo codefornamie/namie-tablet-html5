@@ -108,6 +108,7 @@ define(function(require, exports, module) {
             });
             if (targetArticle) {
                 app.ga.trackEvent("TOPページ", "記事参照", targetArticle.get("publishedAt") + "/" + targetArticle.get("title"));
+                app.ga.trackEvent("TOPページ", "記事種別", targetArticle.get("publishedAt") + "/" + targetArticle.get("site"));
             }
 
             $(document).trigger('scrollToArticle', {

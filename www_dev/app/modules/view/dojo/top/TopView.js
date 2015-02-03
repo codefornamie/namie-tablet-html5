@@ -516,6 +516,7 @@ define(function(require, exports, module) {
                 this.layout.showLevel({
                     level: level
                 });
+                //app.ga.trackEvent("コース選択ページ", "コース選択", level);
                 break;
 
             case "dojoLesson":
@@ -526,6 +527,7 @@ define(function(require, exports, module) {
                     dojoEditionModel: this.currentEditionModel,
                     dojoContentModel: dojoContentModel
                 });
+                app.ga.trackEvent("コース内の動画選択ページ", "「再生する」ボタン押下", dojoContentModel.get("videoId"));
                 break;
 
             case "dojoLevelComplete":
@@ -540,6 +542,7 @@ define(function(require, exports, module) {
                 this.layout.showIntroduction({
                     isFirst : !!params[0]
                 });
+                app.ga.trackEvent("コース選択ページ", "「初めての方へ」選択");
                 break;
 
             default:

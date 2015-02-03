@@ -93,10 +93,12 @@ define(function(require, exports, module) {
                                 // 動画再生したら動画停止ボタンを表示
                                 $("[data-play-movie]").hide();
                                 $("[data-pause-movie]").show();
+                                app.ga.trackEvent("「なみえタブレット道場へようこそ」ページ", "動画再生ボタン押下");
                             } else if (event.data === YT.PlayerState.PAUSED) {
                                 // 動画停止したら動画再生ボタンを表示
                                 $("[data-play-movie]").show();
                                 $("[data-pause-movie]").hide();
+                                app.ga.trackEvent("「なみえタブレット道場へようこそ」ページ", "動画一時停止ボタン押下");
                             }
                         }, this)
                     }
@@ -151,6 +153,7 @@ define(function(require, exports, module) {
                 self.remove();
                 app.router.back();
             }, 300);
+            app.ga.trackEvent("「なみえタブレット道場へようこそ」ページ", "「閉じる」ボタン押下");
         },
         /**
          * Viewが破棄された際に呼び出されるコールバック関数。

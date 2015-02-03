@@ -47,7 +47,7 @@ define(function(require, exports, module) {
 
             $(document).trigger("open:modal");
 
-            app.ga.trackPageView("Finished/cource=" + this.level.get("level"), "なみえ道場/コース習得ページ/コース番号=" + this.level.get("level"));
+            app.ga.trackPageView("Finished/cource=" + this.level.get("level"), "コース習得ページ/コース番号=" + this.level.get("level"));
         },
         /**
          * イベント一覧
