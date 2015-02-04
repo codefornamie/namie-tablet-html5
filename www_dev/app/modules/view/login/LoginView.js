@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var Code = require("modules/util/Code");
     var AbstractView = require("modules/view/AbstractView");
     var LoginModel = require("modules/model/LoginModel");
     var vexDialog = require("vexDialog");
@@ -108,7 +109,7 @@ define(function(require, exports, module) {
             Log.info("onLogin callback called");
             if (!msg) {
                 // personalのrolesが"admin"の場合のみログインを許可する
-                if(app.user.attributes.roles !== "admin") {
+                if (app.config.basic.mode === Code.APP_MODE_OPE && !app.user.hasRole("admin")) {
                     vexDialog.defaultOptions.className = 'vex-theme-default';
                     vexDialog.alert("権限がないためログインできません。");
                     app.pcsManager.accessToken = null;
