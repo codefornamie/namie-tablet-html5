@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var leaflet = require("leaflet");
+    var d3 = require("d3");
     var AbstractView = require("modules/view/AbstractView");
 
     /**
@@ -39,9 +40,21 @@ define(function(require, exports, module) {
             var map = leaflet.map('map').setView([38, 140], 13);
 
             // add an OpenStreetMap tile layer
-            leaflet.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
+            leaflet.tileLayer(
+                'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+                {
+                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                }
+            ).addTo(map);
+
+            var svg = d3.select(map.getPanes().overlayPane).append("svg");
+
+            svg.attr({
+                "width": 10000,
+                "height": 10000
+            });
+
+            var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
             $.get(URL_DUMMY_JSON).done(function (data) {
                 var putMarker = function (lat, lng, μSv) {
@@ -54,13 +67,45 @@ define(function(require, exports, module) {
                     circle.addTo(map);
                 };
 
+                var circle = g.selectAll("circle")
+                    .data(data);
+
+                circle.enter()
+                    .append("circle")
+                    .attr({
+                        "stroke": "#f00",
+                        "stroke-width": 2,
+                        "opacity": 0.7,
+                        "fill": "#ff0",
+                        "r": 20
+                    })
+
+                circle.exit()
+                    .remove();
+
+                var update = function () {
+                    circle
+                        .attr("transform", function (d) {
+                            return "translate(" +
+                                map.latLngToLayerPoint(d.latLngObj).x + "," +
+                                map.latLngToLayerPoint(d.latLngObj).y + ")";
+                        });
+                };
+
                 data.forEach(function (radLog) {
                     var lat = parseInt(radLog.latitude, 10) / Math.pow(10, 6);
                     var lng = parseInt(radLog.longitude, 10) / Math.pow(10, 6);
                     var μSv = parseInt(radLog.value, 10) / 1000;
 
                     putMarker(lat, lng, μSv);
+
+                    radLog.latLngObj = new leaflet.LatLng(lat, lng);
                 });
+
+                // TODO: fit svg bounds
+
+                map.on("viewreset", update);
+                update();
             });
         },
 
