@@ -38,7 +38,8 @@ require.config({
         "canvasResize": "../lib/canvasResize/canvasResize",
         "binaryajax": "../lib/canvasResize/binaryajax",
         "exif": "../lib/canvasResize/exif",
-        "leaflet": "../bower_components/leaflet/dist/leaflet"
+        "leaflet": "../bower_components/leaflet/dist/leaflet",
+        "d3": "../bower_components/d3/d3.min"
     },
 
     deps : [ "main" ],
