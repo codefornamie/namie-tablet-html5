@@ -33,18 +33,35 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         afterRendered : function() {
+            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpuAwBZPaW";
+
             // create a map in the "map" div, set the view to a given place and zoom
-            var map = leaflet.map('map').setView([51.505, -0.09], 13);
+            var map = leaflet.map('map').setView([38, 140], 13);
 
             // add an OpenStreetMap tile layer
             leaflet.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            // add a marker in the given location, attach some popup content to it and open the popup
-            leaflet.marker([51.5, -0.09]).addTo(map)
-                .bindPopup('A pretty CSS3 popup. <br> Easily customizable.')
-                .openPopup();
+            $.get(URL_DUMMY_JSON).done(function (data) {
+                var putMarker = function (lat, lng, μSv) {
+                    var marker = leaflet.marker([lat, lng]);
+                    var circle = leaflet.circle([lat, lng], 1000);
+
+                    marker.addTo(map);
+                    marker.bindPopup(μSv + "μSv");
+
+                    circle.addTo(map);
+                };
+
+                data.forEach(function (radLog) {
+                    var lat = parseInt(radLog.latitude, 10) / Math.pow(10, 6);
+                    var lng = parseInt(radLog.longitude, 10) / Math.pow(10, 6);
+                    var μSv = parseInt(radLog.value, 10) / 1000;
+
+                    putMarker(lat, lng, μSv);
+                });
+            });
         },
 
         /**
