@@ -39,9 +39,15 @@ define(function(require, exports, module) {
          * 検索条件
          * @memberOf AbstractODataCollection#
          */
-        condition : {
-            top : 1,
-            orderby : ""
+        condition : null,
+        /**
+         * 初期化処理
+         * @memberOf AbstractODataCollection#
+         */
+        initialize : function() {
+            this.condition = {
+                    top: 100
+            };
         },
         /**
          * 検索して取得した情報(JSONデータ)をパースする。

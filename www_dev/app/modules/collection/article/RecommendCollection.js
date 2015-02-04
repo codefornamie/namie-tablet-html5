@@ -27,11 +27,13 @@ define(function(require, exports, module) {
          */
         entity : "recommend",
         /**
-         * 検索条件
+         * 初期化処理
          * @memberOf RecommendCollection#
          */
-        condition : {
-            top : 10,
+        initialize : function() {
+            this.condition = {
+                top : 10
+            };
         },
 
         /**
