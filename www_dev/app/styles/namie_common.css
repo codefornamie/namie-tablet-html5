@@ -85,6 +85,12 @@ body {
     font-size: 1rem;
 }
 
+@media only screen and (orientation:portrait) {
+    .button--float::after {
+        display: none;
+    }
+}
+
 hr {
     border-color: #ebe8da;
     border-width: 1px 0;;
