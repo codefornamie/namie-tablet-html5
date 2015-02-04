@@ -78,7 +78,7 @@ define(function(require, exports, module) {
                         "opacity": 0.7,
                         "fill": "#ff0",
                         "r": 20
-                    })
+                    });
 
                 circle.exit()
                     .remove();
