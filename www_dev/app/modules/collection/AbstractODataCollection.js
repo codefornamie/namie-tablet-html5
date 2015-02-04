@@ -98,7 +98,7 @@ define(function(require, exports, module) {
             this.odata = app.config.basic.odataName;
 
             // dc1-clientによるODataアクセスを行う
-            var odataCollection = app.accessor.cell(this.cell).box(this.box).odata(this.odata);
+            var odataCollection = app.box.odata(this.odata);
             this.entityset = odataCollection.entitySet(this.entity);
 
             /**
