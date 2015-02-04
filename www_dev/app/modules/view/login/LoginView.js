@@ -106,9 +106,16 @@ define(function(require, exports, module) {
          */
         onLogin : function(msg) {
             Log.info("onLogin callback called");
-            app.ga.trackEvent("ログインページ", "ログイン完了");
             if (!msg) {
+                // personalのrolesが"admin"の場合のみログインを許可する
+                if(app.user.attributes.roles !== "admin") {
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("権限がないためログインできません。");
+                    app.pcsManager.accessToken = null;
+                    return;
+                }
                 app.logger.info("Success Login process.");
+                app.ga.trackEvent("ログインページ", "ログイン完了");
                 this.goNextView();
             } else {
                 vexDialog.defaultOptions.className = 'vex-theme-default';
