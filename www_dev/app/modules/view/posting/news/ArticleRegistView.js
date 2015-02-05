@@ -258,6 +258,9 @@ define(function(require, exports, module) {
                     vexDialog.defaultOptions.className = 'vex-theme-default';
                     vexDialog.alert(errmsg);
                 } else {
+                    if ($("#articleCategory").val() === "5") {
+                        $(".unnecessaryInTownArticle input,.unnecessaryInTownArticle textArea").val("");
+                    }
                     this.onSubmit();
                 }
             }
@@ -339,7 +342,6 @@ define(function(require, exports, module) {
 
             /**
              * ファイル名を元に、ユニークなID付きのファイル名を生成する
-             * @memberOf ArticleRegistView#
              * @param {String} fileName
              * @return {String}
              */
