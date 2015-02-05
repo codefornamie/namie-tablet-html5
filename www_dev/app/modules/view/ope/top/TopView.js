@@ -124,6 +124,7 @@ define(function(require, exports, module) {
          * @memberOf TopView#
          */
         onClickDojoAchievementButton : function() {
+            this.showLoading();
             this.loadYouTubeLibrary($.proxy(function() {
                 // youtubeAPI読み込み
                 gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
@@ -238,8 +239,8 @@ define(function(require, exports, module) {
                             }
                             dojoContent.achievementModels.push(achievement);
                         }
-                    },this));
-                },this));
+                    }, this));
+                }, this));
             }
 
             // ユーザ毎のレコード配列を準備
@@ -251,17 +252,38 @@ define(function(require, exports, module) {
             };
             this.dojoContentCollection.sort();
             dojoAchievementCsvModel.dojoContentCollection = this.dojoContentCollection;
-            
+
             this.personalCollection.each(function(personalModel) {
                 var personalCsvObject = dojoAchievementCsvModel.createDojoAchievementCsvData(personalModel);
                 csvRecordArray.push(personalCsvObject);
             });
-            var csvData = CommonUtil.convertCsvData(csvRecordArray);
             
-            // TODO 修正確認用に表示。本来は出力処理を記述
-            vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.alert(csvData);
+            // JSONオブジェクトをCSV形式に変換
+            var csvObject = CommonUtil.convertCsvData(csvRecordArray);
+            this.outputCsv(csvObject);
+            this.hideLoading();
         },
+        /**
+         * CSV出力処理
+         * @param {Object} csvObject csv形式のオブジェクト
+         * @memberOf TopView#
+         */
+        outputCsv : function(csvObject) {
+            // UTF-8で表示されるようにBOMを付加しておく
+            var bom = new Uint8Array([
+                    0xEF, 0xBB, 0xBF
+            ]);
+            var blob = new Blob([
+                    bom, csvObject
+            ], {
+                type : 'text/csv'
+            });
+            var csvUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+            var csvDownloadAnchor = $("<a id='dojoCsvDownload' href='" + csvUrl + "' download='道場達成状況.csv'>");
+            $("#contents").append(csvDownloadAnchor);
+            csvDownloadAnchor[0].click();
+            csvDownloadAnchor.remove();
+        }
     });
 
     module.exports = TopView;
