@@ -20,11 +20,13 @@ define(function(require, exports, module) {
          */
         entity : "achievement",
         /**
-         * 検索条件
+         * 初期化処理
          * @memberOf AchievementCollection#
          */
-        condition : {
-            top : 100,
+        initialize : function() {
+            this.condition = {
+                    top : 1000
+            };
         },
         parseOData : function(response, options) {
             return response;
