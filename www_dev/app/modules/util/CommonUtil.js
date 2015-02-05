@@ -30,12 +30,37 @@ define(function(require, exports, module) {
      * @memberOf CommonUtil#
      * @param {String} baseUrl ベースとなるURL
      * @param {String} href aタグのhref
-     * @return {String} 求められたURL
+     * @return {String} 求められたURL。hrefがURLではない場合はnullを返す。
      */
     CommonUtil.resolveUrl = function(baseUrl, href) {
-        var linkUrl = baseUrl.replace(/.jp\u002f.*/g, '.jp\u002f');
-        var thVal = href.replace("http://", "").split("/");
-        return linkUrl + thVal[1] + "/" + thVal[2];
+        var hrefParts = href.match(/^(\w*:\/\/[^/]*)?\/?(.*)/);
+        // URLではない場合は、nullを返す。
+        if (hrefParts[2].indexOf(":") >= 0) {
+            return null;
+        }
+        // hrefが完全形式のURLで指定してある場合はそのまま返却する。
+        if (hrefParts[1]) {
+            return href;
+        }
+        var baseParts = baseUrl.match(/^(\w*:\/\/[^/]*)?\/?(.*)/);
+        var hrefPaths = hrefParts[2].split("/");
+        var basePaths = baseParts[2].split("/");
+        // hrefが絶対パス指定の場合は、baseUrlのプロトコル、ホスト名部分とhrefを結合して返す。
+        if (href.charAt(0) === "/") {
+            return baseParts[1] + href;
+        }
+        // hrefが相対パスの場合
+        basePaths.pop();
+        for (var i = 0; i < hrefPaths.length; i++) {
+            var path = hrefPaths[i];
+            if (path === "..") {
+                basePaths.pop();
+            } else {
+                basePaths.push(path);
+            }
+        }
+
+        return baseParts[1] + "/" + basePaths.join("/");
     };
     /**
      * 文字列の半角スペースを削除する。。

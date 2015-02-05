@@ -393,8 +393,12 @@ define(function(require, exports, module) {
          * @memberOf ArticleListItemView#
          */
         onClickAnchorTag : function(ev) {
-            window.open(CommonUtil.resolveUrl(this.model.get("link"), ev.target.href));
-            ev.preventDefault();
+            var href = $(ev.target).attr("href");
+            var url = CommonUtil.resolveUrl(this.model.get("link"), href);
+            if (url) {
+                window.open(url, '_system');
+                ev.preventDefault();
+            }
         },
         /**
          * 指定URiの画像データをストレージに保存する。
