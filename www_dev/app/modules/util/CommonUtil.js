@@ -94,7 +94,7 @@ define(function(require, exports, module) {
             if (line !== '') {
                 line += colDelim;
             }
-            line = line + "\"" + titleArray[i] + "\"";
+            line = line + titleArray[i];
         }
         csv += line + rowDelim;
 
@@ -104,16 +104,16 @@ define(function(require, exports, module) {
             for ( var index in json[j]) {
                 var titleIndex = titleArray.indexOf(index);
                 if (json[j][index]) {
-                    dataArray[titleIndex] = "\"" + json[j][index].replace(/"/g, '""') + "\"";
+                    dataArray[titleIndex] = json[j][index];
                 } else {
-                    dataArray[titleIndex] = "\"\"";
+                    dataArray[titleIndex] = "";
                 }
             }
             for (var k = 0; k < titleArray.length; k++) {
                 if (dataArray[k]) {
                     csv += dataArray[k];
                 } else {
-                    csv += "\"\"";
+                    csv += "";
                 }
                 if (k !== titleArray.length - 1) {
                     csv += colDelim;
