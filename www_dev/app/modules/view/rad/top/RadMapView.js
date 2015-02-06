@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var d3 = require("d3");
     //var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
+    var RadMapLayerView = require("modules/view/rad/top/RadMapLayerView");
+    var RadiationCollection = require("modules/collection/radiation/RadiationCollection");
 
     /**
      * 放射線アプリの地図を表示するためのView
@@ -36,66 +38,18 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         afterRendered : function() {
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpuAwBZPaW";
-            var map, svg, g;
+            var map, container;
 
             this.initMap();
             this.initSVGLayer();
 
             map = this.map;
-            svg = this.svg;
-            g = svg.select("g");
+            container = this.container;
 
-            $.get(URL_DUMMY_JSON).done(function (data) {
-                var putMarker = function (lat, lng, μSv) {
-                    var m = leaflet.marker([lat, lng]);
-                    var c = leaflet.circle([lat, lng], 1000);
-
-                    m.addTo(map);
-                    m.bindPopup(μSv + "μSv");
-
-                    c.addTo(map);
-                };
-
-                var circle = g.selectAll("circle")
-                    .data(data);
-
-                circle.enter()
-                    .append("circle")
-                    .attr({
-                        "stroke" : "#f00",
-                        "stroke-width" : 2,
-                        "opacity" : 0.7,
-                        "fill" : "#ff0",
-                        "r" : 20
-                    });
-
-                circle.exit()
-                    .remove();
-
-                var update = function () {
-                    circle
-                        .attr("transform", function (d) {
-                            return "translate(" +
-                                map.latLngToLayerPoint(d.latLngObj).x + "," +
-                                map.latLngToLayerPoint(d.latLngObj).y + ")";
-                        });
-                };
-
-                data.forEach(function (radLog) {
-                    var lat = parseInt(radLog.latitude, 10) / Math.pow(10, 6);
-                    var lng = parseInt(radLog.longitude, 10) / Math.pow(10, 6);
-                    var μSv = parseInt(radLog.value, 10) / 1000;
-
-                    putMarker(lat, lng, μSv);
-
-                    radLog.latLngObj = new leaflet.LatLng(lat, lng);
-                });
-
-                // TODO: fit svg bounds
-
-                map.on("viewreset", update);
-                update();
+            this.getViews().each(function (v) {
+                v.setMap(map);
+                v.setContainer(container);
+                v.draw();
             });
         },
 
@@ -129,15 +83,18 @@ define(function(require, exports, module) {
 
             var map = this.map;
             var svg = d3.select(map.getPanes().overlayPane).append("svg");
+            var container;
 
+            // TODO: fit svg bounds
             svg.attr({
                 "width" : 10000,
                 "height" : 10000
             });
 
-            svg.append("g").attr("class", "leaflet-zoom-hide");
+            container = svg.append("g").attr("class", "leaflet-zoom-hide");
 
             this.svg = svg;
+            this.container = container;
         },
 
         /**
@@ -151,6 +108,11 @@ define(function(require, exports, module) {
             this.initCollection();
             this.initEvents();
 
+            // TODO: 手動でmodelをsetしているのは、サーバにデータが無い間のダミー用
+            //this.collection.set({
+            //});
+            this.radiationClusterCollection.fetch();
+
             // ローディングを停止
             this.hideLoading();
         },
@@ -160,6 +122,7 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         initCollection : function () {
+            this.radiationClusterCollection = new RadiationCollection();
         },
 
         /**
@@ -167,6 +130,30 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         initEvents : function() {
+            this.listenTo(this.radiationClusterCollection, "reset", this.onResetCollection);
+            this.listenTo(this.radiationClusterCollection, "add", this.onAddCollection);
+        },
+
+        /**
+         * コレクションがリセットされたら呼ばれる
+         * @memberOf RadMapView#
+         */
+        onResetCollection : function () {
+            this.getViews().each(function (v) {
+                v.remove();
+            });
+        },
+
+        /**
+         * コレクションが変化したら呼ばれる
+         * @memberOf RadMapView#
+         */
+        onAddCollection : function (model) {
+            var layerView = new RadMapLayerView({
+                radiationClusterModel : model
+            });
+
+            this.insertView("", layerView);
         }
     }, {
         /**
