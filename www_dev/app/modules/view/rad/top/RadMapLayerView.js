@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var d3 = require("d3");
     var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
+    var RadiationLogCollection = require("modules/collection/radiation/RadiationLogCollection");
 
     /**
      * 放射線アプリの地図のレイヤ
@@ -51,13 +52,18 @@ define(function(require, exports, module) {
 
             this.initCollection();
             this.initEvents();
+
+            //this.radiationLogCollection.fetch();
         },
 
         /**
-         * collectionを初期化する
+         * radiationClusterModelを元にradiationLogCollectionを初期化する
          * @memberOf RadMapLayerView#
          */
         initCollection : function () {
+            this.radiationLogCollection = new RadiationLogCollection({
+                __id : this.radiationClusterModel.get("collectionId")
+            });
         },
 
         /**
@@ -65,6 +71,9 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         initEvents : function() {
+            this.listenTo(this.radiationLogCollection, "request", this.onRequestCollection);
+            this.listenTo(this.radiationLogCollection, "add", this.onAddCollection);
+            this.listenTo(this.radiationLogCollection, "sync", this.onSyncCollection);
         },
 
         /**
@@ -76,9 +85,9 @@ define(function(require, exports, module) {
             console.assert(this.map, "should call setMap before drawing");
             console.assert(this.container, "should call setContainer before drawing");
 
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpuAwBZPaW";
             var map = this.map;
             var container = this.container;
+            var data = this.radiationLogCollection.toGeoJSON();
 
             var putMarker = function (lat, lng, μSv) {
                 var m = leaflet.marker([lat, lng]);
@@ -114,8 +123,10 @@ define(function(require, exports, module) {
                             map.latLngToLayerPoint(d.latLngObj).y + ")";
                     });
             };
+            // TODO:
+            return;
 
-            data.forEach(function (radLog) {
+            data.features.forEach(function (radLog) {
                 var lat = parseInt(radLog.latitude, 10) / Math.pow(10, 6);
                 var lng = parseInt(radLog.longitude, 10) / Math.pow(10, 6);
                 var μSv = parseInt(radLog.value, 10) / 1000;
@@ -163,6 +174,28 @@ define(function(require, exports, module) {
          */
         setContainer : function (container) {
             this.container = container;
+        },
+
+        /**
+         * コレクションが読み込み開始したら呼ばれる
+         * @memberOf RadMapLayerView#
+         */
+        onRequestCollection : function () {
+        },
+
+        /**
+         * コレクションが変化したら呼ばれる
+         * @memberOf RadMapLayerView#
+         */
+        onAddCollection : function (model) {
+        },
+
+        /**
+         * コレクションが読み込み完了したら呼ばれる
+         * @memberOf RadMapLayerView#
+         */
+        onSyncCollection : function () {
+            this.draw();
         }
     });
 

@@ -8,7 +8,7 @@ define(function(require, exports, module) {
     //var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
     var RadMapLayerView = require("modules/view/rad/top/RadMapLayerView");
-    var RadiationCollection = require("modules/collection/radiation/RadiationCollection");
+    var RadiationClusterCollection = require("modules/collection/radiation/RadiationClusterCollection");
 
     /**
      * 放射線アプリの地図を表示するためのView
@@ -18,6 +18,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var RadMapView = AbstractView.extend({
+        manage : false,
         /**
          * このViewのテンプレートファイルパス
          */
@@ -38,6 +39,13 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         afterRendered : function() {
+        },
+
+        /**
+         * 地図にマッピングしているSVGのレイヤをレンダリングする
+         * @memberOf RadMapView#
+         */
+        renderLayers : function () {
             var map, container;
 
             this.initMap();
@@ -46,10 +54,10 @@ define(function(require, exports, module) {
             map = this.map;
             container = this.container;
 
-            this.getViews().each(function (v) {
+            this.layers.forEach(function (v) {
                 v.setMap(map);
                 v.setContainer(container);
-                v.draw();
+                v.radiationLogCollection.fetch();
             });
         },
 
@@ -105,12 +113,10 @@ define(function(require, exports, module) {
             // ローディングを開始
             this.showLoading();
 
+            this.layers = [];
             this.initCollection();
             this.initEvents();
 
-            // TODO: 手動でmodelをsetしているのは、サーバにデータが無い間のダミー用
-            //this.collection.set({
-            //});
             this.radiationClusterCollection.fetch();
 
             // ローディングを停止
@@ -122,7 +128,7 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         initCollection : function () {
-            this.radiationClusterCollection = new RadiationCollection();
+            this.radiationClusterCollection = new RadiationClusterCollection();
         },
 
         /**
@@ -130,18 +136,17 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         initEvents : function() {
-            this.listenTo(this.radiationClusterCollection, "reset", this.onResetCollection);
+            this.listenTo(this.radiationClusterCollection, "request", this.onRequestCollection);
             this.listenTo(this.radiationClusterCollection, "add", this.onAddCollection);
+            this.listenTo(this.radiationClusterCollection, "sync", this.onSyncCollection);
         },
 
         /**
-         * コレクションがリセットされたら呼ばれる
+         * コレクションが読み込み開始したら呼ばれる
          * @memberOf RadMapView#
          */
-        onResetCollection : function () {
-            this.getViews().each(function (v) {
-                v.remove();
-            });
+        onRequestCollection : function () {
+            this.layers.length = 0;
         },
 
         /**
@@ -153,7 +158,15 @@ define(function(require, exports, module) {
                 radiationClusterModel : model
             });
 
-            this.insertView("", layerView);
+            this.layers.push(layerView);
+        },
+
+        /**
+         * コレクションが読み込み完了したら呼ばれる
+         * @memberOf RadMapView#
+         */
+        onSyncCollection : function () {
+            this.renderLayers();
         }
     }, {
         /**
