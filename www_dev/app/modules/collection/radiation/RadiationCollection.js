@@ -31,6 +31,25 @@ define(function(require, exports, module) {
             return response;
         },
 
+        // TODO: 開発用サーバにデータが入ったらこのメソッドは削除する
+        /**
+         * 開発用サーバにデータが無いのでダミーのsyncを利用する
+         *
+         * @return {undefined}
+         */
+        sync : function (method) {
+            var self = this;
+            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpuAwBZPaW";
+
+            if (method === "read") {
+                return $.get(URL_DUMMY_JSON).done(function (data) {
+                    self.set(data);
+                });
+            } else {
+                return AbstractODataCollection.prototype.sync.apply(this, arguments);
+            }
+        },
+
         /**
          * GeoJSON形式に変換する。
          * @return {Object}
