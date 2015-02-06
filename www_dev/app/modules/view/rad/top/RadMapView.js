@@ -1,11 +1,11 @@
 define(function(require, exports, module) {
     "use strict";
 
-    var app = require("app");
-    var async = require("async");
+    //var app = require("app");
+    //var async = require("async");
     var leaflet = require("leaflet");
     var d3 = require("d3");
-    var GeoUtil = require("modules/util/GeoUtil");
+    //var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
 
     /**
@@ -37,36 +37,24 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpuAwBZPaW";
+            var map, svg, g;
 
-            // create a map in the "map" div, set the view to a given place and zoom
-            var map = leaflet.map('map').setView([38, 140], 13);
+            this.initMap();
+            this.initSVGLayer();
 
-            // add an OpenStreetMap tile layer
-            leaflet.tileLayer(
-                'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-                {
-                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                }
-            ).addTo(map);
-
-            var svg = d3.select(map.getPanes().overlayPane).append("svg");
-
-            svg.attr({
-                "width": 10000,
-                "height": 10000
-            });
-
-            var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+            map = this.map;
+            svg = this.svg;
+            g = svg.select("g");
 
             $.get(URL_DUMMY_JSON).done(function (data) {
                 var putMarker = function (lat, lng, μSv) {
-                    var marker = leaflet.marker([lat, lng]);
-                    var circle = leaflet.circle([lat, lng], 1000);
+                    var m = leaflet.marker([lat, lng]);
+                    var c = leaflet.circle([lat, lng], 1000);
 
-                    marker.addTo(map);
-                    marker.bindPopup(μSv + "μSv");
+                    m.addTo(map);
+                    m.bindPopup(μSv + "μSv");
 
-                    circle.addTo(map);
+                    c.addTo(map);
                 };
 
                 var circle = g.selectAll("circle")
@@ -75,11 +63,11 @@ define(function(require, exports, module) {
                 circle.enter()
                     .append("circle")
                     .attr({
-                        "stroke": "#f00",
-                        "stroke-width": 2,
-                        "opacity": 0.7,
-                        "fill": "#ff0",
-                        "r": 20
+                        "stroke" : "#f00",
+                        "stroke-width" : 2,
+                        "opacity" : 0.7,
+                        "fill" : "#ff0",
+                        "r" : 20
                     });
 
                 circle.exit()
@@ -112,6 +100,47 @@ define(function(require, exports, module) {
         },
 
         /**
+         * Leafletのマップを初期化する
+         * @memberOf RadMapView#
+         */
+        initMap : function () {
+            if (this.map) {
+                return;
+            }
+
+            var map = leaflet.map("map").setView([38, 140], 13);
+
+            leaflet.tileLayer(
+                RadMapView.URL_TILE_SERVER,
+                {
+                    attribution : "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
+                }
+            ).addTo(map);
+
+            this.map = map;
+        },
+
+        /**
+         * Leafletにオーバーラップさせるグラフのレイヤを初期化する
+         * @memberOf RadMapView#
+         */
+        initSVGLayer : function () {
+            console.assert(this.map, "should call initSVGLayer after initMap");
+
+            var map = this.map;
+            var svg = d3.select(map.getPanes().overlayPane).append("svg");
+
+            svg.attr({
+                "width" : 10000,
+                "height" : 10000
+            });
+
+            svg.append("g").attr("class", "leaflet-zoom-hide");
+
+            this.svg = svg;
+        },
+
+        /**
          * 初期化
          * @memberOf RadMapView#
          */
@@ -139,6 +168,11 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
         }
+    }, {
+        /**
+         * タイルサーバのURL
+         */
+        URL_TILE_SERVER : "http://{s}.tile.osm.org/{z}/{x}/{y}.png"
     });
 
     module.exports = RadMapView;
