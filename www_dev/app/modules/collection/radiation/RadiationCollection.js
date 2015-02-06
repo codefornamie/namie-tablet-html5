@@ -29,6 +29,36 @@ define(function(require, exports, module) {
          */
         parseOData: function (response, options) {
             return response;
+        },
+
+        /**
+         * GeoJSONオブジェクトに変換する。
+         * @return {Object}
+         * @memberOf RadiationCollection#
+         */
+        toGeoJSONObject : function() {
+            var geoJSONObject;
+            var features = [];
+
+            this.each(function(model) {
+                features.push(model.toGeoJSONObject());
+            });
+
+            geoJSONObject = {
+                    "type": "FeatureCollection",
+                    "features": features
+            };
+
+            return geoJSONObject;
+        },
+
+        /**
+         * GeoJSON文字列に変換する。
+         * @return {string}
+         * @memberOf RadiationCollection#
+         */
+        toGeoJSON : function() {
+            return JSON.stringify(this.toGeoJSONObject());
         }
     });
 

@@ -30,8 +30,41 @@ define(function(require, exports, module) {
          * @memberOf RadiationModel#
          */
         makeSaveData : function(saveData) {
-        }
+        },
 
+        /**
+         * GeoJSONオブジェクトに変換する。
+         * @return {Object}
+         * @memberOf RadiationModel#
+         */
+        toGeoJSONObject : function() {
+            var geoJSONObject;
+
+            geoJSONObject = {
+                    "type": "Feature",
+                    "geometory": {
+                        "type": "Point",
+                        "coordinates": [this.get("latitude"), this.get("longitude"), this.get("altitude")]
+                    },
+                    "properties": {
+                        "__id": this.get("__id"),
+                        "date": this.get("date"),
+                        "value": this.get("value"),
+                        "collectionId": this.get("collectionId")
+                    }
+            };
+
+            return geoJSONObject;
+        },
+
+        /**
+         * GeoJSON文字列に変換する。
+         * @return {string}
+         * @memberOf RadiationModel#
+         */
+        toGeoJSON : function() {
+            return JSON.stringify(this.toGeoJSONObject());
+        }
     });
 
     module.exports = RadiationModel;
