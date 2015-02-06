@@ -90,26 +90,33 @@ define(function(require, exports, module) {
                 }
             }
             this.chageMultiDateCheckbox();
-            this.setValidator();
+            this.onChangeCategory();
         },
 
+        /**
+         * バリデータの設定を行う
+         * @memberOf ArticleRegistView#
+         */
         setValidator : function() {
+            $("#articleRegistForm input,#articleRegistForm textArea").removeClass("required");
+
             var articleCategory = $("#articleCategory").val();
-            if(_.find(Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING], function(category){
-                return category === articleCategory;
-            })){
+            $("#articleRangeDate1").addClass("required");
+            switch (articleCategory) {
+            case "3":
+            case "4":
+            case "9":
+            case "10":
+                $("#articleTitle").addClass("required");
                 $("#articleDate1").addClass("required");
-            } else {
-                $("#articleDate1").removeClass("required");
-            }
-            if (articleCategory === "6") {
-                $("#articleTitle").removeClass("required");
+                break;
+            case "6":
                 $("#articleDetail").addClass("required");
                 $("#articleNickname").addClass("required");
-            } else {
+                break;
+            default:
                 $("#articleTitle").addClass("required");
-                $("#articleDetail").removeClass("required");
-                $("#articleNickname").removeClass("required");
+                break;
             }
         },
 
@@ -125,6 +132,7 @@ define(function(require, exports, module) {
         },
         /**
          * 編集時にデータを各フォームにセットする
+         * @memberOf ArticleRegistView#
          */
         setData : function() {
             $("#articleRegistTitle").text("記事編集");
@@ -189,6 +197,7 @@ define(function(require, exports, module) {
         },
         /**
          * キャンセルボタン押下時のコールバック関数
+         * @memberOf ArticleRegistView#
          */
         onClickArticleCancelButton : function() {
             if (this.backFunction) {
@@ -199,6 +208,7 @@ define(function(require, exports, module) {
         },
         /**
          * 複数日チェックボックスのチェック有無でフォームを切り替える関数
+         * @memberOf ArticleRegistView#
          */
         chageMultiDateCheckbox : function() {
             if ($("#articleMultiDate").is(":checked")) {
@@ -209,6 +219,7 @@ define(function(require, exports, module) {
         },
         /**
          * カテゴリを変更された際に呼び出されるコールバック関数
+         * @memberOf ArticleRegistView#
          */
         onChangeCategory : function() {
             var articleCategory = $("#articleCategory").val();
@@ -216,11 +227,19 @@ define(function(require, exports, module) {
                 if ($("#fileArea").children().size() >= 1) {
                     $("#addFileForm").hide();
                 }
+            } else {
+                $("#addFileForm").show();
+            }
+            if (articleCategory === "5") {
+                $(".unnecessaryInTownArticle").fadeOut();
+            } else {
+                $(".unnecessaryInTownArticle").fadeIn();
             }
             this.setValidator();
         },
         /**
          * 画像を追加ボタンを押された際のコールバック関数
+         * @memberOf ArticleRegistView#
          */
         onAddFileForm : function() {
             this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
@@ -230,6 +249,7 @@ define(function(require, exports, module) {
         },
         /**
          * 確認画面へボタンを押された際のコールバック関数
+         * @memberOf ArticleRegistView#
          */
         onClickArticleConfirmButton : function() {
             if ($(this.formId).validate().form()) {
@@ -238,12 +258,17 @@ define(function(require, exports, module) {
                     vexDialog.defaultOptions.className = 'vex-theme-default';
                     vexDialog.alert(errmsg);
                 } else {
+                    if ($("#articleCategory").val() === "5") {
+                        $(".unnecessaryInTownArticle input,.unnecessaryInTownArticle textArea").val("");
+                    }
                     this.onSubmit();
                 }
             }
         },
         /**
          * バリデーションチェック
+         * @memberOf ArticleRegistView#
+         * @return {String} エラーメッセージ。正常の場合はnullを返す
          */
         validate : function() {
             if ($("#articleMultiDate").is(":checked")) {
@@ -266,6 +291,7 @@ define(function(require, exports, module) {
         },
         /**
          * モデルにデータをセットする関数
+         * @memberOf ArticleRegistView#
          */
         setInputValue : function() {
             if (this.model === null) {
@@ -316,7 +342,6 @@ define(function(require, exports, module) {
 
             /**
              * ファイル名を元に、ユニークなID付きのファイル名を生成する
-             * 
              * @param {String} fileName
              * @return {String}
              */
@@ -399,6 +424,7 @@ define(function(require, exports, module) {
 
         /**
          * バリデーションチェックがOKとなり、登録処理が開始された際に呼び出されるコールバック関数。
+         * @memberOf ArticleRegistView#
          */
         onSubmit : function() {
             // 登録処理を開始する
