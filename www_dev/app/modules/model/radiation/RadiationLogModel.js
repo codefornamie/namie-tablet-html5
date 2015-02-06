@@ -11,7 +11,7 @@ define(function(require, exports, module) {
      * @exports EventsModel
      * @constructor
      */
-    var RadiationModel = AbstractODataModel.extend({
+    var RadiationLogModel = AbstractODataModel.extend({
         entity : "radiation",
 
         /**
@@ -19,7 +19,7 @@ define(function(require, exports, module) {
          * @param {Object} response レスポンス情報
          * @param {Object} options オプション情報
          * @return {Object} パース後の情報
-         * @memberOf RadiationModel#
+         * @memberOf RadiationLogModel#
          */
         parseOData : function(response, options) {
             return response;
@@ -27,7 +27,7 @@ define(function(require, exports, module) {
         /**
          * モデル固有の永続化データを生成する。
          * @param {Object} saveData 永続化データ
-         * @memberOf RadiationModel#
+         * @memberOf RadiationLogModel#
          */
         makeSaveData : function(saveData) {
         },
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
         /**
          * GeoJSON形式に変換する。
          * @return {Object}
-         * @memberOf RadiationModel#
+         * @memberOf RadiationLogModel#
          */
         toGeoJSON : function() {
             var geoJSON;
@@ -58,5 +58,5 @@ define(function(require, exports, module) {
         }
     });
 
-    module.exports = RadiationModel;
+    module.exports = RadiationLogModel;
 });

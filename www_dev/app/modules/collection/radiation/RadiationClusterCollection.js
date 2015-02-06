@@ -3,16 +3,16 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
-    var RadiationModel = require("modules/model/radiation/RadiationModel");
+    var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
 
     /**
      * 放射線量データのコレクションクラス
      * @class 放射線量データのコレクションクラス
-     * @exports RadiationCollection
+     * @exports RadiationClusterCollection
      * @constructor
      */
-    var RadiationCollection = AbstractODataCollection.extend({
-        model : RadiationModel,
+    var RadiationClusterCollection = AbstractODataCollection.extend({
+        model : RadiationClusterModel,
         entity : "radiation",
         condition : {
             top : 1,
@@ -25,7 +25,7 @@ define(function(require, exports, module) {
          * @param {Object} レスポンス情報
          * @param {Object} オプション
          * @return {Objecy} レスポンス情報
-         * @memberOf RadiationCollection#
+         * @memberOf RadiationClusterCollection#
          */
         parseOData: function (response, options) {
             return response;
@@ -37,13 +37,16 @@ define(function(require, exports, module) {
          *
          * @return {undefined}
          */
-        sync : function (method) {
+        sync : function (method, model, opt) {
             var self = this;
             var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpuAwBZPaW";
 
             if (method === "read") {
+                model.trigger("request", model, null, opt);
+
                 return $.get(URL_DUMMY_JSON).done(function (data) {
                     self.set(data);
+                    self.trigger("sync", self, data, opt);
                 });
             } else {
                 return AbstractODataCollection.prototype.sync.apply(this, arguments);
@@ -53,7 +56,7 @@ define(function(require, exports, module) {
         /**
          * GeoJSON形式に変換する。
          * @return {Object}
-         * @memberOf RadiationCollection#
+         * @memberOf RadiationClusterCollection#
          */
         toGeoJSON : function() {
             var geoJSON;
@@ -72,5 +75,5 @@ define(function(require, exports, module) {
         }
     });
 
-    module.exports = RadiationCollection;
+    module.exports = RadiationClusterCollection;
 });
