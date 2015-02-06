@@ -18,8 +18,7 @@ define(function(require) {
             // テスト対象のコレクション
             var radiationCollection = new RadiationCollection();
 
-            // オブジェクト形式のテスト用データ
-            var targetModelObj = {
+            var targetModelJSON = {
                     "type" : "Feature",
                     "geometory" : {
                         "type" : "Point",
@@ -32,54 +31,43 @@ define(function(require) {
                         "collectionId" : "COLLECTION_ID"
                     }
             };
-            var targetObj = {
+            var targetJSON = {
                     "type" : "FeatureCollection",
                     "features" : []
             };
 
             _(10).times(function(index) {
                 // テスト用モデルデータを複製
-                var modelObj = JSON.parse(JSON.stringify(targetModelObj));
+                var modelJSON = JSON.parse(JSON.stringify(targetModelJSON));
 
-                modelObj.properties.__id = "RADIATION_LOG_UUID_" + index;
+                modelJSON.properties.__id = "RADIATION_LOG_UUID_" + index;
 
-                targetObj.features.push(modelObj);
+                targetJSON.features.push(modelJSON);
 
                 var radiationModel = new RadiationModel({
-                    __id : modelObj.properties.__id,
-                    date : modelObj.properties.date,
-                    latitude : modelObj.geometory.coordinates[0],
-                    longitude : modelObj.geometory.coordinates[1],
-                    altitude : modelObj.geometory.coordinates[2],
-                    value : modelObj.properties.value,
-                    collectionId : modelObj.properties.collectionId
+                    __id : modelJSON.properties.__id,
+                    date : modelJSON.properties.date,
+                    latitude : modelJSON.geometory.coordinates[0],
+                    longitude : modelJSON.geometory.coordinates[1],
+                    altitude : modelJSON.geometory.coordinates[2],
+                    value : modelJSON.properties.value,
+                    collectionId : modelJSON.properties.collectionId
                 });
                 radiationCollection.push(radiationModel);
             });
-            // JSON形式のテスト用コレクションデータ
-            var targetJSON = JSON.stringify(targetObj);
 
             testData = {
                     radiationCollection : radiationCollection,
-                    targetObj : targetObj,
                     targetJSON : targetJSON
             };
 
             done();
         });
 
-        it("TEST-01 RadiationCollection#toGeoJSONObject", function(done) {
-            var resultObj = testData.radiationCollection.toGeoJSONObject();
-
-            assert.equal(typeof resultObj, "object");
-
-            done();
-        });
-
-        it("TEST-02 RadiationCollection#toGeoJSON", function(done) {
+        it("TEST-01 RadiationCollection#toGeoJSON", function(done) {
             var resultJSON = testData.radiationCollection.toGeoJSON();
 
-            assert.equal(resultJSON, testData.targetJSON);
+            assert.deepEqual(resultJSON, testData.targetJSON);
 
             done();
         });

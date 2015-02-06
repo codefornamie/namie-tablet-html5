@@ -15,8 +15,7 @@ define(function(require) {
         });
 
         beforeEach(function(done){
-            // オブジェクト形式のテスト用データ
-            var targetObj = {
+            var targetJSON = {
                     "type" : "Feature",
                     "geometory" : {
                         "type" : "Point",
@@ -29,41 +28,30 @@ define(function(require) {
                         "collectionId" : "COLLECTION_ID"
                     }
             };
-            // JSON形式のテスト用データ
-            var targetJSON = JSON.stringify(targetObj);
 
             // テスト対象のモデル
             var radiationModel = new RadiationModel({
-                __id : targetObj.properties.__id,
-                date : targetObj.properties.date,
-                latitude : targetObj.geometory.coordinates[0],
-                longitude : targetObj.geometory.coordinates[1],
-                altitude : targetObj.geometory.coordinates[2],
-                value : targetObj.properties.value,
-                collectionId : targetObj.properties.collectionId
+                __id : targetJSON.properties.__id,
+                date : targetJSON.properties.date,
+                latitude : targetJSON.geometory.coordinates[0],
+                longitude : targetJSON.geometory.coordinates[1],
+                altitude : targetJSON.geometory.coordinates[2],
+                value : targetJSON.properties.value,
+                collectionId : targetJSON.properties.collectionId
             });
 
             testData = {
                     radiationModel : radiationModel,
-                    targetObj : targetObj,
                     targetJSON : targetJSON
             };
 
             done();
         });
 
-        it("TEST-01 RadiationModel#toGeoJSONObject", function(done) {
-            var resultObj = testData.radiationModel.toGeoJSONObject();
-
-            assert.equal(typeof resultObj, "object");
-
-            done();
-        });
-
-        it("TEST-02 RadiationModel#toGeoJSON", function(done) {
+        it("TEST-01 RadiationModel#toGeoJSON", function(done) {
             var resultJSON = testData.radiationModel.toGeoJSON();
 
-            assert.equal(resultJSON, testData.targetJSON);
+            assert.deepEqual(resultJSON, testData.targetJSON);
 
             done();
         });

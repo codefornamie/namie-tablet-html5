@@ -33,14 +33,14 @@ define(function(require, exports, module) {
         },
 
         /**
-         * GeoJSONオブジェクトに変換する。
+         * GeoJSON形式に変換する。
          * @return {Object}
          * @memberOf RadiationModel#
          */
-        toGeoJSONObject : function() {
-            var geoJSONObject;
+        toGeoJSON : function() {
+            var geoJSON;
 
-            geoJSONObject = {
+            geoJSON = {
                     "type": "Feature",
                     "geometory": {
                         "type": "Point",
@@ -54,16 +54,7 @@ define(function(require, exports, module) {
                     }
             };
 
-            return geoJSONObject;
-        },
-
-        /**
-         * GeoJSON文字列に変換する。
-         * @return {string}
-         * @memberOf RadiationModel#
-         */
-        toGeoJSON : function() {
-            return JSON.stringify(this.toGeoJSONObject());
+            return geoJSON;
         }
     });
 

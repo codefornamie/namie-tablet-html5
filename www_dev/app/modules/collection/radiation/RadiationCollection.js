@@ -32,33 +32,24 @@ define(function(require, exports, module) {
         },
 
         /**
-         * GeoJSONオブジェクトに変換する。
+         * GeoJSON形式に変換する。
          * @return {Object}
          * @memberOf RadiationCollection#
          */
-        toGeoJSONObject : function() {
-            var geoJSONObject;
+        toGeoJSON : function() {
+            var geoJSON;
             var features = [];
 
             this.each(function(model) {
-                features.push(model.toGeoJSONObject());
+                features.push(model.toGeoJSON());
             });
 
-            geoJSONObject = {
+            geoJSON = {
                     "type": "FeatureCollection",
                     "features": features
             };
 
-            return geoJSONObject;
-        },
-
-        /**
-         * GeoJSON文字列に変換する。
-         * @return {string}
-         * @memberOf RadiationCollection#
-         */
-        toGeoJSON : function() {
-            return JSON.stringify(this.toGeoJSONObject());
+            return geoJSON;
         }
     });
 
