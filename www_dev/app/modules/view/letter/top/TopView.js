@@ -119,13 +119,16 @@ define(function(require, exports, module) {
 
         /**
          * 編集画面を開く
-         * @param {String} id 編集する記事のID
+         * @param {Object} param
          * @memberOf LetterTopLayout#
          */
-        showEdit : function(id) {
-            console.assert(_.isString(id), "id should be a string");
+        showEdit : function(param) {
+            console.assert(param, "param should be specified in order to show letter edit page");
+            console.assert(param.letterModel, "letterModel should be specified in order to show letter edit page");
 
-            var letterEditView = new LetterEditView();
+            var letterEditView = new LetterEditView({
+                letterModel: param.letterModel
+            });
 
             this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
@@ -133,17 +136,22 @@ define(function(require, exports, module) {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
             this.setView(LetterTopLayout.SELECTOR_LETTER_EDIT, letterEditView);
+
+            $("#snap-content").scrollTop(0);
         },
 
         /**
          * 編集完了画面を開く
-         * @param {String} id 編集した記事のID
+         * @param {Object} param
          * @memberOf LetterTopLayout#
          */
-        showEditComplete : function(id) {
-            console.assert(_.isString(id), "id should be a string");
+        showEditComplete : function(param) {
+            console.assert(param, "param should be specified in order to show letter edit page");
+            console.assert(param.letterModel, "letterModel should be specified in order to show letter edit page");
 
-            var letterEditCompleteView = new LetterEditCompleteView();
+            var letterEditCompleteView = new LetterEditCompleteView({
+                letterModel: param.letterModel
+            });
 
             this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
@@ -315,7 +323,8 @@ define(function(require, exports, module) {
          * @param {Object} params
          */
         onRoute : function(route, params) {
-            var id;
+            var letterId;
+            var letterModel;
 
             switch (route) {
             case "letterSelect":
@@ -332,13 +341,21 @@ define(function(require, exports, module) {
                 break;
 
             case "letterEdit":
-                id = params[0];
-                this.layout.showEdit(id);
+                letterId = params[0];
+                letterModel = this.letterCollection.get(letterId);
+
+                this.layout.showEdit({
+                    letterModel: letterModel
+                });
                 break;
 
             case "letterEditComplete":
-                id = params[0];
-                this.layout.showEditComplete(id);
+                letterId = params[0];
+                letterModel = this.letterCollection.get(letterId);
+
+                this.layout.showEditComplete({
+                    letterModel: letterModel
+                });
                 break;
 
             case "letterWizard":
