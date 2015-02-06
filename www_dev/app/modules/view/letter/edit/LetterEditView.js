@@ -78,9 +78,39 @@ define(function(require, exports, module) {
          * @memberOf LetterEditView#
          */
         onClickUpdateLetter : function(ev) {
-            alert("更新しました(DUMMY)");
-            app.router.go("letters/" + this.model.get("__id") + "/modified");
-        }
+            this.showLoading();
+            this.setInputValue();
+            this.saveModel();
+        },
+        
+        /**
+         * モデルにデータをセットする関数
+         * @memberOf LetterEditView#
+         */
+        setInputValue : function() {
+            this.model.set("description", $("#letter-edit-form__body").val());
+            this.model.set("nickname", $("#letter-edit-form__nickname").val());
+        },
+        
+        /**
+         * Modelの保存
+         * @memberOf LetterWizardView#
+         */
+        saveModel : function() {
+            this.model.save(null, {
+                success : $.proxy(function() {
+                    this.hideLoading();
+                    this.model.set("isEdited", true);
+                    app.router.go("letters/" + this.model.get("__id") + "/modified");
+                }, this),
+                error : function(e) {
+                    this.hideLoading();
+                    vexDialog.alert("保存に失敗しました。");
+                    app.logger.error("保存に失敗しました。");
+                }
+            });
+        },
+
     });
 
     module.exports = LetterEditView;
