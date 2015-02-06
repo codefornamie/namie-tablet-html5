@@ -25,6 +25,19 @@ define(function(require, exports, module) {
         }
     };
     /**
+     * baseURLとhrefからURLを求める
+     * 
+     * @memberOf CommonUtil#
+     * @param {String} baseUrl ベースとなるURL
+     * @param {String} href aタグのhref
+     * @return {String} 求められたURL
+     */
+    CommonUtil.resolveUrl = function(baseUrl, href) {
+        var linkUrl = baseUrl.replace(/.jp\u002f.*/g, '.jp\u002f');
+        var thVal = href.replace("http://", "").split("/");
+        return linkUrl + thVal[1] + "/" + thVal[2];
+    };
+    /**
      * 文字列の半角スペースを削除する。。
      * 
      * @param {String} str 文字列

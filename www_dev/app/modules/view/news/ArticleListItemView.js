@@ -393,9 +393,8 @@ define(function(require, exports, module) {
          * @memberOf ArticleListItemView#
          */
         onClickAnchorTag : function(ev) {
+            window.open(CommonUtil.resolveUrl(this.model.get("link"), ev.target.href));
             ev.preventDefault();
-            vexDialog.defaultOptions.className = 'vex-theme-default';
-            vexDialog.alert(this.model.getCategory() + "のHPを直接開いてリンクを参照してください。");
         },
         /**
          * 指定URiの画像データをストレージに保存する。
