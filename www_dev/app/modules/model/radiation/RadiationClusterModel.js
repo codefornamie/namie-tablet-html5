@@ -8,7 +8,7 @@ define(function(require, exports, module) {
      * 放射線量データのモデルクラスを作成する。
      *
      * @class 放射線量データのモデルクラス
-     * @exports EventsModel
+     * @exports RadiationClusterModel
      * @constructor
      */
     var RadiationClusterModel = AbstractODataModel.extend({

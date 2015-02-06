@@ -2,12 +2,12 @@ define(function(require) {
     "use strict";
 
     var app = require("app");
-    var RadiationModel = require("modules/model/radiation/RadiationModel");
-    var RadiationCollection = require("modules/collection/radiation/RadiationCollection");
+    var RadiationLogModel = require("modules/model/radiation/RadiationLogModel");
+    var RadiationLogCollection = require("modules/collection/radiation/RadiationLogCollection");
 
     app.noRendering = true;
 
-    describe("RadiationCollection", function() {
+    describe("RadiationLogCollection", function() {
         var testData;
 
         before(function () {
@@ -16,7 +16,7 @@ define(function(require) {
 
         beforeEach(function(done){
             // テスト対象のコレクション
-            var radiationCollection = new RadiationCollection();
+            var radiationLogCollection = new RadiationLogCollection();
 
             var targetModelJSON = {
                     "type" : "Feature",
@@ -44,7 +44,7 @@ define(function(require) {
 
                 targetJSON.features.push(modelJSON);
 
-                var radiationModel = new RadiationModel({
+                var radiationLogModel = new RadiationLogModel({
                     __id : modelJSON.properties.__id,
                     date : modelJSON.properties.date,
                     latitude : modelJSON.geometory.coordinates[0],
@@ -53,19 +53,19 @@ define(function(require) {
                     value : modelJSON.properties.value,
                     collectionId : modelJSON.properties.collectionId
                 });
-                radiationCollection.push(radiationModel);
+                radiationLogCollection.push(radiationLogModel);
             });
 
             testData = {
-                    radiationCollection : radiationCollection,
+                    radiationLogCollection : radiationLogCollection,
                     targetJSON : targetJSON
             };
 
             done();
         });
 
-        it("TEST-01 RadiationCollection#toGeoJSON", function(done) {
-            var resultJSON = testData.radiationCollection.toGeoJSON();
+        it("TEST-01 RadiationLogCollection#toGeoJSON", function(done) {
+            var resultJSON = testData.radiationLogCollection.toGeoJSON();
 
             assert.deepEqual(resultJSON, testData.targetJSON);
 

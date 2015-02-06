@@ -2,12 +2,11 @@ define(function(require) {
     "use strict";
 
     var app = require("app");
-    var _ = require("underscore");
-    var RadiationModel = require("modules/model/radiation/RadiationModel");
+    var RadiationLogModel = require("modules/model/radiation/RadiationLogModel");
 
     app.noRendering = true;
 
-    describe("RadiationModel", function() {
+    describe("RadiationLogModel", function() {
         var testData;
 
         before(function () {
@@ -30,7 +29,7 @@ define(function(require) {
             };
 
             // テスト対象のモデル
-            var radiationModel = new RadiationModel({
+            var radiationLogModel = new RadiationLogModel({
                 __id : targetJSON.properties.__id,
                 date : targetJSON.properties.date,
                 latitude : targetJSON.geometory.coordinates[0],
@@ -41,15 +40,15 @@ define(function(require) {
             });
 
             testData = {
-                    radiationModel : radiationModel,
+                    radiationLogModel : radiationLogModel,
                     targetJSON : targetJSON
             };
 
             done();
         });
 
-        it("TEST-01 RadiationModel#toGeoJSON", function(done) {
-            var resultJSON = testData.radiationModel.toGeoJSON();
+        it("TEST-01 RadiationLogModel#toGeoJSON", function(done) {
+            var resultJSON = testData.radiationLogModel.toGeoJSON();
 
             assert.deepEqual(resultJSON, testData.targetJSON);
 
