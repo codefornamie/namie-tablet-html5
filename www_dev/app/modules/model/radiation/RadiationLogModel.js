@@ -42,9 +42,13 @@ define(function(require, exports, module) {
 
             geoJSON = {
                     "type": "Feature",
-                    "geometory": {
+                    "geometry": {
                         "type": "Point",
-                        "coordinates": [this.get("latitude"), this.get("longitude"), this.get("altitude")]
+                        "coordinates": [
+                            parseInt(this.get("longitude"), 10) / Math.pow(10, 6),
+                            parseInt(this.get("latitude"), 10) / Math.pow(10, 6),
+                           parseInt(this.get("altitude"), 10) / Math.pow(10, 3)
+                        ]
                     },
                     "properties": {
                         "__id": this.get("__id"),
