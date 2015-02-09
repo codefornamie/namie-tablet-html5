@@ -4,6 +4,9 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
     var RadMapView = require("modules/view/rad/top/RadMapView");
+    var RadClusterListView = require("modules/view/rad/top/RadClusterListView");
+    var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
+    var RadiationClusterCollection = require("modules/collection/radiation/RadiationClusterCollection");
 
     /**
      * 放射線アプリのトップ画面を表示するためのViewクラスを作成する。
@@ -47,6 +50,9 @@ define(function(require, exports, module) {
             this.initEvents();
 
             this.setView("#map-container", new RadMapView());
+            this.setView("#contents__secondary .sidebar", new RadClusterListView({
+                collection: this.radClusterCollection
+            }));
 
             // ローディングを停止
             this.hideLoading();
@@ -57,6 +63,18 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         initCollection : function () {
+            this.radClusterCollection = new RadiationClusterCollection();
+
+            //this.radClusterCollection.fetch();
+            // TODO: テスト用データの作成を差し替える
+            _(10).times($.proxy(function(index) {
+                this.radClusterCollection.push(
+                    new RadiationClusterModel({
+                        __id: "test-content-" + index,
+                        dispTitle: "テスト用コンテンツ" + index
+                    })
+                );
+            }), this);
         },
 
         /**
