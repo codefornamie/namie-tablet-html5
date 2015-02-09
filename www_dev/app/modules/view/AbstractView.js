@@ -121,11 +121,32 @@ define(function(require, exports, module) {
             });
         },
         /**
+         * プログレスバー付きローディングメッセージを表示する。
+         * @memberOf AbstractView#
+         */
+        showProgressBarLoading : function() {
+            $.blockUI({
+                message : "しばらくお待ちください<br><progress max='100'></progress>",
+                css : {
+                    border : 'none',
+                    padding : '10px',
+                    backgroundColor : '#000',
+                    '-webkit-border-radius' : '10px',
+                    '-moz-border-radius' : '10px',
+                    opacity : 0.5,
+                    color : '#fff'
+                }
+            });
+            this.$progressBar = $("progress"); 
+            this.$progressBar.attr("value", 0);
+        },
+        /**
          * ローディングメッセージを閉じる
          * @memberOf AbstractView#
          */
         hideLoading : function() {
             $.unblockUI();
+            this.$progressBar = [];
         },
         /**
          * aタグのクリックイベントを処理する。 ブラウザデフォルトではなくpushStateに変更する
