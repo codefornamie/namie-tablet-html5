@@ -20,6 +20,10 @@ define(function(require, exports, module) {
          * このViewのテンプレートファイルパス
          */
         template : require("ldsh!templates/{mode}/top/top"),
+        events : {
+            "click [data-radiation-upload-button]": "onClickRadiationUploadButton",
+            "change #radiationFileInput": "onChangeRadiationFile"
+        },
 
         /**
          * Viewの描画処理の開始前に呼び出されるコールバック関数。
@@ -58,6 +62,20 @@ define(function(require, exports, module) {
 
             // ローディングを停止
             this.hideLoading();
+        },
+        /**
+         * 線量データアップロードボタンが押下された際のコールバック
+         * @memberOf RadTopView#
+         */
+        onClickRadiationUploadButton : function() {
+            $(this.el).find("#radiationFileInput")[0].click();
+        },
+        /**
+         * 線量データアップロードボタンが押下された際のコールバック
+         * @param {Event} ev ファイルイベント
+         * @memberOf RadTopView#
+         */
+        onChangeRadiationFile : function(ev) {
         },
 
         /**
