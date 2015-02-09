@@ -126,6 +126,7 @@ define(function(require, exports, module) {
             // TODO:
             return;
 
+            /*
             data.features.forEach(function (radLog) {
                 var lat = parseInt(radLog.latitude, 10) / Math.pow(10, 6);
                 var lng = parseInt(radLog.longitude, 10) / Math.pow(10, 6);
@@ -140,6 +141,7 @@ define(function(require, exports, module) {
 
             map.on("viewreset", update);
             update();
+            */
         },
 
         /**
