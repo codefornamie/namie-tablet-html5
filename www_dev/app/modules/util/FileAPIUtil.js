@@ -17,6 +17,11 @@ define(function(require, exports, module) {
      */
     FileAPIUtil.GET_GALLERY_MAX = 8;
     /**
+     * 線量データ一覧の表示最大値
+     * @memberOf FileAPIUtil#
+     */
+    FileAPIUtil.GET_RADIATION_MAX = 25;
+    /**
      * File関連のAPIまたはクラスがサポートされているかチェックを行う。
      * @return サポートの可否 true:サポートされいる false:サポートされていない
      * @memberOf FileAPIUtil#
@@ -162,6 +167,67 @@ define(function(require, exports, module) {
         }, false);
     };
     /**
+     * HORIBA端末にて計測したデータ一覧を取得する
+     * @param {Function} callback コールバック関数
+     * @memberOf FileAPIUtil#
+     */
+    FileAPIUtil.getHoribaRadiationList = function(callback) {
+        document.addEventListener('deviceready', function() {
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+                var rootDirectoryEntry = fileSystem.root;
+                // HORIBA/Rabi/配下にCSVデータがデフォルトで保存されてあるため、そこのディレクトリを読み込む
+                rootDirectoryEntry.getDirectory("HORIBA/Radi/", {
+                    create : true
+                }, function(directoryEntry) {
+                    // ディレクトリ内のファイルを読み込むためのDirectoryReaderオブジェクトを生成
+                    var directoryReader = directoryEntry.createReader();
+                    // ディレクトリ内のエントリの読み込み
+                    directoryReader.readEntries(function(entries) {
+                        var fileArray = [];
+                        var files = _.filter(entries, function(entry) {
+                            return entry.isFile === true;
+                        });
+                        // CSVファイルのみでフィルタする
+                        files = _.filter(files, function(file) {
+                            return file.name.match(/\.csv$/i);
+                        });
+
+                        _.each(files, function(fileEntry) {
+                            fileEntry.getMetadata(function(metadata) {
+                                fileEntry.lastModifiedDate = metadata.modificationTime;
+                                fileArray.push(fileEntry);
+                                if (fileArray.length >= files.length) {
+                                    directoryEntry = null;
+                                    // 更新日時でソートし、先頭のGET_RADIATION_MAX数件のみ配列で返却する
+                                    fileArray = _.sortBy(fileArray, function(fileItem) {
+                                        return -fileItem.lastModifiedDate;
+                                    });
+                                    callback(fileArray.slice(0, FileAPIUtil.GET_RADIATION_MAX));
+                                }
+                            }, function(err) {
+                                fileArray.push({});
+                                app.logger.debug("FileAPIUtil.getHoribaRadiationList: getMetadata(): error" + err.code);
+                            }).bind(fileEntry);
+                        }.bind(this));
+                        // ファイルが無い場合は空配列を返す
+                        if (files.length === 0) {
+                            callback(fileArray);
+                        }
+                    }, function(e) {
+                        // readEntriesでエラー
+                        app.logger.debug("FileAPIUtil.getHoribaRadiationList: readEntries(): error" + e.code);
+                    });
+                }, function(e) {
+                    // getDirectoryでエラー
+                    app.logger.debug("FileAPIUtil.getHoribaRadiationList: getDirectory(): error" + e.code);
+                });
+            }, function(e) {
+                // requestFileSystemでエラー
+                app.logger.debug("FileAPIUtil.getHoribaRadiationList: requestFileSystem(): error" + e.code);
+            });
+        }, false);
+    };
+    /**
      * 指定されたFileEntryの配列のBlobURLを生成し、FileEntryに紐づける。 FileAPIUtil.IMAGE_RESIZEプロパティが<code>true</code>の場合、
      * 画像のリサイズ処理を行い、その画像のデータを示すDataURLをFileEntryに設定する。
      * @param {Array} fileArray FileEntryの配列
@@ -238,7 +304,7 @@ define(function(require, exports, module) {
     FileAPIUtil.getFileEntry = function(directoryEntry, fileName, callback, resize) {
         directoryEntry.getFile(fileName, null, function(fileEntry) {
             fileEntry.file(function(file) {
-                // 画像登録日時を取得する
+                // 最終更新日時を取得する
                 fileEntry.lastModifiedDate = file.lastModifiedDate;
                 fileEntry.fileObject = file;
                 callback(fileEntry);

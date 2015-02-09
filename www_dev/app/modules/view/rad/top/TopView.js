@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var RadClusterListView = require("modules/view/rad/top/RadClusterListView");
     var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
     var RadiationClusterCollection = require("modules/collection/radiation/RadiationClusterCollection");
+    var ModalRadiationListView = require("modules/view/rad/top/ModalRadiationListView");
+    var FileAPIUtil = require("modules/util/FileAPIUtil");
 
     /**
      * 放射線アプリのトップ画面を表示するためのViewクラスを作成する。
@@ -21,8 +23,7 @@ define(function(require, exports, module) {
          */
         template : require("ldsh!templates/{mode}/top/top"),
         events : {
-            "click [data-radiation-upload-button]": "onClickRadiationUploadButton",
-            "change #radiationFileInput": "onChangeRadiationFile"
+            "click [data-radiation-upload-button]": "onClickRadiationUploadButton"
         },
 
         /**
@@ -68,14 +69,43 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         onClickRadiationUploadButton : function() {
-            $(this.el).find("#radiationFileInput")[0].click();
+            this.showLoading();
+            var modalRadiationListView = new ModalRadiationListView();
+
+            this.setView("#radiation-list-container", modalRadiationListView);
+            this.listenTo(modalRadiationListView, "closeModalRadiationList", function () {
+                modalRadiationListView.remove();
+                // URLを元に戻す
+                app.router.back();
+            });
+            modalRadiationListView.render();
+
+            // カレンダー画面用URLに遷移
+            app.router.navigate("radiationList", {
+                trigger: true,
+                replace: false
+            });
+            
+
+//            FileAPIUtil.getHoribaRadiationList(this.setRadiationList.bind(this));
         },
         /**
-         * 線量データアップロードボタンが押下された際のコールバック
-         * @param {Event} ev ファイルイベント
+         * 画面にギャラリー一覧を表示する関数
+         * @param {Array} fileArray FileEntryオブジェクトの配列
          * @memberOf RadTopView#
          */
-        onChangeRadiationFile : function(ev) {
+        setRadiationList : function(fileArray) {
+            var urls = [];
+            var fileCount = 0;
+            if (fileArray.length === 0) {
+                alert("線量データがありません。")
+                this.hideLoading();
+                return;
+            }
+            _.each(fileArray, function(fileEntry) {
+                console.log(fileEntry.name);
+            }.bind(this));
+            this.hideLoading();
         },
 
         /**
