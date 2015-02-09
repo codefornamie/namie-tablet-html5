@@ -328,18 +328,18 @@ define(function(require, exports, module) {
          * @memberOf ArticleModel#
          */
         isExpired : function() {
-//            var time = Date.parse(this.get("publishedAt"));
-//            
-//            var date = new Date();
-//            var baseSec = date.getTime();
-//            
-//            var addSec = this.get("period") * 86400000;
-//            var targetSec = baseSec + addSec;
-//            if(baseSec > targetSec){
-//                return true;
-//            }
-//            return false;
-            return true;
+            if (!this.get("period")) {
+                return false;
+            }
+            var publishedAt = Date.parse(this.get("publishedAt")).getTime();
+
+            var now = (new Date()).getTime();
+
+            var period = this.get("period") * 86400000;
+            if (now > publishedAt + period) {
+                return true;
+            }
+            return false;
         },
         /**
          * この記事の本文に対して、クローラーが"minpo"スクレイピングを実施しているかどうかを判定する。
