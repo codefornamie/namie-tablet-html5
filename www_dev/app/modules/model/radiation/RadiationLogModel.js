@@ -22,6 +22,8 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         parseOData : function(response, options) {
+            console.log(response);
+
             return response;
         },
         /**
@@ -45,9 +47,9 @@ define(function(require, exports, module) {
                     "geometry": {
                         "type": "Point",
                         "coordinates": [
-                            parseInt(this.get("longitude"), 10) / Math.pow(10, 6),
-                            parseInt(this.get("latitude"), 10) / Math.pow(10, 6),
-                           parseInt(this.get("altitude"), 10) / Math.pow(10, 3)
+                            this.get("longitude"),
+                            this.get("latitude"),
+                            this.get("altitude")
                         ]
                     },
                     "properties": {

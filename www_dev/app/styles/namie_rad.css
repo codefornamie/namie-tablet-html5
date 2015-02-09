@@ -6,7 +6,7 @@
  *  1. Base
  *  ----------
  */
-.button {
+.page-rad .button {
     display: inline-block;
     background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3e0d5));
     border-radius: 50px;
@@ -36,6 +36,10 @@
 
 .page-rad .contents__primary {
     margin: 0;
+}
+
+.page-rad img.leaflet-tile {
+    pointer-events: none;
 }
 
 /**

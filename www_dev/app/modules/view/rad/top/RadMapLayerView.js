@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var d3 = require("d3");
     var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
+    var RadPopupView = require("modules/view/rad/top/RadPopupView");
     var RadiationLogCollection = require("modules/collection/radiation/RadiationLogCollection");
 
     /**
@@ -48,10 +49,12 @@ define(function(require, exports, module) {
             console.assert(param, "param should be given");
             console.assert(param.radiationClusterModel, "radiationClusterModel should be specified");
 
+            this.isHidden = false;
             this.radiationClusterModel = param.radiationClusterModel;
 
             this.initCollection();
             this.initEvents();
+
 
             //this.radiationLogCollection.fetch();
         },
@@ -71,6 +74,7 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         initEvents : function() {
+            this.listenTo(this.radiationClusterModel, "change:hidden", this.onChangeClusterModel);
             this.listenTo(this.radiationLogCollection, "request", this.onRequestCollection);
             this.listenTo(this.radiationLogCollection, "add", this.onAddCollection);
             this.listenTo(this.radiationLogCollection, "sync", this.onSyncCollection);
@@ -86,48 +90,33 @@ define(function(require, exports, module) {
             console.assert(this.container, "should call setContainer before drawing");
 
             var map = this.map;
-            var svg = this.svg;
             var container = this.container;
             var data = this.radiationLogCollection.toGeoJSON();
-            var transform = d3.geo.transform({
-                point : function (x, y) {
-                    var point = map.latLngToLayerPoint(new leaflet.LatLng(y, x));
 
-                    this.stream.point(point.x, point.y);
-                }
-            });
-            var path = d3.geo.path().projection(transform);
-
-            var circle = container.selectAll("circle").data(data.features);
+            var circle = container.selectAll("circle.layer-" + this.cid).data(data.features);
 
             circle.enter()
                 .append("circle")
                 .attr({
-                    "stroke" : "#f00",
-                    "stroke-width" : 2,
                     "opacity" : 0.7,
-                    "fill" : "#ff0",
-                    "r" : 20
+                    "fill" : function (d) {
+                        return GeoUtil.generateColorByDose(d.properties.value);
+                    },
+                    "r" : 10,
+                    "class" : "leaflet-clickable layer-" + this.cid
+                })
+                .each(function (d) {
+                    var popupView = new RadPopupView({
+                        origin : this,
+                        data : d,
+                        map : map
+                    });
                 });
 
             circle.exit()
                 .remove();
 
             var update = function () {
-                var bounds = path.bounds(data);
-                var topLeft = bounds[0];
-                var bottomRight = bounds[1];
-
-                var AREA_MARGIN = 300;
-
-                svg
-                    .attr("width", bottomRight[0] - topLeft[0] + AREA_MARGIN * 2)
-                    .attr("height", bottomRight[1] - topLeft[1] + AREA_MARGIN * 2)
-                    .style("left", topLeft[0] - AREA_MARGIN + "px")
-                    .style("top", topLeft[1] - AREA_MARGIN + "px");
-
-                container.attr("transform", "translate(" + (-topLeft[0] + AREA_MARGIN) + "," + (-topLeft[1] + AREA_MARGIN) + ")");
-
                 circle
                     .attr("transform", function (d) {
                         var x = GeoUtil.project(map, d.geometry.coordinates)[0];
@@ -137,6 +126,7 @@ define(function(require, exports, module) {
                     });
             };
 
+            /*
             var putMarker = function (lat, lng, μSv) {
                 var m = leaflet.marker([lat, lng]);
                 var c = leaflet.circle([lat, lng], 1000);
@@ -151,12 +141,13 @@ define(function(require, exports, module) {
                 var coords = feature.geometry.coordinates;
                 var props = feature.properties;
 
-                var lat = coords[0];
-                var lng = coords[1];
+                var lat = coords[1];
+                var lng = coords[0];
                 var μSv = props.value;
 
                 putMarker(lat, lng, μSv);
             });
+            */
 
             map.on("viewreset", update);
             update();
@@ -168,6 +159,8 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         show : function () {
+            $(".layer-" + this.cid).show();
+            this.isHidden = false;
         },
 
         /**
@@ -176,6 +169,20 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         hide : function () {
+            $(".layer-" + this.cid).hide();
+            this.isHidden = true;
+        },
+
+        /**
+         * toggle
+         * @memberOf RadMapLayerView#
+         */
+        toggle : function () {
+            if (this.isHidden) {
+                this.show();
+            } else {
+                this.hide();
+            }
         },
 
         /**
@@ -203,6 +210,20 @@ define(function(require, exports, module) {
          */
         setContainer : function (container) {
             this.container = container;
+        },
+
+        /**
+         * onChangeClusterModel
+         * @memberOf RadMapLayerView#
+         */
+        onChangeClusterModel : function () {
+            var isHidden = this.radiationClusterModel.get("hidden");
+
+            if (isHidden) {
+                this.hide();
+            } else {
+                this.show();
+            }
         },
 
         /**

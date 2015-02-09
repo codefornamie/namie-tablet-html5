@@ -49,7 +49,9 @@ define(function(require, exports, module) {
             this.initCollection();
             this.initEvents();
 
-            this.setView("#map-container", new RadMapView());
+            this.setView("#map-container", new RadMapView({
+                radiationClusterCollection: this.radClusterCollection
+            }));
             this.setView("#contents__secondary .sidebar", new RadClusterListView({
                 collection: this.radClusterCollection
             }));
@@ -65,16 +67,16 @@ define(function(require, exports, module) {
         initCollection : function () {
             this.radClusterCollection = new RadiationClusterCollection();
 
-            //this.radClusterCollection.fetch();
+            this.radClusterCollection.fetch();
             // TODO: テスト用データの作成を差し替える
-            _(10).times($.proxy(function(index) {
-                this.radClusterCollection.push(
-                    new RadiationClusterModel({
-                        __id: "test-content-" + index,
-                        dispTitle: "テスト用コンテンツ" + index
-                    })
-                );
-            }), this);
+            //_(10).times($.proxy(function(index) {
+            //    this.radClusterCollection.push(
+            //        new RadiationClusterModel({
+            //            __id: "test-content-" + index,
+            //            dispTitle: "テスト用コンテンツ" + index
+            //        })
+            //    );
+            //}), this);
         },
 
         /**
@@ -82,6 +84,7 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         initEvents : function() {
+            this.listenTo(this.radClusterCollection, "sync", this.render);
         }
     });
 

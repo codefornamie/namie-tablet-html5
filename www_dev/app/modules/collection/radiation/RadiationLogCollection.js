@@ -45,6 +45,14 @@ define(function(require, exports, module) {
                 model.trigger("request", model, null, opt);
 
                 return $.get(URL_DUMMY_JSON).done(function (data) {
+                    data.forEach(function (feature) {
+                        feature.__id = _.uniqueId();
+                        feature.dispTitle = "測定データ" + feature.__id;
+                        feature.latitude = (35 + Math.random() * 5);
+                        feature.longitude = (135 + Math.random() * 5);
+                        feature.value = (0.001 + Math.random() * 0.5);
+                    });
+
                     self.set(data);
                     self.trigger("sync", self, data, opt);
                 });
