@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-    var RadMapView = require("modules/view/rad/top/MapView");
+    var RadMapView = require("modules/view/rad/top/RadMapView");
 
     /**
      * 放射線アプリのトップ画面を表示するためのViewクラスを作成する。
