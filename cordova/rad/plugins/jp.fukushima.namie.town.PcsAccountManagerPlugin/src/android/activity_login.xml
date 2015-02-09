@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_login"
+    android:name="activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/widget_margin_bottom"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <TextView android:id="@+id/userid_label"
+          android:layout_width="280sp"
+          android:layout_height="wrap_content"
+          android:text="ユーザー名："
+          android:textSize="32sp" />
+          <EditText
+            android:id="@+id/username"
+            android:layout_width="320sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:textSize="32sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <TextView android:id="@+id/password_label"
+          android:layout_width="280sp"
+          android:layout_height="wrap_content"
+          android:text="パスワード："
+          android:textSize="32sp" />
+          <EditText
+            android:id="@+id/password"
+            android:layout_width="320sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:textSize="32sp" />
+     </LinearLayout>
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="登録" />
+    </LinearLayout>
+
+</LinearLayout>
