@@ -86,21 +86,19 @@ define(function(require, exports, module) {
             console.assert(this.container, "should call setContainer before drawing");
 
             var map = this.map;
+            var svg = this.svg;
             var container = this.container;
             var data = this.radiationLogCollection.toGeoJSON();
+            var transform = d3.geo.transform({
+                point : function (x, y) {
+                    var point = map.latLngToLayerPoint(new leaflet.LatLng(y, x));
 
-            var putMarker = function (lat, lng, μSv) {
-                var m = leaflet.marker([lat, lng]);
-                var c = leaflet.circle([lat, lng], 1000);
+                    this.stream.point(point.x, point.y);
+                }
+            });
+            var path = d3.geo.path().projection(transform);
 
-                m.addTo(map);
-                m.bindPopup(μSv + "μSv");
-
-                c.addTo(map);
-            };
-
-            var circle = container.selectAll("circle")
-                .data(data);
+            var circle = container.selectAll("circle").data(data.features);
 
             circle.enter()
                 .append("circle")
@@ -116,32 +114,52 @@ define(function(require, exports, module) {
                 .remove();
 
             var update = function () {
+                var bounds = path.bounds(data);
+                var topLeft = bounds[0];
+                var bottomRight = bounds[1];
+
+                var AREA_MARGIN = 300;
+
+                svg
+                    .attr("width", bottomRight[0] - topLeft[0] + AREA_MARGIN * 2)
+                    .attr("height", bottomRight[1] - topLeft[1] + AREA_MARGIN * 2)
+                    .style("left", topLeft[0] - AREA_MARGIN + "px")
+                    .style("top", topLeft[1] - AREA_MARGIN + "px");
+
+                container.attr("transform", "translate(" + (-topLeft[0] + AREA_MARGIN) + "," + (-topLeft[1] + AREA_MARGIN) + ")");
+
                 circle
                     .attr("transform", function (d) {
-                        return "translate(" +
-                            map.latLngToLayerPoint(d.latLngObj).x + "," +
-                            map.latLngToLayerPoint(d.latLngObj).y + ")";
+                        var x = GeoUtil.project(map, d.geometry.coordinates)[0];
+                        var y = GeoUtil.project(map, d.geometry.coordinates)[1];
+
+                        return "translate(" + x + "," + y + ")";
                     });
             };
-            // TODO:
-            return;
 
-            /*
-            data.features.forEach(function (radLog) {
-                var lat = parseInt(radLog.latitude, 10) / Math.pow(10, 6);
-                var lng = parseInt(radLog.longitude, 10) / Math.pow(10, 6);
-                var μSv = parseInt(radLog.value, 10) / 1000;
+            var putMarker = function (lat, lng, μSv) {
+                var m = leaflet.marker([lat, lng]);
+                var c = leaflet.circle([lat, lng], 1000);
+
+                m.addTo(map);
+                m.bindPopup(μSv + "μSv");
+
+                c.addTo(map);
+            };
+
+            data.features.forEach(function (feature) {
+                var coords = feature.geometry.coordinates;
+                var props = feature.properties;
+
+                var lat = coords[0];
+                var lng = coords[1];
+                var μSv = props.value;
 
                 putMarker(lat, lng, μSv);
-
-                radLog.latLngObj = new leaflet.LatLng(lat, lng);
             });
-
-            // TODO: fit svg bounds
 
             map.on("viewreset", update);
             update();
-            */
         },
 
         /**
@@ -167,6 +185,15 @@ define(function(require, exports, module) {
          */
         setMap : function (map) {
             this.map = map;
+        },
+
+        /**
+         * Viewがレンダリングされる先のsvgをsetする
+         * @memberOf RadMapLayerView#
+         * @param {D3.Selection} svg
+         */
+        setSVG : function (svg) {
+            this.svg = svg;
         },
 
         /**

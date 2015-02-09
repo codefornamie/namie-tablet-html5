@@ -46,16 +46,18 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         renderLayers : function () {
-            var map, container;
+            var map, svg, container;
 
             this.initMap();
             this.initSVGLayer();
 
             map = this.map;
+            svg = this.svg;
             container = this.container;
 
             this.layers.forEach(function (v) {
                 v.setMap(map);
+                v.setSVG(svg);
                 v.setContainer(container);
                 v.radiationLogCollection.fetch();
             });
