@@ -80,13 +80,16 @@ define(function(require, exports, module) {
          * @memberOf LetterEditView#
          */
         onClickUpdateLetter : function(ev) {
-            this.showLoading();
-            this.validate();
-            this.setInputValue();
-            // データ更新後、etagを更新するためthis.modelを再度fetchする
-            async.series([
-                          this.saveModel.bind(this), this.fetchModel.bind(this)
-                  ], this.onSaveComplete.bind(this));
+            if (this.validate()) {
+                this.showLoading();
+                this.setInputValue();
+                // データ更新後、etagを更新するためthis.modelを再度fetchする
+                async.series([
+                              this.saveModel.bind(this), this.fetchModel.bind(this)
+                      ], this.onSaveComplete.bind(this));
+            } else {
+                return;
+            }
         },
         
         /**
@@ -94,18 +97,19 @@ define(function(require, exports, module) {
          * @memberOf LetterEditView#
          */
         validate : function() {
-            if ($("#lletter-edit-form__body").val().length > 140) {
+            if ($("#letter-edit-form__body").val().length > 140) {
                 vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
                 vexDialog.buttons.YES.text = 'OK';
                 vexDialog.alert("ひとことは140文字以内で入力してください。");
-                return;
+                return false;
             }
             if ($("#letter-edit-form__nickname").val().length > 20) {
                 vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
                 vexDialog.buttons.YES.text = 'OK';
                 vexDialog.alert("お名前は20文字以内で入力してください。");
-                return;
+                return false;
             }
+            return true;
         },
         /**
          * モデルにデータをセットする関数
@@ -123,7 +127,7 @@ define(function(require, exports, module) {
         saveModel : function(next) {
             this.model.save(null, {
                 success : function() {
-                    next("aa");
+                    next(null);
                 },
                 error : function(e) {
                     next(e);
@@ -149,13 +153,13 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          */
         onSaveComplete : function(err) {
+            this.hideLoading();
             if (err) {
-                this.hideLoading();
+                vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
                 vexDialog.alert("保存に失敗しました。");
                 app.logger.error("保存に失敗しました。");
                 return;
             }
-            this.hideLoading();
             app.router.go("letters/" + this.model.get("__id") + "/modified");
         },
 
