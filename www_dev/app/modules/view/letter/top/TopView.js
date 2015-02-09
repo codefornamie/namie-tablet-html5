@@ -11,6 +11,7 @@ define(function(require, exports, module) {
     var LetterEditView = require("modules/view/letter/edit/LetterEditView");
     var LetterEditCompleteView = require("modules/view/letter/edit/LetterEditCompleteView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var StringUtil = require("modules/util/StringUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
     var Equal = require("modules/util/filter/Equal");
     var Ge = require("modules/util/filter/Ge");
@@ -360,7 +361,7 @@ define(function(require, exports, module) {
             case "letterWizard":
                 this.showLoading();
                 var queryString = params[1];
-                var query = app.router.parseQueryString(queryString);
+                var query = StringUtil.parseQueryString(queryString);
                 var step = query.step;
 
                 this.layout.showWizard(step);

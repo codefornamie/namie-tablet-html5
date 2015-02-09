@@ -12,6 +12,7 @@ define(function(require, exports, module) {
     var Code = require("modules/util/Code");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
+    var StringUtil = require("modules/util/StringUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
     var moment = require("moment");
     var vexDialog = require("vexDialog");
@@ -180,7 +181,7 @@ define(function(require, exports, module) {
          */
         onRoute : function(route, params) {
             var queryString = params[1];
-            var query = app.router.parseQueryString(queryString);
+            var query = StringUtil.parseQueryString(queryString);
             var step = query.step;
 
             this._isRouting = true;

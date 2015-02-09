@@ -4,7 +4,6 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractCollection = require("modules/collection/AbstractCollection");
     var Filter = require("modules/util/filter/Filter");
-    var LoginModel = require("modules/model/LoginModel");
     var Log = require("modules/util/Logger");
 
     /**
