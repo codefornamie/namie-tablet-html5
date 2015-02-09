@@ -548,6 +548,18 @@ define(function(require, exports, module) {
         onClickGridItem : function(ev, param) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
             app.newsView = this;
+            var col = app.newsView.newsCollection;
+            var mod = col.models;
+            col.each(function(mod) {
+                var n = mod.get("__id");
+                if (n === articleId) {
+//                    return alert(mod.get("period"));
+                    if(mod.isExpired()){
+                        alert("公開期限が終了いたしました。");
+                        return;
+                    }
+                }
+            });
             app.router.go("top", moment(app.currentDate).format("YYYY-MM-DD"), "article", articleId);
         },
 
