@@ -114,17 +114,17 @@ define(function(require, exports, module) {
         };
         if (log4javascript.Level.INFO.equals(loggingEvent.level)) {
             body.level = PIOLogLevel.INFO;
-            this.app.accessor.cell(this.cell).box(this.box).event.post(body, this.getSessionId(), {
+            this.app.box.event.post(body, this.getSessionId(), {
                 error : this.onFailed
             });
         } else if (log4javascript.Level.WARN.equals(loggingEvent.level)) {
             body.level = PIOLogLevel.WARN;
-            this.app.accessor.cell(this.cell).box(this.box).event.post(body, this.getSessionId(), {
+            this.app.box.event.post(body, this.getSessionId(), {
                 error : this.onFailed
             });
         } else if (loggingEvent.level.isGreaterOrEqual(log4javascript.Level.ERROR)) {
             body.level = PIOLogLevel.ERROR;
-            this.app.accessor.cell(this.cell).box(this.box).event.post(body, this.getSessionId(), {
+            this.app.box.event.post(body, this.getSessionId(), {
                 error : this.onFailed
             });
         } else {
