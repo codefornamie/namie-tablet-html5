@@ -26,7 +26,7 @@ define(function(require, exports, module) {
          * @memberOf LetterEditView#
          */
         afterRendered : function() {
-            if(this.model.get("imageThumbUrl")){
+            if (this.model.get("imageThumbUrl")) {
                 var davModel = new WebDavModel();
                 var path = this.model.get("imagePath");
                 path = path ? path + "/" : "";
@@ -46,10 +46,10 @@ define(function(require, exports, module) {
                         imgElement.load(function() {
                         });
                         imgElement.attr("src", url);
-                    },this),
-                    error: $.proxy(function () {
+                    }, this),
+                    error : $.proxy(function() {
                         app.logger.error("画像の取得に失敗しました");
-                    },this)
+                    }, this)
                 });
             }
         },
@@ -85,27 +85,28 @@ define(function(require, exports, module) {
                 this.setInputValue();
                 // データ更新後、etagを更新するためthis.modelを再度fetchする
                 async.series([
-                              this.saveModel.bind(this), this.fetchModel.bind(this)
-                      ], this.onSaveComplete.bind(this));
+                        this.saveModel.bind(this), this.fetchModel.bind(this)
+                ], this.onSaveComplete.bind(this));
             } else {
                 return;
             }
         },
-        
+
         /**
          * バリデーションチェック
          * @memberOf LetterEditView#
+         * @return {Boolean} エラーの場合はfalse
          */
         validate : function() {
+            vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+            vexDialog.buttons.YES.text = 'OK';
+            // 本文文字列制限チェック
             if ($("#letter-edit-form__body").val().length > 140) {
-                vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
-                vexDialog.buttons.YES.text = 'OK';
                 vexDialog.alert("ひとことは140文字以内で入力してください。");
                 return false;
             }
+            // お名前文字列制限チェック
             if ($("#letter-edit-form__nickname").val().length > 20) {
-                vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
-                vexDialog.buttons.YES.text = 'OK';
                 vexDialog.alert("お名前は20文字以内で入力してください。");
                 return false;
             }
@@ -119,10 +120,11 @@ define(function(require, exports, module) {
             this.model.set("description", $("#letter-edit-form__body").val());
             this.model.set("nickname", $("#letter-edit-form__nickname").val());
         },
-        
+
         /**
          * Modelの保存
          * @memberOf LetterWizardView#
+         * @param {Function} next
          */
         saveModel : function(next) {
             this.model.save(null, {
@@ -137,6 +139,7 @@ define(function(require, exports, module) {
         /**
          * Modelのfetch処理
          * @memberOf LetterWizardView#
+         * @param {Function} next
          */
         fetchModel : function(next) {
             this.model.fetch({
@@ -151,6 +154,7 @@ define(function(require, exports, module) {
         /**
          * データの編集保存処理が完了した際に呼ばれるコールバック関数
          * @memberOf LetterWizardView#
+         * @param {Object} err
          */
         onSaveComplete : function(err) {
             this.hideLoading();
