@@ -1,0 +1,49 @@
+/**
+ *  放射線アプリCSS
+ */
+/**
+ *  ----------
+ *  1. Base
+ *  ----------
+ */
+.page-rad .button {
+    display: inline-block;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3e0d5));
+    border-radius: 50px;
+    /*color: #650505;*/
+    /*font-size: 1.3rem;*/
+    margin: 0 20px 10px 0;
+    padding: 1.2rem 1.2rem;
+    line-height: 1;
+    box-shadow: 0 3px 8px #666;
+}
+
+/**
+ *  ----------
+ *  2. Project
+ *  ----------
+ */
+.page-rad #map-container {
+    height: 100%;
+}
+
+.page-rad #map-container > div {
+    height: 100%;
+}
+.page-rad #map {
+    height: 100%;
+}
+
+.page-rad .contents__primary {
+    padding: 0;
+}
+
+.page-rad .contents__secondary .sidemenu {
+    text-align: center;
+}
+
+/**
+ *  ----------
+ *  3. Cosmetic
+ *  ----------
+ */
