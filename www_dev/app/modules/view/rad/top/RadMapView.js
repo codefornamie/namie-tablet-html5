@@ -46,16 +46,18 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         renderLayers : function () {
-            var map, container;
+            var map, svg, container;
 
             this.initMap();
             this.initSVGLayer();
 
             map = this.map;
+            svg = this.svg;
             container = this.container;
 
             this.layers.forEach(function (v) {
                 v.setMap(map);
+                v.setSVG(svg);
                 v.setContainer(container);
                 v.radiationLogCollection.fetch();
             });
@@ -78,6 +80,8 @@ define(function(require, exports, module) {
                     attribution : "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
                 }
             ).addTo(map);
+
+            map.on("viewreset", this.fitBounds.bind(this));
 
             this.map = map;
         },
@@ -108,16 +112,22 @@ define(function(require, exports, module) {
         /**
          * 初期化
          * @memberOf RadMapView#
+         * @param {Object} param
          */
-        initialize : function() {
+        initialize : function(param) {
+            console.assert(param, "param should be given");
+            console.assert(param.radiationClusterCollection, "radiationClusterCollection should be specified");
+
+            this.radiationClusterCollection = param.radiationClusterCollection;
+
             // ローディングを開始
             this.showLoading();
 
             this.layers = [];
-            this.initCollection();
+            //this.initCollection();
             this.initEvents();
 
-            this.radiationClusterCollection.fetch();
+            //this.radiationClusterCollection.fetch();
 
             // ローディングを停止
             this.hideLoading();
@@ -128,7 +138,7 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         initCollection : function () {
-            this.radiationClusterCollection = new RadiationClusterCollection();
+            //this.radiationClusterCollection = new RadiationClusterCollection();
         },
 
         /**
@@ -139,6 +149,41 @@ define(function(require, exports, module) {
             this.listenTo(this.radiationClusterCollection, "request", this.onRequestCollection);
             this.listenTo(this.radiationClusterCollection, "add", this.onAddCollection);
             this.listenTo(this.radiationClusterCollection, "sync", this.onSyncCollection);
+        },
+
+        /**
+         * SVG要素をマッピングされているデータにfitさせる
+         * @memberOf RadMapView#
+         */
+        fitBounds : function () {
+            var features = _(this.layers).map(function (v) {
+                return v.radiationLogCollection.toGeoJSON().features;
+            }).flatten(true).value();
+            var data = {
+                "type" : "FeatureCollection",
+                "features" : features
+            };
+            var map = this.map;
+            var transform = d3.geo.transform({
+                point : function (x, y) {
+                    var point = map.latLngToLayerPoint(new leaflet.LatLng(y, x));
+                    this.stream.point(point.x, point.y);
+                }
+            });
+            var path = d3.geo.path().projection(transform);
+            var bounds = path.bounds(data);
+            var topLeft = bounds[0];
+            var bottomRight = bounds[1];
+
+            var AREA_MARGIN = 100;
+
+            this.svg
+                .attr("width", bottomRight[0] - topLeft[0] + AREA_MARGIN * 2)
+                .attr("height", bottomRight[1] - topLeft[1] + AREA_MARGIN * 2)
+                .style("left", topLeft[0] - AREA_MARGIN + "px")
+                .style("top", topLeft[1] - AREA_MARGIN + "px");
+
+            this.container.attr("transform", "translate(" + (-topLeft[0] + AREA_MARGIN) + "," + (-topLeft[1] + AREA_MARGIN) + ")");
         },
 
         /**

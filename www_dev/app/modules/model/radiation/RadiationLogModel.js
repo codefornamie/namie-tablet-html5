@@ -22,6 +22,8 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         parseOData : function(response, options) {
+            console.log(response);
+
             return response;
         },
         /**
@@ -42,9 +44,13 @@ define(function(require, exports, module) {
 
             geoJSON = {
                     "type": "Feature",
-                    "geometory": {
+                    "geometry": {
                         "type": "Point",
-                        "coordinates": [this.get("latitude"), this.get("longitude"), this.get("altitude")]
+                        "coordinates": [
+                            this.get("longitude"),
+                            this.get("latitude"),
+                            this.get("altitude")
+                        ]
                     },
                     "properties": {
                         "__id": this.get("__id"),

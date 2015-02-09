@@ -7,6 +7,7 @@ define(function(require, exports, module) {
     var d3 = require("d3");
     var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
+    var RadPopupView = require("modules/view/rad/top/RadPopupView");
     var RadiationLogCollection = require("modules/collection/radiation/RadiationLogCollection");
 
     /**
@@ -48,10 +49,12 @@ define(function(require, exports, module) {
             console.assert(param, "param should be given");
             console.assert(param.radiationClusterModel, "radiationClusterModel should be specified");
 
+            this.isHidden = false;
             this.radiationClusterModel = param.radiationClusterModel;
 
             this.initCollection();
             this.initEvents();
+
 
             //this.radiationLogCollection.fetch();
         },
@@ -71,6 +74,7 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         initEvents : function() {
+            this.listenTo(this.radiationClusterModel, "change:hidden", this.onChangeClusterModel);
             this.listenTo(this.radiationLogCollection, "request", this.onRequestCollection);
             this.listenTo(this.radiationLogCollection, "add", this.onAddCollection);
             this.listenTo(this.radiationLogCollection, "sync", this.onSyncCollection);
@@ -89,6 +93,40 @@ define(function(require, exports, module) {
             var container = this.container;
             var data = this.radiationLogCollection.toGeoJSON();
 
+            var circle = container.selectAll("circle.layer-" + this.cid).data(data.features);
+
+            circle.enter()
+                .append("circle")
+                .attr({
+                    "opacity" : 0.7,
+                    "fill" : function (d) {
+                        return GeoUtil.generateColorByDose(d.properties.value);
+                    },
+                    "r" : 10,
+                    "class" : "leaflet-clickable layer-" + this.cid
+                })
+                .each(function (d) {
+                    var popupView = new RadPopupView({
+                        origin : this,
+                        data : d,
+                        map : map
+                    });
+                });
+
+            circle.exit()
+                .remove();
+
+            var update = function () {
+                circle
+                    .attr("transform", function (d) {
+                        var x = GeoUtil.project(map, d.geometry.coordinates)[0];
+                        var y = GeoUtil.project(map, d.geometry.coordinates)[1];
+
+                        return "translate(" + x + "," + y + ")";
+                    });
+            };
+
+            /*
             var putMarker = function (lat, lng, μSv) {
                 var m = leaflet.marker([lat, lng]);
                 var c = leaflet.circle([lat, lng], 1000);
@@ -99,49 +137,20 @@ define(function(require, exports, module) {
                 c.addTo(map);
             };
 
-            var circle = container.selectAll("circle")
-                .data(data);
+            data.features.forEach(function (feature) {
+                var coords = feature.geometry.coordinates;
+                var props = feature.properties;
 
-            circle.enter()
-                .append("circle")
-                .attr({
-                    "stroke" : "#f00",
-                    "stroke-width" : 2,
-                    "opacity" : 0.7,
-                    "fill" : "#ff0",
-                    "r" : 20
-                });
-
-            circle.exit()
-                .remove();
-
-            var update = function () {
-                circle
-                    .attr("transform", function (d) {
-                        return "translate(" +
-                            map.latLngToLayerPoint(d.latLngObj).x + "," +
-                            map.latLngToLayerPoint(d.latLngObj).y + ")";
-                    });
-            };
-            // TODO:
-            return;
-
-            /*
-            data.features.forEach(function (radLog) {
-                var lat = parseInt(radLog.latitude, 10) / Math.pow(10, 6);
-                var lng = parseInt(radLog.longitude, 10) / Math.pow(10, 6);
-                var μSv = parseInt(radLog.value, 10) / 1000;
+                var lat = coords[1];
+                var lng = coords[0];
+                var μSv = props.value;
 
                 putMarker(lat, lng, μSv);
-
-                radLog.latLngObj = new leaflet.LatLng(lat, lng);
             });
-
-            // TODO: fit svg bounds
+            */
 
             map.on("viewreset", update);
             update();
-            */
         },
 
         /**
@@ -150,6 +159,8 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         show : function () {
+            $(".layer-" + this.cid).show();
+            this.isHidden = false;
         },
 
         /**
@@ -158,6 +169,20 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         hide : function () {
+            $(".layer-" + this.cid).hide();
+            this.isHidden = true;
+        },
+
+        /**
+         * toggle
+         * @memberOf RadMapLayerView#
+         */
+        toggle : function () {
+            if (this.isHidden) {
+                this.show();
+            } else {
+                this.hide();
+            }
         },
 
         /**
@@ -170,12 +195,35 @@ define(function(require, exports, module) {
         },
 
         /**
+         * Viewがレンダリングされる先のsvgをsetする
+         * @memberOf RadMapLayerView#
+         * @param {D3.Selection} svg
+         */
+        setSVG : function (svg) {
+            this.svg = svg;
+        },
+
+        /**
          * Viewがレンダリングされる先のcontainerをsetする
          * @memberOf RadMapLayerView#
          * @param {D3.Selection} container
          */
         setContainer : function (container) {
             this.container = container;
+        },
+
+        /**
+         * onChangeClusterModel
+         * @memberOf RadMapLayerView#
+         */
+        onChangeClusterModel : function () {
+            var isHidden = this.radiationClusterModel.get("hidden");
+
+            if (isHidden) {
+                this.hide();
+            } else {
+                this.show();
+            }
         },
 
         /**

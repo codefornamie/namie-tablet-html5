@@ -16,6 +16,14 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/{mode}/top/radClusterListItem"),
 
         /**
+         * イベント
+         * @memberOf RadClusterListItemView#
+         */
+        events : {
+            "click" : "onClickClusterItem"
+        },
+
+        /**
          * Viewの描画処理の開始前に呼び出されるコールバック関数。
          * @memberOf RadClusterListItemView#
          */
@@ -28,12 +36,23 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
         },
-        
+
         /**
          * 初期化
          * @memberOf RadClusterListItemView#
          */
-        initialize: function() {
+        initialize : function() {
+        },
+
+        /**
+         * リストのアイテムをクリックした後に呼ばれる
+         * @memberOf RadClusterListItemView#
+         */
+        onClickClusterItem : function () {
+            var radClusterModel = this.model;
+            var isHidden = !!radClusterModel.get("hidden");
+
+            radClusterModel.set("hidden", !isHidden);
         }
     });
 

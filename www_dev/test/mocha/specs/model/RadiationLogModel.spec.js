@@ -16,9 +16,9 @@ define(function(require) {
         beforeEach(function(done){
             var targetJSON = {
                     "type" : "Feature",
-                    "geometory" : {
+                    "geometry" : {
                         "type" : "Point",
-                        "coordinates" : ["37.492139", "140.990049", "12345"]
+                        "coordinates" : ["140.990049", "37.492139", "12345"]
                     },
                     "properties" : {
                         "__id" : "RADIATION_LOG_UUID",
@@ -32,9 +32,9 @@ define(function(require) {
             var radiationLogModel = new RadiationLogModel({
                 __id : targetJSON.properties.__id,
                 date : targetJSON.properties.date,
-                latitude : targetJSON.geometory.coordinates[0],
-                longitude : targetJSON.geometory.coordinates[1],
-                altitude : targetJSON.geometory.coordinates[2],
+                longitude : targetJSON.geometry.coordinates[0],
+                latitude : targetJSON.geometry.coordinates[1],
+                altitude : targetJSON.geometry.coordinates[2],
                 value : targetJSON.properties.value,
                 collectionId : targetJSON.properties.collectionId
             });

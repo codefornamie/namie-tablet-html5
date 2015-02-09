@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var leaflet = require("leaflet");
 
     /**
      * 地図情報ユーティリティクラス
@@ -11,11 +12,49 @@ define(function(require, exports, module) {
     };
 
     /**
-     * convertJsonToGeoJson
+     * 緯度経度をピクセルに変換する
      *
-     * @return {Object}
+     * @memberOf GeoUtil#
+     * @param {Leaflet.Map} map
+     * @param {Array} x
+     * @return {Array}
      */
-    GeoUtil.prototype.convertJsonToGeoJson = function () {
+    GeoUtil.project = function (map, x) {
+        var point = map.latLngToLayerPoint(new leaflet.LatLng(x[1], x[0]));
+        return [point.x, point.y];
+    };
+
+    /**
+     * generateColorByDose
+     *
+     * @memberOf GeoUtil#
+     * @param {Number} dose - ナノシーベルト毎時の値が来る
+     * @return {String}
+     */
+    GeoUtil.generateColorByDose = function (dose) {
+        var col;
+
+        if (dose < 0.1) {
+            col = "#0b24e5";
+        } else if (dose <= 0.2) {
+            col = "#357ce7";
+        } else if (dose <= 0.5) {
+            col = "#25bfe9";
+        } else if (dose <= 1.0) {
+            col = "#18d381";
+        } else if (dose <= 1.9) {
+            col = "#16b23a";
+        } else if (dose <= 3.8) {
+            col = "#a5cd05";
+        } else if (dose <= 9.5) {
+            col = "#ebc323";
+        } else if (dose <= 19) {
+            col = "#ec881c";
+        } else if (19 < dose) {
+            col = "#ff0a21";
+        }
+
+        return col;
     };
 
     module.exports = GeoUtil;

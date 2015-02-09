@@ -22,6 +22,8 @@ define(function(require, exports, module) {
          * @memberOf RadiationClusterModel#
          */
         parseOData : function(response, options) {
+            console.log(response);
+
             return response;
         },
         /**
@@ -44,7 +46,11 @@ define(function(require, exports, module) {
                     "type": "Feature",
                     "geometory": {
                         "type": "Point",
-                        "coordinates": [this.get("latitude"), this.get("longitude"), this.get("altitude")]
+                        "coordinates": [
+                            this.get("latitude"),
+                            this.get("longitude"),
+                            this.get("altitude")
+                        ]
                     },
                     "properties": {
                         "__id": this.get("__id"),
