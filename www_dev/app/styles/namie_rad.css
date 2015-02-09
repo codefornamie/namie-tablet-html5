@@ -35,7 +35,11 @@
 }
 
 .page-rad .contents__primary {
-    margin: 0;
+    padding: 0;
+}
+
+.page-rad .contents__secondary .sidemenu {
+    text-align: center;
 }
 
 /**
