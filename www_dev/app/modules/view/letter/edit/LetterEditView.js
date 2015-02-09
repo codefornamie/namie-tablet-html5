@@ -5,6 +5,8 @@ define(function(require, exports, module) {
     var WebDavModel = require("modules/model/WebDavModel");
     var AbstractView = require("modules/view/AbstractView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var vexDialog = require("vexDialog");
+    var async = require("async");
 
     /**
      * 記事編集画面のViewクラス
@@ -79,10 +81,32 @@ define(function(require, exports, module) {
          */
         onClickUpdateLetter : function(ev) {
             this.showLoading();
+            this.validate();
             this.setInputValue();
-            this.saveModel();
+            // データ更新後、etagを更新するためthis.modelを再度fetchする
+            async.series([
+                          this.saveModel.bind(this), this.fetchModel.bind(this)
+                  ], this.onSaveComplete.bind(this));
         },
         
+        /**
+         * バリデーションチェック
+         * @memberOf LetterEditView#
+         */
+        validate : function() {
+            if ($("#lletter-edit-form__body").val().length > 140) {
+                vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+                vexDialog.buttons.YES.text = 'OK';
+                vexDialog.alert("ひとことは140文字以内で入力してください。");
+                return;
+            }
+            if ($("#letter-edit-form__nickname").val().length > 20) {
+                vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
+                vexDialog.buttons.YES.text = 'OK';
+                vexDialog.alert("お名前は20文字以内で入力してください。");
+                return;
+            }
+        },
         /**
          * モデルにデータをセットする関数
          * @memberOf LetterEditView#
@@ -96,19 +120,43 @@ define(function(require, exports, module) {
          * Modelの保存
          * @memberOf LetterWizardView#
          */
-        saveModel : function() {
+        saveModel : function(next) {
             this.model.save(null, {
-                success : $.proxy(function() {
-                    this.hideLoading();
-                    this.model.set("isEdited", true);
-                    app.router.go("letters/" + this.model.get("__id") + "/modified");
-                }, this),
+                success : function() {
+                    next("aa");
+                },
                 error : function(e) {
-                    this.hideLoading();
-                    vexDialog.alert("保存に失敗しました。");
-                    app.logger.error("保存に失敗しました。");
+                    next(e);
                 }
             });
+        },
+        /**
+         * Modelのfetch処理
+         * @memberOf LetterWizardView#
+         */
+        fetchModel : function(next) {
+            this.model.fetch({
+                success : function() {
+                    next(null);
+                },
+                error : function(e) {
+                    next(e);
+                }
+            });
+        },
+        /**
+         * データの編集保存処理が完了した際に呼ばれるコールバック関数
+         * @memberOf LetterWizardView#
+         */
+        onSaveComplete : function(err) {
+            if (err) {
+                this.hideLoading();
+                vexDialog.alert("保存に失敗しました。");
+                app.logger.error("保存に失敗しました。");
+                return;
+            }
+            this.hideLoading();
+            app.router.go("letters/" + this.model.get("__id") + "/modified");
         },
 
     });
