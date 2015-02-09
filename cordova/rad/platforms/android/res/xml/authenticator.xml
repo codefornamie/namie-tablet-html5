@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
     android:accountType="jp.fukushima.namie.town.Pcs"
-    android:icon="@drawable/icon"
-    android:smallIcon="@drawable/icon"
+    android:icon="@drawable/icon_ukedon"
+    android:smallIcon="@drawable/icon_ukedon"
     android:label="@string/account_label"
 />
