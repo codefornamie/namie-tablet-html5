@@ -50,7 +50,7 @@ define(function(require, exports, module) {
                         feature.dispTitle = "測定データ" + feature.__id;
                         feature.latitude = (35 + Math.random() * 5);
                         feature.longitude = (135 + Math.random() * 5);
-                        feature.value = (0.001 + Math.random() * 0.5);
+                        feature.value = (0.001 + Math.random() * 20);
                     });
 
                     self.set(data);
