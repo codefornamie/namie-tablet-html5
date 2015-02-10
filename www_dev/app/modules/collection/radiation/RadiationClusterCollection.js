@@ -34,6 +34,7 @@ define(function(require, exports, module) {
                     maxLatitude : cluster.maxLatitude / Math.pow(10, 6),
                     minLongitude : cluster.minLongitude / Math.pow(10, 6),
                     maxLongitude : cluster.maxLongitude / Math.pow(10, 6),
+                    averageValue : cluster.averageValue / Math.pow(10, 3),
                     maxValue : cluster.maxValue / Math.pow(10, 3)
                 });
             });

@@ -1,11 +1,68 @@
-<p>
-    <%= clusterFeature.properties.maxValue %> μSv
-</p>
+<div class="rad-popup">
+    <div class="rad-popup__header">
+        <div class="rad-popup__date">
+            <%= moment(clusterFeature.properties.startDate).format("YYYY/MM/DD") %>
+            〜
+            <%= moment(clusterFeature.properties.endDate).format("YYYY/MM/DD") %>
+        </div>
 
-<ul style="max-height: 300px; overflow: auto;">
-    <% logFeatureCollection.features.forEach(function (log) { %>
-        <li>
-            <%= log.properties.value %> μSv
-        </li>
-    <% }) %>
-</ul>
+        <h4 class="rad-popup__average-value">
+            平均:
+            <b><%= clusterFeature.properties.averageValue %></b>
+            μSv/h
+        </h4>
+
+        <p class="rad-popup__max-value">
+            最大:
+            <b><%= clusterFeature.properties.maxValue %></b>
+            μSv/h
+        </p>
+    </div>
+
+    <div class="rad-popup__info">
+        <ul>
+            <li>
+                タイプ:
+                <%= clusterFeature.properties.isFixedStation ? "固定局" : "移動局" %>
+            </li>
+
+            <li>
+                測定標本数:
+                <%= clusterFeature.properties.numSample %>
+            </li>
+
+            <li>
+                測定機器メーカー:
+                <%= clusterFeature.properties.sensorVendor %>
+            </li>
+
+            <li>
+                測定機器モデル:
+                <%= clusterFeature.properties.sensorModel %>
+            </li>
+
+            <li>
+                測定機器シリアルNo.:
+                <%= clusterFeature.properties.sensorSerialNo %>
+            </li>
+        </ul>
+    </div>
+
+    <ul class="rad-log-list">
+        <% logFeatureCollection.features.forEach(function (log) { %>
+            <li class="clearfix">
+                <div class="pull-right">
+                    <small>
+                        <%= moment(log.properties.date).format("YYYY/MM/DD") %>
+                    </small>
+                </div>
+
+                <div>
+                    <span>
+                        <%= log.properties.value %> μSv/h
+                    </span>
+                </div>
+            </li>
+        <% }) %>
+    </ul>
+</div>

@@ -16,6 +16,18 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/{mode}/top/radClusterListItem"),
 
         /**
+         * レンダリングに利用するオブジェクトを作成する
+         *
+         * @return {Object}
+         */
+        serialize : function () {
+            return {
+                model : this.model,
+                clusterFeature : this.model.toGeoJSON()
+            };
+        },
+
+        /**
          * イベント
          * @memberOf RadClusterListItemView#
          */

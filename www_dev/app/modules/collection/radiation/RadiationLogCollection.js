@@ -48,7 +48,7 @@ define(function(require, exports, module) {
          */
         sync : function (method, collection, opt) {
             var self = this;
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cmsXgEqvOq";
+            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cdPevbVobS";
 
             if (method === "read") {
                 collection.trigger("request", collection, null, opt);
