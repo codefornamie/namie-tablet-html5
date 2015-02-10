@@ -55,8 +55,8 @@ define(function(require, exports, module) {
 
                 return $.get(URL_DUMMY_JSON).done(function (data) {
                     data.forEach(function (log) {
-                        log.latitude = 35 * Math.pow(10, 6) + Math.random() * 5 * Math.pow(10, 6)
-                        log.longitude = 135 * Math.pow(10, 6) + Math.random() * 5 * Math.pow(10, 6)
+                        log.latitude = 35 * Math.pow(10, 6) + Math.random() * 5 * Math.pow(10, 6);
+                        log.longitude = 135 * Math.pow(10, 6) + Math.random() * 5 * Math.pow(10, 6);
                     });
 
                     self.set(self.parseOData(data));
