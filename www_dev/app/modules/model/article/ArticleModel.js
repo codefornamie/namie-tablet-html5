@@ -323,6 +323,25 @@ define(function(require, exports, module) {
             return null;
         },
         /**
+         * この記事の公開期限が切れているかチェックする。
+         * @returns {Boolean} 公開期限が過ぎている場合に<code>true</code>を返却する
+         * @memberOf ArticleModel#
+         */
+        isExpired : function() {
+            if (!this.get("period")) {
+                return false;
+            }
+            var publishedAt = Date.parse(this.get("publishedAt")).getTime();
+
+            var now = (new Date()).getTime();
+
+            var period = this.get("period") * 86400000;
+            if (now > publishedAt + period) {
+                return true;
+            }
+            return false;
+        },
+        /**
          * この記事の本文に対して、クローラーが"minpo"スクレイピングを実施しているかどうかを判定する。
          * <p>
          * クローラーが"minpo"スクレイピングを実施している場合、,<code>true</code>を返却する。<br>
