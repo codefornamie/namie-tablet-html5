@@ -111,8 +111,13 @@ define(function(require, exports, module) {
             this.saveSequence(
                 saveModels,
 
-                function onSaveSequence(err) {
+                function onSaveAllSequence(err) {
                     self.hideLoading();
+
+                    if (err && err.httpClient && err.httpClient.status === 412) {
+                        //self.collection.fetch();
+                        // TODO: NAM-889 collectionの更新処理を行う
+                    }
                 }
             );
         },
@@ -121,10 +126,11 @@ define(function(require, exports, module) {
          * 並び順保存処理
          * @memberOf OpeFeedListView#
          * @param {Array} models 記事情報の配列
-         * @param {Function} onSaveSequence 情報保存後のコールバック関数
+         * @param {Function} onSaveAllSequence 情報保存後のコールバック関数
          */
-        saveSequence : function(models, onSaveSequence) {
+        saveSequence : function(models, onSaveAllSequence) {
             var self = this;
+            var isFinished = false;
 
             // 最大同時処理数
             var LIMIT_PARALLEL_SAVE_SEQUENCE = 5;
@@ -135,30 +141,42 @@ define(function(require, exports, module) {
                 LIMIT_PARALLEL_SAVE_SEQUENCE,
 
                 // 各要素に対する保存処理
-                function fn(model, done) {
+                function fn(model, onSave) {
                     model
                         .save()
-                        .then(function () {
+                        .fail(function (err) {
+                            // 412 Precondition failed の場合ここに到達する
+                            onSave(err);
+                        })
+                        .done(function () {
                             // ETagを更新する
                             return model.fetch();
                         })
                         .done(function () {
-                            done();
+                            onSave();
                         })
                         .fail(function (err) {
-                            done(err);
+                            onSave(err);
                         });
                 },
 
                 // 保存処理が全て完了したら呼ばれる
                 function onFinish(err) {
+                    // 並列リクエストで同時にエラーが返ってくると
+                    // onFinishが複数回呼ばれてしまうため、複数呼び出しを防ぐ
+                    if (isFinished) {
+                        return;
+                    }
+
                     if (err) {
                         vexDialog.defaultOptions.className = 'vex-theme-default';
                         vexDialog.alert("並び順の保存に失敗しました。");
                         app.logger.error("並び順の保存に失敗しました。");
                     }
 
-                    onSaveSequence(err);
+                    onSaveAllSequence(err);
+
+                    isFinished = true;
                 }
             );
         },

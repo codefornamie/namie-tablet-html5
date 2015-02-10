@@ -69,7 +69,9 @@ define(function(require, exports, module) {
                 Log.info("AbstractODataModel search complete handler");
                 // 取得したJSONオブジェクト
                 var json = null;
-                if (res.error) {
+
+                // TODO: 自前でステータスコードを見るのではなく、dc1-clientが返却する(であろう)エラーオブジェクトを利用すること
+                if (res.error || res.httpClient && res.httpClient.status === 412) {
                     if (options.error) {
                         options.error(res);
                     }
