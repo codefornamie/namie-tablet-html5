@@ -6,6 +6,49 @@
  *  1. Base
  *  ----------
  */
+.page-rad {
+    background-color: #fbfaf4;
+}
+
+.page-rad .header {
+    display: block;
+    background-image: none;
+    height: auto;
+}
+
+.page-rad .header .top-bar {
+/*
+    background: url(../../app/img/img-rad-header-bg.png);
+    background-size: contain;
+*/
+    height: 55px;
+}
+
+.page-rad .header .top-bar .title-area {
+    float: none;
+}
+
+.page-rad .top-bar .name h1 {
+/*
+    background-image: url("../../app/img/img-rad-title-logo.png");
+    background-repeat: no-repeat;
+    background-position: center;    line-height: 55px;
+*/
+    text-align: center;
+    font-size: 1.5rem;
+    padding-top: 4px;
+}
+
+.page-rad .top-bar .name h1 a {
+/*
+    text-indent: -9999px;
+*/
+}
+
+.page-rad .global-nav {
+    display: none;
+}
+
 .page-rad .button {
     display: inline-block;
     background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3e0d5));
@@ -38,6 +81,9 @@
     padding: 0;
 }
 
+.page-rad .contents__secondary {
+    padding-top: 15px;
+}
 .page-rad .contents__secondary .sidemenu {
     text-align: center;
 }
