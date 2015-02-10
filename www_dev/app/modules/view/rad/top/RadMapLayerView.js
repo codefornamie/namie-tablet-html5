@@ -99,11 +99,14 @@ define(function(require, exports, module) {
                 .append("circle")
                 .attr({
                     "opacity" : 0.7,
-                    "fill" : function (d) {
-                        return GeoUtil.generateColorByDose(d.properties.value);
-                    },
                     "r" : 10,
-                    "class" : "leaflet-clickable layer-" + this.cid
+                    "class" : function (d) {
+                        return [
+                                "leaflet-clickable",
+                                "layer-" + this.cid,
+                                GeoUtil.generateClassNameByDose(d.properties.value)
+                        ].join(" ");
+                    }
                 })
                 .each(function (d) {
                     var popupView = new RadPopupView({
