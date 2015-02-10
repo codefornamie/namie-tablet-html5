@@ -28,7 +28,16 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogCollection#
          */
         parseOData: function (response, options) {
-            return response;
+            var res = response.map(function (log) {
+                return _.extend({
+                    latitude : log.latitude / Math.pow(10, 6),
+                    longitude : log.longitude / Math.pow(10, 6),
+                    altitude : log.altitude / Math.pow(10, 3),
+                    value : log.value / Math.pow(10, 3)
+                });
+            });
+
+            return res;
         },
 
         // TODO: 開発用サーバにデータが入ったらこのメソッドは削除する
@@ -37,23 +46,20 @@ define(function(require, exports, module) {
          *
          * @return {undefined}
          */
-        sync : function (method, model, opt) {
+        sync : function (method, collection, opt) {
             var self = this;
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpuAwBZPaW";
+            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpWhdqdeXm";
 
             if (method === "read") {
-                model.trigger("request", model, null, opt);
+                collection.trigger("request", collection, null, opt);
 
                 return $.get(URL_DUMMY_JSON).done(function (data) {
-                    data.forEach(function (feature) {
-                        feature.__id = _.uniqueId();
-                        feature.dispTitle = "測定データ" + feature.__id;
-                        feature.latitude = (35 + Math.random() * 5);
-                        feature.longitude = (135 + Math.random() * 5);
-                        feature.value = (0.001 + Math.random() * 20);
+                    data.forEach(function (log) {
+                        log.latitude = 35 * Math.pow(10, 6) + Math.random() * 5 * Math.pow(10, 6)
+                        log.longitude = 135 * Math.pow(10, 6) + Math.random() * 5 * Math.pow(10, 6)
                     });
 
-                    self.set(data);
+                    self.set(self.parseOData(data));
                     self.trigger("sync", self, data, opt);
                 });
             } else {

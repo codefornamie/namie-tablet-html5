@@ -28,7 +28,17 @@ define(function(require, exports, module) {
          * @memberOf RadiationClusterCollection#
          */
         parseOData: function (response, options) {
-            return response;
+            var res = response.map(function (log) {
+                return _.extend({
+                    minLatitude : log.minLatitude / Math.pow(10, 6),
+                    maxLatitude : log.maxLatitude / Math.pow(10, 6),
+                    minLongitude : log.minLongitude / Math.pow(10, 6),
+                    maxLongitude : log.maxLongitude / Math.pow(10, 6),
+                    maxValue : log.maxValue / Math.pow(10, 3)
+                });
+            });
+
+            return res;
         },
 
         // TODO: 開発用サーバにデータが入ったらこのメソッドは削除する
@@ -37,21 +47,13 @@ define(function(require, exports, module) {
          */
         sync : function (method, collection, opt) {
             var self = this;
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpuAwBZPaW";
+            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/bVbXQzmEpu";
 
             if (method === "read") {
                 collection.trigger("request", collection, null, opt);
 
                 return $.get(URL_DUMMY_JSON).done(function (data) {
-                    data.forEach(function (feature) {
-                        feature.__id = _.uniqueId();
-                        feature.dispTitle = "P-" + feature.__id + "";
-                        feature.latitude = (35 + Math.random() * 5);
-                        feature.longitude = (135 + Math.random() * 5);
-                        feature.value = ~~((0.001 + Math.random() * 0.5) * 1000) / 1000;
-                    });
-
-                    self.set(data);
+                    self.set(self.parseOData(data));
                     self.trigger("sync", self, data, opt);
                 });
             } else {
