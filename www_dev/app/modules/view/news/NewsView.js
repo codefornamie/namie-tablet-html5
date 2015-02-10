@@ -23,6 +23,7 @@ define(function(require, exports, module) {
     var RecommendCollection = require("modules/collection/article/RecommendCollection");
     var FavoriteCollection = require("modules/collection/article/FavoriteCollection");
     var EventsCollection = require("modules/collection/events/EventsCollection");
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     // util
     var DateUtil = require("modules/util/DateUtil");
@@ -77,11 +78,28 @@ define(function(require, exports, module) {
             this.targetDate = this.targetDate || options.date;
             this.initialScrollTop = options.scrollTop || 0;
 
-            this.setArticleSearchCondition({
-                targetDate : new Date(this.targetDate)
-            });
-
-            this.searchArticles();
+            // 休刊日情報の読み込み
+            var holCol = new NewspaperHolidayCollection();
+            holCol.prevPublished(this.targetDate, function(prev, isPublish, err) {
+                if (err) {
+                    app.logger.error("error NewsView:holCol.prevPublished()");
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("休刊日の取得に失敗しました。");
+                    this.hideLoading();
+                    return;
+                }
+                if (isPublish) {
+                    // 記事読み込み範囲設定
+                    this.setArticleSearchCondition(moment(prev).add(1, "d").toDate(), new Date(this.targetDate));
+                    // 記事読み込み   
+                    this.searchArticles();
+                } else {
+                    // 休刊日
+                    this.hideLoading();
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("休刊日です。");
+                }
+            }.bind(this));
             this.initEvents();
         },
 
@@ -90,10 +108,10 @@ define(function(require, exports, module) {
          * @param {Object} 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
          * @memberOf NewsView#
          */
-        setArticleSearchCondition : function(condition) {
-            this.articleCollection.setSearchCondition(condition);
-            this.recommendCollection.setSearchCondition(condition);
-            this.eventsCollection.setSearchCondition(condition);
+        setArticleSearchCondition : function(from, to) {
+            this.articleCollection.setSearchConditionRange(from, to);
+            this.recommendCollection.setSearchCondition({targetDate: from});
+            this.eventsCollection.setSearchCondition({targetDate: from});
         },
 
         /**
@@ -324,13 +342,19 @@ define(function(require, exports, module) {
             this.summarizeArticle("6", {
                 targetDate : targetDate,
                 idPreffex : "letter-",
+                title : "みんなで投稿！撮れたて写真館",
                 dispTitle : "みんなで投稿！撮れたて写真館",
-                sortOrder: 1
+                sortOrder: 1,
+                isFirst : true
             });
 
             // GridListView初期化
             this.showGridListView();
 
+            // 初期スクロール位置が指定されている場合、スクロールする
+            this.initScrollTop();
+
+            // ローディング画面を閉じる
             this.hideLoading();
         },
         /**
@@ -339,10 +363,12 @@ define(function(require, exports, module) {
          * 指定された記事タイプの記事を１つの記事にまとめて、ArticleCollectionの先頭に挿入する。<br>
          * optionsパラメタに、まとめられた記事に関する、以下の情報を設定する。
          * <ul>
-         * <li>idPreffex<br>
+         * <li>{String} idPreffex<br>
          * 作成する記事情報のIDのプレフィック</li>
-         * <li>dispTitle<br>
+         * <li>{String} dispTitle<br>
          * 記事一覧に表示される記事タイトル</li>
+         * <li>{Boolean} isFirst<br>
+         * まとめた記事を常に先頭に追加する場合はtrueを指定。(デフォルトはfalse)</li>
          * </ul>
          * </p>
          * @param {String} type 記事タイプ
@@ -350,6 +376,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         summarizeArticle : function(type, options) {
+            var isFirst = options && options.isFirst;
             if (app.config.basic.mode === Code.APP_MODE_NEWS || this.isPreview) {
                 
                 // 指定された記事タイプのカテゴリ名を取得
@@ -362,30 +389,24 @@ define(function(require, exports, module) {
                 }
 
                 var newsArticles = this.newsCollection.toArray().concat();
-                // 記事の掲載日の降順でソートする
-                newsArticles.sort(function(a, b) {
-                    var pa = a.get("publishedAt");
-                    var pb = b.get("publishedAt");
-                    if (pa === pb) {
-                        return 0;
-                    }
-                    if (pa < pb) {
-                        return options.sortOrder;
-                    } else if (pa > pb) {
-                        return -1 * options.sortOrder;
-                    }
-                });
 
                 var articleDateMap = {};
                 var imagePath;
                 var imageThumbUrl;
 
                 // newsCollectionからまとめる記事を削除し、配列に追加する
-                _.each(newsArticles, $.proxy(function(article) {
+                var firstArticleIdx = -1;
+                _.each(newsArticles, $.proxy(function(article, idx) {
                     if (article.get("type") !== type) {
                         return;
                     }
 
+                    // 最初に出現した位置を記憶する。
+                    if (firstArticleIdx < 0) {
+                        firstArticleIdx = idx;
+                    }
+
+                    // 日付ごとのマップに入れ替える。
                     var publishedAt = article.get("publishedAt");
                     var articleModel = articleDateMap[publishedAt];
                     if (!articleModel) {
@@ -410,6 +431,9 @@ define(function(require, exports, module) {
                         imageThumbUrl = article.get("imageThumbUrl");
                     }
                 }, this));
+                if (firstArticleIdx < 0) {
+                    firstArticleIdx = this.newsCollection.size();
+                }
 
                 var articleDateList = [];
                 _.each(articleDateMap, function(articleDate) {
@@ -437,19 +461,25 @@ define(function(require, exports, module) {
                     }
                 }
 
-                // まとめ記事画面を開くための記事を作成し、コレクションの先頭に登録
+                // まとめ記事画面を開くための記事を作成し、コレクションの適切な位置に追加
                 var folderArticle = new ArticleModel({
                     __id : options.idPreffex + DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
                     site : _.indexBy(app.serverConfig.COLOR_LABEL, "type")[type].label,
+                    title : options.title,
                     dispTitle : options.dispTitle,
+                    publishedAt : DateUtil.formatDate(options.targetDate, "yyyy-MM-dd"),
                     type : type,
                     articles : articleDateList,
                     newArrivals : newArrivals,
                     imagePath : imagePath,
                     imageThumbUrl : imageThumbUrl
                 });
-                this.newsCollection.unshift(folderArticle);
-                this.articleCollection.unshift(folderArticle);
+                // isFirst指定がある場合は先頭に配置する。
+                if (isFirst) {
+                    firstArticleIdx = 0;
+                }
+                this.newsCollection.models.splice(firstArticleIdx, 0, folderArticle);
+                this.articleCollection.models.splice(firstArticleIdx, 0, folderArticle);
             }
         },
         /**
@@ -518,7 +548,7 @@ define(function(require, exports, module) {
         onClickGridItem : function(ev, param) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
             app.newsView = this;
-            app.router.go("article", articleId);
+            app.router.go("top", moment(app.currentDate).format("YYYY-MM-DD"), "article", articleId);
         },
 
         /**
@@ -586,24 +616,20 @@ define(function(require, exports, module) {
         },
 
         /**
-         * YYYY年MM月DD日版の新聞に戻るボタンの日付を更新する
+         * 新聞に戻るボタンを設定する
          * @memberOf NewsView#
          */
         updateFooterButtons : function() {
             var self = this;
-            var $btnGoTop = this.$el.find("#news-action").find("[data-gotop]");
             var $btnBack = this.$el.find("#news-action").find("[data-back]");
             var currentMoment = moment(app.currentDate);
             var currentDateStr = currentMoment.format("YYYY-MM-DD");
 
-            $btnGoTop.on("click", function() {
-                self.setScrollTop(0);
-            });
-
-            $btnBack.text(currentMoment.format("YYYY年MM月DD日版の新聞に戻る"));
             $btnBack.on("click", function(ev) {
+                app.ga.trackEvent("記事詳細ページ", "一覧に戻る","");
+
                 ev.preventDefault();
-                app.router.go("top", currentDateStr);
+                app.router.back();
             });
         },
 
@@ -612,7 +638,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         initScrollTop : function() {
-            if (this.initialScrollTop) {
+            if (this.initialScrollTop || this.initialScrollTop === 0) {
                 this.setScrollTop(this.initialScrollTop);
             }
         },
@@ -682,7 +708,9 @@ define(function(require, exports, module) {
                 $("#main").addClass("is-backnumber");
             }
 
-            this.updateFooterButtons();
+            if ( route !== "top" ) {
+                this.updateFooterButtons();
+            }
         },
 
         /**
@@ -699,7 +727,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         trackPageView : function() {
-            app.ga.trackPageView("/NewsView", "ニュース");
+            app.ga.trackPageView("Top","TOPページ");
         }
     }, {
         /**

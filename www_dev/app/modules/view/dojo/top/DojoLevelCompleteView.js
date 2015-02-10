@@ -46,6 +46,8 @@ define(function(require, exports, module) {
             $('.is-grayedout').unblock(); 
 
             $(document).trigger("open:modal");
+
+            app.ga.trackPageView("Finished/cource=" + this.level.get("level"), "コース習得ページ/コース番号=" + this.level.get("level"));
         },
         /**
          * イベント一覧
@@ -65,9 +67,23 @@ define(function(require, exports, module) {
 
             // 次のコースへ進む。上位レベルがない場合は、トップ画面に戻る
             if (app.currentDojoLevel < this.getMaxDojoLevel() - 1) {
-                app.router.go("dojo", "levels", parseInt(app.currentDojoLevel) + 1);
+                app.router.go(
+                    "dojo",
+                    "levels",
+                    parseInt(app.currentDojoLevel) + 1,
+                    {
+                        trigger : true,
+                        replace : true
+                    }
+                );
             } else {
-                app.router.go("dojo-top");
+                app.router.go(
+                    "dojo-top",
+                    {
+                        trigger : true,
+                        replace : true
+                    }
+                );
             }
         },
 

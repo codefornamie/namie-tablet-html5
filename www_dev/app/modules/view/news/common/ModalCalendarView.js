@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var foundationCalendar = require("foundation-calendar");
     var AbstractView = require("modules/view/AbstractView");
     var BusinessUtil = require("modules/util/BusinessUtil");
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
+    var vexDialog = require("vexDialog");
 
     require("moment/locale/ja");
 
@@ -35,6 +37,8 @@ define(function(require, exports, module) {
          * @memberOf ModalCalendarView#
          */
         afterRendered : function() {
+            app.ga.trackPageView("Calendar","過去の新聞を読む 日付選択ページ");
+
             var self = this;
             var latestPublishDate = moment(BusinessUtil.getCurrentPublishDate()).startOf('day');
 
@@ -77,6 +81,9 @@ define(function(require, exports, module) {
          */
         events : {
             "click #modal-calendar-overlay" : "onClickOverlay",
+            "click [data-close]" : "onClickCloser",
+            "click .rd-back" : "onClickMonth",
+            "click .rd-next" : "onClickMonth",
             "click .rd-day-body" : "onClickDate"
         },
 
@@ -99,7 +106,29 @@ define(function(require, exports, module) {
                 return;
             }
 
+            app.ga.trackEvent("過去の新聞を読む 日付選択ページ", "閉じる", "");
+
             this.trigger("closeModalCalendar");
+        },
+
+        /**
+         * 閉じるボタンをクリックした時に呼ばれる
+         * @memberOf ModalCalendarView#
+         * @param {Event} ev
+         */
+        onClickCloser : function (ev) {
+            app.ga.trackEvent("過去の新聞を読む 日付選択ページ", "閉じる", "");
+
+            this.trigger("closeModalCalendar");
+        },
+
+        /**
+         * 月が変更された後に呼ばれる
+         * @memberOf ModalCalendarView#
+         * @param {Event} ev
+         */
+        onClickMonth: function (ev) {
+            app.ga.trackEvent("過去の新聞を読む 日付選択ページ", "表示月切り替え", this.calendar.getMoment().format("YYYY-MM"));
         },
 
         /**
@@ -123,7 +152,33 @@ define(function(require, exports, module) {
         onClickDate: function (ev) {
             // クリックしたセルが（未配信日等の）無効な日付でない場合は遷移する
             if (!$(ev.target).is(".rd-day-disabled")) {
-                app.router.go("top", moment(this.selectedDate).format("YYYY-MM-DD"));
+                this.showLoading();
+                var holCol = new NewspaperHolidayCollection();
+                holCol.prevPublished(moment(this.selectedDate).toDate(), function(prev, isPublish, e) {
+                    if (this.selectedDate === app.currentDate) {
+                        this.hideLoading();
+                        this.trigger("closeModalCalendar");
+                    }
+                    if (e) {
+                        app.logger.error("error ModalCalendarView:holCol.prevPublished()");
+                        vexDialog.defaultOptions.className = 'vex-theme-default';
+                        vexDialog.alert("休刊日の取得に失敗しました。");
+                        this.hideLoading();
+                    }
+                    if (!isPublish) {
+                        // 休刊日
+                        vexDialog.defaultOptions.className = 'vex-theme-default';
+                        vexDialog.alert("その日は休刊日のため、記事はありません。");
+                        this.hideLoading();
+                    } else {
+                        app.ga.trackEvent("過去の新聞を読む 日付選択ページ", "日付項目", moment(this.selectedDate).format("YYYY-MM-DD"));
+
+                        app.router.navigate("top/" + moment(this.selectedDate).format("YYYY-MM-DD"), {
+                            trigger: true,
+                            replace: true
+                        });
+                    }
+                }.bind(this));
             }
         },
 
@@ -150,11 +205,11 @@ define(function(require, exports, module) {
                             "<span class='rd-month-label__month'>" + month + "月</span>";
                     });
                     // 今日の日付の要素にclass rd-today をつける。
-                    var today = BusinessUtil.getCurrentPublishDate();
+                    var today = new Date(app.currentPublishDate);
                     var selectedDate = moment(self.selectedDate);
-                    if (year === today.getFullYear() &&
-                            month === today.getMonth() + 1) {
-                        $('.rd-day-body:contains(' + today.getDate() + ')').addClass("rd-today");
+                    if (year === today.getFullYear() && month === today.getMonth() + 1) {
+                        $('.rd-day-body:not(.rd-day-prev-month):not(.rd-day-next-month)').eq(today.getDate() - 1)
+                                .addClass("rd-today");
                     }
                 }
             }, 0);

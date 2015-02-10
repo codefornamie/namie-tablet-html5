@@ -30,10 +30,18 @@ define(function(require, exports, module) {
          */
         isChangeImage : false,
 
+        /**
+         * ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         * @memberOf ArticleRegistFileItemView#
+         */
         beforeRendered : function() {
 
         },
 
+        /**
+         * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * @memberOf ArticleRegistFileItemView#
+         */
         afterRendered : function() {
             var self = this;
             // エレメントに自分自身を保持する。
@@ -79,8 +87,13 @@ define(function(require, exports, module) {
 
         },
 
+        /**
+         * 初期化する
+         * @memberOf ArticleRegistFileItemView#
+         */
         initialize : function() {
         },
+
         events : {
             "change #articleFile" : "onChangeFileData",
             "click #fileInputButton" : "onClickFileInputButton",
@@ -88,14 +101,27 @@ define(function(require, exports, module) {
         },
         /**
          * 画像選択ボタン押下時のハンドラ
+         * @memberOf ArticleRegistFileItemView#
          */
         onClickFileInputButton : function() {
             $(this.el).find("#articleFile")[0].click();
         },
         /**
+         * 投稿画面で画像が選択された際に呼び出されるコールバック関数。
+         * <p>
+         * Google Analytics ログ記録
+         * </p>
+         * @param event
+         */
+        fireAnalyticsLogOnChangeFileData: function(event) {
+            app.ga.trackEvent("投稿ページ", "写真選択");
+        },
+        /**
          * ファイル選択時のハンドラ
+         * @memberOf ArticleRegistFileItemView#
          */
         onChangeFileData : function(event) {
+            this.fireAnalyticsLogOnChangeFileData(event);
             var self = this;
             app.logger.debug("onChangeFileData");
             this.isChangeImage = true;
@@ -120,12 +146,13 @@ define(function(require, exports, module) {
               var reader = new FileReader();
               reader.onload = (function(img) {
                   return function(e) {
-                      img.attr("src", e.target.result);
+                      var imageDataURL = e.target.result;
+                      img.attr("src", imageDataURL);
                       var reader = new FileReader();
                       reader.onload = function(e) {
                           inputFile.data = e.target.result;
                           self.imageByteArray = inputFile.data;
-                          self.onLoadFileExtend(e, file, img);
+                          self.onLoadFileExtend(e, file, imageDataURL, img);
                       };
                       reader.readAsArrayBuffer(file);
                   };
@@ -143,6 +170,7 @@ define(function(require, exports, module) {
         },
         /**
          * 削除ボタン押下時のハンドラ
+         * @memberOf ArticleRegistFileItemView#
          */
         onClickFileDeleteButton : function(e) {
             $(this.el).find("#articleFile").val("");

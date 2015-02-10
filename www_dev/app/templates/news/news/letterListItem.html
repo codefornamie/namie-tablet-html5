@@ -1,6 +1,7 @@
 <li
     data-article-id="<%= model.get('__id') %>"
     class="grid-list__item"
+    data-grid-list-item
 >
     <div class="grid-cell--image">
         <img class="articleImage">
@@ -10,8 +11,11 @@
         <div class="grid-description">
             <p class="grid-description__title">
                 <%= model.get("dispTitle") %> <br>
+            </p>
+
+            <p class="grid-description__new-arrivals">
                 <% if (model.get("newArrivals")) { %>
-                    今日の新着写真投稿 <%= model.get("newArrivals") %> 件
+                    今日の新着写真投稿 <b><%= model.get("newArrivals") %></b> 件
                 <% }%>
             </p>
         </div>

@@ -22,13 +22,6 @@ define(function(require, exports, module) {
         numFetchedModels: 0,
 
         /**
-         * 初期化処理
-         * @memberOf BacknumberCollection#
-         */
-        initialize : function() {
-        },
-
-        /**
          * 対象月を指定する。
          * @param {Date|moment} 対象月をDateオブジェクトで指定。（年月のみ使用）
          * @memberOf BacknumberCollection#

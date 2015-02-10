@@ -73,7 +73,7 @@ define(function(require, exports, module) {
                 $("[data-remained-num]").text("このコースは" + Code.DOJO_LEVELS[this.level.get("level")].levelName + "の動画を全部修得すると再生できます");
             }
 
-            _(this.models).each($.proxy(function(model) {
+            _(this.models).each($.proxy(function(model, index) {
                 var solvedItem = _.find(model.achievementModels,function(ach){
                     return ach.get("type") === "dojo_" + Code.DOJO_STATUS_SOLVED;
                 });
@@ -88,6 +88,7 @@ define(function(require, exports, module) {
                     model : model,
                     animationDeley : animationDeley,
                     parentView: this,
+                    index: index,
                     isNext: nextCount === 1,
                     isGrayedOut: nextCount > 1
                 }));

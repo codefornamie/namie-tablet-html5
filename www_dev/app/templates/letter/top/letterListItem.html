@@ -27,7 +27,7 @@
                 <img class="letterListItemPicture" src="">
             </div>
             
-            <div class="small-5 columns columns--body">
+            <div class="small-5 columns columns--body confirm-letter">
                 <h4>
                     <%= model.get("nickname") %> さん
                 </h4>
@@ -39,6 +39,13 @@
 
             <div class="small-2 columns columns--action">
                 <div class="post-action">
+                     <a
+                        href="/letters/<%= model.get('__id') %>/edit"
+                        class="button"
+                    >
+                        編集する
+                    </a><br>
+
                     <a
                         href="#"
                         class="button button--gray"

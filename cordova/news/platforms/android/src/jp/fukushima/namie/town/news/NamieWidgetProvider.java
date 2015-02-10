@@ -7,7 +7,6 @@ import java.util.Calendar;
 
 import jp.fukushima.namie.town.news.WidgetContentManager.MessageStyle;
 import jp.fukushima.namie.town.news.PublishStatus.ArticleExists;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -17,10 +16,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 /**
@@ -41,7 +42,6 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     private static PublishStatus publishStatus = null;
     // 未読状態の最終チェック時刻
     private static long lastUnreadCheckTime = 0;
-
     // ウィジェット表示情報管理オブジェクト
     private static WidgetContentManager contentManager = null;
 
@@ -52,17 +52,11 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onEnabled(Context context) {
         Log.d(TAG, "NamieWidgetProvider#onEnabled()");
 
-        if (publishStatus == null) {
-            publishStatus = new PublishStatus();
-        }
+        publishStatus = new PublishStatus();
+        contentManager = new WidgetContentManager(context);
         lastUnreadCheckTime = 0;
-        contentManager = null;
 
-        // ウィジット更新用アラームの登録
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
-        long startDelay = System.currentTimeMillis() + TIMER_START_DELAY;
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, UPDATE_INTERVAL , pendingIntent);
+        setUpdateAlarm(context);
 
         super.onEnabled(context);
     }
@@ -71,17 +65,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onDisabled(Context context) {
         Log.d(TAG, "NamieWidgetProvider#onDisalbed()");
 
-        // ウィジット更新用アラームの解除
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
-        alarmManager.cancel(pendingIntent);
-
-        publishStatus = null;
-        lastUnreadCheckTime = 0;
-        contentManager = null;
+        cancelUpdateAlarm(context);
 
         super.onDisabled(context);
-    };
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -93,12 +80,22 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "NamieWidgetProvider#onReceive()");
 
+        if (publishStatus == null) {
+            publishStatus = new PublishStatus();
+            lastUnreadCheckTime = 0;
+        }
         if (contentManager == null) {
             contentManager = new WidgetContentManager(context);
         }
 
         String action = intent.getAction();
-        if (action.equals(WIDGET_UPDATE_ACTION)) {
+        if (action.equals(Intent.ACTION_DATE_CHANGED) ||
+            action.equals(Intent.ACTION_TIMEZONE_CHANGED) ||
+            action.equals(Intent.ACTION_TIME_CHANGED) ||
+            action.equals(Intent.ACTION_PACKAGE_REPLACED)) {
+            cancelUpdateAlarm(context);
+            setUpdateAlarm(context);
+        } else if (action.equals(WIDGET_UPDATE_ACTION)) {
             // 新聞の発行、未読状態を更新
             updateNewspaperStatus(context);
 
@@ -107,6 +104,10 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         }
 
         super.onReceive(context, intent);
+    }
+
+    public WidgetContentManager getContentManager() {
+        return contentManager;
     }
 
     public PublishStatus getPublishStatus() {
@@ -163,7 +164,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      */
     private void initPublishStatus(Context context) {
-        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this, contentManager);
+        PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this);
         if (requestThread != null) {
             requestThread.start();
         }
@@ -174,7 +175,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      */
     private void checkRecentArticleExists(Context context) {
-        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this, contentManager);
+        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this);
         if (requestThread != null) {
             requestThread.start();
         }
@@ -209,7 +210,26 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         // メッセージ更新
         setMessageViewStyle(context, remoteViews, contentManager.getMessageStyle());
         remoteViews.setTextViewText(R.id.fukidashi, Html.fromHtml(contentManager.getMessage()));
-        remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
+        remoteViews.setTextViewText(R.id.article_title, Html.fromHtml(contentManager.getMessage()));
+
+        Resources resources = context.getResources();
+        Configuration config = resources.getConfiguration();
+
+        // ランドスケープの場合のみ表示する項目を更新
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            remoteViews.setTextViewText(R.id.article_title_with_thumbnail, Html.fromHtml(contentManager.getMessage()));
+
+            String siteName = contentManager.getSite();
+            if (siteName != null) {
+                remoteViews.setTextViewText(R.id.article_site, siteName);
+                remoteViews.setTextViewText(R.id.article_site_with_thumbnail, siteName);
+            }
+
+            Bitmap thumbnail = contentManager.getThumbnail();
+            if (thumbnail != null) {
+                remoteViews.setImageViewBitmap(R.id.thumb, thumbnail);
+            }
+        }
 
         // 新聞発行の有無に応じて新聞アイコンを変更
         if (publishStatus != null) {
@@ -231,27 +251,33 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      */
     private void setMessageViewStyle(Context context, RemoteViews remoteViews, MessageStyle style) {
         Resources resources = context.getResources();
-        float density = resources.getDisplayMetrics().density;
         Configuration config = resources.getConfiguration();
 
         switch(config.orientation) {
         case Configuration.ORIENTATION_PORTRAIT:
             if (style == MessageStyle.STYLE_BUBBLE) {
-                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_fukidashi_v);
-                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 32), 0, dpToPx(density, 16), 0);
+                remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
+                remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
             } else {
-                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_midashi);
-                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 20), 0, dpToPx(density, 20), 0);
+                remoteViews.setViewVisibility(R.id.fukidashi, View.INVISIBLE);
+                remoteViews.setViewVisibility(R.id.recommend, contentManager.getMessageVisiblity());
             }
             break;
         case Configuration.ORIENTATION_LANDSCAPE:
         default :
             if (style == MessageStyle.STYLE_BUBBLE) {
-                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_fukidashi);
-                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 60), 0, dpToPx(density, 30), 0);
+                remoteViews.setViewVisibility(R.id.fukidashi, contentManager.getMessageVisiblity());
+                remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
+                remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
             } else {
-                remoteViews.setInt(R.id.fukidashi, "setBackgroundResource", R.drawable.img_midashi);
-                remoteViews.setViewPadding(R.id.fukidashi, dpToPx(density, 20), 0, dpToPx(density, 20), 0);
+                remoteViews.setViewVisibility(R.id.fukidashi, View.INVISIBLE);
+                if (contentManager.getThumbnail() != null) {
+                    remoteViews.setViewVisibility(R.id.recommend, View.INVISIBLE);
+                    remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, contentManager.getMessageVisiblity());
+                } else {
+                    remoteViews.setViewVisibility(R.id.recommend, contentManager.getMessageVisiblity());
+                    remoteViews.setViewVisibility(R.id.recommend_with_thumbnail, View.INVISIBLE);
+                }
             }
             break;
         }
@@ -267,15 +293,20 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         remoteViews.setInt(buttonId, "setBackgroundResource", resourceId);
     }
 
-    /**
-     * dpの値からpxを求めて返す.
-     * @param density density
-     * @param dp dp
-     * @return ピクセル値
-     */
-    private int dpToPx(float density, float dp) {
-        return (int) (dp * density + 0.5f);
+    private void setUpdateAlarm(Context context) {
+        // ウィジット更新用アラームの登録
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
+        long startDelay = System.currentTimeMillis() + TIMER_START_DELAY;
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, UPDATE_INTERVAL , pendingIntent);
     }
+
+    private void cancelUpdateAlarm(Context context) {
+        // ウィジット更新用アラームの解除
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
+        alarmManager.cancel(pendingIntent);
+    };
 
     /**
      * アプリ起動用のPendingIntentを設定する.

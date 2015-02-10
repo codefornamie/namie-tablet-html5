@@ -16,6 +16,16 @@ define(function(require, exports, module) {
     Code.APP_MODE_POSTING = "posting";
     Code.APP_MODE_OPE = "ope";
     Code.APP_MODE_DOJO = "dojo";
+    Code.APP_MODE_RAD = "rad";
+
+    // アプリモードとアプリ名とのマッピング
+    Code.APP_NAME = {
+        "news" : "なみえ新聞",
+        "letter" : "なみえ写真投稿",
+        "posting" : "なみえ新聞ライター",
+        "ope" : "浪江町アプリ管理ツール",
+        "dojo" : "なみえ道場"
+    };
 
     // 記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST = [
@@ -28,11 +38,15 @@ define(function(require, exports, module) {
             }, {
                 key : "3",
                 value : "イベント",
-                detailValue : "イベント(町民代理投稿)"
+                valueByMode : {
+                    "ope" : "イベント(町民代理投稿)",
+                }
             }, {
                 key : "4",
                 value : "レポート",
-                detailValue : "レポート(町民代理投稿)"
+                valueByMode : {
+                    "ope" : "レポート(町民代理投稿)",
+                }
             }, {
                 key : "5",
                 value : "記事"
@@ -48,26 +62,22 @@ define(function(require, exports, module) {
             }, {
                 key : "9",
                 value : "イベント",
-                detailValue : "イベント(役場)"
+                valueByMode : {
+                    "ope" : "イベント(役場)",
+                }
             }, {
                 key : "10",
                 value : "レポート",
-                detailValue : "レポート(役場)"
-            }, {
-                key : "11",
-                value : "イベント",
-                detailValue : "イベント"
-            }, {
-                key : "12",
-                value : "レポート",
-                detailValue : "レポート"
+                valueByMode : {
+                    "ope" : "レポート(役場)",
+                }
             }
     ];
 
     // 各アプリで使用する記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST_BY_MODE = {};
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_POSTING] = [
-            "11", "12"
+            "3", "4"
     ];
     Code.ARTICLE_CATEGORY_LIST_BY_MODE[Code.APP_MODE_OPE] = [
             "5", "9", "10", "6", "3", "4"
@@ -85,18 +95,16 @@ define(function(require, exports, module) {
      * img要素のscr属性にpersonium.ioのWebDAVが格納されているサイトの情報定義
      */
     Code.MINPO_SCRAPING = [
-        {
-            site : "福島民報(トップニュース)",
-            scraping: "minpo"
-        },
-        {
-            site : "福島民報(県内ニュース)",
-            scraping: "minpo"
-        },
-        {
-            site : "福島民報(スポーツニュース)",
-            scraping: "minpo"
-        }
+            {
+                site : "福島民報(トップニュース)",
+                scraping : "minpo"
+            }, {
+                site : "福島民報(県内ニュース)",
+                scraping : "minpo"
+            }, {
+                site : "福島民報(スポーツニュース)",
+                scraping : "minpo"
+            }
     ];
     // 記事サイト
     Code.ARTICLE_SITE_LIST = [
@@ -133,6 +141,9 @@ define(function(require, exports, module) {
     Code.IMAGE_TYPE_URL = 1;
     Code.IMAGE_TYPE_NONE = 0;
 
+    // 許される連続した休刊日の最大(日)
+    Code.LIMIT_CONSECUTIVE_HOLIDAY = 20;
+
     // 写真投稿アプリ: 投稿した記事の掲載期間(日数)
     Code.LETTER_PUB_PERIOD = 7;
 
@@ -168,24 +179,25 @@ define(function(require, exports, module) {
                 className : "none",
                 levelName : "",
                 label : "白帯",
-                description : "初めてタブレットをさわる方のためのコースです。（文言未決定）",
-                congratulations: "白帯コースの動画を全て閲覧しました。これでタブレットの基礎動作はマスターできましたね。<br>「茶帯」を進呈します！",
+                description : "このコースでは、なみえタブレットとは何か、なみえタブレットでできること、使用上の注意、 箱から出して電源を入れるまで、タブレットの画面の見方、なみえ新聞の見方を学べるよ。",
+                congratulations : "白帯コースの動画を全て閲覧しました。これでタブレットの基礎動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
-            }, {
+            },
+            {
                 id : "1",
                 className : "white",
                 levelName : "白帯",
                 label : "茶帯",
-                description : "茶帯コースです。（文言未決定）",
-                congratulations: "茶帯コースの動画を全て閲覧しました。これでタブレットの応用動作はマスターできましたね。<br>「茶帯」を進呈します！",
+                description : "このコースでは、写真の撮影・閲覧、文字入力の方法、浪江町のホームページの見方、Googleマップの見方、YouTubeの見方、インターネット（Google検索、Yahoo）の使い方を学べるよ。",
+                congratulations : "茶帯コースの動画を全て閲覧しました。これでタブレットの応用動作はマスターできましたね。<br>「茶帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "2",
                 className : "brown",
                 levelName : "茶帯",
                 label : "黒帯",
-                description : "黒帯コースです。（文言未決定）",
-                congratulations: "黒帯コースの動画を全て閲覧しました。これでタブレットの全てをマスターできましたね。<br>「黒帯」を進呈します！",
+                description : "このコースでは、なみえ新聞に投稿する方法、LINEの使い方、その他アプリ（手書きメモ、スケジュール、ネットラジオ、連絡帳）の使い方を学べるよ。",
+                congratulations : "黒帯コースの動画を全て閲覧しました。これでタブレットの全てをマスターできましたね。<br>「黒帯」を進呈します！",
                 iconPath : ""
             }, {
                 id : "3",
@@ -193,10 +205,13 @@ define(function(require, exports, module) {
                 levelName : "黒帯",
                 label : "",
                 description : "",
-                congratulations: "",
+                congratulations : "",
                 iconPath : ""
             }
     ];
+
+    // 道場のイントロダクション動画のID
+    Code.DOJO_INTORODUCTION_VIDEO_ID = "NgVzppfZ-4Q";
 
     /**
      * アプリモード毎に、キャッシュを有効にするかどうか定義する。

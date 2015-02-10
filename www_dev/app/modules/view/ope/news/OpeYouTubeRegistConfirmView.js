@@ -13,7 +13,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var OpeYouTubeRegistConfirmView = YouTubeListItemView.extend({
-        template : require("ldsh!templates/{mode}/news/youtubeRegistConfirm"),
+        template : require("ldsh!templates/ope/news/youtubeRegistConfirm"),
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * <p>

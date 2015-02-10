@@ -121,11 +121,32 @@ define(function(require, exports, module) {
             });
         },
         /**
+         * プログレスバー付きローディングメッセージを表示する。
+         * @memberOf AbstractView#
+         */
+        showProgressBarLoading : function() {
+            $.blockUI({
+                message : "しばらくお待ちください<br><progress max='100'></progress>",
+                css : {
+                    border : 'none',
+                    padding : '10px',
+                    backgroundColor : '#000',
+                    '-webkit-border-radius' : '10px',
+                    '-moz-border-radius' : '10px',
+                    opacity : 0.5,
+                    color : '#fff'
+                }
+            });
+            this.$progressBar = $("progress"); 
+            this.$progressBar.attr("value", 0);
+        },
+        /**
          * ローディングメッセージを閉じる
          * @memberOf AbstractView#
          */
         hideLoading : function() {
             $.unblockUI();
+            this.$progressBar = [];
         },
         /**
          * aタグのクリックイベントを処理する。 ブラウザデフォルトではなくpushStateに変更する
@@ -187,13 +208,19 @@ define(function(require, exports, module) {
                 $targetElem.load($.proxy(function() {
                     if (isExpansion) {
                         $targetElem.wrap("<a class='expansionPicture' href='" + url + "'></a>");
-                        $(".expansionPicture").colorbox(
+                        var $colorbox = $targetElem.parent().colorbox(
                                 {
                                     closeButton : false,
                                     current : "",
                                     photo : true,
                                     maxWidth : "83%",
                                     maxHeight : "100%",
+                                    onOpen : function () {
+                                        // ライトボックスが開いている時に
+                                        // OSの戻るボタンで記事詳細画面に戻れるように
+                                        // URLを変更しておく
+                                        location.hash = encodeURIComponent(url);
+                                    },
                                     onComplete : function() {
                                         $("#colorbox").append(
                                                 "<button id='cboxCloseButton' class='small button'>閉じる</button>");
@@ -206,12 +233,26 @@ define(function(require, exports, module) {
                                             saveFunc(ev);
                                         });
                                         $("#colorbox").find("img").data("blob", blob);
+
+                                        // OSの戻るボタンで戻った際に
+                                        // closeLightBoxイベントが呼ばれる @app/router.js
+                                        app.once("closeLightBox", function () {
+                                            $colorbox.colorbox.close();
+                                            $colorbox.data("isClosingByBack", true);
+                                        });
                                     },
                                     onClosed : function() {
                                         $("#cboxSaveButton").remove();
                                         $("#cboxCloseButton").remove();
+
+                                        // OSの戻るボタンで戻った際に
+                                        // 二重でbackしないようにする
+                                        if (!$colorbox.data("isClosingByBack")) {
+                                            app.router.back();
+                                        }
                                     }
-                                });
+                                }
+                        );
                     }
                     window.URL.revokeObjectURL($(this).attr("src"));
                 }, this, url, blob));

@@ -24,12 +24,14 @@ define(function(require, exports, module) {
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了する前に呼び出される。
+         *  @memberOf GlobalNavView#
          */
         beforeRendered : function() {
         },
 
         /**
          *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         *  @memberOf GlobalNavView#
          */
         afterRendered : function() {
             var self = this;
@@ -44,6 +46,7 @@ define(function(require, exports, module) {
 
         /**
          *  初期化処理
+         *  @memberOf GlobalNavView#
          */
         initialize : function() {
             var self = this;
@@ -75,6 +78,7 @@ define(function(require, exports, module) {
 
         /**
          *  viewがremoveされる時に呼ばれる
+         *  @memberOf GlobalNavView#
          */
         cleanup: function () {
             app.router.off('route:globalNav');
@@ -82,6 +86,7 @@ define(function(require, exports, module) {
 
         /**
          * RadiationエンティティセットへのFetch成功時のイベントハンドラ。
+         * @memberOf GlobalNavView#
          */
         onFetchRadiation: function() {
             var model = this.collection.at(0);
@@ -108,6 +113,7 @@ define(function(require, exports, module) {
 
         /**
          * 発行日を設定する。
+         * @memberOf GlobalNavView#
          * @param {Date} date 設定する日付
          */
         setDate : function(date) {
@@ -125,6 +131,7 @@ define(function(require, exports, module) {
         /**
          *  今日の新聞に戻るボタンは
          *  topでは表示しない
+         *  @memberOf GlobalNavView#
          */
         updateBackHomeButton: function () {
             var fragment = Backbone.history.fragment;
@@ -140,6 +147,7 @@ define(function(require, exports, module) {
 
         /**
          *  日付の表記を変更
+         *  @memberOf GlobalNavView#
          */
         updateDateLabel: function () {
             var self = this;
@@ -152,16 +160,18 @@ define(function(require, exports, module) {
 
         /**
          *  サンドイッチボタンがクリックされたら呼ばれる
+         *  @memberOf GlobalNavView#
          *  @param {Event} ev
          */
         onClickDrawerOpener: function (ev) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー","");
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニュー","");
             ev.preventDefault();
             this.snapper.open('left');
         },
 
         /**
          *  今日の新聞に戻るボタンが押されたら呼ばれる
+         *  @memberOf GlobalNavView#
          */
         onClickBackHome: function (ev) {
             ev.preventDefault();
@@ -170,13 +180,14 @@ define(function(require, exports, module) {
 
         /**
          *  フォントサイズ変更ボタンが押されたら呼ばれる
+         *  @memberOf GlobalNavView#
          */
         onClickFontSize: function (ev) {
             $(document).trigger('willChangeFontSize');
 
             var $target = $(ev.currentTarget);
             var size = parseInt($target.attr('data-font-size'), 10);
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "文字サイズ選択", parseInt(size));
+            app.ga.trackEvent("全ページ共通", "文字サイズ選択", parseInt(size));
             $('html, body').css('font-size', size + 'px');
 
             $(document).trigger('didChangeFontSize');
@@ -194,6 +205,7 @@ define(function(require, exports, module) {
 
         /**
          *  文字サイズの保存処理
+         *  @memberOf GlobalNavView#
          *  @param {String} fontSize 文字サイズ
          */
         saveFontSize: function (fontSize) {
@@ -209,6 +221,7 @@ define(function(require, exports, module) {
          * メニュー項目ボタンのaタグをクリックした際の挙動を
          * ブラウザデフォルトではなく
          * pushStateに変更する
+         * @memberOf GlobalNavView#
          */
         onClickMenuButton: function (evt) {
             var $target = $(evt.currentTarget);
@@ -226,26 +239,42 @@ define(function(require, exports, module) {
         },
 
         /**
-         * カレンダーがクリックされたら呼ばれる
+         * ヘルプがクリックされたら呼ばれる
          * @memberOf GlobalNavView#
          */
         onClickHelp : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「ヘルプ」","");
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニューボタンの項目押下「ヘルプ」","");
 
             var tutorialView = new TutorialView();
 
             this.setView(GlobalNavView.SELECTOR_GLOBAL_HELP, tutorialView);
             this.listenTo(tutorialView, "closeGlobalHelp", function () {
                 tutorialView.remove();
+                // URLを元に戻す
+                app.router.back();
             });
             tutorialView.render();
+
+            // ヘルプ画面用URLに遷移
+            app.router.navigate("help", {
+                trigger: true,
+                replace: false
+            });
         },
 
+        /**
+         * バックナンバーがクリックされたら呼ばれる
+         * @memberOf GlobalNavView#
+         */
         onClickBackno : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「バックナンバー」","");
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニュー内の項目「バックナンバー」","");
         },
+        /**
+         * 設定がクリックされたら呼ばれる
+         * @memberOf GlobalNavView#
+         */
         onClickSetting : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "ヘッダ部メニュー内の項目「設定」","");
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニュー内の項目「設定」","");
         },
 
         /**
@@ -253,18 +282,29 @@ define(function(require, exports, module) {
          * @memberOf GlobalNavView#
          */
         onClickCalendar : function (evt) {
+            app.ga.trackEvent("全ページ共通", "ヘッダ部メニューボタンの項目押下「過去の新聞を読む」","");
+
             var modalCalendarView = new ModalCalendarView();
 
             this.setView(GlobalNavView.SELECTOR_MODAL_CALENDAR, modalCalendarView);
             this.listenTo(modalCalendarView, "closeModalCalendar", function () {
                 modalCalendarView.remove();
+                // URLを元に戻す
+                app.router.back();
             });
             modalCalendarView.render();
+
+            // カレンダー画面用URLに遷移
+            app.router.navigate("calendar", {
+                trigger: true,
+                replace: false
+            });
         },
 
         /**
          * ルーティングによって呼ばれる
          *
+         * @memberOf GlobalNavView#
          * @param {Event} ev
          */
         onRoute: function (ev) {

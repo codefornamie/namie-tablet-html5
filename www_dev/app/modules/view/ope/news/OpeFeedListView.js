@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var async = require("async");
     var FeedListView = require("modules/view/news/FeedListView");
     var jquerySortable = require("jquery-sortable");
     var vexDialog = require("vexDialog");
@@ -77,63 +78,89 @@ define(function(require, exports, module) {
          * @memberOf OpeFeedListView#
          */
         onClickSequenceRegist : function() {
-            this.showLoading();
-            $("#sequenceConfirm").hide();
-            var saveModels = [];
+            var self = this;
             // ListItemView取得
             var itemViews = this.getViews("#feedList").value();
-            _.each(itemViews, function(itemView) {
-                var sequence = itemView.$el.index().toString();
-                if (itemView.model.get("sequence") !== sequence) {
+            var saveModels = _(itemViews)
+                .map(function (itemView) {
+                    var remoteSequence = itemView.model.get("sequence");
+                    var localSequence = itemView.$el.index().toString();
+
                     // 並び順に変更がないものは保存対象としない
-                    itemView.model.set("sequence", itemView.$el.index().toString());
-                    saveModels.push(itemView.model);
+                    if (remoteSequence !== localSequence) {
+                        itemView.model.set("sequence", localSequence);
+
+                        return itemView.model;
+                    }
+                })
+                .compact()
+                .value();
+
+            // 保存するmodelが無ければ
+            // 何もせず警告を出す
+            if (!saveModels || saveModels.length === 0) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("並び順を変更してから保存ボタンを押してください。");
+
+                return;
+            }
+
+            this.showLoading();
+            $("#sequenceConfirm").hide();
+
+            this.saveSequence(
+                saveModels,
+
+                function onSaveSequence(err) {
+                    self.hideLoading();
                 }
-            });
-            var onSaveFunction = $.proxy(function() {
-                if (saveModels.length <= 0) {
-                    // 並び順が代わっていないようなら処理を行わない
-                    this.hideLoading();
-                } else {
-                    // リクエスト過多にならないように、最大５パラで保存処理を実行する
-                    this.saveSequence(saveModels.splice(0, 5), onSaveFunction);
-                }
-            }, this);
-            this.saveSequence(saveModels.splice(0, 5), onSaveFunction);
+            );
         },
+
         /**
          * 並び順保存処理
          * @memberOf OpeFeedListView#
          * @param {Array} models 記事情報の配列
-         * @param {Function} callback 情報保存後のコールバック関数
+         * @param {Function} onSaveSequence 情報保存後のコールバック関数
          */
-        saveSequence : function(models, callback) {
-            if (!models || models.length === 0) {
-                vexDialog.defaultOptions.className = 'vex-theme-default';
-                vexDialog.alert("並び順を変更してから保存ボタンを押してください。");
-                this.hideLoading();
-                return;
-            }
-            var modelsLength = models.length;
-            var currentCount = 0;
+        saveSequence : function(models, onSaveSequence) {
+            var self = this;
 
-            _.each(models, $.proxy(function(model) {
-                model.save(null, {
-                    success : $.proxy(function() {
-                        currentCount++;
-                        if (currentCount >= modelsLength) {
-                            // 全ての保存処理が終わったタイミングでコールバックを呼ぶ
-                            callback();
-                        }
-                    }, this),
-                    error : $.proxy(function() {
-                        this.hideLoading();
+            // 最大同時処理数
+            var LIMIT_PARALLEL_SAVE_SEQUENCE = 5;
+
+            async.eachLimit(
+                models,
+
+                LIMIT_PARALLEL_SAVE_SEQUENCE,
+
+                // 各要素に対する保存処理
+                function fn(model, done) {
+                    model
+                        .save()
+                        .then(function () {
+                            // ETagを更新する
+                            return model.fetch();
+                        })
+                        .done(function () {
+                            done();
+                        })
+                        .fail(function (err) {
+                            done(err);
+                        });
+                },
+
+                // 保存処理が全て完了したら呼ばれる
+                function onFinish(err) {
+                    if (err) {
                         vexDialog.defaultOptions.className = 'vex-theme-default';
                         vexDialog.alert("並び順の保存に失敗しました。");
                         app.logger.error("並び順の保存に失敗しました。");
-                    }, this)
-                });
-            }, this));
+                    }
+
+                    onSaveSequence(err);
+                }
+            );
         },
         /**
          * @memberOf OpeFeedListView#

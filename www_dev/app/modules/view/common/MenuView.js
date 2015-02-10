@@ -47,19 +47,19 @@ define(function(require, exports, module) {
             $('#snap-content').data("snap").close();
         },
         onClickTop : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「TOP」","");
+            app.ga.trackEvent("全ページ共通", "サイドメニュー内の項目「TOP」","");
         },
         onClickFavorite : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「切り抜き」","");
+            app.ga.trackEvent("全ページ共通", "サイドメニュー内の項目「切り抜き」","");
         },
         onClickHelp : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「ヘルプ」","");
+            app.ga.trackEvent("全ページ共通", "サイドメニュー内の項目「ヘルプ」","");
         },
         onClickBackno : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「バックナンバー」","");
+            app.ga.trackEvent("全ページ共通", "サイドメニュー内の項目「バックナンバー」","");
         },
         onClickSetting : function(evt) {
-            app.ga.trackEvent("新聞アプリ/全ページ共通", "サイドメニュー内の項目「設定」","");
+            app.ga.trackEvent("全ページ共通", "サイドメニュー内の項目「設定」","");
         }
     });
 

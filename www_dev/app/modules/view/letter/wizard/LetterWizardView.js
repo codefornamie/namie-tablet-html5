@@ -12,6 +12,7 @@ define(function(require, exports, module) {
     var Code = require("modules/util/Code");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
+    var StringUtil = require("modules/util/StringUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
     var moment = require("moment");
     var vexDialog = require("vexDialog");
@@ -40,6 +41,8 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          */
         afterRendered : function() {
+            app.ga.trackPageView("Wizard", "写真新規投稿ページ");
+            
             this.prepareValidate();
 
             this.$step = this.$el.find(LetterWizardView.SELECTOR_LETTER_WIZARD).steps({
@@ -73,12 +76,25 @@ define(function(require, exports, module) {
                 FileAPIUtil.bindFileInput(this.$el.find("#articleFile"));
                 this.hideLoading();
             }
+
+            // フォームの入力値と確認画面を、モデルのデータを元に設定する
+            $("#letter-wizard-form__title").val(this.model.get("title"));
+            $("#letter-wizard-form__body").val(this.model.get("description"));
+            $("#letter-wizard-form__nickname").val(this.model.get("nickname"));
+            this.setConfirmLabel();
+
+            if (this.file) {
+                $("#previewFile").attr("src", this.file.dataURL);
+                $(".letterPicture").attr("src", this.file.dataURL);
+                this.showImageControl();
+            }
         },
         /**
          * 写真選択後、対象写真の削除ボタンやプレビュー画像を表示するための要素を表示する。
          * <p>
          * なみえ写真投稿では、写真選択後のプレビュー画像は別の方法で表示するため、この処理はオーバライドして抑止する。
          * </p>
+         * @memberOf LetterWizardView#
          */
         showImageControl : function() {
             if (this.isAndroid) {
@@ -144,7 +160,10 @@ define(function(require, exports, module) {
                 // URLを更新する
                 // ルーティングによって呼ばれた場合は新たなルーティングを行わない
                 if (!this._isRouting) {
+                    app.ga.trackPageView("Wizard/step=" + expectedStep, "写真新規投稿ページ");
                     app.router.navigate("/letters/new?step=" + expectedStep);
+                    // 入力内容をモデルに保存
+                    this.setInputValue();
                 }
 
                 // 現在のページ番号をdata属性に格納
@@ -162,7 +181,7 @@ define(function(require, exports, module) {
          */
         onRoute : function(route, params) {
             var queryString = params[1];
-            var query = app.router.parseQueryString(queryString);
+            var query = StringUtil.parseQueryString(queryString);
             var step = query.step;
 
             this._isRouting = true;
@@ -238,6 +257,7 @@ define(function(require, exports, module) {
         onFinished : function(ev, currentIndex) {
             this.showLoading();
             this.setInputValue();
+            app.ga.trackEvent("写真投稿ページ", "「投稿する」ボタン押下");
             // ニックネームをlocalStorageに保存
             this.saveLocalStorage();
             this.saveLetterPicture();
@@ -315,10 +335,16 @@ define(function(require, exports, module) {
                 // ファイルの読み込み
                 var reader = new FileReader();
                 reader.onload = $.proxy(function(e) {
-                    target.data = e.target.result;
-                    this.onLoadFileExtend(e, file, target);
+                    var imageDataURL = e.target.result;
+                    var reader = new FileReader();
+                    reader.onload = $.proxy(function(e) {
+                        target.data = e.target.result;
+                        app.ga.trackEvent("写真投稿ページ", "写真選択（「ギャラリー一覧」から）");
+                        this.onLoadFileExtend(e, file, imageDataURL, target);
+                    }, this);
+                    reader.readAsArrayBuffer(file);
                 }, this);
-                reader.readAsArrayBuffer(file);
+                reader.readAsDataURL(file);
 
             }, this), function(e) {
                 // fileでエラー
@@ -357,16 +383,28 @@ define(function(require, exports, module) {
             this.model.set("depublishedAt", moment(prePublishedAt).add(Code.LETTER_PUB_PERIOD, "d").format("YYYY-MM-DD"));
         },
         /**
+         * 投稿画面で画像が選択された際に呼び出されるコールバック関数。
+         * <p>
+         * Google Analytics ログ記録処理を実装する。
+         * </p>
+         * @param event {Event} Clickイベント
+         */
+        fireAnalyticsLogOnChangeFileData: function(event) {
+            app.ga.trackEvent("写真投稿ページ", "写真選択（「他の写真を選ぶ」から）");
+        },
+        /**
          * ファイル読み込み後に行う拡張処理
          * @memberOf LetterWizardView#
          * @param {Event} ev ファイルロードイベント
          * @param {Object} file ファイルオブジェクト
+         * @param {Object} imageDataURL 画像のData URL
          * @param {Object} target 選択した画像要素
          */
-        onLoadFileExtend : function(ev, file, target) {
+        onLoadFileExtend : function(ev, file, imageDataURL, target) {
             this.hideLoading();
             this.file = file;
             this.file.data = ev.target.result;
+            this.file.dataURL = imageDataURL;
             if (navigator.userAgent.indexOf('Android') < 0) {
                 this.makeThmbnail(this.file.data, $.proxy(function(blob) {
                     this.file.thumb = blob;

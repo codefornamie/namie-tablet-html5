@@ -24,14 +24,6 @@ define(function(require, exports, module) {
          */
         entity : "dojo_movie",
         /**
-         * 検索条件
-         * @memberOf DojoContentCollection#
-         */
-        condition : {
-            top : 100,
-            orderby : "sequence desc"
-        },
-        /**
          * youtubeCollection
          * @memberOf DojoContentCollection#
          */
@@ -41,6 +33,16 @@ define(function(require, exports, module) {
          * @memberOf DojoContentCollection#
          */
         achievementCollection: null,
+        /**
+         * 初期化処理
+         * @memberOf DojoContentCollection#
+         */
+        initialize : function() {
+            this.condition = {
+                top : 100,
+                orderby : "sequence desc"
+            };
+        },
         /**
          * レスポンス情報のパースを行う。
          * @memberOf DojoContentCollection#

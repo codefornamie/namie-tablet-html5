@@ -14,8 +14,14 @@ define(function(require, exports, module) {
     var FavoriteCollection = AbstractODataCollection.extend({
         model : FavoriteModel,
         entity : "favorite",
-        condition : {
-            top : 1000
+        /**
+         * 初期化処理
+         * @memberOf FavoriteCollection#
+         */
+        initialize : function() {
+            this.condition = {
+                top : 1000
+            };
         },
     });
 

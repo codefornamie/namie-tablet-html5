@@ -51,6 +51,7 @@ define(function(require, exports, module) {
                 }
             };
             document.addEventListener("pause", this.onPause, false);
+            app.ga.trackPageView("Movie/movie=" + this.dojoContentModel.get("videoId"), "動画再生ページ表示/動画ID=" + this.dojoContentModel.get("videoId"));
         },
         /**
          * イベント一覧
@@ -95,6 +96,7 @@ define(function(require, exports, module) {
          * @param {Event} ev
          */
         onClickCompleteLesson : function(ev) {
+            app.ga.trackEvent("動画再生ページ", "「習得した」ボタン押下", this.dojoContentModel.get("videoId"));
             var isLevelCompletedBefore;
 
             if (this.dojoContentModel.achievementModels) {
@@ -103,7 +105,7 @@ define(function(require, exports, module) {
                 });
 
                 if (solvedAchievement) {
-                    this.onClickBack(ev);
+                    this.onClickBack(ev, true);
                     return;
                 }
             }
@@ -124,9 +126,18 @@ define(function(require, exports, module) {
                     // 現在の動画を習得した時点で現在のコースを制覇した場合は、コース制覇画面へ遷移する
                     // そうでない場合は、動画一覧へ戻る
                     if (!isLevelCompletedBefore && this.isLevelCompleted()) {
-                        app.router.go("dojo", "levels", app.currentDojoLevel, "finished");
+                        app.router.go(
+                            "dojo",
+                            "levels",
+                            app.currentDojoLevel,
+                            "finished",
+                            {
+                                trigger : true,
+                                replace : true
+                            }
+                        );
                     } else {
-                        this.onClickBack(ev);
+                        this.onClickBack(ev, true);
                     }
                 }, this)
             });
@@ -149,6 +160,7 @@ define(function(require, exports, module) {
          * @memberOf DojoLessonLayout#
          */
         onClickPlaybackLesson: function () {
+            app.ga.trackEvent("動画再生ページ", "「まだよく分からない」ボタン押下", this.dojoContentModel.get("videoId"));
             this.$el.find("#dojo-lesson")
                 .removeClass("is-ended")
                 .addClass("is-ready");
@@ -171,10 +183,13 @@ define(function(require, exports, module) {
          * @memberOf DojoLessonLayout#
          * @param {Event} ev
          */
-        onClickBack : function(ev) {
+        onClickBack : function(ev, action) {
             ev.preventDefault();
 
-            app.router.go("dojo", "levels", app.currentDojoLevel);
+            app.router.back();
+            if (action === undefined) {
+                app.ga.trackEvent("動画再生ページ", "「閉じる」ボタン押下", this.dojoContentModel.get("videoId"));
+            }
         },
 
         /**
@@ -219,12 +234,31 @@ define(function(require, exports, module) {
                             this.player.removeEventListener("onReady");
                             gapi.client.load('youtube', 'v3', $.proxy(this.onLoadYoutubePlayer, this));
                         }, this),
+
                         "onStateChange" : $.proxy(function(event) {
                             app.logger.debug("Youtube state change. state=" + event.data);
+
                             if (event.data === YT.PlayerState.PLAYING) {
-                                // 動画開始されたら動画再生ボタンを表示
+                                // 動画が再生可能になったらボタンを有効化する
                                 $("[data-play-movie]").show();
+                                $("[data-pause-movie]").show();
+
+                                // 動画再生したら動画停止ボタンを表示
+                                $("#cell-play-movie").hide();
+                                $("#cell-pause-movie").show();
+                                app.ga.trackEvent("動画再生ページ", "動画再生ボタン押下", this.dojoContentModel.get("videoId"));
+                            } else {
+                                // 動画停止したら動画再生ボタンを表示
+                                $("#cell-play-movie").show();
+                                $("#cell-pause-movie").hide();
                             }
+                            if (event.data === YT.PlayerState.PAUSED) {
+                                if (this.player.getCurrentTime() !== this.player.getDuration()) {
+                                    // 最後まで再生した後の一時停止イベントではログは記録しない
+                                    app.ga.trackEvent("動画再生ページ", "動画一時停止ボタン押下", this.dojoContentModel.get("videoId"));
+                                }
+                            }
+
                             if (event.data === YT.PlayerState.ENDED) {
                                 // 動画終了時に習得確認テキストを出す
                                 this.onEndYouTube();

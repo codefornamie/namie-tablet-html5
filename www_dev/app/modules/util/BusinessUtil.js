@@ -5,6 +5,9 @@ define(function(require, exports, module) {
     var moment = require("moment");
     var IsNull = require("modules/util/filter/IsNull");
     var Le = require("modules/util/filter/Le");
+    var Ge = require("modules/util/filter/Ge");
+    
+    var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     /**
      * 業務ユーティリティクラス
@@ -31,38 +34,51 @@ define(function(require, exports, module) {
     /**
      * 休刊日を加味した配信日計算を行う
      * @memberOf BusinessUtil#
-     * @param {ArticleCollection} articleCollection 記事情報コレクション：インポートしてしまうとループが発生してしまうため、 引数でインスタンスをもらう
+     * @param {NewspaperHolidayCollection} newspaperHolidayCollection 
      * @param {Function} callback 休刊日を加味した配信日計算後の処理
      */
-    BusinessUtil.calcConsiderSuspendPublication = function(articleCollection, callback) {
-        var publishDate = new Date();
-        var nowTimeString = moment(publishDate).format("HH:mm");
+    BusinessUtil.calcConsiderSuspendPublication = function(newspaperHolidayCollection, callback) {
+        var publishDate = moment();
+        var nowTimeString = publishDate.format("HH:mm");
         if (nowTimeString < app.serverConfig.PUBLISH_TIME) {
-            publishDate = moment(publishDate).add(-1, "d");
+            publishDate = publishDate.add(-1, "d");
         }
-
-        // 休刊対応の場合は、直近の配信日を知るため、publishedAtでorderbyし、先頭一件取得を行う
-        articleCollection.condition = {
-            top : 1,
-            orderby : "publishedAt desc"
-        };
-        articleCollection.condition.filters = [
-                new Le("publishedAt", moment(publishDate).format("YYYY-MM-DD")), new IsNull("isDepublish")
-        ];
-        articleCollection.fetch({
-            success : $.proxy(function() {
-                if (articleCollection.size()) {
-                    // 検索結果が得られた場合は、そのarticle情報のpublishedAtを本日の配信日とする
-                    publishDate = articleCollection.at(0).get("publishedAt");
-                }
-                app.currentPublishDate = moment(publishDate).format("YYYY-MM-DD");
-                // 既読管理のためにパーソナル情報を更新。
-                app.user.updateShowLastPublished();
-                callback(app.currentPublishDate);
-            }, this),
-            error : $.proxy(function() {
-                callback(app.currentPublishDate);
-            }, this),
+        
+        // 休刊日計算処理
+        newspaperHolidayCollection.prevPublished(publishDate.toDate(), function(prevPublishDate,isPublish,err) {
+            var considerDate = publishDate.format("YYYY-MM-DD");
+            if (err) {
+                app.logger.error("error BusinessUtil.calcConsiderSuspendPublication()");
+            } else if (!isPublish) {
+                // 現在の日付が休刊日の場合
+                considerDate = moment(prevPublishDate).format("YYYY-MM-DD");
+            }
+            app.currentPublishDate = considerDate;
+            // 既読管理のためにパーソナル情報を更新。
+            app.user.updateShowLastPublished();
+            callback(considerDate);
+        });
+    };
+    /**
+     * 次号の配信日を返す。
+     * @memberOf BusinessUtil#
+     * @param {NewspaperHolidayCollection} newspaperHolidayCollection 
+     * @param {Function} callback 休刊日を加味した配信日計算後の処理
+     */
+    BusinessUtil.calcNextPublication = function(callback) {
+        var publishDate = moment();
+        
+        // 休刊日計算処理
+        var newspaperHolidayCollection = new NewspaperHolidayCollection();
+        newspaperHolidayCollection.nextPublish(publishDate.toDate(), function(nextPublishDate, err) {
+            var considerDate = publishDate.format("YYYY-MM-DD");
+            if (err) {
+                app.logger.error("error BusinessUtil.calcNextPublication()");
+            } else {
+                considerDate = moment(nextPublishDate).format("YYYY-MM-DD");
+            }
+            app.currentPublishDate = considerDate;
+            callback(considerDate);
         });
     };
 

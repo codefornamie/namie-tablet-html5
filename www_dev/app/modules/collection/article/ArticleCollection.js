@@ -28,13 +28,14 @@ define(function(require, exports, module) {
          */
         entity : "article",
         /**
-         * 検索条件
+         * 初期化処理
          * @memberOf ArticleCollection#
          */
-        condition : {
-            // 新聞アプリの記事に表示する最大件数
-            top : 300,
-            orderby : "createdAt desc"
+        initialize : function() {
+            this.condition = {
+                top : 300,
+                orderby : "createdAt desc"
+            };
         },
         /**
          * レスポンス情報のパースを行う。
@@ -70,36 +71,52 @@ define(function(require, exports, module) {
                 // 順序付け(sequence)ありとなしで分ける
                 var sequenced = [];
                 var unsequenced = [];
+                var fromDateString = app.currentDate;
+
+                if (this.searchConditionFromDate) {
+                    // 記事の検索が範囲指定のばあい、その範囲の開始日とする。
+                    // この日付以前の記事は、sequenceを無視する。
+                    fromDateString = moment(this.searchConditionFromDate).format("YYYY-MM-DD");
+                }
+
                 for (var i = 0; i < response.length; i++) {
-                    if (isNaN(parseInt(response[i].sequence)) || response[i].publishedAt < app.currentDate) {
+                    if (isNaN(parseInt(response[i].sequence)) || response[i].publishedAt < fromDateString) {
                         unsequenced.push(response[i]);
                     } else {
                         sequenced.push(response[i]);
                     }
                 }
-                // 最初に順序付けありのデータをその順序でresponseに設定
-                response = _.sortBy(sequenced, function(res) {
-                    return parseInt(res.sequence);
+
+                // 最初に順序付けありのデータをその順序でソート
+                sequenced = _.sortBy(sequenced, function(res) {
+                    return parseInt(res.sequence, 10);
                 });
-                // 順序付けなしは優先度 > 更新日時降順でソート
+
+                // 次に順序付けなしのデータを優先度 > 更新日時降順でソート
                 unsequenced = _.sortBy(unsequenced, function(res) {
                     return [
-                            res.priority, Number.MAX_SAFE_INTEGER - (new Date(res.updatedAt)).getTime()
+                        res.priority,
+                        - new Date(res.updatedAt)
                     ];
                 });
+
                 // 順序付けなしのデータを適切な位置に差し込んでいく
                 _.each(unsequenced, function(ures) {
-                    // response内でuresの優先度と同じエントリのうち、一番最後に出現するものを探す。
-                    var lastIndex = response.length - 1;
+                    // sequenced内でuresの優先度と同じエントリのうち、一番最後に出現するものを探す。
+                    var lastIndex = sequenced.length - 1;
+
                     for (var j = lastIndex; j >= 0; j--) {
-                        if (ures.priority === response[j].priority) {
+                        if (ures.priority === sequenced[j].priority) {
                             lastIndex = j;
                             break;
                         }
                     }
+
                     // 見つけた要素の後ろ(見つからない場合は最後)に追加する
-                    response.splice(lastIndex + 1, 0, ures);
+                    sequenced.splice(lastIndex + 1, 0, ures);
                 });
+
+                response = sequenced;
             }
 
             return response;
@@ -107,22 +124,66 @@ define(function(require, exports, module) {
 
         /**
          * 記事の検索条件を指定する。
+         * @param {Date} fDate 検索範囲開始日
+         * @param {Date} tDate 検索範囲終了日
+         * @param {boolean} isOnlyPublish trueの場合、記事の掲載期間を考慮して検索する。
+         * falseの場合、記事の掲載開始日のみに基づく。
+         * @param {boolean} isDepublish trueの場合、検索結果に掲載中止を含める。
+         */
+        setSearchConditionRange : function(fDate, tDate, isOnlyPublish, isDepublish) {
+            this.searchConditionFromDate = fDate;
+            var f = moment(fDate).format("YYYY-MM-DD");
+            var t = moment(tDate).format("YYYY-MM-DD");
+
+            // 範囲の条件生成
+            var rangeCondition;
+            if (isOnlyPublish) {
+                rangeCondition = new And([new Ge("publishedAt", f), new Le("publishedAt", t)]);
+            } else {
+                rangeCondition = new And([
+                    new Or([
+                            new And([
+                                    new Le("publishedAt", t), new Ge("depublishedAt", f)
+                            ]), new And([
+                                    new Or([
+                                            new IsNull("depublishedAt"), new Equal("depublishedAt", "")
+                                    ]), new Ge("publishedAt", f), new Le("publishedAt", t)
+                            ])
+
+                    ])
+                ]);
+                
+            }
+            // 全体条件
+            var condition = [];
+            // 範囲
+            condition.push(rangeCondition);
+            // 削除を除く
+            condition.push(new And([
+                new Or([
+                        new IsNull("deletedAt"), new Equal("deletedAt", "")
+                ])
+            ]));
+            
+            if(!isDepublish){
+                // 掲載中止を 除く
+                condition.push(new IsNull("isDepublish"));
+            }
+            
+            // 条件を設定する
+            this.condition.filters = [
+                new And([
+                        condition
+                ])
+            ];
+        },
+        /**
+         * 記事の検索条件を指定する。
          * @param {Object} condition 検索条件。現在、targetDateプロパティにDateオブジェクトを指定可能。
          * @memberOf ArticleCollection#
          */
         setSearchCondition : function(condition) {
-            var targetDate = condition.targetDate;
-            var dateString = DateUtil.formatDate(targetDate, "yyyy-MM-dd");
-
-            this.condition.filters = [
-                new And([
-                        new Or([
-                                new Equal("publishedAt", dateString), new And([
-                                        new Le("publishedAt", dateString), new Ge("depublishedAt", dateString)
-                                ])
-                        ]), new IsNull("isDepublish"), new Or([new IsNull("deletedAt"), new Equal("deletedAt", "")])
-                ])
-            ];
+            this.setSearchConditionRange(condition.targetDate, condition.targetDate);
         }
     });
 

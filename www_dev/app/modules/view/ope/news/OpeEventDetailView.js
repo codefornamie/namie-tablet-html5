@@ -48,7 +48,7 @@ define(function(require, exports, module) {
          * @memberOf OpeEventDetailView#
          */
         onClickGotoCancel : function() {
-            app.router.go("ope-top" ,this.model.get("publishedAt"));
+            app.router.go("ope-top" ,this.targetDate);
         }
     });
     module.exports = OpeEventDetailView;

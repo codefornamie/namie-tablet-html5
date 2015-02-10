@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var Code = require("modules/util/Code");
     var AbstractView = require("modules/view/AbstractView");
     var LoginModel = require("modules/model/LoginModel");
     var vexDialog = require("vexDialog");
@@ -72,7 +73,7 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             Log.info("LoginView initialize");
-            app.ga.trackPageView("Login", "ログイン");
+            app.ga.trackPageView("Login", "ログインページ");
             this.model = new LoginModel();
         },
 
@@ -83,7 +84,6 @@ define(function(require, exports, module) {
          */
         onClickLoginButton : function() {
             Log.info("onClickButton(Login button click handler) called ");
-            app.ga.trackEvent("ニュース", "ログイン");
 
             var loginId = $("#loginId").val();
             var password = $("#password").val();
@@ -108,7 +108,15 @@ define(function(require, exports, module) {
         onLogin : function(msg) {
             Log.info("onLogin callback called");
             if (!msg) {
+                // personalのrolesが"admin"の場合のみログインを許可する
+                if (app.config.basic.mode === Code.APP_MODE_OPE && !app.user.hasRole("admin")) {
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("権限がないためログインできません。");
+                    app.pcsManager.accessToken = null;
+                    return;
+                }
                 app.logger.info("Success Login process.");
+                app.ga.trackEvent("ログインページ", "ログイン完了");
                 this.goNextView();
             } else {
                 vexDialog.defaultOptions.className = 'vex-theme-default';

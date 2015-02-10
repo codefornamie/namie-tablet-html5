@@ -58,6 +58,39 @@ body {
     box-shadow: 0 3px 0 rgb(90, 86, 61);
 }
 
+.button--float {
+    background: white;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 50%;
+    color: rgb(8, 76, 129);
+    line-height: 38px;
+    font-size: 25px;
+    box-shadow: 0px 2px 1px 0px #a4a4a4;
+    position: absolute;
+    top: -19px;
+    right: -19px;
+    text-align: center;
+}
+
+.button--float::after {
+    content: "閉じる";
+    position: absolute;
+    top: 0;
+    left: 100%;
+    color: white;
+    white-space: nowrap;
+    margin-left: 10px;
+    font-size: 1rem;
+}
+
+@media only screen and (orientation:portrait) {
+    .button--float::after {
+        display: none;
+    }
+}
+
 hr {
     border-color: #ebe8da;
     border-width: 1px 0;;
@@ -919,7 +952,7 @@ div.nehan-block.nehan-body:last-child {
 .letters-detail {
     background: white;
     margin-bottom: 50px;
-    padding: 45px;
+    padding: 30px;
 }
 
 .letters-detail .eventFile {
@@ -929,9 +962,10 @@ div.nehan-block.nehan-body:last-child {
 .letter-detail__nickname {
     color: rgb(241, 132, 132);
     font-weight: bold;
-    font-size: 2.0rem;
+    font-size: 1.5rem;
     margin-bottom: 20px;
     margin-top: 20px;
+    text-align: right;
 }
 
 .letter-detail__nickname-unit {
@@ -941,7 +975,7 @@ div.nehan-block.nehan-body:last-child {
 
 .letter-detail__description {
     color: rgb(90, 86, 61);
-    font-size: 2.0rem;
+    font-size: 1.7rem;
 }
 
 /**
@@ -1562,4 +1596,39 @@ select#articleCategory {
 
 .text--localnews {
     color: #61b152;
+}
+
+/**
+ *  円形の枠に囲われた数字
+ */
+.circle-number {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 34px;
+    font-size: 38px;
+    color: #784e3c;
+    border: 3px solid #784e3c;
+    border-radius: 20px;
+}
+
+/**
+ *  おくやみ
+ */
+.condolenceListItem {
+    margin: 30px 0 50px;
+}
+
+.news-detail .condolenceListItem .post-header__title {
+    border-left: 5px solid rgb(35, 136, 215);
+    padding: 15px 0 15px 30px;
+    color: rgb(35, 136, 215);
+    font-size: 1.5rem;
+    background: rgb(237, 241, 241);
+}
+
+.condolence__body {
+    background: rgb(243, 241, 233);
+    padding: 30px 35px;
+    margin: 30px 0;
 }
