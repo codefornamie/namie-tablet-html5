@@ -117,3 +117,52 @@
     background-color: #ff0a21;
     fill: #ff0a21;
 }
+
+ /**
+ *  モーダル線量リストダイアログ
+ */
+.modal-radiation-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+}
+
+.modal-radiation {
+    bottom: 0;
+    height: 80%;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 80%;
+}
+
+.modal-radiation {
+    background: rgb(222, 234, 243);
+    text-align: center;
+    padding: 15px 0;
+    color: rgb(8, 76, 129);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.modal-radiation .radiationList {
+    height: 420px;
+    overflow: scroll;
+}
+
+.modal-radiation .radiationListItem label.radiationItemFileName {
+    font-size: 1.2rem;
+}
+.modal-radiation .radiationListItem label.radiationItemFileLastModified {
+    font-size: 1rem;
+}
+
+.modal-radiation .radiationList {
+        padding: 15px 0;
+}

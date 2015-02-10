@@ -7,6 +7,10 @@ define(function(require, exports, module) {
     var RadClusterListView = require("modules/view/rad/top/RadClusterListView");
     var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
     var RadiationClusterCollection = require("modules/collection/radiation/RadiationClusterCollection");
+    var ModalRadiationListView = require("modules/view/rad/top/ModalRadiationListView");
+    var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var CommonUtil = require("modules/util/CommonUtil");
+    var vexDialog = require("vexDialog");
 
     /**
      * 放射線アプリのトップ画面を表示するためのViewクラスを作成する。
@@ -20,6 +24,9 @@ define(function(require, exports, module) {
          * このViewのテンプレートファイルパス
          */
         template : require("ldsh!templates/{mode}/top/top"),
+        events : {
+            "click [data-radiation-upload-button]": "onClickRadiationUploadButton"
+        },
 
         /**
          * Viewの描画処理の開始前に呼び出されるコールバック関数。
@@ -57,6 +64,51 @@ define(function(require, exports, module) {
             }));
 
             // ローディングを停止
+            this.hideLoading();
+        },
+        /**
+         * 線量データアップロードボタンが押下された際のコールバック
+         * @memberOf RadTopView#
+         */
+        onClickRadiationUploadButton : function() {
+            if (CommonUtil.isCordova()) {
+                this.showLoading();
+                FileAPIUtil.getHoribaRadiationList(this.setRadiationList.bind(this));
+            } else {
+                alert("ご使用の端末ではアップロードできません。");
+                return;
+            }
+        },
+        /**
+         * 画面に線量データ一覧を表示する関数
+         * @param {Array} fileEntryArray FileEntryオブジェクトの配列
+         * @memberOf RadTopView#
+         */
+        setRadiationList : function(fileEntryArray) {
+            var urls = [];
+            var fileCount = 0;
+            if (!fileEntryArray || fileEntryArray.length === 0) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("放射線量データがありません。");
+                this.hideLoading();
+                return;
+            }
+            var modalRadiationListView = new ModalRadiationListView();
+            modalRadiationListView.fileEntryArray = fileEntryArray;
+
+            this.setView("#radiation-list-container", modalRadiationListView);
+            this.listenTo(modalRadiationListView, "closeModalRadiationList", function () {
+                modalRadiationListView.remove();
+                // URLを元に戻す
+                app.router.back();
+            });
+            modalRadiationListView.render();
+
+            // カレンダー画面用URLに遷移
+            app.router.navigate("radiationList", {
+                trigger: true,
+                replace: false
+            });
             this.hideLoading();
         },
 
