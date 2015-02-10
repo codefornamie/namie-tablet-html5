@@ -108,7 +108,13 @@ define(function(require, exports, module) {
                         return GeoUtil.generateColorByDose(maxValue);
                     },
                     "r" : 10,
-                    "class" : "leaflet-clickable layer-" + this.cid
+                    "class" : function (d) {
+                        return [
+                                "leaflet-clickable",
+                                "layer-" + this.cid,
+                                GeoUtil.generateClassNameByDose(d.properties.value)
+                        ].join(" ");
+                    }
                 })
                 .each(function (d) {
                     var popupView = new RadPopupView({
