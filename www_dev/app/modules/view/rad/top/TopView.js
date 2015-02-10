@@ -9,6 +9,8 @@ define(function(require, exports, module) {
     var RadiationClusterCollection = require("modules/collection/radiation/RadiationClusterCollection");
     var ModalRadiationListView = require("modules/view/rad/top/ModalRadiationListView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
+    var CommonUtil = require("modules/util/CommonUtil");
+    var vexDialog = require("vexDialog");
 
     /**
      * 放射線アプリのトップ画面を表示するためのViewクラスを作成する。
@@ -69,8 +71,34 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         onClickRadiationUploadButton : function() {
-            this.showLoading();
+            if (CommonUtil.isCordova()) {
+                this.showLoading();
+                FileAPIUtil.getHoribaRadiationList(this.setRadiationList.bind(this));
+            } else {
+                alert("ご使用の端末ではアップロードできません。");
+                return;
+            }
+        },
+        /**
+         * 画面にギャラリー一覧を表示する関数
+         * @param {Array} fileArray FileEntryオブジェクトの配列
+         * @memberOf RadTopView#
+         */
+        setRadiationList : function(fileArray) {
+            var urls = [];
+            var fileCount = 0;
+            if (fileArray.length === 0) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("放射線量データがありません。");
+                this.hideLoading();
+                return;
+            }
+            var fileName = "";
+            _.each(fileArray, function(fileEntry) {
+                fileName += fileEntry.name + "\n";
+            }.bind(this));
             var modalRadiationListView = new ModalRadiationListView();
+            modalRadiationListView.fileName = fileName;
 
             this.setView("#radiation-list-container", modalRadiationListView);
             this.listenTo(modalRadiationListView, "closeModalRadiationList", function () {
@@ -85,26 +113,6 @@ define(function(require, exports, module) {
                 trigger: true,
                 replace: false
             });
-            
-
-//            FileAPIUtil.getHoribaRadiationList(this.setRadiationList.bind(this));
-        },
-        /**
-         * 画面にギャラリー一覧を表示する関数
-         * @param {Array} fileArray FileEntryオブジェクトの配列
-         * @memberOf RadTopView#
-         */
-        setRadiationList : function(fileArray) {
-            var urls = [];
-            var fileCount = 0;
-            if (fileArray.length === 0) {
-                alert("線量データがありません。")
-                this.hideLoading();
-                return;
-            }
-            _.each(fileArray, function(fileEntry) {
-                console.log(fileEntry.name);
-            }.bind(this));
             this.hideLoading();
         },
 

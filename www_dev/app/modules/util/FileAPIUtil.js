@@ -207,7 +207,7 @@ define(function(require, exports, module) {
                             }, function(err) {
                                 fileArray.push({});
                                 app.logger.debug("FileAPIUtil.getHoribaRadiationList: getMetadata(): error" + err.code);
-                            }).bind(fileEntry);
+                            }.bind(fileEntry));
                         }.bind(this));
                         // ファイルが無い場合は空配列を返す
                         if (files.length === 0) {

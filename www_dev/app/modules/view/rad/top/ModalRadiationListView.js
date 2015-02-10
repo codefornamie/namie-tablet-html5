@@ -28,6 +28,7 @@ define(function(require, exports, module) {
             if (this.radiationList) {
                 this.radiationList.destroy();
             }
+            $("[data-modal-radiation]").text(this.fileName);
             this.hideLoading();
 
             $(document).trigger("open:modal");
