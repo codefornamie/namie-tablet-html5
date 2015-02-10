@@ -29,7 +29,7 @@ define(function(require, exports, module) {
          */
         parseOData: function (response, options) {
             var res = response.map(function (log) {
-                return _.extend({
+                return _.extend(log, {
                     latitude : log.latitude / Math.pow(10, 6),
                     longitude : log.longitude / Math.pow(10, 6),
                     altitude : log.altitude / Math.pow(10, 3),
@@ -48,7 +48,7 @@ define(function(require, exports, module) {
          */
         sync : function (method, collection, opt) {
             var self = this;
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cpWhdqdeXm";
+            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cmsXgEqvOq";
 
             if (method === "read") {
                 collection.trigger("request", collection, null, opt);

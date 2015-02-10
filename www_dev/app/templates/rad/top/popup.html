@@ -1,7 +1,11 @@
-<h4>
-    ◯◯観測所
-</h4>
-
 <p>
-    <%= dose %> μSv
+    <%= clusterFeature.properties.maxValue %> μSv
 </p>
+
+<ul style="max-height: 300px; overflow: auto;">
+    <% logFeatureCollection.features.forEach(function (log) { %>
+        <li>
+            <%= log.properties.value %> μSv
+        </li>
+    <% }) %>
+</ul>

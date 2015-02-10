@@ -44,19 +44,27 @@ define(function(require, exports, module) {
 
             geoJSON = {
                     "type": "Feature",
-                    "geometory": {
+                    "geometry": {
                         "type": "Point",
                         "coordinates": [
-                            this.get("latitude"),
-                            this.get("longitude"),
+                            (this.get("minLongitude") + this.get("maxLongitude")) / 2,
+                            (this.get("minLatitude") + this.get("maxLatitude")) / 2,
                             this.get("altitude")
                         ]
                     },
                     "properties": {
                         "__id": this.get("__id"),
-                        "date": this.get("date"),
-                        "value": this.get("value"),
-                        "collectionId": this.get("collectionId")
+                        "userId": this.get("userId"),
+                        "createDate": this.get("createDate"),
+                        "startDate": this.get("startDate"),
+                        "endDate": this.get("endDate"),
+                        "numSample": this.get("numSample"),
+                        "maxValue": this.get("maxValue"),
+                        "averageValue": this.get("averageValue"),
+                        "isFixedStation": this.get("isFixedStation"),
+                        "sensorVendor": this.get("sensorVendor"),
+                        "sensorModel": this.get("sensorModel"),
+                        "sensorSerialNo": this.get("sensorSerialNo")
                     }
             };
 

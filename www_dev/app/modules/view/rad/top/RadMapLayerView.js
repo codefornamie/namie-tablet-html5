@@ -91,16 +91,21 @@ define(function(require, exports, module) {
 
             var map = this.map;
             var container = this.container;
-            var data = this.radiationLogCollection.toGeoJSON();
-
-            var circle = container.selectAll("circle.layer-" + this.cid).data(data.features);
+            var data = [{
+                radiationClusterModel : this.radiationClusterModel,
+                radiationLogCollection : this.radiationLogCollection
+            }];
+            var circle = container.selectAll("circle.layer-" + this.cid).data(data);
 
             circle.enter()
                 .append("circle")
                 .attr({
-                    "opacity" : 0.7,
+                    "opacity" : 0.9,
                     "fill" : function (d) {
-                        return GeoUtil.generateColorByDose(d.properties.value);
+                        var feature = d.radiationClusterModel.toGeoJSON();
+                        var maxValue = feature.properties.maxValue;
+
+                        return GeoUtil.generateColorByDose(maxValue);
                     },
                     "r" : 10,
                     "class" : "leaflet-clickable layer-" + this.cid
@@ -119,35 +124,13 @@ define(function(require, exports, module) {
             var update = function () {
                 circle
                     .attr("transform", function (d) {
-                        var x = GeoUtil.project(map, d.geometry.coordinates)[0];
-                        var y = GeoUtil.project(map, d.geometry.coordinates)[1];
+                        var feature = d.radiationClusterModel.toGeoJSON();
+                        var x = GeoUtil.project(map, feature.geometry.coordinates)[0];
+                        var y = GeoUtil.project(map, feature.geometry.coordinates)[1];
 
                         return "translate(" + x + "," + y + ")";
                     });
             };
-
-            /*
-            var putMarker = function (lat, lng, μSv) {
-                var m = leaflet.marker([lat, lng]);
-                var c = leaflet.circle([lat, lng], 1000);
-
-                m.addTo(map);
-                m.bindPopup(μSv + "μSv");
-
-                c.addTo(map);
-            };
-
-            data.features.forEach(function (feature) {
-                var coords = feature.geometry.coordinates;
-                var props = feature.properties;
-
-                var lat = coords[1];
-                var lng = coords[0];
-                var μSv = props.value;
-
-                putMarker(lat, lng, μSv);
-            });
-            */
 
             map.on("viewreset", update);
             update();

@@ -28,13 +28,13 @@ define(function(require, exports, module) {
          * @memberOf RadiationClusterCollection#
          */
         parseOData: function (response, options) {
-            var res = response.map(function (log) {
-                return _.extend({
-                    minLatitude : log.minLatitude / Math.pow(10, 6),
-                    maxLatitude : log.maxLatitude / Math.pow(10, 6),
-                    minLongitude : log.minLongitude / Math.pow(10, 6),
-                    maxLongitude : log.maxLongitude / Math.pow(10, 6),
-                    maxValue : log.maxValue / Math.pow(10, 3)
+            var res = response.map(function (cluster) {
+                return _.extend(cluster, {
+                    minLatitude : cluster.minLatitude / Math.pow(10, 6),
+                    maxLatitude : cluster.maxLatitude / Math.pow(10, 6),
+                    minLongitude : cluster.minLongitude / Math.pow(10, 6),
+                    maxLongitude : cluster.maxLongitude / Math.pow(10, 6),
+                    maxValue : cluster.maxValue / Math.pow(10, 3)
                 });
             });
 
@@ -47,7 +47,7 @@ define(function(require, exports, module) {
          */
         sync : function (method, collection, opt) {
             var self = this;
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/bVbXQzmEpu";
+            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/bIZCDwkkMO";
 
             if (method === "read") {
                 collection.trigger("request", collection, null, opt);
