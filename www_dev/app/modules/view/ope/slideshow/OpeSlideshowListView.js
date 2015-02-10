@@ -4,7 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
 
     var AbstractView = require("modules/view/AbstractView");
-    var OpeslideshowListItemView = require("modules/view/ope/slideshow/OpeslideshowListItemView");
+    var OpeSlideshowListItemView = require("modules/view/ope/slideshow/OpeSlideshowListItemView");
     var SlideshowCollection = require("modules/collection/slideshow/SlideshowCollection");
 
     /**
@@ -26,7 +26,7 @@ define(function(require, exports, module) {
          */
         beforeRendered : function() {
             this.slideshowCollection.each(function (model) {
-                this.insertView("#slideshowListfileArea", new OpeslideshowListItemView({
+                this.insertView("#slideshowListfileArea", new OpeSlideshowListItemView({
                     model : model
                 }));
             }.bind(this));

@@ -32,6 +32,9 @@ define(function(require, exports, module) {
          * @memberOf OpeSlideshowRegistConfirmView#
          */
         afterRendered : function() {
+            var $image = this.$el.find('[data-figure-image]');
+            var image = this.model.get('image');
+            $image.attr('src', image.src);
         },
 
         /**
@@ -62,67 +65,34 @@ define(function(require, exports, module) {
          * @memberOf OpeSlideshowRegistConfirmView#
          */
         onClickSlideshowRegistButton : function() {
-            // TODO 未実装
+            this.showLoading();
+            this.saveSlideshowPicture();
         },
         /**
          * 添付された画像をdavへ登録する
          * @memberOf OpeSlideshowRegistConfirmView#
          */
-        saveArticlePicture : function() {
-            // TODO 未実装
+        saveSlideshowPicture : function() {
             if(!this.model.get("__id")){
                 this.model.id = AbstractModel.createNewId();
             }
-            
-            if(!this.model.get("imagePath")){
-                this.model.set("imagePath", this.generateFilePath());
+            if(!this.model.get("filename")){
+                this.model.set("filename", this.generateFilePath());
             }
 
-            var images = this.model.get("images");
-            this.makeThmbnail(images[0], $.proxy(function(blob){
-                this.file.thumb = blob;
-            }, this));
+            var image = this.model.get("image");
             var davs = [];
-            _.each(images, $.proxy(function(image){
-                if(image.data){
-                    if(!this.model.get("__id")){
-                        this.model.id = AbstractModel.createNewId();
-                    }
+            if(image.data){
+                var davModel = new WebDavModel();
+                davModel.set("path", "slideshow");
+                davModel.set("fileName", image.fileName);
 
-                    if(!this.model.get("imagePath")){
-                        this.model.set("imagePath", this.generateFilePath());
-                    }
-
-                    var davModel = new WebDavModel();
-                    davModel.set("path", this.model.get("imagePath"));
-                    davModel.set("fileName", image.fileName);
-                    
-                    davModel.set("data", image.data);
-                    davModel.set("contentType", image.contentType);
-                    davs.push(davModel);
-                }
-            }, this));
-
-            var imageCount = images.length;
-            if(imageCount === 0){
-                this.saveModel();
-                return;
+                davModel.set("data", image.data);
+                davModel.set("contentType", image.contentType);
+                davs.push(davModel);
             }
 
-            if(this.thumbImageByteArray) {
-                // サムネイル画像の生成が必要な場合(新規 or 編集で1つ目の画像が変更されている)
-                var thmbDavModel = new WebDavModel();
-                thmbDavModel.set("path", this.model.get("imagePath"));
-                thmbDavModel.set("fileName", "thumbnail.png");
-                thmbDavModel.set("contentType", "image/png");
-                this.makeThmbnail(this.thumbImageByteArray, $.proxy(function(blob){
-                    thmbDavModel.set("data", blob);
-                    davs.push(thmbDavModel);
-                    this.saveDavFile(davs);
-                }, this));
-            } else {
-                this.saveDavFile(davs);
-            }
+            this.saveDavFile(davs);
         },
         /**
          * DAVファイルの登録
@@ -157,7 +127,7 @@ define(function(require, exports, module) {
         saveModel : function(){
             this.model.save(null, {
                 success : $.proxy(function() {
-                    if (Backbone.history.fragment == 'opeArticleRegist') {
+                    if (Backbone.history.fragment == 'opeArticleRegist' || Backbone.history.fragment == 'opeSlideshowRegist') {
                         app.router.go("ope-top");
                         return;
                     }

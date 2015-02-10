@@ -22,7 +22,7 @@ define(function(require, exports, module) {
          * @memberOf SlideshowModel#
          */
         makeSaveData : function(saveData) {
-            saveData.fileName = this.get("fileName");
+            saveData.filename = this.get("filename");
             saveData.published = this.get("published");
             saveData.publishedAt = this.get("publishedAt");
             saveData.depublishedAt = this.get("depublishedAt");

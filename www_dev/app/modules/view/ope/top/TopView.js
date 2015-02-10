@@ -143,6 +143,7 @@ define(function(require, exports, module) {
          */
         onClickNewsListButton : function() {
             this.showLoading();
+            $("[data-sequence-register-button]").show();
             this.setView("#opeNewsList", this.newsView).render();
             this.newsView.setDate(this.targetDate ? new Date(this.targetDate) : new Date());
             this.hideLoading();
@@ -153,6 +154,7 @@ define(function(require, exports, module) {
          */
         onClickSlideshowListButton : function() {
             this.showLoading();
+            $("[data-sequence-register-button]").hide();
             var slideshowListView = new OpeSlideshowListView();
             this.setView("#opeNewsList", slideshowListView);
             slideshowListView.loadSlideshow();
