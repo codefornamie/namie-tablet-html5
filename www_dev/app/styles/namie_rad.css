@@ -23,19 +23,53 @@
  *  2. Project
  *  ----------
  */
+.page-rad .contents__primary {
+    padding: 0;
+}
+
 .page-rad #map-container {
     height: 100%;
+    padding-bottom: 50px;
 }
 
 .page-rad #map-container > div {
     height: 100%;
 }
+
 .page-rad #map {
     height: 100%;
 }
 
-.page-rad .contents__primary {
-    padding: 0;
+.page-rad .map-legend {
+    background-color: #fff;
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+}
+
+.page-rad .map-legend-list {
+    display: table;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.page-rad .map-legend-list li {
+    display: table-cell;
+    padding: 0 5px;
+    line-height: 1rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.page-rad .map-legend-symbol {
+    width: 70px;
+    height: 12px;
+    
+}
+
+.page-rad .map-legend-label {
+    font-size: 0.8rem;
 }
 
 .page-rad .contents__secondary .sidemenu {
@@ -47,3 +81,39 @@
  *  3. Cosmetic
  *  ----------
  */
+.page-rad .map-marker--1 {
+    background-color: #0b24e5;
+    fill: #0b24e5;
+}
+.page-rad .map-marker--2 {
+    background-color: #357ce7;
+    fill: #357ce7;
+}
+.page-rad .map-marker--3 {
+    background-color: #25bfe9;
+    fill:#25bfe9;
+}
+.page-rad .map-marker--4 {
+    background-color: #18d381;
+    fill: #18d381;
+}
+.page-rad .map-marker--5 {
+    background-color: #16b23a;
+    fill: #16b23a;
+}
+.page-rad .map-marker--6 {
+    background-color: #a5cd05;
+    fill: #a5cd05;
+}
+.page-rad .map-marker--7 {
+    background-color: #ebc323;
+    fill: #ebc323;
+}
+.page-rad .map-marker--8 {
+    background-color: #ec881c;
+    fill: #ec881c;
+}
+.page-rad .map-marker--9 {
+    background-color: #ff0a21;
+    fill: #ff0a21;
+}

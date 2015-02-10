@@ -25,36 +25,36 @@ define(function(require, exports, module) {
     };
 
     /**
-     * generateColorByDose
+     * generateClassNameByDose
      *
      * @memberOf GeoUtil#
      * @param {Number} dose - ナノシーベルト毎時の値が来る
      * @return {String}
      */
-    GeoUtil.generateColorByDose = function (dose) {
-        var col;
+    GeoUtil.generateClassNameByDose = function (dose) {
+        var index;
 
         if (dose < 0.1) {
-            col = "#0b24e5";
+            index = 1;
         } else if (dose <= 0.2) {
-            col = "#357ce7";
+            index = 2;
         } else if (dose <= 0.5) {
-            col = "#25bfe9";
+            index = 3;
         } else if (dose <= 1.0) {
-            col = "#18d381";
+            index = 4;
         } else if (dose <= 1.9) {
-            col = "#16b23a";
+            index = 5;
         } else if (dose <= 3.8) {
-            col = "#a5cd05";
+            index = 6;
         } else if (dose <= 9.5) {
-            col = "#ebc323";
+            index = 7;
         } else if (dose <= 19) {
-            col = "#ec881c";
+            index = 8;
         } else if (19 < dose) {
-            col = "#ff0a21";
+            index = 9;
         }
 
-        return col;
+        return "map-marker--" + index;
     };
 
     module.exports = GeoUtil;
