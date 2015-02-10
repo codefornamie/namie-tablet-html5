@@ -25,7 +25,7 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             this.condition = {
-                    top : 1000
+                    top : 10000
             };
         },
         parseOData : function(response, options) {

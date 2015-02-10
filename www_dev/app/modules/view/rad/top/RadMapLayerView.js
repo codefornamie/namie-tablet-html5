@@ -111,7 +111,7 @@ define(function(require, exports, module) {
                                 "layer-" + this.cid,
                                 GeoUtil.generateClassNameByDose(maxValue)
                         ].join(" ");
-                    }
+                    }.bind(this)
                 })
                 .each(function (d) {
                     var popupView = new RadPopupView({
