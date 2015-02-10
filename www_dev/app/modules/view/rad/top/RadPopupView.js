@@ -26,7 +26,8 @@ define(function(require, exports, module) {
          */
         serialize : function () {
             return {
-                dose : this.data.properties.value
+                clusterFeature : this.radiationClusterFeature,
+                logFeatureCollection : this.radiationLogFeatureCollection
             };
         },
 
@@ -59,10 +60,12 @@ define(function(require, exports, module) {
 
             this.origin = param.origin;
             this.data = param.data;
+            this.radiationClusterFeature = this.data.radiationClusterModel.toGeoJSON();
+            this.radiationLogFeatureCollection = this.data.radiationLogCollection.toGeoJSON();
 
             this.initEvents();
 
-            var coords = this.data.geometry.coordinates;
+            var coords = this.radiationClusterFeature.geometry.coordinates;
             this.popup = leaflet.popup()
                 .setLatLng(
                     new leaflet.LatLng(coords[1], coords[0])

@@ -2,5 +2,21 @@
     data-article-id="<%= model.get('__id') %>"
     class="rad-cluster-item feed-item"
 >
-    <%= model.get("dispTitle") %></p>
+    <div class="rad-popup__date">
+        <%= moment(clusterFeature.properties.createDate).format("YYYY/MM/DD") %>
+        〜
+        <%= moment(clusterFeature.properties.endDate).format("YYYY/MM/DD") %>
+    </div>
+
+    <h4 class="rad-popup__average-value">
+        平均:
+        <b><%= clusterFeature.properties.averageValue %></b>
+        μSv/h
+    </h4>
+
+    <div class="rad-popup__max-value">
+        最大:
+        <b><%= clusterFeature.properties.maxValue %></b>
+        μSv/h
+    </div>
 </li>

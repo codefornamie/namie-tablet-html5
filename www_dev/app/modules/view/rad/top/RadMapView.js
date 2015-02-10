@@ -5,7 +5,7 @@ define(function(require, exports, module) {
     //var async = require("async");
     var leaflet = require("leaflet");
     var d3 = require("d3");
-    //var GeoUtil = require("modules/util/GeoUtil");
+    var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
     var RadMapLayerView = require("modules/view/rad/top/RadMapLayerView");
     var RadiationClusterCollection = require("modules/collection/radiation/RadiationClusterCollection");
@@ -152,29 +152,31 @@ define(function(require, exports, module) {
         },
 
         /**
+         * 地図に描画するマーカーの座標を持つFeatureCollectionを返す
+         * @memberOf RadMapView#
+         * @return {Object}
+         */
+        generateFeatureCollection : function () {
+            var features = _(this.layers).map(function (v) {
+                return v.radiationLogCollection.toGeoJSON().features;
+            }).flatten(true).value();
+            var featureCollection = {
+                "type" : "FeatureCollection",
+                "features" : features
+            };
+
+            return featureCollection;
+        },
+
+        /**
          * SVG要素をマッピングされているデータにfitさせる
          * @memberOf RadMapView#
          */
         fitBounds : function () {
-            var features = _(this.layers).map(function (v) {
-                return v.radiationLogCollection.toGeoJSON().features;
-            }).flatten(true).value();
-            var data = {
-                "type" : "FeatureCollection",
-                "features" : features
-            };
-            var map = this.map;
-            var transform = d3.geo.transform({
-                point : function (x, y) {
-                    var point = map.latLngToLayerPoint(new leaflet.LatLng(y, x));
-                    this.stream.point(point.x, point.y);
-                }
-            });
-            var path = d3.geo.path().projection(transform);
-            var bounds = path.bounds(data);
+            var featureCollection = this.generateFeatureCollection();
+            var bounds = GeoUtil.computeBounds(this.map, featureCollection);
             var topLeft = bounds[0];
             var bottomRight = bounds[1];
-
             var AREA_MARGIN = 100;
 
             this.svg

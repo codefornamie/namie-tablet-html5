@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var leaflet = require("leaflet");
+    var d3 = require("d3");
 
     /**
      * 地図情報ユーティリティクラス
@@ -55,6 +56,26 @@ define(function(require, exports, module) {
         }
 
         return "map-marker--" + index;
+    };
+
+    /**
+     * computeBounds
+     *
+     * @param {Leaflet.Map} map
+     * @param {Object} featureCollection - GeoJSONのFeatureCollection形式のオブジェクト
+     * @return {Array} D3のboundsの形式
+     */
+    GeoUtil.computeBounds = function (map, featureCollection) {
+        var transform = d3.geo.transform({
+            point : function (x, y) {
+                var point = map.latLngToLayerPoint(new leaflet.LatLng(y, x));
+                this.stream.point(point.x, point.y);
+            }
+        });
+        var path = d3.geo.path().projection(transform);
+        var bounds = path.bounds(featureCollection);
+
+        return bounds;
     };
 
     module.exports = GeoUtil;
