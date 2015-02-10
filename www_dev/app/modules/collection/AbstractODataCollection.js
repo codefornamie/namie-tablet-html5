@@ -4,7 +4,6 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractCollection = require("modules/collection/AbstractCollection");
     var Filter = require("modules/util/filter/Filter");
-    var LoginModel = require("modules/model/LoginModel");
     var Log = require("modules/util/Logger");
 
     /**
@@ -39,9 +38,15 @@ define(function(require, exports, module) {
          * 検索条件
          * @memberOf AbstractODataCollection#
          */
-        condition : {
-            top : 1,
-            orderby : ""
+        condition : null,
+        /**
+         * 初期化処理
+         * @memberOf AbstractODataCollection#
+         */
+        initialize : function() {
+            this.condition = {
+                    top: 100
+            };
         },
         /**
          * 検索して取得した情報(JSONデータ)をパースする。
@@ -98,7 +103,7 @@ define(function(require, exports, module) {
             this.odata = app.config.basic.odataName;
 
             // dc1-clientによるODataアクセスを行う
-            var odataCollection = app.accessor.cell(this.cell).box(this.box).odata(this.odata);
+            var odataCollection = app.box.odata(this.odata);
             this.entityset = odataCollection.entitySet(this.entity);
 
             /**

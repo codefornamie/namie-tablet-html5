@@ -27,8 +27,13 @@ define(function(require, exports, module) {
         /**
          * 初期化する
          * @memberOf LetterEditCompleteView#
+         * @param {Object} param
          */
-        initialize : function() {
+        initialize : function(param) {
+            console.assert(param, "param should be specified");
+            console.assert(param.letterModel, "param.letterModel should be specified");
+
+            this.model = param.letterModel;
         }
     });
 

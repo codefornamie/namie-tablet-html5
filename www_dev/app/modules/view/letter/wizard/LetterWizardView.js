@@ -12,6 +12,7 @@ define(function(require, exports, module) {
     var Code = require("modules/util/Code");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
+    var StringUtil = require("modules/util/StringUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
     var moment = require("moment");
     var vexDialog = require("vexDialog");
@@ -40,6 +41,8 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          */
         afterRendered : function() {
+            app.ga.trackPageView("Wizard", "写真新規投稿ページ");
+            
             this.prepareValidate();
 
             this.$step = this.$el.find(LetterWizardView.SELECTOR_LETTER_WIZARD).steps({
@@ -157,6 +160,7 @@ define(function(require, exports, module) {
                 // URLを更新する
                 // ルーティングによって呼ばれた場合は新たなルーティングを行わない
                 if (!this._isRouting) {
+                    app.ga.trackPageView("Wizard/step=" + expectedStep, "写真新規投稿ページ");
                     app.router.navigate("/letters/new?step=" + expectedStep);
                     // 入力内容をモデルに保存
                     this.setInputValue();
@@ -177,7 +181,7 @@ define(function(require, exports, module) {
          */
         onRoute : function(route, params) {
             var queryString = params[1];
-            var query = app.router.parseQueryString(queryString);
+            var query = StringUtil.parseQueryString(queryString);
             var step = query.step;
 
             this._isRouting = true;
@@ -253,6 +257,7 @@ define(function(require, exports, module) {
         onFinished : function(ev, currentIndex) {
             this.showLoading();
             this.setInputValue();
+            app.ga.trackEvent("写真投稿ページ", "「投稿する」ボタン押下");
             // ニックネームをlocalStorageに保存
             this.saveLocalStorage();
             this.saveLetterPicture();
@@ -334,6 +339,7 @@ define(function(require, exports, module) {
                     var reader = new FileReader();
                     reader.onload = $.proxy(function(e) {
                         target.data = e.target.result;
+                        app.ga.trackEvent("写真投稿ページ", "写真選択（「ギャラリー一覧」から）");
                         this.onLoadFileExtend(e, file, imageDataURL, target);
                     }, this);
                     reader.readAsArrayBuffer(file);
@@ -375,6 +381,16 @@ define(function(require, exports, module) {
             var prePublishedAt = BusinessUtil.getCurrentPublishDate();
             this.model.set("publishedAt", moment(prePublishedAt).add(1, "d").format("YYYY-MM-DD"));
             this.model.set("depublishedAt", moment(prePublishedAt).add(Code.LETTER_PUB_PERIOD, "d").format("YYYY-MM-DD"));
+        },
+        /**
+         * 投稿画面で画像が選択された際に呼び出されるコールバック関数。
+         * <p>
+         * Google Analytics ログ記録処理を実装する。
+         * </p>
+         * @param event {Event} Clickイベント
+         */
+        fireAnalyticsLogOnChangeFileData: function(event) {
+            app.ga.trackEvent("写真投稿ページ", "写真選択（「他の写真を選ぶ」から）");
         },
         /**
          * ファイル読み込み後に行う拡張処理

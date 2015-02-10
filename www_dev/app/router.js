@@ -3,30 +3,30 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var Code = require("modules/util/Code");
-    var login = require("modules/view/login/index");
-    login.letter = require("modules/view/letter/login/index");
-    login.posting = require("modules/view/posting/login/index");
-    login.ope = require("modules/view/ope/login/index");
-    login.dojo = require("modules/view/dojo/login/index");
-
+    var StringUtil = require("modules/util/StringUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
 
     var LoginModel = require("modules/model/LoginModel");
-    var ArticleCollection = require("modules/collection/article/ArticleCollection");
     var NewspaperHolidayCollection = require("modules/collection/misc/NewspaperHolidayCollection");
 
     var common = require("modules/view/common/index");
-    var postingCommon = require("modules/view/posting/common/index");
-    var dojoCommon = require("modules/view/dojo/common/index");
-    var NewsView = require("modules/view/news/NewsView");
+    var login = require("modules/view/login/index");
 
+    // 新聞
+    var NewsView = require("modules/view/news/NewsView");
     var ScrapView = require("modules/view/scrap/ScrapView");
     var BacknumberView = require("modules/view/backnumber/BacknumberView");
     var BacknumberDateView = require("modules/view/backnumber/BacknumberDateView");
 
+    // ライター
+    login.posting = require("modules/view/posting/login/index");
+    var postingCommon = require("modules/view/posting/common/index");
     var EventNewsView = require("modules/view/posting/news/NewsView");
     var ArticleDetailView = require("modules/view/posting/news/ArticleDetailView");
     var ArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
+
+    // 運用管理
+    login.ope = require("modules/view/ope/login/index");
     var TopView = require("modules/view/ope/top/TopView");
     var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
     var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
@@ -34,18 +34,31 @@ define(function(require, exports, module) {
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
 
+    // 道場
+    login.dojo = require("modules/view/dojo/login/index");
+    var dojoCommon = require("modules/view/dojo/common/index");
     var DojoTopView = require("modules/view/dojo/top/TopView");
-    var DojoLessonView = require("modules/view/dojo/lesson/DojoLessonView");
-    var DojoIntroductionView = require("modules/view/dojo/top/DojoIntroductionView");
 
+    // 写真投稿
+    login.letter = require("modules/view/letter/login/index");
     var LetterTopView = require("modules/view/letter/top/TopView");
     var LetterGlobalNavView = require("modules/view/letter/common/GlobalNavView");
 
-    // Use main layout and set Views.
-    var getViews = function() {
-        var params = parseQueryString(location.href.split("?")[1]);
-        app.config.basic.mode = params.mode || app.config.basic.mode;
-        if (_.isEmpty(app.config.basic.mode) || app.config.basic.mode === "news") {
+    // 放射線
+    login.rad = require("modules/view/rad/login/index");
+    var radCommon = require("modules/view/rad/common/index");
+    var RadTopView = require("modules/view/rad/top/TopView");
+
+    /**
+     *  アプリごとの共通viewを取得する
+     *  @return {Object}
+     */
+    var getLoginViews = function() {
+        // TODO add description here
+        var params = StringUtil.parseQueryString(location.href.split("?")[1]);
+        var mode = app.config.basic.mode = params.mode || app.config.basic.mode;
+
+        if (_.isEmpty(mode) || mode === Code.APP_MODE_NEWS) {
             return {
                 "#header" : new login.HeaderView(),
                 "#global-nav" : new login.GlobalNavView(),
@@ -53,98 +66,136 @@ define(function(require, exports, module) {
                 "#contents" : new login.LoginView(),
                 "#footer" : new login.FooterView()
             };
-        } else if (app.config.basic.mode === Code.APP_MODE_DOJO) {
+        } else if (mode === Code.APP_MODE_DOJO) {
             return {
                 "#header" : new login.HeaderView(),
                 "#contents" : new login.dojo.LoginView(),
             };
-        } else if (app.config.basic.mode === Code.APP_MODE_POSTING) {
+        } else if (mode === Code.APP_MODE_POSTING) {
             return {
                 "#header" : new login.HeaderView(),
                 "#contents" : new login.posting.LoginView(),
             };
-        } else if (app.config.basic.mode === Code.APP_MODE_LETTER) {
+        } else if (mode === Code.APP_MODE_LETTER) {
             return {
                 "#header" : new login.HeaderView(),
                 "#contents" : new login.letter.LoginView(),
             };
-        } else if (app.config.basic.mode === Code.APP_MODE_OPE) {
+        } else if (mode === Code.APP_MODE_OPE) {
             return {
                 "#contents" : new login.ope.LoginView(),
                 "#footer" : new login.FooterView()
+            };
+        } else if (mode === Code.APP_MODE_RAD) {
+            return {
+                "#header" : new login.HeaderView(),
+                "#contents" : new login.rad.LoginView()
             };
         }
     };
 
     /**
-     * URLのクエリ文字列をパースする。
-     * @param {String} queryString クエリ文字列
-     * @return {Object} queryStringをパースした結果のマップオブジェクト。
+     *  画面全体のLayout
+     *
+     *  @class
+     *  @constructor
      */
-    var parseQueryString = function(queryString) {
-        var params = {};
-        if (queryString) {
-            _.each(_.map(decodeURI(queryString).split(/&/g), function(el, i) {
-                var aux = el.split('='), o = {};
-                if (aux.length >= 1) {
-                    var val;
-                    if (aux.length == 2)
-                        val = aux[1];
-                    o[aux[0]] = val;
-                }
-                return o;
-            }), function(o) {
-                _.extend(params, o);
-            });
-        }
-        return params;
-    };
-
-    // Defining the application router.
-    var Layout = Backbone.Layout.extend({
+    var AppLayout = Backbone.Layout.extend({
+        /**
+         *  画面全体の要素
+         *  @memberOf AppLayout#
+         */
         el : "main",
 
-        template : require("ldsh!templates/{mode}/main"),
+        /**
+         *  画面全体のテンプレート
+         *  @memberOf AppLayout#
+         */
+        template : null,
 
+        /**
+         *  アプリごとにtemplateの値を差し替えるためのディクショナリ
+         *  @memberOf AppLayout#
+         */
         templateMap : {
             news : require("ldsh!templates/news/main"),
             ope : require("ldsh!templates/ope/main"),
             posting : require("ldsh!templates/posting/main"),
             letter : require("ldsh!templates/letter/main"),
             dojo : require("ldsh!templates/dojo/main"),
+            rad : require("ldsh!templates/rad/main")
         },
 
         /**
-         * 描画目に実行する処理。
-         * @memberOf router#
+         *  描画前に実行する処理。
+         *  @memberOf AppLayout#
          */
         beforeRender : function() {
             this.template = this.templateMap[app.config.basic.mode];
         },
-        views : getViews(),
 
+        /**
+         *  ログイン画面のview
+         *  @memberOf AppLayout#
+         */
+        views : getLoginViews(),
+
+        /**
+         *  ヘッダのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} headerView
+         */
         setHeader : function(headerView) {
             this.setView("#header", headerView).render();
         },
+
+        /**
+         *  グローバルナビのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} globalNavView
+         */
         setGlobalNav : function(globalNavView) {
             this.setView("#global-nav", globalNavView).render();
         },
+
+        /**
+         *  フッタのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} footerView
+         */
         setFooter : function(footerView) {
             this.setView("#footer", footerView).render();
         },
+
+        /**
+         *  メニューのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} menuView
+         */
         setMenu : function(menuView) {
             this.setView("#menu", menuView).render();
         },
+
+        /**
+         *  設定画面のviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} settingsView
+         */
         setSettings : function(settingsView) {
             this.setView("#settings", settingsView).render();
         },
+
+        /**
+         *  メインのviewをsetする
+         *  @memberOf AppLayout#
+         *  @param {Backbone.View} view
+         */
         showView : function(view) {
             this.setView("#contents", view).render();
         },
 
         /**
          * セレクタで指定したviewをremoveする
-         * 
          * @param {String} viewName
          */
         removeViewByName : function(viewName) {
@@ -157,17 +208,23 @@ define(function(require, exports, module) {
     });
 
     /**
-     * ルーター
-     * @class
-     * @exports Router
-     * @constructor
+     *  ルーター
+     *  @class
+     *  @exports Router
+     *  @constructor
      */
     var Router = Backbone.Router.extend({
+        /**
+         *  初期化
+         *  @memberOf Router#
+         */
         initialize : function() {
             // Render to the page.
             console.log("Router initialized");
-            this.layout = new Layout();
+
+            this.layout = new AppLayout();
             this.loginView = this.layout.views["#contents"];
+
             if (!app.noRendering) {
                 this.layout.render();
             }
@@ -181,6 +238,10 @@ define(function(require, exports, module) {
             });
         },
 
+        /**
+         *  ルーティングテーブル
+         *  @memberOf Router#
+         */
         routes : {
             "" : "index",
             "redirect?*queryString" : "redirect",
@@ -217,13 +278,23 @@ define(function(require, exports, module) {
             "letters/posted" : "letterWizardComplete",
             "letters/:id" : "letterDetail",
             "letters/:id/edit" : "letterEdit",
-            "letters/:id/modified" : "letterEditComplete"
+            "letters/:id/modified" : "letterEditComplete",
+
+            // 放射線アプリ
+            "rad" : "radTop"
         },
 
+        /**
+         *  初期画面
+         *  @memberOf Router#
+         *  @param {String} queryString
+         */
         index : function(queryString) {
             app.logger.debug("Welcome to your / route.");
-            if(queryString){
-                var params = parseQueryString(queryString);
+
+            // TODO add description here
+            if (queryString) {
+                var params = StringUtil.parseQueryString(queryString);
                 app.config.basic.mode = params.mode;
                 app.preview = params.preview;
                 app.loginId = params.loginId;
@@ -248,7 +319,14 @@ define(function(require, exports, module) {
          */
         top : function(date) {
             app.logger.debug("It's a top page.");
+
             var targetDate = app.previewTargetDate ? app.previewTargetDate : date;
+
+            // 日付が変わったら保存されているスクロール位置を削除する
+            if (date !== app.currentDate) {
+                app.scrollTop = 0;
+            }
+
             if (targetDate) {
                 // 現在の日付を記録する
                 app.currentDate = targetDate;
@@ -281,14 +359,13 @@ define(function(require, exports, module) {
          * @param {String} articleId
          */
         showArticle : function(date, articleId) {
-            // TODO check date
             if (date != app.currentDate) {
                 setTimeout(function () {
                     this.go("top", date);
                 }.bind(this), 0);
                 return;
             }
-            
+
             // TODO appに刺さずに別の場所で管理する
             app.scrollTop = (app.newsView) ? app.newsView.getScrollTop() : 0;
 
@@ -546,6 +623,18 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ---------- 放射線 ----------
+         */
+        /**
+         * 放射線：トップ
+         */
+        radTop : function () {
+            var radTopView = new RadTopView();
+
+            this.layout.showView(radTopView);
+        },
+
+        /**
          * ---------- ユーティリティ ----------
          */
         /**
@@ -587,9 +676,7 @@ define(function(require, exports, module) {
          */
         back : function() {
             window.history.back();
-        },
-
-        parseQueryString: parseQueryString
+        }
     });
 
     module.exports = Router;

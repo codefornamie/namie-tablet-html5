@@ -107,10 +107,21 @@ define(function(require, exports, module) {
             $(this.el).find("#articleFile")[0].click();
         },
         /**
+         * 投稿画面で画像が選択された際に呼び出されるコールバック関数。
+         * <p>
+         * Google Analytics ログ記録
+         * </p>
+         * @param event
+         */
+        fireAnalyticsLogOnChangeFileData: function(event) {
+            app.ga.trackEvent("投稿ページ", "写真選択");
+        },
+        /**
          * ファイル選択時のハンドラ
          * @memberOf ArticleRegistFileItemView#
          */
         onChangeFileData : function(event) {
+            this.fireAnalyticsLogOnChangeFileData(event);
             var self = this;
             app.logger.debug("onChangeFileData");
             this.isChangeImage = true;

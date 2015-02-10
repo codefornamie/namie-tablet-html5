@@ -11,6 +11,7 @@ define(function(require, exports, module) {
     var LetterEditView = require("modules/view/letter/edit/LetterEditView");
     var LetterEditCompleteView = require("modules/view/letter/edit/LetterEditCompleteView");
     var ArticleCollection = require("modules/collection/article/ArticleCollection");
+    var StringUtil = require("modules/util/StringUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
     var Equal = require("modules/util/filter/Equal");
     var Ge = require("modules/util/filter/Ge");
@@ -118,13 +119,16 @@ define(function(require, exports, module) {
 
         /**
          * 編集画面を開く
-         * @param {String} id 編集する記事のID
+         * @param {Object} param
          * @memberOf LetterTopLayout#
          */
-        showEdit : function(id) {
-            console.assert(_.isString(id), "id should be a string");
+        showEdit : function(param) {
+            console.assert(param, "param should be specified in order to show letter edit page");
+            console.assert(param.letterModel, "letterModel should be specified in order to show letter edit page");
 
-            var letterEditView = new LetterEditView();
+            var letterEditView = new LetterEditView({
+                letterModel: param.letterModel
+            });
 
             this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
@@ -132,17 +136,22 @@ define(function(require, exports, module) {
             this.removeView(LetterTopLayout.SELECTOR_LETTER_WIZARD_COMPLETE);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_EDIT_COMPLETE);
             this.setView(LetterTopLayout.SELECTOR_LETTER_EDIT, letterEditView);
+
+            $("#snap-content").scrollTop(0);
         },
 
         /**
          * 編集完了画面を開く
-         * @param {String} id 編集した記事のID
+         * @param {Object} param
          * @memberOf LetterTopLayout#
          */
-        showEditComplete : function(id) {
-            console.assert(_.isString(id), "id should be a string");
+        showEditComplete : function(param) {
+            console.assert(param, "param should be specified in order to show letter edit page");
+            console.assert(param.letterModel, "letterModel should be specified in order to show letter edit page");
 
-            var letterEditCompleteView = new LetterEditCompleteView();
+            var letterEditCompleteView = new LetterEditCompleteView({
+                letterModel: param.letterModel
+            });
 
             this.removeView(LetterTopLayout.SELECTOR_LETTER_SELECT);
             this.removeView(LetterTopLayout.SELECTOR_LETTER_LIST);
@@ -163,11 +172,17 @@ define(function(require, exports, module) {
                 // ウィザードのページ切り替え時であれば、何もしない
                 return;
             }
+            if (evt.currentTarget.id === "edit_letter") {
+                    app.ga.trackEvent("TOPページ", "「編集する」ボタン押下");
+            } else if(evt.currentTarget.id === "post_new_letter") {
+                app.ga.trackEvent("TOPページ", "「新しく投稿する」ボタン押下");
+            }
             if(evt.currentTarget.id !== "post_new_letter") {
                 // 新規投稿ボタン以外は、そのまま画面遷移する。
                 this.followAnchor(evt);
                 return;
             }
+            
             // 新規投稿ボタンの場合、遷移する前に自身の本日中の投稿数制限にかかっていないかをチェックする必要がある。
             // PIOへ本日分の記事を検索する
             var articleCollection = new ArticleCollection();
@@ -308,14 +323,17 @@ define(function(require, exports, module) {
          * @param {Object} params
          */
         onRoute : function(route, params) {
-            var id;
+            var letterId;
+            var letterModel;
 
             switch (route) {
             case "letterSelect":
+                app.ga.trackPageView("Top", "TOPページ");
                 this.layout.showSelect();
                 break;
 
             case "letterList":
+                app.ga.trackPageView("List", "過去の投稿ページ");
                 this.layout.showList();
                 break;
 
@@ -323,19 +341,27 @@ define(function(require, exports, module) {
                 break;
 
             case "letterEdit":
-                id = params[0];
-                this.layout.showEdit(id);
+                letterId = params[0];
+                letterModel = this.letterCollection.get(letterId);
+
+                this.layout.showEdit({
+                    letterModel: letterModel
+                });
                 break;
 
             case "letterEditComplete":
-                id = params[0];
-                this.layout.showEditComplete(id);
+                letterId = params[0];
+                letterModel = this.letterCollection.get(letterId);
+
+                this.layout.showEditComplete({
+                    letterModel: letterModel
+                });
                 break;
 
             case "letterWizard":
                 this.showLoading();
                 var queryString = params[1];
-                var query = app.router.parseQueryString(queryString);
+                var query = StringUtil.parseQueryString(queryString);
                 var step = query.step;
 
                 this.layout.showWizard(step);
