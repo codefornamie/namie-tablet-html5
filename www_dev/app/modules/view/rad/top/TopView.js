@@ -87,7 +87,7 @@ define(function(require, exports, module) {
         setRadiationList : function(fileEntryArray) {
             var urls = [];
             var fileCount = 0;
-            if (fileEntryArray.length === 0) {
+            if (!fileEntryArray || fileEntryArray.length === 0) {
                 vexDialog.defaultOptions.className = 'vex-theme-default';
                 vexDialog.alert("放射線量データがありません。");
                 this.hideLoading();

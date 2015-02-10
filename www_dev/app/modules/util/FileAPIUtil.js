@@ -215,14 +215,17 @@ define(function(require, exports, module) {
                         }
                     }, function(e) {
                         // readEntriesでエラー
+                        callback([]);
                         app.logger.debug("FileAPIUtil.getHoribaRadiationList: readEntries(): error" + e.code);
                     });
                 }, function(e) {
                     // getDirectoryでエラー
+                    callback([]);
                     app.logger.debug("FileAPIUtil.getHoribaRadiationList: getDirectory(): error" + e.code);
                 });
             }, function(e) {
                 // requestFileSystemでエラー
+                callback([]);
                 app.logger.debug("FileAPIUtil.getHoribaRadiationList: requestFileSystem(): error" + e.code);
             });
         }, false);
