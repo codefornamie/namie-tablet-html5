@@ -52,7 +52,7 @@ define(function(require, exports, module) {
             }
             var csvObject = {};
             this.personalModel = personalModel;
-            csvObject["ユーザーID"] = personalModel.get("__id");
+            csvObject["ログインID"] = personalModel.get("loginId");
             this.dojoContentCollection.each(function(dojoModel) {
                 var csvTitleLabel = this.getCsvTitleLabel(dojoModel);
                 var csvAchievementLabel = this.getCsvAchievementLabel(dojoModel);

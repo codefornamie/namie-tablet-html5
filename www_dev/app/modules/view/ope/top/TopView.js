@@ -83,8 +83,10 @@ define(function(require, exports, module) {
          * @param {Function} callback
          */
         loadYouTubeLibrary : function(callback) {
+            this.$progressBar.attr("value", 10);
             if (app.gapiLoaded) {
                 callback();
+                this.$progressBar.attr("value", 30);
                 return;
             }
             var self = this;
@@ -116,6 +118,7 @@ define(function(require, exports, module) {
                 if (!err) {
                     app.gapiLoaded = true;
                 }
+                this.$progressBar.attr("value", 30);
                 callback(err);
             });
         },
@@ -124,7 +127,7 @@ define(function(require, exports, module) {
          * @memberOf TopView#
          */
         onClickDojoAchievementButton : function() {
-            this.showLoading();
+            this.showProgressBarLoading();
             this.loadYouTubeLibrary($.proxy(function() {
                 // youtubeAPI読み込み
                 gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
@@ -154,6 +157,7 @@ define(function(require, exports, module) {
                 this.youtubeCollection.channelId = "UCSeFpozPKXTm_frDTqccxpQ";
                 this.youtubeCollection.fetch({
                     success : $.proxy(function() {
+                        this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 10);
                         next(null);
                     }, this),
                     error : function error(err) {
@@ -170,8 +174,9 @@ define(function(require, exports, module) {
                 this.dojoContentCollection.youtubeCollection = this.youtubeCollection;
                 this.dojoContentCollection.fetch({
                     success : function() {
+                        this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 10);
                         next(null);
-                    },
+                    }.bind(this),
                     error : function (err) {
                         next(err);
                     }
@@ -191,10 +196,14 @@ define(function(require, exports, module) {
          */
         loadPersonalCollection : function(callback) {
             this.personalCollection = new PersonalCollection();
+            this.personalCollection.condition = {
+                    top : 10000
+            };
             this.personalCollection.fetch({
                 success : function() {
+                    this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 10);
                     callback();
-                },
+                }.bind(this),
                 error : function (ev) {
                     callback(ev);
                 }
@@ -211,8 +220,9 @@ define(function(require, exports, module) {
             ];
             this.achievementCollection.fetch({
                 success : function() {
+                    this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 20);
                     callback();
-                },
+                }.bind(this),
                 error : function (ev) {
                     callback(ev);
                 }
@@ -227,6 +237,7 @@ define(function(require, exports, module) {
                 app.logger.error("error OPE:TopView:onAllFetch");
                 vexDialog.defaultOptions.className = 'vex-theme-default';
                 vexDialog.alert("道場達成状況情報の取得に失敗しました。");
+                this.hideLoading();
                 return;
             }
             // 動画と達成情報の連結を行う
@@ -257,7 +268,8 @@ define(function(require, exports, module) {
                 var personalCsvObject = dojoAchievementCsvModel.createDojoAchievementCsvData(personalModel);
                 csvRecordArray.push(personalCsvObject);
             });
-            
+            this.$progressBar.attr("value", 100);
+
             // JSONオブジェクトをCSV形式に変換
             var csvObject = CommonUtil.convertCsvData(csvRecordArray);
             this.outputCsv(csvObject);
