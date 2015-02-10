@@ -40,11 +40,11 @@ define(function(require, exports, module) {
     SpecHelper.before = function(spec, done) {
         app.logger.debug("Start SpecHelper.before().");
 
-        app.noRendering = true;
+        app.noRendering = false;
         app.logger.debug("Setting personium.io enveironments.");
         app.config.basic.mode = "news";
         // テスト用セル
-        app.config.basic.cellId = "kizunatest02";
+        app.config.basic.cellId = "kizunatest04";
         app.logger.debug("app.config.basic:" + JSON.stringify(app.config.basic));
         // タイムアウト値を拡大
         spec.timeout(20000);
