@@ -88,6 +88,7 @@ define(function(require, exports, module) {
             };
         } else if (mode === Code.APP_MODE_RAD) {
             return {
+                "#header" : new login.HeaderView(),
                 "#contents" : new login.rad.LoginView()
             };
         }
