@@ -100,13 +100,13 @@ define(function(require, exports, module) {
                 .attr({
                     "opacity" : 0.7,
                     "r" : 10,
-                    "class" : function (d) {
+                    "class" : $.proxy(function (d) {
                         return [
                                 "leaflet-clickable",
                                 "layer-" + this.cid,
                                 GeoUtil.generateClassNameByDose(d.properties.value)
                         ].join(" ");
-                    }
+                    }, this)
                 })
                 .each(function (d) {
                     var popupView = new RadPopupView({
