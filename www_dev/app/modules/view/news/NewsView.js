@@ -472,7 +472,8 @@ define(function(require, exports, module) {
                     articles : articleDateList,
                     newArrivals : newArrivals,
                     imagePath : imagePath,
-                    imageThumbUrl : imageThumbUrl
+                    imageThumbUrl : imageThumbUrl,
+                    period : _.indexBy(app.serverConfig.COLOR_LABEL, "type")[type].period
                 });
                 // isFirst指定がある場合は先頭に配置する。
                 if (isFirst) {
@@ -554,7 +555,7 @@ define(function(require, exports, module) {
             });
             if (model.isExpired()) {
                 vexDialog.defaultOptions.className = 'vex-theme-default';
-                vexDialog.alert("掲載期限が終了しました。");
+                vexDialog.alert("掲載期間が終了しました。");
                 return;
             }
             app.router.go("top", moment(app.currentDate).format("YYYY-MM-DD"), "article", articleId);
