@@ -101,18 +101,15 @@ define(function(require, exports, module) {
                 .append("circle")
                 .attr({
                     "opacity" : 0.9,
-                    "fill" : function (d) {
+                    "r" : 10,
+                    "class" : function (d) {
                         var feature = d.radiationClusterModel.toGeoJSON();
                         var maxValue = feature.properties.maxValue;
 
-                        return GeoUtil.generateColorByDose(maxValue);
-                    },
-                    "r" : 10,
-                    "class" : function (d) {
                         return [
                                 "leaflet-clickable",
                                 "layer-" + this.cid,
-                                GeoUtil.generateClassNameByDose(d.properties.value)
+                                GeoUtil.generateClassNameByDose(maxValue)
                         ].join(" ");
                     }
                 })

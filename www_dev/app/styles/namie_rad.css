@@ -76,6 +76,68 @@
     text-align: center;
 }
 
+
+.page-rad .rad-cluster-item {
+    padding: 8px;
+}
+
+/**
+ *  吹き出し
+ */
+.page-rad .rad-popup {
+    width: 300px;
+}
+
+.page-rad .rad-popup__header {
+    margin: 0 0 16px;
+}
+
+.page-rad .rad-popup__date {
+    font-size: 18px;
+}
+
+.page-rad .rad-popup__average-value {
+    color: inherit;
+    margin: 8px 0;
+    line-height: 1;
+}
+
+.page-rad .rad-popup__max-value {
+    margin: 0;
+    line-height: 1;
+}
+
+.page-rad .rad-popup__info {
+    margin: 8px 0;
+    font-size: 0.8rem;
+}
+
+.page-rad .rad-popup__info > ul {
+    margin: 16px 8px 16px 32px;
+    font-size: 0.8rem;
+}
+
+.page-rad .rad-info-list {
+    margin: 0;
+    padding: 0;
+}
+
+.page-rad .rad-log-list {
+    margin: 0;
+    padding: 8px;
+    width: 100%;
+    max-height: 150px;
+    list-style: none;
+    overflow: auto;
+    border: 1px solid #ccc;
+}
+
+.page-rad .rad-log-list > li {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 2px 0 rgba(0,0,0,0.16);
+    margin-bottom: 8px;
+    padding: 8px;
+}
+
 /**
  *  ----------
  *  3. Cosmetic
