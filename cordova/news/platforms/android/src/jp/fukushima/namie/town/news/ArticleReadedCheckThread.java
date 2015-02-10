@@ -20,7 +20,7 @@ public class ArticleReadedCheckThread extends AbstractRequestThread {
         // 既読情報の取得
         PersoniumModel personium = new PersoniumModel();
         boolean isArticleReaded = personium.isArticleReaded(_mContext);
-        PublishStatus status = _mWidgetProvider.getPublishStatus();
+        PublishStatus status = PublishStatus.getInstance();
         status.isReaded = isArticleReaded;
 
         Log.d(TAG, "CheckPublishRequestThread completed.");

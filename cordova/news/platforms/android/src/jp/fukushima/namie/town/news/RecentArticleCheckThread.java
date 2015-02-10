@@ -16,12 +16,12 @@ public class RecentArticleCheckThread extends AbstractRequestThread {
 
     @Override
     public void run() {
-        Log.d(TAG, "CheckPublishRequestThread started.");
+        Log.i(TAG, "CheckPublishRequestThread started.");
 
         // 最新号の記事が存在するかどうかをチェックする
         PersoniumModel personium = new PersoniumModel();
         boolean isArticleExists = personium.isRecentArticleExists(_mContext);
-        PublishStatus status = _mWidgetProvider.getPublishStatus();
+        PublishStatus status = PublishStatus.getInstance();
         if (isArticleExists) {
             status.articleExists = ArticleExists.EXISTS;
         } else {
@@ -32,6 +32,6 @@ public class RecentArticleCheckThread extends AbstractRequestThread {
         WidgetContentManager contentManager = _mWidgetProvider.getContentManager();
         getRecommendArticles(contentManager);
 
-        Log.d(TAG, "PersoniumRequestThread completed.");
+        Log.i(TAG, "PersoniumRequestThread completed.");
     }
 }
