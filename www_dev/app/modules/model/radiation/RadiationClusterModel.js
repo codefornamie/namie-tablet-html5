@@ -12,7 +12,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var RadiationClusterModel = AbstractODataModel.extend({
-        entity : "radiation",
+        entity : "radiation_cluster",
 
         /**
          * 取得したOData情報のparse処理を行う。
@@ -32,6 +32,19 @@ define(function(require, exports, module) {
          * @memberOf RadiationClusterModel#
          */
         makeSaveData : function(saveData) {
+            saveData.userId = this.get("userId");
+            saveData.createDate = this.get("createDate");
+            saveData.startDate = this.get("startDate");
+            saveData.endDate = this.get("endDate");
+            saveData.numSample = this.get("numSample");
+            saveData.maxValue = this.get("maxValue");
+            saveData.averageValue = this.get("averageValue");
+            saveData.maxLatitude = this.get("maxLatitude");
+            saveData.minLatitude = this.get("minLatitude");
+            saveData.minLongitude = this.get("minLongitude");
+            saveData.maxLongitude = this.get("maxLongitude");
+            saveData.isFixedStation = this.get("isFixedStation");
+
         },
 
         /**

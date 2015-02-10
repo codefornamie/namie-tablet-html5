@@ -12,7 +12,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var RadiationLogModel = AbstractODataModel.extend({
-        entity : "radiation",
+        entity : "radiation_log",
 
         /**
          * 取得したOData情報のparse処理を行う。
@@ -32,6 +32,12 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         makeSaveData : function(saveData) {
+            saveData.date = this.get("date");
+            saveData.latitude = this.get("latitude");
+            saveData.longitude = this.get("longitude");
+            saveData.altitude = this.get("altitude");
+            saveData.value = this.get("value");
+            saveData.collectionId = this.get("collectionId");
         },
 
         /**
