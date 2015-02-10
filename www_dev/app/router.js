@@ -30,6 +30,7 @@ define(function(require, exports, module) {
     var TopView = require("modules/view/ope/top/TopView");
     var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
     var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
+    var OpeSlideshowRegistView = require("modules/view/ope/slideshow/OpeSlideshowRegistView");
     var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
@@ -484,6 +485,17 @@ define(function(require, exports, module) {
             this.navigate("opeYouTubeRegist");
             $("#contents__primary").scrollTop(0);
         },
+
+        /**
+         * このメソッドは手動で呼ばれる
+         */
+        opeSlideshowRegist : function(options) {
+            app.logger.debug('[route] opeSlideshowRegist');
+            this.layout.setView("#contents__primary", new OpeSlideshowRegistView(options)).render();
+            this.navigate("opeSlideshowRegist");
+            $("#contents__primary").scrollTop(0);
+        },
+
         /**
          * このメソッドは手動で呼ばれる
          */

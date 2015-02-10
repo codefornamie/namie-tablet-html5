@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var async = require("async");
     var AbstractView = require("modules/view/AbstractView");
     var OpeNewsView = require("modules/view/ope/news/OpeNewsView");
+    var OpeSlideshowListView = require("modules/view/ope/slideshow/OpeSlideshowListView");
     var foundationCalendar = require("foundation-calendar");
     var DateUtil = require("modules/util/DateUtil");
     var CommonUtil = require("modules/util/CommonUtil");
@@ -26,13 +27,17 @@ define(function(require, exports, module) {
      */
     var TopView = AbstractView.extend({
         template : require("ldsh!templates/{mode}/top/top"),
+        newsView : null,
+        targetDate : null,
 
         /**
          * このViewのイベント
          * @memberOf TopView#
          */
         events : {
-            "click [data-dojo-achievement-button]" : "onClickDojoAchievementButton"
+            "click [data-dojo-achievement-button]" : "onClickDojoAchievementButton",
+            "click [data-news-list-button]" : "onClickNewsListButton",
+            "click [data-slideshow-list-button]" : "onClickSlideshowListButton"
         },
         /**
          * 描画前に実行する処理。
@@ -47,6 +52,7 @@ define(function(require, exports, module) {
          * @memberOf TopView#
          */
         afterRendered : function() {
+            var self = this;
             // カレンダー表示
             var calendar = this.$el.find("[data-date]");
             var targetDate;
@@ -56,7 +62,7 @@ define(function(require, exports, module) {
                 var date = new Date();
                 targetDate = date.format("%Y-%m-%d");
             }
-            var newsView = new OpeNewsView({targetDate:targetDate});
+            this.newsView = new OpeNewsView({targetDate:targetDate});
             calendar.val(targetDate);
             calendar.fcdp({
                 fixed : true,
@@ -65,15 +71,15 @@ define(function(require, exports, module) {
             calendar.bind('dateChange', function(evt, opts) {
                 console.info('dateChange triggered');
                 var targetDate = new Date(evt.target.value);
-                newsView.setDate(targetDate);
+                self.newsView.setDate(targetDate);
 
                 targetDate = targetDate.format("%Y-%m-%d");
-                newsView.targetDate = targetDate;
+                self.targetDate = targetDate;
             });
 
             // 記事一覧を表示
-            this.setView("#opeNewsList", newsView).render();
-            newsView.setDate(this.targetDate ? new Date(this.targetDate) : new Date());
+            this.setView("#opeNewsList", this.newsView).render();
+            this.newsView.setDate(this.targetDate ? new Date(this.targetDate) : new Date());
             $("[data-sequence-register-button]").show();
         },
         /**
@@ -130,7 +136,27 @@ define(function(require, exports, module) {
                 gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
                 gapi.client.load('youtube', 'v3', $.proxy(this.searchDojoCsvInfo, this));
             }, this));
-
+        },
+        /**
+         * 新聞記事一覧ボタンを押下された際の処理
+         * @memberOf TopView#
+         */
+        onClickNewsListButton : function() {
+            this.showLoading();
+            this.setView("#opeNewsList", this.newsView).render();
+            this.newsView.setDate(this.targetDate ? new Date(this.targetDate) : new Date());
+            this.hideLoading();
+        },
+        /**
+         * スライドショー画像一覧ボタンを押下された際の処理
+         * @memberOf TopView#
+         */
+        onClickSlideshowListButton : function() {
+            this.showLoading();
+            var slideshowListView = new OpeSlideshowListView();
+            this.setView("#opeNewsList", slideshowListView);
+            slideshowListView.loadSlideshow();
+            this.hideLoading();
         },
         /**
          * 町民の道場動画達成状況CSV用の情報取得
