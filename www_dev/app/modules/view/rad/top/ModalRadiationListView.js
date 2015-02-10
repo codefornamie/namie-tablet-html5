@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
+    var ModalRadiationListItemView = require("modules/view/rad/top/ModalRadiationListItemView");
 
 
     /**
@@ -25,7 +26,6 @@ define(function(require, exports, module) {
          * @memberOf ModalRadiationListView#
          */
         beforeRendered : function() {
-            this.setRadiationList();
         },
 
         /**
@@ -36,6 +36,7 @@ define(function(require, exports, module) {
             if (this.radiationList) {
                 this.radiationList.destroy();
             }
+            this.setRadiationList();
             this.hideLoading();
 
             $(document).trigger("open:modal");
@@ -53,25 +54,12 @@ define(function(require, exports, module) {
          * @memberOf ModalRadiationListView#
          */
         setRadiationList : function() {
-//            var self = this;
-//            var animationDeley = 0;
-//            _.each(this.fileEntryArray, $.proxy(function(model) {
-//                var ItemView = self.feedListItemViewClass;
-//                if (this.customListItemView) {
-//                    var customListItemView = _.find(this.customListItemView, function(customView) {
-//                        return model.get("type") === customView.type;
-//                    });
-//                    if (customListItemView) {
-//                        ItemView = customListItemView.view;
-//                    }
-//                }
-//                this.insertView(this.listElementSelector, new ItemView({
-//                    model : model,
-//                    animationDeley : animationDeley,
-//                    parentView : this
-//                }));
-//                animationDeley += 0.2;
-//            }, this));
+            _.each(this.fileEntryArray, $.proxy(function(fileEntry) {
+                this.insertView("#radiationList", new ModalRadiationListItemView({
+                    fileEntry : fileEntry,
+                    parentView : this
+                })).render();
+            }, this));
         },
 
         /**

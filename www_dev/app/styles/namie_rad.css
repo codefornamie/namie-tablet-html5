@@ -150,4 +150,19 @@
     font-size: 1.5rem;
     font-weight: bold;
 }
- 
+
+.modal-radiation .radiationList {
+    height: 420px;
+    overflow: scroll;
+}
+
+.modal-radiation .radiationListItem label.radiationItemFileName {
+    font-size: 1.2rem;
+}
+.modal-radiation .radiationListItem label.radiationItemFileLastModified {
+    font-size: 1rem;
+}
+
+.modal-radiation .radiationList {
+        padding: 15px 0;
+}

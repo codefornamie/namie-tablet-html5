@@ -6,16 +6,19 @@
         id="modal-radiation"
         class="modal-radiation"
     >
-        <a class="button--float" data-close>
-            ✕
-        </a>
+        <a
+            class="button--float"
+            data-close
+        > ✕ </a>
 
         <div class="modal-radiation__header">
-            アップロードする放射線量データを選択してください。
-        </div>
+            アップロードする放射線量データを選択してください。</div>
 
-        <div
-            data-modal-radiation
-        ></div>
+        <ul
+            id="radiationList"
+            class="radiationList"
+            style="list-style: none;"
+        ></ul>
+        <button type="button" id="radiationUploadButton">アップロード</button>
     </div>
 </div>
