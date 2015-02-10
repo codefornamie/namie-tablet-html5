@@ -80,11 +80,11 @@ define(function(require, exports, module) {
             }
         },
         /**
-         * 画面にギャラリー一覧を表示する関数
-         * @param {Array} fileArray FileEntryオブジェクトの配列
+         * 画面に線量データ一覧を表示する関数
+         * @param {Array} fileEntryArray FileEntryオブジェクトの配列
          * @memberOf RadTopView#
          */
-        setRadiationList : function(fileArray) {
+        setRadiationList : function(fileEntryArray) {
             var urls = [];
             var fileCount = 0;
             if (fileArray.length === 0) {
@@ -93,12 +93,8 @@ define(function(require, exports, module) {
                 this.hideLoading();
                 return;
             }
-            var fileName = "";
-            _.each(fileArray, function(fileEntry) {
-                fileName += fileEntry.name + "\n";
-            }.bind(this));
             var modalRadiationListView = new ModalRadiationListView();
-            modalRadiationListView.fileName = fileName;
+            modalRadiationListView.fileEntryArray = fileEntryArray;
 
             this.setView("#radiation-list-container", modalRadiationListView);
             this.listenTo(modalRadiationListView, "closeModalRadiationList", function () {
