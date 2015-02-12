@@ -174,6 +174,7 @@ define(function(require, exports, module) {
          */
         onClickFileDeleteButton : function(e) {
             $(this.el).find("#articleFile").val("");
+            $(this.el).find("#previewFile").removeProp("file");
             $(this.el).find("#previewFile").attr("src", "");
             $(this.el).find("#previewFile").hide();
             $(this.el).find("#fileDeleteButton").hide();
