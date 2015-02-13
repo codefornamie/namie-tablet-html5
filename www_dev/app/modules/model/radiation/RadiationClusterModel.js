@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var Code = require("modules/util/Code");
 
     /**
      * 放射線量データのモデルクラスを作成する。
@@ -37,12 +38,36 @@ define(function(require, exports, module) {
             saveData.startDate = this.get("startDate");
             saveData.endDate = this.get("endDate");
             saveData.numSample = this.get("numSample");
-            saveData.maxValue = this.get("maxValue");
-            saveData.averageValue = this.get("averageValue");
-            saveData.maxLatitude = this.get("maxLatitude");
-            saveData.minLatitude = this.get("minLatitude");
-            saveData.minLongitude = this.get("minLongitude");
-            saveData.maxLongitude = this.get("maxLongitude");
+            var maxValue = null;
+            if (this.get("maxValue")) {
+                maxValue = Math.round(this.get("maxValue") * Code.RAD_RADIATION_DOSE_MAGNIFICATION);
+            }
+            saveData.maxValue = maxValue;
+            var averageValue = null;
+            if (this.get("averageValue")) {
+                averageValue = Math.round(this.get("averageValue") * Code.RAD_RADIATION_DOSE_MAGNIFICATION);
+            }
+            saveData.averageValue = averageValue;
+            var maxLatitude = null;
+            if (this.get("maxLatitude")) {
+                maxLatitude = Math.round(this.get("maxLatitude") * Code.RAD_LAT_LONG_MAGNIFICATION);
+            }
+            saveData.maxLatitude = maxLatitude;
+            var minLatitude = null;
+            if (this.get("minLatitude")) {
+                minLatitude = Math.round(this.get("maxLatitude") * Code.RAD_LAT_LONG_MAGNIFICATION);
+            }
+            saveData.minLatitude = minLatitude;
+            var minLongitude = null;
+            if (this.get("minLongitude")) {
+                minLongitude = Math.round(this.get("minLongitude") * Code.RAD_LAT_LONG_MAGNIFICATION);
+            }
+            saveData.minLongitude = minLongitude;
+            var maxLongitude = null;
+            if (this.get("maxLongitude")) {
+                maxLongitude = Math.round(this.get("maxLongitude") * Code.RAD_LAT_LONG_MAGNIFICATION);
+            }
+            saveData.maxLongitude = maxLongitude;
             saveData.isFixedStation = this.get("isFixedStation");
 
         },
