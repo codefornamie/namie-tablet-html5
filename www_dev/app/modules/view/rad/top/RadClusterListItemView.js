@@ -65,11 +65,6 @@ define(function(require, exports, module) {
             var isHidden = !!radClusterModel.get("hidden");
 
             radClusterModel.set("hidden", !isHidden);
-
-            // 非表示のモデルが表示に切り替えられた場合
-            if (isHidden) {
-                radClusterModel.collection.trigger("showCluster", radClusterModel);
-            }
         }
     });
 

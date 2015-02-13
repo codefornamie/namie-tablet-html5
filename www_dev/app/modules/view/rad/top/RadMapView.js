@@ -146,7 +146,7 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         initEvents : function() {
-            this.listenTo(this.radiationClusterCollection, "showCluster", this.onShowCluster);
+            this.listenTo(this.radiationClusterCollection, "change:hidden", this.onChangeClusterModel);
             this.listenTo(this.radiationClusterCollection, "request", this.onRequestCollection);
             this.listenTo(this.radiationClusterCollection, "add", this.onAddCollection);
             this.listenTo(this.radiationClusterCollection, "sync", this.onSyncCollection);
@@ -190,15 +190,20 @@ define(function(require, exports, module) {
         },
 
         /**
-         * RadClusterListItemViewの押下によりクラスターが表示されたら呼ばれる
+         * クラスターモデルの表示状態が変更されたら呼ばれる
          * @memberOf RadMapView#
          */
-        onShowCluster : function (clusterModel) {
-            var feature = clusterModel.toGeoJSON();
-            var lat = feature.geometry.coordinates[1];
-            var lng = feature.geometry.coordinates[0];
+        onChangeClusterModel : function (model) {
+            var isHidden = model.get("hidden");
 
-            this.map.panTo([lat, lng]);
+            if (!isHidden) {
+                // 表示状態に切り替わったら地図の中心をクラスターの地点へ移動する
+                var feature = model.toGeoJSON();
+                var lat = feature.geometry.coordinates[1];
+                var lng = feature.geometry.coordinates[0];
+
+                this.map.panTo([lat, lng]);
+            }
         },
 
         /**
