@@ -13,6 +13,12 @@ define(function(require, exports, module) {
      * @constructor
      */
     var WebDavModel = AbstractModel.extend({
+        /**
+         * idとして使用するattribute中のフィールド
+         * @memberOf WebDavModel#
+         */
+        idAttribute : "path",
+
         urlRoot : "/dav",
         path : "",
         url : function(){
@@ -30,6 +36,7 @@ define(function(require, exports, module) {
          *            model モデル
          * @param {Object}
          *            options オプション情報
+         * @memberOf WebDavModel#
          */
         sync : function(method, model, options) {
             Log.info("WebDavModel sync");
@@ -97,6 +104,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberOf WebDavModel#
          */
         create : function(method, model, options, complete) {
             Log.info("WebDavModel create");
@@ -140,6 +148,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberOf WebDavModel#
          */
         update : function(method, model, options, complete) {
             Log.info("WebDavModel update");
@@ -159,10 +168,27 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberOf WebDavModel#
          */
         del : function(method, model, options, complete) {
-            //Log.info("WebDavModel delete");
-            throw new Error("UnsupportedOperationException: delete()");
+            Log.info("WebDavModel delete");
+            var path = this.get("path");
+            if (!path) {
+                new Error("path is null.");
+            }
+            var fileName = this.get("fileName");
+            var onSuccess = options.success;
+            var onFailure = options.failure;
+            
+            this.dav.del(path + "/" + this.get("fileName"),{
+                success : $.proxy(function(e){
+                    Log.info("WebDavModel delete complete");
+                    complete(e);
+                }, this),
+                error: $.proxy(function(e){
+                    complete(e);
+                }, this)
+            });
         },
         /**
          * PCS Davの取得処理を行う。
@@ -178,6 +204,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberOf WebDavModel#
          */
         retrieve : function(method, model, options, complete) {
             PIOImage.getBinaryWithCache(this.dav, this.id, {
@@ -197,6 +224,7 @@ define(function(require, exports, module) {
          *            以下のシグネチャの関数を指定する。<br>
          *            <code>complete (response:Object)</code><br>
          *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberOf WebDavModel#
          */
         mkCol : function(path) {
             var dav = app.box.col("dav");

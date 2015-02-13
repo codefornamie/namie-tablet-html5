@@ -2,8 +2,10 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var vexDialog = require("vexDialog");
     var async = require("async");
 
+    var WebDavModel = require("modules/model/WebDavModel");
     var AbstractView = require("modules/view/AbstractView");
     var SlideshowCollection = require("modules/collection/slideshow/SlideshowCollection");
 
@@ -20,6 +22,13 @@ define(function(require, exports, module) {
          * @memberOf OpeSlideshowListItemView#
          */
         tagName : "tr",
+        /**
+         * このViewのイベント
+         * @memberOf OpeSlideshowListItemView#
+         */
+        events : {
+            "click [data-article-edit-button]" : "onClickSlideshowDeleteButton"
+        },
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了前に呼び出される。
@@ -42,10 +51,77 @@ define(function(require, exports, module) {
 
         /**
          * 初期化処理
-         * @memberOf NewsView#
+         * @memberOf OpeSlideshowListItemView#
          */
         initialize : function(options) {
         },
+        /**
+         * スライドショー削除ボタンを押下された際の処理
+         * @memberOf OpeSlideshowListItemView#
+         */
+        onClickSlideshowDeleteButton : function() {
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.buttons.YES.text = 'はい';
+            vexDialog.buttons.NO.text = 'いいえ';
+            vexDialog.open({
+                message : 'このスライドショー画像:（' + this.model.get('filename') + ')を削除していいですか？',
+                callback : $.proxy(function(value) {
+                    if (value) {
+                        this.showLoading();
+                        this.deleteArticle();
+                    }
+                    return;
+                }, this)
+            });
+        },
+        /**
+         * スライドショー画像の削除関数
+         * WebDavファイルとODataを物理削除する
+         * @memberOf OpeSlideshowListItemView#
+         */
+        deleteArticle : function() {
+            var image = this.model.get("filename");
+            var davModel = new WebDavModel();
+            davModel.set("path", "slideshow");
+            davModel.set("fileName", image);
+            this.destroyDavFile(davModel);
+        },
+        /**
+         * DAVファイルの削除
+         * @memberOf OpeSlideshowRegistConfirmView#
+         */
+        destroyDavFile : function(davModel) {
+            davModel.destroy({
+                success : $.proxy(function(e) {
+                    // ODataの削除
+                    this.destroyModel();
+                }, this),
+                error : $.proxy(function(e) {
+                    this.hideLoading();
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("画像削除に失敗しました。");
+                    app.logger.error("画像削除に失敗しました。");
+                }, this)
+            });
+        },
+        /**
+         * ODataの削除
+         * @memberOf OpeSlideshowRegistConfirmView#
+         */
+        destroyModel : function(davModel) {
+            // ODataの削除
+            this.model.destroy({
+                success : $.proxy(function(e) {
+                    this.hideLoading();
+                    app.router.back();
+                }, this),
+                error : $.proxy(function(e) {
+                    this.hideLoading();
+                    vexDialog.alert("削除に失敗しました。");
+                    app.logger.error("error LetterListItemView:deleteLetter()");
+                }, this)
+            });
+        }
     });
     module.exports = OpeSlideshowListItemView;
 });
