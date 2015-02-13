@@ -30,6 +30,8 @@ public class PersoniumModel {
     private static final String TAG = "NamieNewspaper";
     private static final String ACCOUNT_TYPE = "jp.fukushima.namie.town.Pcs";
     private static final int RECOMMEND_FETCH_NUM = 1;
+    // 最低限のリフレッシュ間隔（1時間）
+    private static final int MIN_REFRESH_INTERVAL = 60 * 60 * 1000;
     AccountManager manager = null;
     Account account = null;
     DcContext dc = null;
@@ -368,14 +370,22 @@ public class PersoniumModel {
    /**
     *
     * @param context
+ * @return 
     * @return
     */
-   public PublishStatus initPublishStatus(Context context) {
+   public PublishStatus initPublishStatus(Context context, PublishStatus ret) {
        Log.d(TAG, "start initPublishStatus");
-
-       PublishStatus ret = new PublishStatus();
-
        Calendar now = Calendar.getInstance();
+       
+       // 万が一連続でコールされた場合も、サーバ過負荷防止のために、最低限のインターバルを空ける
+       if (ret.lastRequestDate != null
+       && now.getTimeInMillis() - ret.lastRequestDate.getTimeInMillis() < MIN_REFRESH_INTERVAL) {
+    	   Log.w(TAG, "skip check. (cause MIN_REFRESH_INTERVAL)");
+           return ret;
+       }
+       // チェック時刻の更新
+       ret.lastRequestDate = now;
+       
        // 土曜日または日曜日ならば新聞発行なし
        if (isSaturdayOrSunday(Calendar.getInstance())) {
            Log.d(TAG, "Today is SATURDAY or SUNDAY");
@@ -386,7 +396,7 @@ public class PersoniumModel {
        ODataCollection odata = initializePersonium(context);
        if (odata == null) {
            Log.w(TAG, "perosonium initialize error");
-           return null;
+           return ret;
        }
 
        // 休刊日情報のチェック
@@ -399,10 +409,9 @@ public class PersoniumModel {
        // 発行時刻の取得
        Calendar publishTime = getPublishTime(odata);
        if (publishTime == null) {
-           return null;
+           return ret;
        }
 
-       ret.lastRequestDate = Calendar.getInstance();
        ret.publishTime = publishTime;
        ret.isPublishDay = true;
        Log.d(TAG, "end initPublishStatus");

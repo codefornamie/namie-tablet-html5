@@ -15,15 +15,15 @@ public class PublishStatusInitializeThread extends AbstractRequestThread {
 
     @Override
     public void run() {
-        Log.d(TAG, "PublishStatusInitializeThread started.");
+        Log.i(TAG, "PublishStatusInitializeThread started.");
+        
+        PublishStatus publishStatus = PublishStatus.getInstance();
 
         // 配信時刻と休刊日情報を取得し、既読済み情報などを初期化する
         PersoniumModel personium = new PersoniumModel();
-
         // アカウントが設定されていない場合、情報取得は行わない
         if (personium.getAuthToken(_mContext) != null) {
-            PublishStatus publishStatus = personium.initPublishStatus(_mContext);
-            _mWidgetProvider.setPublishStatus(publishStatus);
+            personium.initPublishStatus(_mContext, publishStatus);
 
             // おすすめ記事の取得
             WidgetContentManager contentManager = _mWidgetProvider.getContentManager();
@@ -32,8 +32,8 @@ public class PublishStatusInitializeThread extends AbstractRequestThread {
             // 設定情報(COLOR_LABEL)の取得
             String colorLabel = personium.getColorLabel(_mContext);
             contentManager.setSiteMap(colorLabel);
-
-        }
-        Log.d(TAG, "PublishStatusInitializeThread completed.");
+		}
+        publishStatus.isRefreshing = false;
+        Log.i(TAG, "PublishStatusInitializeThread completed.");
     }
 }
