@@ -37,7 +37,9 @@ require.config({
         "canvas-to-blob" : "../bower_components/blueimp-canvas-to-blob/js/canvas-to-blob",
         "canvasResize": "../lib/canvasResize/canvasResize",
         "binaryajax": "../lib/canvasResize/binaryajax",
-        "exif": "../lib/canvasResize/exif"
+        "exif": "../lib/canvasResize/exif",
+        "leaflet": "../bower_components/leaflet/dist/leaflet",
+        "d3": "../bower_components/d3/d3.min"
     },
 
     deps : [ "main" ],

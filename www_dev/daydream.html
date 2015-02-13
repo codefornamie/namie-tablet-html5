@@ -86,7 +86,7 @@ body {
 }
 
 .popup #month {
-	left: 227px;
+	left: 220px;
 }
 
 .popup #date {
@@ -439,13 +439,16 @@ body {
      */
     function showPopup() {
         log("show popup message");
+        var nbsp = String.fromCharCode(160);
         var month = _publishTime.getMonth() + 1;
         if (month < 10) {
-            month = "0" + month;
+            // 月が一桁の場合、余白を追加
+            month = nbsp + nbsp + month;
         }
         var date = _publishTime.getDate();
         if (date < 10) {
-            date = "0" + date;
+            // 日が一桁の場合、余白を追加
+            date = nbsp + nbsp + date;
         }
         $("#month").text(month);
         $("#date").text(date);

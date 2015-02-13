@@ -21,6 +21,7 @@ define(function(require, exports, module) {
             saveData.loginId = this.get("loginId");
             saveData.fontSize = this.get("fontSize");
             saveData.showLastPublished = this.get("showLastPublished");
+            saveData.roles = this.get("roles");
         },
 
         /**
@@ -50,6 +51,21 @@ define(function(require, exports, module) {
                         this.get("showLastPublished", prev);
                     }
                 });
+            }
+        },
+        /**
+         * このユーザが指定したロールを持つかを判定する。
+         * @param {String} role ロール
+         * @returns {Boolean} 指定したロールを持つ場合はtrue
+         * @memberOf PersonalModel#
+         */
+        hasRole : function(role) {
+            var rolesStr = this.get("roles");
+            if (rolesStr) {
+                var roles = this.get("roles").split(",");
+                return roles.indexOf(role) >= 0;
+            } else {
+                return false;
             }
         }
     });

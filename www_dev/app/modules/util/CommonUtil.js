@@ -25,6 +25,44 @@ define(function(require, exports, module) {
         }
     };
     /**
+     * baseURLとhrefからURLを求める
+     * 
+     * @memberOf CommonUtil#
+     * @param {String} baseUrl ベースとなるURL
+     * @param {String} href aタグのhref
+     * @return {String} 求められたURL。hrefがURLではない場合はnullを返す。
+     */
+    CommonUtil.resolveUrl = function(baseUrl, href) {
+        var hrefParts = href.match(/^(\w*:\/\/[^/]*)?\/?(.*)/);
+        // URLではない場合は、nullを返す。
+        if (hrefParts[2].indexOf(":") >= 0) {
+            return null;
+        }
+        // hrefが完全形式のURLで指定してある場合はそのまま返却する。
+        if (hrefParts[1]) {
+            return href;
+        }
+        var baseParts = baseUrl.match(/^(\w*:\/\/[^/]*)?\/?(.*)/);
+        var hrefPaths = hrefParts[2].split("/");
+        var basePaths = baseParts[2].split("/");
+        // hrefが絶対パス指定の場合は、baseUrlのプロトコル、ホスト名部分とhrefを結合して返す。
+        if (href.charAt(0) === "/") {
+            return baseParts[1] + href;
+        }
+        // hrefが相対パスの場合
+        basePaths.pop();
+        for (var i = 0; i < hrefPaths.length; i++) {
+            var path = hrefPaths[i];
+            if (path === "..") {
+                basePaths.pop();
+            } else {
+                basePaths.push(path);
+            }
+        }
+
+        return baseParts[1] + "/" + basePaths.join("/");
+    };
+    /**
      * 文字列の半角スペースを削除する。。
      * 
      * @param {String} str 文字列
@@ -69,6 +107,59 @@ define(function(require, exports, module) {
             useCache = false;
         }
         return useCache;
+    };
+    /**
+     * JSONオブジェクトをCSV出力できるデータに変換する
+     * @param {Object} json JSON形式のオブジェクト
+     * @return {String} csvData CSV変換後のデータ
+     * @memberOf CommonUtil#
+     */
+    CommonUtil.convertCsvData = function(json) {
+        // 項目毎の区切り文字
+        var colDelim = ",";
+        // レコード毎の改行文字
+        var rowDelim = "\r\n";
+        var csv = "";
+        var titleArray = [];
+        // 最初のレコードから項目を取得
+        for ( var title in json[0]) {
+            titleArray.push(title);
+        }
+
+        var line = "";
+        // 項目行作成
+        for (var i = 0; i < titleArray.length; i++) {
+            if (line !== '') {
+                line += colDelim;
+            }
+            line = line + titleArray[i];
+        }
+        csv += line + rowDelim;
+
+        // レコード行作成
+        for (var j = 0; j < json.length; j++) {
+            var dataArray = [];
+            for ( var index in json[j]) {
+                var titleIndex = titleArray.indexOf(index);
+                if (json[j][index]) {
+                    dataArray[titleIndex] = json[j][index];
+                } else {
+                    dataArray[titleIndex] = "";
+                }
+            }
+            for (var k = 0; k < titleArray.length; k++) {
+                if (dataArray[k]) {
+                    csv += dataArray[k];
+                } else {
+                    csv += "";
+                }
+                if (k !== titleArray.length - 1) {
+                    csv += colDelim;
+                }
+            }
+            csv += rowDelim;
+        }
+        return csv;
     };
     module.exports = CommonUtil;
 });

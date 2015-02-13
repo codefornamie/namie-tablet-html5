@@ -20,5 +20,31 @@ define(function(require, exports, module) {
         return str.lastIndexOf(prefix, 0) === 0;
     };
 
+    /**
+     * URLのクエリ文字列をパースする。
+     * @memberOf StringUtil#
+     * @param {String} queryString クエリ文字列
+     * @return {Object} queryStringをパースした結果のマップオブジェクト。
+     */
+    StringUtil.parseQueryString = function(queryString) {
+        var params = {};
+        if (queryString) {
+            _.each(_.map(decodeURI(queryString).split(/&/g), function(el) {
+                var aux = el.split("="), o = {};
+                if (aux.length >= 1) {
+                    var val;
+                    if (aux.length === 2) {
+                        val = aux[1];
+                    }
+                    o[aux[0]] = val;
+                }
+                return o;
+            }), function(o) {
+                _.extend(params, o);
+            });
+        }
+        return params;
+    };
+
     module.exports = StringUtil;
 });

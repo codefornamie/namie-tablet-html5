@@ -24,13 +24,15 @@ define(function(require, exports, module) {
          */
         entity : "newspaper_holiday",
         /**
-         * 検索条件
-         * @memberOf NewspaperHolidayCollection#
-         */
-        condition : {
-            top : Code.LIMIT_CONSECUTIVE_HOLIDAY,
-            orderby : "__id desc"
-        },
+          * 初期化処理
+          * @memberOf AchievementCollection#
+          */
+         initialize : function() {
+             this.condition = {
+                     top : Code.LIMIT_CONSECUTIVE_HOLIDAY,
+                     orderby : "__id desc"
+             };
+         },
         /**
          * レスポンス情報のパースを行う。
          * @param {Array} レスポンス情報の配列

@@ -340,6 +340,10 @@
     padding: 40px 20px 0 0;
 }
 
+.page-letter .confirm-letter {
+    word-break: break-all;
+}
+
 /**
  *  機能選択ページ
  */
@@ -662,6 +666,10 @@
     min-width: 180px;
 }
 
+.letter-edit-form .letterPicture {
+    margin-bottom: 1rem;
+}
+
 /**
  *  ----------
  *  3. Cosmetic
@@ -725,6 +733,10 @@
 
 .letter-form #confirmNickname {
     margin-bottom: 30px;
+}
+
+.letter-form .confirm-letter {
+    word-break: break-all;
 }
 
 .gallery-list {

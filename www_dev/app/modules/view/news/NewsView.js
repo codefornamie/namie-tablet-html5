@@ -351,6 +351,10 @@ define(function(require, exports, module) {
             // GridListView初期化
             this.showGridListView();
 
+            // 初期スクロール位置が指定されている場合、スクロールする
+            this.initScrollTop();
+
+            // ローディング画面を閉じる
             this.hideLoading();
         },
         /**
@@ -468,7 +472,8 @@ define(function(require, exports, module) {
                     articles : articleDateList,
                     newArrivals : newArrivals,
                     imagePath : imagePath,
-                    imageThumbUrl : imageThumbUrl
+                    imageThumbUrl : imageThumbUrl,
+                    period : _.indexBy(app.serverConfig.COLOR_LABEL, "type")[type].period
                 });
                 // isFirst指定がある場合は先頭に配置する。
                 if (isFirst) {
@@ -544,6 +549,15 @@ define(function(require, exports, module) {
         onClickGridItem : function(ev, param) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
             app.newsView = this;
+
+            var model = this.articleCollection.find(function(article) {
+                return article.get("__id") === articleId;
+            });
+            if (model.isExpired()) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("掲載期間が終了しました。");
+                return;
+            }
             app.router.go("top", moment(app.currentDate).format("YYYY-MM-DD"), "article", articleId);
         },
 
@@ -634,7 +648,7 @@ define(function(require, exports, module) {
          * @memberOf NewsView#
          */
         initScrollTop : function() {
-            if (this.initialScrollTop) {
+            if (this.initialScrollTop || this.initialScrollTop === 0) {
                 this.setScrollTop(this.initialScrollTop);
             }
         },

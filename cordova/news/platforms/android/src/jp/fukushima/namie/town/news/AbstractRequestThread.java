@@ -69,7 +69,9 @@ public abstract class AbstractRequestThread extends Thread {
             // 元々サムネイルとして登録されている画像なのでリサイズせずにそのまま読み込む
             bitmap = BitmapFactory.decodeStream(inputStream);
 
-            inputStream.close();
+            if (inputStream != null) {
+                inputStream.close();
+            }
             return bitmap;
         } catch (Exception e) {
             return bitmap;
