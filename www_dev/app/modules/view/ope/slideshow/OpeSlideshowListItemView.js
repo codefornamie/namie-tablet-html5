@@ -118,7 +118,7 @@ define(function(require, exports, module) {
                 error : $.proxy(function(e) {
                     this.hideLoading();
                     vexDialog.alert("削除に失敗しました。");
-                    app.logger.error("error LetterListItemView:deleteLetter()");
+                    app.logger.error("削除に失敗しました。");
                 }, this)
             });
         }
