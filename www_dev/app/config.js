@@ -39,7 +39,8 @@ require.config({
         "binaryajax": "../lib/canvasResize/binaryajax",
         "exif": "../lib/canvasResize/exif",
         "leaflet": "../bower_components/leaflet/dist/leaflet",
-        "d3": "../bower_components/d3/d3.min"
+        "d3": "../bower_components/d3/d3.min",
+        "leaflet.markercluster": "../bower_components/leaflet.markercluster/dist/leaflet.markercluster"
     },
 
     deps : [ "main" ],

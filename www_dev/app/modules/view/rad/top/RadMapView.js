@@ -223,7 +223,10 @@ define(function(require, exports, module) {
                 radiationClusterModel : model
             });
 
-            this.layers.push(layerView);
+            // 試作検証用のため、1件のみ適用する
+            if (this.layers.length === 0) {
+                this.layers.push(layerView);
+            }
         },
 
         /**
