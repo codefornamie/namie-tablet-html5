@@ -6,6 +6,8 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var OpeSlideshowListItemView = require("modules/view/ope/slideshow/OpeSlideshowListItemView");
     var SlideshowCollection = require("modules/collection/slideshow/SlideshowCollection");
+    var vexDialog = require("vexDialog");
+
 
     /**
      * スライドショー一覧画面のViewクラス
@@ -37,6 +39,7 @@ define(function(require, exports, module) {
          * @memberOf OpeSlideshowListView#
          */
         afterRendered : function() {
+            this.hideLoading();
         },
 
         /**
@@ -44,7 +47,8 @@ define(function(require, exports, module) {
          * @memberOf OpeSlideshowListView#
          */
         initialize : function() {
-            this.listenTo(this.slideshowCollection, "reset sync request", this.render);
+            this.loadSlideshow();
+            this.listenTo(this.slideshowCollection, "reset sync request destroy", this.render);
         },
 
         /**
@@ -69,6 +73,11 @@ define(function(require, exports, module) {
          *  @memberOf OpeSlideshowListView#
          */
         onClickSlideshowRegisterButton: function () {
+            if (this.slideshowCollection && this.slideshowCollection.size() >= 100) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("スライドショーが100件以上登録されているため、新規登録ができません。");
+                return;
+            }
             $("[data-sequence-register-button]").hide();
             $("#sequenceConfirm").hide();
             app.router.opeSlideshowRegist();

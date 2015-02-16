@@ -31,6 +31,7 @@ define(function(require, exports, module) {
     var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
     var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
     var OpeSlideshowRegistView = require("modules/view/ope/slideshow/OpeSlideshowRegistView");
+    var OpeSlideshowListView = require("modules/view/ope/slideshow/OpeSlideshowListView");
     var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
@@ -264,6 +265,7 @@ define(function(require, exports, module) {
             // 管理アプリ
             'ope-top' : 'opeTop',
             'ope-top/:date' : 'opeTop',
+            'ope-slideshow' : 'opeSlideshow',
 
             // 道場アプリ
             'dojo-top' : 'dojoTop',
@@ -466,13 +468,21 @@ define(function(require, exports, module) {
                 }.bind(this));
             }
         },
+        /**
+         * スライドショー一覧への遷移
+         */
+        opeSlideshow : function() {
+            app.logger.debug('[route] opeSlideshow');
+            var slideshowListView = new OpeSlideshowListView();
+            this.layout.setView("#opeNewsList", slideshowListView);
+        },
 
         /**
          * このメソッドは手動で呼ばれる
          */
         opeArticleRegist : function(options) {
             app.logger.debug('[route] opeArticleRegist');
-            this.layout.setView("#contents__primary", new OpeArticleRegistView(options)).render();
+            this.layout.setView("#opeNewsList", new OpeArticleRegistView(options)).render();
             this.navigate("opeArticleRegist");
             $("#contents__primary").scrollTop(0);
         },
@@ -482,7 +492,7 @@ define(function(require, exports, module) {
          */
         opeYouTubeRegist : function(options) {
             app.logger.debug('[route] opeYouTubeRegist');
-            this.layout.setView("#contents__primary", new OpeYouTubeRegistView(options)).render();
+            this.layout.setView("#opeNewsList", new OpeYouTubeRegistView(options)).render();
             this.navigate("opeYouTubeRegist");
             $("#contents__primary").scrollTop(0);
         },
@@ -492,7 +502,7 @@ define(function(require, exports, module) {
          */
         opeSlideshowRegist : function(options) {
             app.logger.debug('[route] opeSlideshowRegist');
-            this.layout.setView("#contents__primary", new OpeSlideshowRegistView(options)).render();
+            this.layout.setView("#opeNewsList", new OpeSlideshowRegistView(options)).render();
             this.navigate("opeSlideshowRegist");
             $("#contents__primary").scrollTop(0);
         },
@@ -502,7 +512,7 @@ define(function(require, exports, module) {
          */
         opeEventDetail : function(options) {
             app.logger.debug('[route] opeEventDetail');
-            this.layout.setView("#contents__primary", new OpeEventDetailView(options)).render();
+            this.layout.setView("#opeNewsList", new OpeEventDetailView(options)).render();
             this.navigate("opeEventDetail");
             $("#contents__primary").scrollTop(0);
         },
@@ -511,7 +521,7 @@ define(function(require, exports, module) {
          */
         opeArticleDetail : function(options) {
             app.logger.debug('[route] opeArticleDetail');
-            this.layout.setView("#contents__primary", new OpeArticleDetailView(options)).render();
+            this.layout.setView("#opeNewsList", new OpeArticleDetailView(options)).render();
             this.navigate("opeArticleDetail");
             $("#contents__primary").scrollTop(0);
         },
@@ -520,7 +530,7 @@ define(function(require, exports, module) {
          */
         opeYouTubeDetail : function(options) {
             app.logger.debug('[route] opeYouTubeDetail');
-            this.layout.setView("#contents__primary", new OpeYouTubeDetailView(options)).render();
+            this.layout.setView("#opeNewsList", new OpeYouTubeDetailView(options)).render();
             this.navigate("opeYouTubeDetail");
             $("#contents__primary").scrollTop(0);
         },

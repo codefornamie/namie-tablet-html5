@@ -7,7 +7,6 @@ define(function(require, exports, module) {
 
     var WebDavModel = require("modules/model/WebDavModel");
     var AbstractView = require("modules/view/AbstractView");
-    var SlideshowCollection = require("modules/collection/slideshow/SlideshowCollection");
 
     /**
      * スライドショー画面一覧アイテムのViewクラス
@@ -70,6 +69,7 @@ define(function(require, exports, module) {
                         this.showLoading();
                         this.deleteArticle();
                     }
+                    vexDialog.buttons.YES.text = 'OK';
                     return;
                 }, this)
             });
@@ -92,7 +92,7 @@ define(function(require, exports, module) {
          */
         destroyDavFile : function(davModel) {
             davModel.destroy({
-                success : $.proxy(function(e) {
+                success : $.proxy(function() {
                     // ODataの削除
                     this.destroyModel();
                 }, this),
@@ -100,7 +100,7 @@ define(function(require, exports, module) {
                     this.hideLoading();
                     vexDialog.defaultOptions.className = 'vex-theme-default';
                     vexDialog.alert("画像削除に失敗しました。");
-                    app.logger.error("画像削除に失敗しました。");
+                    app.logger.error("destroyDavFile():error=" + e.code);
                 }, this)
             });
         },
@@ -108,12 +108,11 @@ define(function(require, exports, module) {
          * ODataの削除
          * @memberOf OpeSlideshowRegistConfirmView#
          */
-        destroyModel : function(davModel) {
+        destroyModel : function() {
             // ODataの削除
             this.model.destroy({
-                success : $.proxy(function(e) {
-                    this.hideLoading();
-                    app.router.back();
+                success : $.proxy(function() {
+                    app.logger.debug("destroyModel():success");
                 }, this),
                 error : $.proxy(function(e) {
                     this.hideLoading();
