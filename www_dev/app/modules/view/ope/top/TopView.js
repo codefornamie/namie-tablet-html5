@@ -153,7 +153,6 @@ define(function(require, exports, module) {
          * @memberOf TopView#
          */
         onClickSlideshowListButton : function() {
-            this.showLoading();
             $("[data-sequence-register-button]").hide();
             app.router.go("ope-slideshow");
         },
