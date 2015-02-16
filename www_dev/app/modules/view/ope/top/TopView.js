@@ -145,23 +145,16 @@ define(function(require, exports, module) {
          * @memberOf TopView#
          */
         onClickNewsListButton : function() {
-            this.showLoading();
-            $("[data-sequence-register-button]").show();
-            this.setView("#opeNewsList", this.newsView).render();
-            this.newsView.setDate(this.targetDate ? new Date(this.targetDate) : new Date());
-            this.hideLoading();
+            var date = this.targetDate || null;
+            app.router.go("ope-top", date);
         },
         /**
          * スライドショー画像一覧ボタンを押下された際の処理
          * @memberOf TopView#
          */
         onClickSlideshowListButton : function() {
-            this.showLoading();
             $("[data-sequence-register-button]").hide();
-            var slideshowListView = new OpeSlideshowListView();
-            this.setView("#opeNewsList", slideshowListView);
-            slideshowListView.loadSlideshow();
-            this.hideLoading();
+            app.router.go("ope-slideshow");
         },
         /**
          * 町民の道場動画達成状況CSV用の情報取得

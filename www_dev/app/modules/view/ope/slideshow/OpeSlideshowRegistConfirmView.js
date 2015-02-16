@@ -127,11 +127,7 @@ define(function(require, exports, module) {
         saveModel : function(){
             this.model.save(null, {
                 success : $.proxy(function() {
-                    if (Backbone.history.fragment == 'opeArticleRegist' || Backbone.history.fragment == 'opeSlideshowRegist') {
-                        app.router.go("ope-top");
-                        return;
-                    }
-                    app.router.go("posting-top");
+                    app.router.go("ope-slideshow");
                 }, this),
                 error: function(e){
                     this.hideLoading();
