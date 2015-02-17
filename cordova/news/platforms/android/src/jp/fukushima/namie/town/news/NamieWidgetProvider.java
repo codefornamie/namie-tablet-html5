@@ -4,7 +4,6 @@
 package jp.fukushima.namie.town.news;
 
 import jp.fukushima.namie.town.news.WidgetContentManager.MessageStyle;
-import jp.fukushima.namie.town.news.PublishStatus.ArticleExists;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -16,7 +15,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -28,16 +26,19 @@ import android.widget.RemoteViews;
 public class NamieWidgetProvider extends AppWidgetProvider {
     private static final String TAG = "NamieNewspaper";
     private static final String WIDGET_UPDATE_ACTION = "jp.fukushima.namie.town.news.WIDGET_UPDATE_ACTION";
+    private static final String WIDGET_UPDATE_STATUS = "jp.fukushima.namie.town.news.WIDGET_UPDATE_STATUS";
+    private static final String WIDGET_UPDATE_READED = "jp.fukushima.namie.town.news.WIDGET_UPDATE_READED";
+    private static final String WIDGET_SET_READED = "jp.fukushima.namie.town.news.WIDGET_SET_READED";
 
     // ウィジェット更新処理開始までのインターバル(ms)
     private static final int TIMER_START_DELAY = 3 * 1000;
     // ウィジェット更新インターバル(ms)
     private static final int UPDATE_INTERVAL = 500;
     // 既読チェックインターバル(ms)
-    private static final int READ_CHECK_INTERVAL = 30 * 60 * 1000;
+    private static final long READ_CHECK_INTERVAL = 1 * 60 * 1000;
+    // おすすめ記事チェックインターバル(ms)
+    private static final long RECOMMEND_UPDATE_INTERVAL = 2 * 60 * 1000;
 
-    // 未読状態の最終チェック時刻
-    private static long lastUnreadCheckTime = 0;
     // ウィジェット表示情報管理オブジェクト
     private static WidgetContentManager contentManager = null;
 
@@ -49,7 +50,6 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         Log.d(TAG, "NamieWidgetProvider#onEnabled()");
 
         contentManager = new WidgetContentManager(context);
-        lastUnreadCheckTime = 0;
 
         setUpdateAlarm(context);
 
@@ -87,11 +87,18 @@ public class NamieWidgetProvider extends AppWidgetProvider {
             cancelUpdateAlarm(context);
             setUpdateAlarm(context);
         } else if (action.equals(WIDGET_UPDATE_ACTION)) {
-            // 新聞の発行、未読状態を更新
-            updateNewspaperStatus(context);
-
             // ウィジェットの表示更新
             updateWidget(context);
+        } else if (action.equals(WIDGET_UPDATE_STATUS)) {
+            // 新聞発行情報を取得
+            initPublishStatus(context);
+        } else if (action.equals(WIDGET_UPDATE_READED)) {
+            // 新聞の発行、未読状態を更新
+            checkAlreadyReaded(context);
+        } else if (action.equals(WIDGET_SET_READED)) {
+            // 既読に設定
+            PublishStatus publishStatus = PublishStatus.getInstance();
+            publishStatus.isReaded = true;
         }
 
         super.onReceive(context, intent);
@@ -101,64 +108,12 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         return contentManager;
     }
 
-    private void updateNewspaperStatus(Context context) {
-        PublishStatus publishStatus = PublishStatus.getInstance();
-
-        // 日付が変更されていた場合、新聞発行情報を初期化
-        if (!publishStatus.isDailyUpdated()) {
-        	Log.d(TAG, "isDailyUpdated() is false");
-            initPublishStatus(context);
-        }
-
-        // 新聞発行日でなければチェックしない
-        if (!publishStatus.isPublishDay) {
-            return;
-        }
-
-        // 新聞発行時刻を過ぎているかのチェック
-        publishStatus.isPublished = publishStatus.isPastPublishTime();
-
-        // 発行時刻を過ぎていない場合はこれ以上チェックしない
-        if (!publishStatus.isPublished) {
-            return;
-        }
-
-        long currentElaspedTime = SystemClock.elapsedRealtime();
-        if (currentElaspedTime - lastUnreadCheckTime > READ_CHECK_INTERVAL) {
-            lastUnreadCheckTime = currentElaspedTime;
-
-            // 当日分記事の存在チェック（新聞発行後１回のみ）
-            if (publishStatus.articleExists == ArticleExists.NOT_CHECKED) {
-                checkRecentArticleExists(context);
-            }
-
-            // 新聞発行済、かつ未読であれば既読状態をチェック
-            if (publishStatus.isPublished && !publishStatus.isReaded) {
-                checkAlreadyReaded(context);
-            }
-        }
-    }
-
     /**
      * 新聞の発行情報（発行時刻、休刊日）を取得する.
      * @param context コンテキスト
      */
     private void initPublishStatus(Context context) {
         PublishStatusInitializeThread requestThread = new PublishStatusInitializeThread(context, this);
-        if (requestThread != null) {
-            PublishStatus publishStatus = PublishStatus.getInstance();
-            // 二重に更新スレッドが起動しないよう、リフレッシュ中のフラグを立てておく
-            publishStatus.isRefreshing = true;
-            requestThread.start();
-        }
-    }
-
-    /**
-     * 最新号の新聞の記事が存在するかどうかをチェックする.
-     * @param context コンテキスト
-     */
-    private void checkRecentArticleExists(Context context) {
-        RecentArticleCheckThread requestThread = new RecentArticleCheckThread(context, this);
         if (requestThread != null) {
             requestThread.start();
         }
@@ -217,7 +172,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         // 新聞発行の有無に応じて新聞アイコンを変更
         PublishStatus publishStatus = PublishStatus.getInstance();
         if (publishStatus != null) {
-            boolean published = publishStatus.isPublished && !publishStatus.isReaded;
+            boolean published = publishStatus.isPastPublishTime() && !publishStatus.isReaded;
             setApplicationIcon(remoteViews, R.id.link_news, contentManager.getNewsIcon(published));
         }
 
@@ -277,19 +232,30 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         remoteViews.setInt(buttonId, "setBackgroundResource", resourceId);
     }
 
+    /**
+     * ウィジェット表示更新、サーバアクセス用アラームの登録
+     * @param context
+     */
     private void setUpdateAlarm(Context context) {
-        // ウィジット更新用アラームの登録
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
+        // ウィジット表示更新用アラームの登録
         long startDelay = System.currentTimeMillis() + TIMER_START_DELAY;
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, UPDATE_INTERVAL , pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, UPDATE_INTERVAL , getUpdateActionPendingIntent(context));
+        // おすすめ記事更新アラームの登録
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, RECOMMEND_UPDATE_INTERVAL , getUpdateStatusPendingIntent(context));
+        // 新着アラームの登録
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, READ_CHECK_INTERVAL , getUpdateReadedPendingIntent(context));
     }
 
+    /**
+     * ウィジット表示更新、サーバアクセス用アラームの解除
+     * @param context
+     */
     private void cancelUpdateAlarm(Context context) {
-        // ウィジット更新用アラームの解除
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = getUpdateActionPendingIntent(context);
-        alarmManager.cancel(pendingIntent);
+        alarmManager.cancel(getUpdateActionPendingIntent(context));
+        alarmManager.cancel(getUpdateStatusPendingIntent(context));
+        alarmManager.cancel(getUpdateReadedPendingIntent(context));
     };
 
     /**
@@ -308,9 +274,31 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context コンテキスト
      * @return PendingIntent
      */
-    public PendingIntent getUpdateActionPendingIntent(Context context) {
+    private PendingIntent getUpdateActionPendingIntent(Context context) {
         Intent intent = new Intent(context, NamieWidgetProvider.class);
         intent.setAction(WIDGET_UPDATE_ACTION);
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
+    }
+
+    /**
+     * おすすめ記事取得用のPendingIntentのインスタンスを返す.
+     * @param context コンテキスト
+     * @return PendingIntent
+     */
+    private PendingIntent getUpdateStatusPendingIntent(Context context) {
+        Intent intent = new Intent(context, NamieWidgetProvider.class);
+        intent.setAction(WIDGET_UPDATE_STATUS);
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
+    }
+
+    /**
+     * 新着チェック用のPendingIntentのインスタンスを返す.
+     * @param context コンテキスト
+     * @return PendingIntent
+     */
+    private PendingIntent getUpdateReadedPendingIntent(Context context) {
+        Intent intent = new Intent(context, NamieWidgetProvider.class);
+        intent.setAction(WIDGET_UPDATE_READED);
         return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
@@ -320,7 +308,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param url オープンするURL
      * @return PendingIntent
      */
-    public PendingIntent getViewActionPendingIntent(Context context, String url) {
+    private PendingIntent getViewActionPendingIntent(Context context, String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
