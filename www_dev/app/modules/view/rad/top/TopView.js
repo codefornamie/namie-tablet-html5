@@ -71,7 +71,6 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         onClickRadiationUploadButton : function() {
-//            this.setRadiationList([{name:"1.csv",lastModifiedDate:new Date()},{name:"2.csv",lastModifiedDate:new Date()},{name:"3.csv",lastModifiedDate:new Date()},{name:"4.csv",lastModifiedDate:new Date()},{name:"5.csv",lastModifiedDate:new Date()},{name:"6.csv",lastModifiedDate:new Date()},{name:"7.csv",lastModifiedDate:new Date()},{name:"8.csv",lastModifiedDate:new Date()},{name:"9.csv",lastModifiedDate:new Date()}]);
             if (CommonUtil.isCordova()) {
                 this.showLoading();
                 FileAPIUtil.getHoribaRadiationList(this.setRadiationList.bind(this));
