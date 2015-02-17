@@ -71,54 +71,91 @@ define(function(require, exports, module) {
          * @memberOf ModalRadiationListView#
          */
         onClickRadiationUploadButton : function() {
-            this.showLoading();
             var self = this;
             // ListItemView取得
-            var itemViews = this.getViews("#radiationList").value();
+            var itemViews = this.getViews("#radiationList") ? this.getViews("#radiationList").value() : [];
             // チェックボックスで選んだItemViewのみに絞る
             var selectedItemViews = itemViews.filter(function(item) {
                 return !!item.$el.find("input:checked").length;
             });
 
-            var fileEntry = selectedItemViews[0].fileEntry;
+            this.failFileNames = [];
 
-            // this.fileEntries = [];
-            // this.count = 0;
-            // this.files = [];
-            // _.each(selectedItemViews,function(selectItem) {
-            // this.fileEntries.push(selectItem.fileEntry);
-            // }.bind(this));
+            if (!selectedItemViews) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("アップロードするファイルを選択してください。");
+                return;
+            }
+            this.showProgressBarLoading();
 
+            // チェックされたCSVファイルのfileEntryを配列に詰める
+            var fileEntries = [];
+            _.each(selectedItemViews, function(selectItem) {
+                if (selectItem.fileEntry) {
+                    fileEntries.push(selectItem.fileEntry);
+                }
+            });
+            this.parProgress = 100 / fileEntries.length / 2;
+            // radiationClusterの保存からradiationLogの保存の1セットをシリアルに処理する
+            async.eachSeries(fileEntries, function(fileEntry, next) {
+                self.convertFileEntry(fileEntry, next);
+            }, function complete(err) {
+                self.$progressBar.attr("value", 100);
+                self.hideLoading();
+                if (err) {
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert(err);
+                    app.logger.error("ModalRadiationListView#onClickRadiationUploadButton():error:" + err);
+                    return;
+                }
+                app.logger.debug("success all to save radiationCluster and radiationLog");
+                self.trigger("closeModalRadiationList");
+            });
+        },
+        /**
+         * 選択されたファイルをデータとして扱える形に変換する
+         * @memberOf ModalRadiationListView#
+         * @param {Object} fileEntry FileEntryオブジェクト
+         * @param {Function} next
+         */
+        convertFileEntry : function(fileEntry, next) {
             fileEntry.file(function(file) {
                 var reader = new FileReader();
-                // ロード関数登録
-                reader.onload = function(e) {
-                    console.log("result:" + reader.result);
-                    file.jsonObject = CommonUtil.convertJsonObject(reader.result);
+                // fileのロード完了後のコールバック
+                reader.onload = function(ev) {
+                    try {
+                        // テキスト形式で返却されたデータをjsonオブジェクトに変換
+                        file.jsonObject = CommonUtil.convertJsonObject(reader.result);
+                    } catch (e) {
+                        app.logger.error("CommonUtil.convertJsonObject():error=" + e);
+                        next(file.name + "の形式が正しくありません。");
+                        return;
+                    }
+                    // 線量値や緯度経度情報が無いレコードは省く
                     file.jsonObject = _.filter(file.jsonObject, function(json) {
                         return !!json[ModalRadiationListView.HORIBA_TITLE_DOSE] &&
                                 !!json[ModalRadiationListView.HORIBA_TITLE_POSITION];
                     });
-                    this.setRadiationClusterValue(file);
+                    // データからcluster保存用のモデル作成
+                    var radiationClusterModel = this.createRadiationClusterModel(file);
+                    // 保存処理
+                    this.saveClusterModel(radiationClusterModel, file, next);
                 }.bind(this, file);
 
                 // テキストとしてファイルを読み込む
                 reader.readAsText(file);
-            }.bind(this), function(e) {
+            }.bind(this), function(err) {
                 // fileでエラー
-                app.logger.error("onClickRadiationUploadButton(): file(): error" + e.code);
-                this.hideLoading();
-                vexDialog.defaultOptions.className = 'vex-theme-default';
-                vexDialog.alert("アップロードに失敗しました。");
-            }.bind(this));
-
+                app.logger.error("convertFileEntry(): file(): error" + err.code);
+                next(fileEntry.name + "の読み込みに失敗しました。");
+            });
         },
         /**
          * clusterModelにデータをセットする
          * @memberOf ModalRadiationListView#
          * @param {Object} file ファイルオブジェクト
          */
-        setRadiationClusterValue : function(file) {
+        createRadiationClusterModel : function(file) {
             var radiationClusterModels = [];
             var radiationClusterModel = new RadiationClusterModel();
             // clustermodelに必要なデータの計算処理を実施
@@ -135,8 +172,7 @@ define(function(require, exports, module) {
             radiationClusterModel.set("minLongitude", file.minLongitude);
             radiationClusterModel.set("maxLongitude", file.maxLongitude);
             radiationClusterModel.set("isFixedStation", false);
-            this.saveClusterModel(radiationClusterModel, file);
-
+            return radiationClusterModel;
         },
 
         /**
@@ -163,7 +199,6 @@ define(function(require, exports, module) {
             var svs = _.map(data, function(obj) {
                 return parseFloat(obj[ModalRadiationListView.HORIBA_TITLE_DOSE]);
             });
-            console.log("svs:" + JSON.stringify(svs));
             file.maxValue = _.max(svs, function(sv) {
                 return sv;
             });
@@ -176,22 +211,13 @@ define(function(require, exports, module) {
 
             // データから緯度のみの配列を取得
             var latitudes = _.map(data, function(obj) {
-                if (obj[ModalRadiationListView.HORIBA_TITLE_POSITION]) {
-                    return parseFloat(obj[ModalRadiationListView.HORIBA_TITLE_POSITION].split(" ")[0]);
-                }
-                return [
-                    ""
-                ];
+                return parseFloat(obj[ModalRadiationListView.HORIBA_TITLE_POSITION].split(" ")[0]);
             });
             // データから軽度のみの配列を取得
             var longitudes = _.map(data, function(obj) {
-                if (obj[ModalRadiationListView.HORIBA_TITLE_POSITION]) {
-                    return parseFloat(obj[ModalRadiationListView.HORIBA_TITLE_POSITION].split(" ")[1]);
-                }
-                return [
-                    ""
-                ];
+                return parseFloat(obj[ModalRadiationListView.HORIBA_TITLE_POSITION].split(" ")[1]);
             });
+
             file.maxLatitude = _.max(latitudes, function(lat) {
                 return lat;
             });
@@ -210,28 +236,30 @@ define(function(require, exports, module) {
          * @memberOf ModalRadiationListView#
          * @param {Model} radiationClusterModel クラスターモデル
          * @param {Object} file ファイルオブジェクト
+         * @param {Function} next
          */
-        saveClusterModel : function(radiationClusterModel, file) {
+        saveClusterModel : function(radiationClusterModel, file, next) {
             radiationClusterModel.save(null, {
                 success : function(model) {
+                    this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + this.parProgress);
                     app.logger.debug("saveClusterModel():success");
-                    this.saveLoopLogModel(model, file);
+                    // clusterの保存に成功した場合はradiationLogの保存処理実施
+                    this.setLogModels(model, file, next);
                 }.bind(this),
                 error : function(e) {
                     app.logger.debug("saveClusterModel():error" + e.code);
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert("アップロードに失敗しました。");
-                    this.hideLoading();
-                }.bind(this)
+                    next(file.name + "の保存処理に失敗しました。");
+                }
             });
         },
         /**
-         * radiationLog保存処理
+         * radiationLog作成処理後保存呼び出し
          * @memberOf ModalRadiationListView#
          * @param {Model} radiationClusterModel クラスターモデル
          * @param {Object} file ファイルオブジェクト
+         * @param {Function} next
          */
-        saveLoopLogModel : function(radiationClusterModel, file) {
+        setLogModels : function(radiationClusterModel, file, next) {
             var logModels = [];
             _.each(file.jsonObject, function(rec) {
                 var model = new RadiationLogModel();
@@ -246,48 +274,42 @@ define(function(require, exports, module) {
                 model.set("collectionId", radiationClusterModel.get("__id"));
                 logModels.push(model);
             });
-            this.saveSequence(logModels);
+            this.saveEachLogModel(logModels, file, next);
         },
         /**
          * 線量レコード単位の保存処理
          * @memberOf ModalRadiationListView#
          * @param {Array} models radiationLogModelの配列
+         * @param {Function} next
          */
-        saveSequence : function(models) {
+        saveEachLogModel : function(models, file, next) {
             var self = this;
 
+            // TODO 現状は5パラでリクエストしているが後々$batch処理に変更する
             // 最大同時処理数
             var LIMIT_PARALLEL_SAVE_SEQUENCE = 5;
 
-            async.eachLimit(models,
-
-            LIMIT_PARALLEL_SAVE_SEQUENCE,
-
+            async.eachLimit(models, LIMIT_PARALLEL_SAVE_SEQUENCE,
             // 各要素に対する保存処理
             function fn(model, done) {
-                model.save().then(function() {
-                    // ETagを更新する
-                    return model.fetch();
-                }).done(function() {
-                    done();
-                }).fail(function(err) {
-                    done(err);
+                model.save(null, {
+                    success : function() {
+                        done();
+                    },
+                    error : function(e) {
+                        done(e);
+                    }
                 });
             },
-
             // 保存処理が全て完了したら呼ばれる
             function onFinish(err) {
                 if (err) {
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert("アップロードに失敗しました。");
-                    self.hideLoading();
                     app.logger.error("ModalRadiationListView#saveSequence():error:" + JSON.stringify(err));
-                    return;
+                    next(file.name + "の保存処理に失敗しました。");
+                } else {
+                    self.$progressBar.attr("value", parseInt(self.$progressBar.attr("value")) + self.parProgress);
+                    next();
                 }
-                app.logger.debug("ModalRadiationListView#saveSequence():success");
-                self.hideLoading();
-                self.trigger("closeModalRadiationList");
-
             });
         },
         /**
