@@ -85,26 +85,29 @@ public class WidgetContentManager {
 
             // メッセージ表示モードの遷移
             displayMode = nextDisplayMode(displayMode);
+            synchronized(recommendArticles){
+                // 表示メッセージのインデックスをインクリメント
+                if (displayMode == DisplayMode.DISPLAY_FIXED_MESSAGE) {
+                    messageIndex = (messageIndex + 1) % messages.size();
+                } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND) {
+                    recommendArticleIndex = (recommendArticleIndex + 1) % recommendArticles.size();
+                    displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;
+                    messageIndex = 0;
+                }
 
-            // 表示メッセージのインデックスをインクリメント
-            if (displayMode == DisplayMode.DISPLAY_FIXED_MESSAGE) {
-                messageIndex = (messageIndex + 1) % messages.size();
-            } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND) {
-                recommendArticleIndex = (recommendArticleIndex + 1) % recommendArticles.size();
-            }
+                // 表示メッセージのスタイルとテキストを決める
+                messageStyle =  getMessageStyle(displayMode);
+                site = getSiteFromArticle(displayMode);
+                message = getTitleFromArticle(displayMode);
+                thumbnail = getThumbnailFromArticle(displayMode);
 
-            // 表示メッセージのスタイルとテキストを決める
-            messageStyle =  getMessageStyle(displayMode);
-            site = getSiteFromArticle(displayMode);
-            message = getTitleFromArticle(displayMode);
-            thumbnail = getThumbnailFromArticle(displayMode);
-
-            // メッセージの取得に失敗した場合は固定メッセージ表示とする
-            if (message == null) {
-                Log.e(TAG, "Widget message is null.");
-                displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;
-                messageStyle = MessageStyle.STYLE_BUBBLE;
-                message = messages.get(messageIndex);
+                // メッセージの取得に失敗した場合は固定メッセージ表示とする
+                if (message == null) {
+                    Log.e(TAG, "Widget message is null.");
+                    displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;
+                    messageStyle = MessageStyle.STYLE_BUBBLE;
+                    message = messages.get(messageIndex);
+                }
             }
         }
 
@@ -209,7 +212,9 @@ public class WidgetContentManager {
      * おすすめ記事をクリアする.
      */
     public void clearRecommendArticle() {
-        recommendArticles.clear();
+        synchronized(recommendArticles){
+            recommendArticles.clear();
+        }
     }
 
     /**
