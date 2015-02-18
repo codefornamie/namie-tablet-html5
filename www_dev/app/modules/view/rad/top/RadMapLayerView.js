@@ -92,60 +92,10 @@ define(function(require, exports, module) {
 
             var map = this.map;
             var markerClusters = this.markerClusters;
-/*
-            var container = this.container;
-            var data = [{
-                radiationClusterModel : this.radiationClusterModel,
-                radiationLogCollection : this.radiationLogCollection
-            }];
 
-            var circle = container.selectAll("circle.layer-" + this.cid).data(data);
-
-            circle.enter()
-                .append("circle")
-                .attr({
-                    "opacity" : 0.9,
-                    "r" : 10,
-                    "class" : function (d) {
-                        var feature = d.radiationClusterModel.toGeoJSON();
-                        var maxValue = feature.properties.maxValue;
-
-                        return [
-                                "leaflet-clickable",
-                                "layer-" + this.cid,
-                                GeoUtil.generateClassNameByDose(maxValue)
-                        ].join(" ");
-                    }.bind(this)
-                })
-                .each(function (d) {
-                    var popupView = new RadPopupView({
-                        origin : this,
-                        data : d,
-                        map : map
-                    });
-                });
-
-            circle.exit()
-                .remove();
-
-            var update = function () {
-                circle
-                    .attr("transform", function (d) {
-                        var feature = d.radiationClusterModel.toGeoJSON();
-                        var x = GeoUtil.project(map, feature.geometry.coordinates)[0];
-                        var y = GeoUtil.project(map, feature.geometry.coordinates)[1];
-
-                        return "translate(" + x + "," + y + ")";
-                    });
-            };
-
-            map.on("viewreset", update);
-            update();
-*/
-            var layerView = this;
             this.radiationLogCollection.each(function(model) {
                 var marker = leaflet.geoJson(model.toGeoJSON());
-                marker.layerView = layerView;
+
                 markerClusters.addLayer(marker);
             });
         },
@@ -156,54 +106,50 @@ define(function(require, exports, module) {
          * @return {leaflet.DivIcon}
          */
         defineClusterIcon : function(cluster) {
-/*
-            var markers = cluster.getAllChildMarkers();
-            var n = 0;
-            for (var i = 0; i < markers.length; i++) {
-            n += markers[i].value;
-            }
-            return leaflet.divIcon({ html: n, className: 'mycluster', iconSize: leaflet.point(40, 40) });
-*/
+            var self = this;
+            var iconDim = 40;
+            var html, icon;
+            //var containerElement = document.createElementNS(d3.ns.prefix.svg, 'svg');
+            var containerElement = document.createElement("div");
+            var container = d3.select(containerElement)
+                .attr("width", 40)
+                .attr("height", 40);
 
-            //Create an svg element
-            var svgElement = document.createElementNS(d3.ns.prefix.svg, 'svg');
-
-            var svg = d3.select(svgElement).attr("width",40).attr("height",40);
-            svg.append("circle")
+            container.append("div")
+                .style({
+                    "width" : "40px",
+                    "height" : "40px",
+                    "border-radius" : "50%"
+                })
                 .attr({
-                    "cx": 20,
-                    "cy": 20,
-                    "r": 20,
-                    "class": function(d) {
+                    "class" : function(d) {
                         var valueTotal = 0;
+
                         _(cluster.getAllChildMarkers()).each(function(marker) {
                             valueTotal += marker.feature.properties.value;
                         });
-                        return GeoUtil.generateClassNameByDose(valueTotal / cluster.getChildCount());
+
+                        return [
+                            "marker-cluster__circle",
+                            GeoUtil.generateClassNameByDose(valueTotal / cluster.getChildCount())
+                        ].join(" ");
                     }
                 });
-            svg.append("text")
-                .text(cluster.getChildCount())
+
+            container.append("span")
                 .attr({
-                    "x": 20,
-                    "y": 20,
-                    "dy": ".3em",
-                    "text-anchor": "middle",
-                    "font-weight": "bold",
-                    "font-size": "1rem",
-                    "fill": "white"
-                });
+                    "class" : "marker-cluster__text"
+                })
+                .text(cluster.getChildCount());
 
-            var html = this.serializeXmlNode(svgElement);
-
-            var iconDim = 40;
-            var myIcon = new leaflet.DivIcon({
-                html: html,
-                className: 'marker-cluster', 
-                iconSize: new leaflet.Point(iconDim, iconDim)
+            html = $(containerElement).html();
+            icon = new leaflet.DivIcon({
+                html : html,
+                className : "marker-cluster",
+                iconSize : new leaflet.Point(iconDim, iconDim)
             });
 
-            return myIcon;
+            return icon;
         },
 
         /**
@@ -258,12 +204,19 @@ define(function(require, exports, module) {
          * @param {Leaflet.Map} map
          */
         setMap : function (map) {
+            var self = this;
+
             this.map = map;
 
             this.markerClusters = new leaflet.MarkerClusterGroup({
-                maxClusterRadius: 40,
-                iconCreateFunction: this.defineClusterIcon.bind(this)
+                showCoverageOnHover : false,
+                zoomToBoundsOnClick : false,
+                animateAddingMarkers : true,
+                maxClusterRadius : 80,
+                iconCreateFunction : this.defineClusterIcon.bind(this)
             });
+
+            this.markerClusters.on("clusterclick", this.onClusterClick.bind(this));
 
             map.addLayer(this.markerClusters);
         },
@@ -320,6 +273,32 @@ define(function(require, exports, module) {
          */
         onSyncCollection : function () {
             this.draw();
+        },
+
+        /**
+         * onClusterClick
+         * @memberOf RadMapLayerView#
+         * @param {Object} ev
+         */
+        onClusterClick : function (ev) {
+            var markers = ev.layer.getAllChildMarkers();
+            var features = _.pluck(markers, "feature");
+            var fcol = {
+                "type" : "FeatureCollection",
+                "features" : features
+            };
+
+            var popupView = new RadPopupView({
+                data : {
+                    radiationClusterFeature : this.radiationClusterModel.toGeoJSON(),
+                    radiationLogFeatureCollection : fcol
+                },
+
+                position : ev.latlng
+            });
+
+            popupView.setMap(this.map);
+            popupView.show();
         }
     });
 

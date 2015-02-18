@@ -55,21 +55,18 @@ define(function(require, exports, module) {
          */
         initialize : function(param) {
             console.assert(param, "param should be given");
-            console.assert(param.origin, "origin should be specified");
+            console.assert(param.position, "position should be specified");
             console.assert(param.data, "data should be specified");
 
-            this.origin = param.origin;
+            this.position = param.position;
             this.data = param.data;
-            this.radiationClusterFeature = this.data.radiationClusterModel.toGeoJSON();
-            this.radiationLogFeatureCollection = this.data.radiationLogCollection.toGeoJSON();
+            this.radiationClusterFeature = this.data.radiationClusterFeature;
+            this.radiationLogFeatureCollection = this.data.radiationLogFeatureCollection;
 
             this.initEvents();
 
-            var coords = this.radiationClusterFeature.geometry.coordinates;
             this.popup = leaflet.popup()
-                .setLatLng(
-                    new leaflet.LatLng(coords[1], coords[0])
-                )
+                .setLatLng(this.position)
                 .setContent(this.getContent());
         },
 
@@ -78,7 +75,6 @@ define(function(require, exports, module) {
          * @memberOf RadPopupView#
          */
         initEvents : function() {
-            $(this.origin).on("click", this.onClickOrigin.bind(this));
         },
 
         /**
@@ -87,6 +83,7 @@ define(function(require, exports, module) {
          * @memberOf RadPopupView#
          */
         show : function () {
+            this.popup.openOn(this.map);
         },
 
         /**
@@ -120,13 +117,6 @@ define(function(require, exports, module) {
          * @memberOf RadPopupView#
          */
         onClickOrigin : function () {
-            var self = this;
-
-            // map自体のクリックイベントが同時に反応して
-            // ポップアップが閉じてしまうため
-            setTimeout(function () {
-                self.popup.openOn(self.map);
-            }, 0);
         }
     });
 
