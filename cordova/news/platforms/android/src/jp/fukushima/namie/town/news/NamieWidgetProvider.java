@@ -34,6 +34,8 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     private static final int TIMER_START_DELAY = 3 * 1000;
     // ウィジェット更新インターバル(ms)
     private static final int UPDATE_INTERVAL = 500;
+    // サーバアクセス開始までのインターバル(ms)
+    private static final int UPDATE_TIMER_START_DELAY = 300 * 1000;
     // 既読チェックインターバル(ms)
     private static final long READ_CHECK_INTERVAL = 30 * 60 * 1000 + 1;
     // おすすめ記事チェックインターバル(ms)
@@ -171,7 +173,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         // 新聞発行の有無に応じて新聞アイコンを変更
         PublishStatus publishStatus = PublishStatus.getInstance();
         if (publishStatus != null) {
-            boolean published = publishStatus.isPastPublishTime() && !publishStatus.isReaded;
+            boolean published = publishStatus.isPublishDay && publishStatus.isPastPublishTime() && !publishStatus.isReaded;
             setApplicationIcon(remoteViews, R.id.link_news, contentManager.getNewsIcon(published));
         }
 
@@ -236,19 +238,21 @@ public class NamieWidgetProvider extends AppWidgetProvider {
      * @param context
      */
     private void setUpdateAlarm(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context
+                .getSystemService(Context.ALARM_SERVICE);
         // ウィジット表示更新用アラームの登録
         long startDelay = System.currentTimeMillis() + TIMER_START_DELAY;
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, UPDATE_INTERVAL , getUpdateActionPendingIntent(context));
-        // おすすめ記事更新アラームの登録
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-                (long) (Math.random() * RECOMMEND_UPDATE_INTERVAL),
-                RECOMMEND_UPDATE_INTERVAL,
-                getUpdateStatusPendingIntent(context));
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay,
+                UPDATE_INTERVAL, getUpdateActionPendingIntent(context));
         // 新着アラームの登録
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-                (long) (Math.random() * READ_CHECK_INTERVAL),
+                (long) (Math.random() * UPDATE_TIMER_START_DELAY),
                 READ_CHECK_INTERVAL, getUpdateReadedPendingIntent(context));
+        // おすすめ記事更新アラームの登録
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                (long) (Math.random() * UPDATE_TIMER_START_DELAY + 5000),
+                RECOMMEND_UPDATE_INTERVAL,
+                getUpdateStatusPendingIntent(context));
     }
 
     /**
