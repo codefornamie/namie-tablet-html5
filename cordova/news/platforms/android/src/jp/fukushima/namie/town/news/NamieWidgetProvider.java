@@ -37,11 +37,9 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     // サーバアクセス開始までのインターバル(ms)
     private static final int UPDATE_TIMER_START_DELAY = 300 * 1000;
     // 既読チェックインターバル(ms)
-//    private static final long READ_CHECK_INTERVAL = 30 * 60 * 1000 + 1;
-    private static final long READ_CHECK_INTERVAL = 3 * 60 * 1000 + 1;
+    private static final long READ_CHECK_INTERVAL = 30 * 60 * 1000 + 1;
     // おすすめ記事チェックインターバル(ms)
-//    private static final long RECOMMEND_UPDATE_INTERVAL = 180 * 60 * 1000 + 1;
-    private static final long RECOMMEND_UPDATE_INTERVAL = 6 * 60 * 1000 + 1;
+    private static final long RECOMMEND_UPDATE_INTERVAL = 180 * 60 * 1000 + 1;
 
     // ウィジェット表示情報管理オブジェクト
     private static WidgetContentManager contentManager = null;
