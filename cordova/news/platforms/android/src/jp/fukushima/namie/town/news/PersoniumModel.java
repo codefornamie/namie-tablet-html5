@@ -403,6 +403,7 @@ public class PersoniumModel {
        boolean isHoliday = isNewspaperHoliday(odata, now);
        if (isHoliday) {
            // 休刊日
+           ret.isPublishDay = false;
            return ret;
        }
 
