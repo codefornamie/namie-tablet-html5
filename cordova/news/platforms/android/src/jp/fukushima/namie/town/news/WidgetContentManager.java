@@ -83,16 +83,14 @@ public class WidgetContentManager {
 
         if (frameIndex == 0) {
 
-            // メッセージ表示モードの遷移
-            displayMode = nextDisplayMode(displayMode);
             synchronized(recommendArticles){
+                // メッセージ表示モードの遷移
+                displayMode = nextDisplayMode(displayMode);
                 // 表示メッセージのインデックスをインクリメント
                 if (displayMode == DisplayMode.DISPLAY_FIXED_MESSAGE) {
                     messageIndex = (messageIndex + 1) % messages.size();
                 } else if (displayMode == DisplayMode.DISPLAY_RECOMMEND) {
                     recommendArticleIndex = (recommendArticleIndex + 1) % recommendArticles.size();
-                    displayMode = DisplayMode.DISPLAY_FIXED_MESSAGE;
-                    messageIndex = 0;
                 }
 
                 // 表示メッセージのスタイルとテキストを決める
