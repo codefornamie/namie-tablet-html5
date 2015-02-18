@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var async = require("async");
     var leaflet = require("leaflet");
+    var leafletMarkerCluster = require("leaflet.markercluster");
     var d3 = require("d3");
     var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
@@ -90,11 +91,14 @@ define(function(require, exports, module) {
             console.assert(this.container, "should call setContainer before drawing");
 
             var map = this.map;
+            var markerClusters = this.markerClusters;
+/*
             var container = this.container;
             var data = [{
                 radiationClusterModel : this.radiationClusterModel,
                 radiationLogCollection : this.radiationLogCollection
             }];
+
             var circle = container.selectAll("circle.layer-" + this.cid).data(data);
 
             circle.enter()
@@ -137,6 +141,83 @@ define(function(require, exports, module) {
 
             map.on("viewreset", update);
             update();
+*/
+            var layerView = this;
+            this.radiationLogCollection.each(function(model) {
+                var marker = leaflet.geoJson(model.toGeoJSON());
+                marker.layerView = layerView;
+                markerClusters.addLayer(marker);
+            });
+        },
+
+        /**
+         * defineClusterIcon
+         *
+         * @return {leaflet.DivIcon}
+         */
+        defineClusterIcon : function(cluster) {
+/*
+            var markers = cluster.getAllChildMarkers();
+            var n = 0;
+            for (var i = 0; i < markers.length; i++) {
+            n += markers[i].value;
+            }
+            return leaflet.divIcon({ html: n, className: 'mycluster', iconSize: leaflet.point(40, 40) });
+*/
+
+            //Create an svg element
+            var svgElement = document.createElementNS(d3.ns.prefix.svg, 'svg');
+
+            var svg = d3.select(svgElement).attr("width",40).attr("height",40);
+            svg.append("circle")
+                .attr({
+                    "cx": 20,
+                    "cy": 20,
+                    "r": 20,
+                    "class": function(d) {
+                        var valueTotal = 0;
+                        _(cluster.getAllChildMarkers()).each(function(marker) {
+                            valueTotal += marker.feature.properties.value;
+                        });
+                        return GeoUtil.generateClassNameByDose(valueTotal / cluster.getChildCount());
+                    }
+                });
+            svg.append("text")
+                .text(cluster.getChildCount())
+                .attr({
+                    "x": 20,
+                    "y": 20,
+                    "dy": ".3em",
+                    "text-anchor": "middle",
+                    "font-weight": "bold",
+                    "font-size": "1rem",
+                    "fill": "white"
+                });
+
+            var html = this.serializeXmlNode(svgElement);
+
+            var iconDim = 40;
+            var myIcon = new leaflet.DivIcon({
+                html: html,
+                className: 'marker-cluster', 
+                iconSize: new leaflet.Point(iconDim, iconDim)
+            });
+
+            return myIcon;
+        },
+
+        /**
+         * serializeXmlNode
+         *
+         * @memberOf RadMapLayerView#
+         */
+        serializeXmlNode : function(xmlNode) {
+            if (typeof window.XMLSerializer != "undefined") {
+                return (new window.XMLSerializer()).serializeToString(xmlNode);
+            } else if (typeof xmlNode.xml != "undefined") {
+                return xmlNode.xml;
+            }
+            return "";
         },
 
         /**
@@ -178,6 +259,13 @@ define(function(require, exports, module) {
          */
         setMap : function (map) {
             this.map = map;
+
+            this.markerClusters = new leaflet.MarkerClusterGroup({
+                maxClusterRadius: 40,
+                iconCreateFunction: this.defineClusterIcon.bind(this)
+            });
+
+            map.addLayer(this.markerClusters);
         },
 
         /**

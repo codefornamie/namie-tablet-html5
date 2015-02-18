@@ -146,6 +146,7 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         initEvents : function() {
+            this.listenTo(this.radiationClusterCollection, "change:hidden", this.onChangeClusterModel);
             this.listenTo(this.radiationClusterCollection, "request", this.onRequestCollection);
             this.listenTo(this.radiationClusterCollection, "add", this.onAddCollection);
             this.listenTo(this.radiationClusterCollection, "sync", this.onSyncCollection);
@@ -189,6 +190,23 @@ define(function(require, exports, module) {
         },
 
         /**
+         * クラスターモデルの表示状態が変更されたら呼ばれる
+         * @memberOf RadMapView#
+         */
+        onChangeClusterModel : function (model) {
+            var isHidden = model.get("hidden");
+
+            if (!isHidden) {
+                // 表示状態に切り替わったら地図の中心をクラスターの地点へ移動する
+                var feature = model.toGeoJSON();
+                var lat = feature.geometry.coordinates[1];
+                var lng = feature.geometry.coordinates[0];
+
+                this.map.panTo([lat, lng]);
+            }
+        },
+
+        /**
          * コレクションが読み込み開始したら呼ばれる
          * @memberOf RadMapView#
          */
@@ -205,7 +223,10 @@ define(function(require, exports, module) {
                 radiationClusterModel : model
             });
 
-            this.layers.push(layerView);
+            // 試作検証用のため、1件のみ適用する
+            if (this.layers.length === 0) {
+                this.layers.push(layerView);
+            }
         },
 
         /**
