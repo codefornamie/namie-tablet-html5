@@ -241,9 +241,14 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         long startDelay = System.currentTimeMillis() + TIMER_START_DELAY;
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, UPDATE_INTERVAL , getUpdateActionPendingIntent(context));
         // おすすめ記事更新アラームの登録
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 1, RECOMMEND_UPDATE_INTERVAL , getUpdateStatusPendingIntent(context));
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                (long) (Math.random() * RECOMMEND_UPDATE_INTERVAL),
+                RECOMMEND_UPDATE_INTERVAL,
+                getUpdateStatusPendingIntent(context));
         // 新着アラームの登録
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, READ_CHECK_INTERVAL , getUpdateReadedPendingIntent(context));
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                (long) (Math.random() * READ_CHECK_INTERVAL),
+                READ_CHECK_INTERVAL, getUpdateReadedPendingIntent(context));
     }
 
     /**
