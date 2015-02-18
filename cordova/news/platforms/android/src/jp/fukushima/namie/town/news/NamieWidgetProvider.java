@@ -35,9 +35,9 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     // ウィジェット更新インターバル(ms)
     private static final int UPDATE_INTERVAL = 500;
     // 既読チェックインターバル(ms)
-    private static final long READ_CHECK_INTERVAL = 30 * 60 * 1000;
+    private static final long READ_CHECK_INTERVAL = 30 * 60 * 1000 + 1;
     // おすすめ記事チェックインターバル(ms)
-    private static final long RECOMMEND_UPDATE_INTERVAL = 180 * 60 * 1000;
+    private static final long RECOMMEND_UPDATE_INTERVAL = 180 * 60 * 1000 + 1;
 
     // ウィジェット表示情報管理オブジェクト
     private static WidgetContentManager contentManager = null;
@@ -73,15 +73,14 @@ public class NamieWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "NamieWidgetProvider#onReceive()");
+        Log.d(TAG, "NamieWidgetProvider#onReceive(): intent.act: " + intent.getAction());
 
         if (contentManager == null) {
             contentManager = new WidgetContentManager(context);
         }
 
         String action = intent.getAction();
-        if (action.equals(Intent.ACTION_DATE_CHANGED) ||
-            action.equals(Intent.ACTION_TIMEZONE_CHANGED) ||
+        if (action.equals(Intent.ACTION_TIMEZONE_CHANGED) ||
             action.equals(Intent.ACTION_TIME_CHANGED) ||
             action.equals(Intent.ACTION_PACKAGE_REPLACED)) {
             cancelUpdateAlarm(context);
@@ -242,9 +241,9 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         long startDelay = System.currentTimeMillis() + TIMER_START_DELAY;
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, UPDATE_INTERVAL , getUpdateActionPendingIntent(context));
         // おすすめ記事更新アラームの登録
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, RECOMMEND_UPDATE_INTERVAL , getUpdateStatusPendingIntent(context));
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 1, RECOMMEND_UPDATE_INTERVAL , getUpdateStatusPendingIntent(context));
         // 新着アラームの登録
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, READ_CHECK_INTERVAL , getUpdateReadedPendingIntent(context));
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startDelay, READ_CHECK_INTERVAL , getUpdateReadedPendingIntent(context));
     }
 
     /**
