@@ -84,25 +84,78 @@ define(function(require, exports, module) {
         /**
          * draw
          *
+         * @memberOf RadMapLayerView#
          * @return {undefined}
          */
         draw : function () {
             console.assert(this.map, "should call setMap before drawing");
             console.assert(this.container, "should call setContainer before drawing");
 
+            var self = this;
             var map = this.map;
             var markerClusters = this.markerClusters;
 
             this.radiationLogCollection.each(function(model) {
-                var marker = leaflet.geoJson(model.toGeoJSON());
+                var marker = leaflet.geoJson(model.toGeoJSON(), {
+                    pointToLayer : self.pointToLayer
+                });
 
                 markerClusters.addLayer(marker);
             });
         },
 
         /**
+         * pointToLayer
+         *
+         * @memberOf RadMapLayerView#
+         * @param {Object} feature
+         * @param {leaflet.LatLng} latLng
+         * @return {leaflet.Marker}
+         */
+        pointToLayer : function(feature, latLng) {
+            var iconDim = 20;
+            var html, icon, marker;
+            var containerElement = document.createElement("div");
+            var container = d3.select(containerElement)
+                .attr("width", iconDim)
+                .attr("height", iconDim);
+
+            container.append("div")
+                .style({
+                    "width" : iconDim + "px",
+                    "height" : iconDim + "px",
+                    "border-radius" : "50%"
+                })
+                .attr({
+                    "class" : function(d) {
+                        var value = feature.properties.value;
+
+                        return [
+                            "marker__circle",
+                            GeoUtil.generateClassNameByDose(value)
+                        ].join(" ");
+                    }
+                });
+
+            html = $(containerElement).html();
+            icon = new leaflet.DivIcon({
+                html : html,
+                className : "marker",
+                iconSize : new leaflet.Point(iconDim, iconDim)
+            });
+
+            marker = leaflet.marker(latLng, {
+                icon : icon
+            });
+
+            return marker;
+        },
+
+        /**
          * defineClusterIcon
          *
+         * @memberOf RadMapLayerView#
+         * @param {Object} cluster
          * @return {leaflet.DivIcon}
          */
         defineClusterIcon : function(cluster) {
