@@ -197,12 +197,12 @@ define(function(require, exports, module) {
             var isHidden = model.get("hidden");
 
             if (!isHidden) {
-                // 表示状態に切り替わったら地図の中心をクラスターの地点へ移動する
-                var feature = model.toGeoJSON();
-                var lat = feature.geometry.coordinates[1];
-                var lng = feature.geometry.coordinates[0];
-
-                this.map.panTo([lat, lng]);
+                // 表示状態に切り替わったら、クラスターに含まれる全要素が表示されるよう地図を設定する
+                var self = this;
+                    self.map.fitBounds([
+                        [model.get("minLatitude"), model.get("maxLongitude")],
+                        [model.get("maxLatitude"), model.get("minLongitude")]
+                    ]);
             }
         },
 
