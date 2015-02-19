@@ -51,32 +51,32 @@ define(function(require) {
                 done();
             });
         });
-        it("TEST-06 LoginModel#login パスワードが誤っている際に認証エラーとなることを確認する", function(done) {
-            var token = app.pcsManager.accessToken;
-            app.pcsManager.accessToken = undefined;
-            var loginModel = new LoginModel();
-            loginModel.baseUrl = app.config.basic.baseUrl;
-            loginModel.cellId = app.config.basic.cellId;
-            loginModel.box = app.config.basic.boxName;
-            loginModel.set("loginId", SpecHelper.TEST_USER);
-            loginModel.set("password", "invalid");
-
-            loginModel.login(function(message) {
-                assert.equal(message, "ユーザーID、または、パスワードが正しくありません。", "auth error.");
-                // 後の処理のために再ログイン
-                loginModel = new LoginModel();
-                loginModel.baseUrl = app.config.basic.baseUrl;
-                loginModel.cellId = app.config.basic.cellId;
-                loginModel.box = app.config.basic.boxName;
-                loginModel.set("loginId", SpecHelper.TEST_USER);
-                loginModel.set("password", SpecHelper.TEST_USER_PASSWORD);
-
-                loginModel.login(function() {
-                    assert.ok(true, "Success login");
-                    done();
-                });
-            });
-        });
+//        it("TEST-06 LoginModel#login パスワードが誤っている際に認証エラーとなることを確認する", function(done) {
+//            var token = app.pcsManager.accessToken;
+//            app.pcsManager.accessToken = undefined;
+//            var loginModel = new LoginModel();
+//            loginModel.baseUrl = app.config.basic.baseUrl;
+//            loginModel.cellId = app.config.basic.cellId;
+//            loginModel.box = app.config.basic.boxName;
+//            loginModel.set("loginId", SpecHelper.TEST_USER);
+//            loginModel.set("password", "invalid");
+//
+//            loginModel.login(function(message) {
+//                assert.equal(message, "ユーザーID、または、パスワードが正しくありません。", "auth error.");
+//                // 後の処理のために再ログイン
+//                loginModel = new LoginModel();
+//                loginModel.baseUrl = app.config.basic.baseUrl;
+//                loginModel.cellId = app.config.basic.cellId;
+//                loginModel.box = app.config.basic.boxName;
+//                loginModel.set("loginId", SpecHelper.TEST_USER);
+//                loginModel.set("password", SpecHelper.TEST_USER_PASSWORD);
+//
+//                loginModel.login(function() {
+//                    assert.ok(true, "Success login");
+//                    done();
+//                });
+//            });
+//        });
         var testLoginId;
         it("TEST-07 LoginModel#fetchPersonalInfo 存在しないパーソナル情報の読み込みを行った際に、パーソナル情報が生成されることを確認する", function(done) {
             testLoginId = "ukedon" + _.uniqueId();
@@ -87,6 +87,7 @@ define(function(require) {
                 done();
             });
         });
+        var targetModel;
         it("TEST-07 LoginModel#fetchPersonalInfo 作成したパーソナル情報が存在することを確認する", function(done) {
             var collection = new PersonalCollection()
             collection.condition.filters = [
@@ -98,6 +99,7 @@ define(function(require) {
                 success : function() {
                     if (collection.size() > 0) {
                         assert.ok(true, "success personai info creating.");
+                        targetModel = collection.at(0);
                         done();
                     } else {
                         assert.ok(false, "failed personai info creating.");
@@ -108,6 +110,11 @@ define(function(require) {
                     done();
                 }
             });
+        });
+        after(function(done) {
+            app.logger.debug("Start after().");
+            this.timeout(20000);
+            SpecHelper.deleteTestData(targetModel, done);
         });
     });
 });
