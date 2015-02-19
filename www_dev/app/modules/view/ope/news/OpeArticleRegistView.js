@@ -218,6 +218,7 @@ define(function(require, exports, module) {
             }
             this.chageMultiDateCheckbox();
             this.onChangeCategory();
+            this.$el.find("a").attr("href", "javascript:void(0)");
         },
 
         /**
