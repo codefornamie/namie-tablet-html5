@@ -4,7 +4,6 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractCollection = require("modules/collection/AbstractCollection");
     var Filter = require("modules/util/filter/Filter");
-    var Log = require("modules/util/Logger");
 
     /**
      * PCS ODataの検索操作を行うモデルの基底クラスを作成する。
@@ -59,7 +58,7 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataCollection#
          */
         parseResponse : function(response, options) {
-            //Log.info("AbstractODataCollection parseResponse");
+            //app.logger.info("AbstractODataCollection parseResponse");
             response = this.parseOData(response, options);
             return response;
         },
@@ -75,7 +74,7 @@ define(function(require, exports, module) {
          *
          */
         parseOData : function(response, options) {
-            //Log.info("AbstractODataCollection parseOData");
+            //app.logger.info("AbstractODataCollection parseOData");
             return response;
         },
         /**
@@ -90,7 +89,7 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataCollection#
          */
         sync : function(method, model, options) {
-            Log.info("AbstractODataCollection sync");
+            app.logger.info("AbstractODataCollection sync");
 
             var def = $.Deferred();
 
@@ -112,7 +111,7 @@ define(function(require, exports, module) {
              * @memberOf AbstractODataCollection#
              */
             var complete = function(res) {
-                Log.info("AbstractODataCollection search complete handler");
+                app.logger.info("AbstractODataCollection search complete handler");
 
                 // 取得したJSONオブジェクト
                 var json = null;
@@ -146,7 +145,7 @@ define(function(require, exports, module) {
             try {
                 this.search(method, model, options, complete);
             } catch (e) {
-                Log.info("Personium Exception : " + e);
+                app.logger.info("Personium Exception : " + e);
                 //app.router.go("login");
                 window.location.href = "/";
             }
@@ -170,11 +169,11 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataCollection#
          */
         search : function(method, model, options, complete) {
-            Log.info("AbstractODataCollection search");
+            app.logger.info("AbstractODataCollection search");
             this.condition = Filter.searchCondition(this.condition);
             this.entityset.query().filter(this.condition.filter).top(this.condition.top).orderby(this.condition.orderby).run({
                 complete : function(response) {
-                    Log.info("AbstractODataCollection search complete");
+                    app.logger.info("AbstractODataCollection search complete");
                     complete(response);
                 }
             });

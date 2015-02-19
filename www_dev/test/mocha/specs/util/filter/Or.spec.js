@@ -7,8 +7,6 @@ define(function(require) {
     var And = require("modules/util/filter/And");
     var Filter = require("modules/util/filter/Filter");
 
-    app.noRendering = true;
-
     describe("Or", function() {
         it("TEST-01 Or#expression", function() {
             var filtersA = new Equal("country", "Japan");

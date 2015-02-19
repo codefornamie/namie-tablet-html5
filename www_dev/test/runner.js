@@ -19,7 +19,9 @@
   // Set the application endpoint and load the configuration.
   require.config({
     paths: {
-      underscore: "../bower_components/lodash/dist/lodash.underscore"
+      underscore: "../bower_components/lodash/dist/lodash.underscore",
+      specHelper: "../test/mocha/specs/SpecHelper",
+      newsSpecHelper: "../test/mocha/specs/NewsSpecHelper"
     },
 
     baseUrl: "base/app"
@@ -34,7 +36,7 @@
     // Ensure templates can be found correctly.
     require.config({
       lodashLoader: {
-        root: "base/app/templates"
+        root: ""
       }
     });
 
@@ -50,5 +52,6 @@
 
     // Load all specs and start Karma.
     require(specs, karma.start);
+    window.testRequire = require;
   });
 })(this);
