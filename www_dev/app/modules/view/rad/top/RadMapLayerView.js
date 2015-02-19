@@ -4,12 +4,13 @@ define(function(require, exports, module) {
     var app = require("app");
     var async = require("async");
     var leaflet = require("leaflet");
-    var leafletMarkerCluster = require("leaflet.markercluster");
     var d3 = require("d3");
     var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
     var RadPopupView = require("modules/view/rad/top/RadPopupView");
     var RadiationLogCollection = require("modules/collection/radiation/RadiationLogCollection");
+
+    require("leaflet.markercluster");
 
     /**
      * 放射線アプリの地図のレイヤ
@@ -56,7 +57,6 @@ define(function(require, exports, module) {
             this.initCollection();
             this.initEvents();
 
-
             //this.radiationLogCollection.fetch();
         },
 
@@ -92,7 +92,6 @@ define(function(require, exports, module) {
             console.assert(this.container, "should call setContainer before drawing");
 
             var self = this;
-            var map = this.map;
             var markerClusters = this.markerClusters;
 
             this.radiationLogCollection.each(function(model) {
@@ -127,7 +126,7 @@ define(function(require, exports, module) {
                     "border-radius" : "50%"
                 })
                 .attr({
-                    "class" : function(d) {
+                    "class" : function() {
                         var value = feature.properties.value;
 
                         return [
@@ -159,10 +158,8 @@ define(function(require, exports, module) {
          * @return {leaflet.DivIcon}
          */
         defineClusterIcon : function(cluster) {
-            var self = this;
             var iconDim = 40;
             var html, icon;
-            //var containerElement = document.createElementNS(d3.ns.prefix.svg, 'svg');
             var containerElement = document.createElement("div");
             var container = d3.select(containerElement)
                 .attr("width", 40)
@@ -175,7 +172,7 @@ define(function(require, exports, module) {
                     "border-radius" : "50%"
                 })
                 .attr({
-                    "class" : function(d) {
+                    "class" : function() {
                         var valueTotal = 0;
 
                         _(cluster.getAllChildMarkers()).each(function(marker) {
@@ -211,9 +208,9 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         serializeXmlNode : function(xmlNode) {
-            if (typeof window.XMLSerializer != "undefined") {
+            if (typeof window.XMLSerializer !== "undefined") {
                 return (new window.XMLSerializer()).serializeToString(xmlNode);
-            } else if (typeof xmlNode.xml != "undefined") {
+            } else if (typeof xmlNode.xml !== "undefined") {
                 return xmlNode.xml;
             }
             return "";
@@ -257,8 +254,6 @@ define(function(require, exports, module) {
          * @param {Leaflet.Map} map
          */
         setMap : function (map) {
-            var self = this;
-
             this.map = map;
 
             this.markerClusters = new leaflet.MarkerClusterGroup({

@@ -42,7 +42,6 @@ public class PublishStatusInitializeThread extends AbstractRequestThread {
             Log.e(TAG, "PublishStatusInitializeThread error", e);
         }
 
-        publishStatus.isRefreshing = false;
         Log.i(TAG, "PublishStatusInitializeThread completed.");
     }
 }

@@ -14,7 +14,7 @@
     "assert": "~0.1.0",
     "foundation": "~5.4.5",
     "modernizr": "~2.8.3",
-    "layoutmanager": "~0.9.5",
+    "layoutmanager": "0.9.5",
     "jquery-validation": "~1.13.1",
     "animate.css": "~3.2.0",
     "jquery.panzoom": "~2.0.5",
