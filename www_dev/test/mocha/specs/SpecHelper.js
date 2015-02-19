@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var Class = require("modules/util/Class");
     var LoginModel = require("modules/model/LoginModel");
     var PersonalModel = require("modules/model/personal/PersonalModel");
+    var AbstractODataModel = require("modules/model/AbstractODataModel");
 
     /**
      * personium.ioの単体テストで必要となる共通処理(認証や、テストデータ作成、削除など)を、提供するクラスを作成する。
@@ -130,6 +131,37 @@ define(function(require, exports, module) {
             error : function() {
                 app.logger.debug("Failed creating personal data.");
                 // パーソナル情報新規登録に失敗
+                done();
+            }
+        });
+    };
+    /**
+     * テスト用の道場動画データを作成する
+     * @param {Function} done 処理が完了した際に呼び出されるコールバック関数。
+     * @memberOf SpecHelper#
+     */
+    SpecHelper.createDojoMovie = function(done) {
+        var model = new AbstractODataModel();
+        model.entity = "dojo_movie";
+        model.makeSaveData = function(saveData) {
+            saveData.__id = "dojo_movie1";
+            saveData.videoId = "NtUAbrgnmpM";
+            saveData.relationVideoId = "";
+            saveData.level = "0";
+            saveData.category = "";
+            saveData.sequence = "1";
+        };
+        model.save(null, {
+            success : function(model, response, options) {
+                app.logger.debug("Success creating dojo_movie data.");
+                // 道場動画情報新規登録成功
+                app.logger.debug("save dojo_movie model. __id: " + response.__id);
+                var testDataId = "dojo_movie1";
+                done(testDataId);
+            },
+            error : function() {
+                app.logger.debug("Failed creating dojo_movie data.");
+                // 道場動画情報新規登録に失敗
                 done();
             }
         });
