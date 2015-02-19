@@ -5,8 +5,6 @@ define(function(require) {
     var Or = require("modules/util/filter/Or");
     var Filter = require("modules/util/filter/Filter");
 
-    app.noRendering = true;
-
     describe("StartsWith", function() {
         it("TEST-01 StartsWith#expression", function() {
             var operator = new StartsWith("property", "abc");

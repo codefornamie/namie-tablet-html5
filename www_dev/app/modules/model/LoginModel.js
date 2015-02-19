@@ -10,7 +10,6 @@ define(function(require, exports, module) {
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
     var IsNull = require("modules/util/filter/IsNull");
-    var Log = require("modules/util/Logger");
 
     /**
      * ログイン画面のモデルクラスを作成する。
@@ -94,7 +93,7 @@ define(function(require, exports, module) {
          * @param {String} pw パスワード
          */
         certificationWithAccount : function(id, pw) {
-            Log.info("start certificationWithAccount");
+            app.logger.debug("start certificationWithAccount");
             var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
             dcContext.setAsync(true);
             var accessor = dcContext.asAccount(this.cellId, id, pw);
@@ -103,11 +102,11 @@ define(function(require, exports, module) {
             app.accessor = cellobj.accessor;
             app.box = targetBox;
             var token = cellobj.getAccessToken();
-            Log.info("token = " + token);
+            app.logger.debug("token = " + token);
             // app.pcsManager.setAccessToken(token);
             app.pcsManager.setTokenAndExpiresInValue(cellobj);
             // app.pcsManager.accessToken = token;
-            Log.info("end certificationWithAccount");
+            app.logger.debug("end certificationWithAccount");
         },
 
         /**
@@ -116,7 +115,7 @@ define(function(require, exports, module) {
          * @param {String} token アクセストークン
          */
         certificationWithToken : function() {
-            Log.info("set access token : " + app.pcsManager.accessToken);
+            app.logger.debug("set access token : " + app.pcsManager.accessToken);
             var dcContext = new dcc.DcContext(this.baseUrl, this.cellId);
             dcContext.setAsync(true);
             try {
@@ -124,9 +123,9 @@ define(function(require, exports, module) {
                 var targetBox = cellobj.box("data");
                 app.accessor = cellobj.accessor;
                 app.box = targetBox;
-                Log.info("personium certification success with token.");
+                app.logger.debug("personium certification success with token.");
             } catch (e) {
-                Log.info("certificate failure : " + e);
+                app.logger.debug("certificate failure : " + e);
             }
         },
 
@@ -141,7 +140,7 @@ define(function(require, exports, module) {
                 this.accountManager = window.plugins.accountmanager;
             }
             if (this.accountManager) {
-                Log.info("start regist account for AccountManager");
+                app.logger.debug("start regist account for AccountManager");
                 var param = {
                     baseUrl : this.baseUrl,
                     cellName : this.cellId,
@@ -149,14 +148,14 @@ define(function(require, exports, module) {
                     boxName : this.box
                 };
                 this.accountManager.addAccountExplicitly(this.packageName, id, pw, param, function(error, account) {
-                    Log.info("account manager addAccountExplicitly responsed");
+                    app.logger.debug("account manager addAccountExplicitly responsed");
                     if (error) {
                         this.onLogin("login failure : " + error);
                         return;
                     }
                 });
             } else {
-                Log.info("account manager undefined (not android)");
+                app.logger.debug("account manager undefined (not android)");
             }
         },
 
@@ -173,16 +172,16 @@ define(function(require, exports, module) {
          * @param {Function} onLogin 認証完了後に呼び出されるコールバック関数。
          */
         login : function(onLogin) {
-            Log.info("login method in LoginModel start");
+            app.logger.debug("login method in LoginModel start");
             this.onLogin = onLogin;
             try {
                 if (app.pcsManager.accessToken) {
-                    Log.info("app.pcsManager.accessToken is exist");
+                    app.logger.debug("app.pcsManager.accessToken is exist");
                     this.certificationWithToken();
                 } else {
                     var id = this.get("loginId");
                     var pw = this.get("encryptionPassword");
-                    Log.info("app.pcsManager.accessToken is null / loginId : " + id);
+                    app.logger.debug("app.pcsManager.accessToken is null / loginId : " + id);
                     if (!pw) {
                         // パスワードを暗号化
                         var shaPassword = "";
@@ -191,22 +190,22 @@ define(function(require, exports, module) {
                         pw = shaPassword.substr(0, 32);
                     }
                     this.certificationWithAccount(id, pw);
-                    Log.info("token certification success. start regist AccountManager");
+                    app.logger.debug("token certification success. start regist AccountManager");
                     app.pcsManager.registAccountManager(id, pw, function() {
-                        Log.info("regist account success");
+                        app.logger.debug("regist account success");
                     }, function(error) {
-                        Log.info("error regist account : " + error);
+                        app.logger.debug("error regist account : " + error);
                     });
                 }
             } catch (e) {
-                Log.info("login failure msg : " + e);
+                app.logger.debug("login failure msg : " + e);
                 var message = "";
                 if (e.name === "NetworkError" || e.name === "NETWORK_ERR") {
                     message = "ネットワーク接続エラーが発生しました。";
                 } else {
                     message = "ユーザーID、または、パスワードが正しくありません。";
                 }
-                Log.info("login exception : " + message);
+                app.logger.debug("login exception : " + message);
                 this.onLogin(message);
                 return;
             }
@@ -223,7 +222,7 @@ define(function(require, exports, module) {
          */
         loadPersonal : function(callback) {
             var collection = new PersonalCollection();
-            if (_.isEmpty(this.get("loginId"))) {
+            if (_.isEmpty(this.get("loginId")) && app.pcsManager.isAndroidDevice()) {
                 // AccountManager からログインIDを取得し、ログインモデルに設定する
                 var loginId = app.pcsManager.androidAccountManager.getAccountsByType(app.pcsManager.packageName,
                         $.proxy(function(res, accounts) {
@@ -249,30 +248,30 @@ define(function(require, exports, module) {
                         new Equal("loginId", this.get("loginId")), new IsNull("deletedAt")
                 ])
             ];
-            Log.info("personal collection fetch start");
+            app.logger.debug("personal collection fetch start");
             collection.fetch({
                 success : $.proxy(function() {
-                    Log.info("petsonal collection fetch success. count : " + collection.size());
+                    app.logger.debug("petsonal collection fetch success. count : " + collection.size());
                     if (collection.size() !== 0) {
-                        Log.info("already exist personal info");
+                        app.logger.debug("already exist personal info");
                         // 既にパーソナル情報が登録されている場合
                         app.user = collection.models[0];
                         callback();
                     } else {
-                        Log.info("Not found personal info.");
+                        app.logger.debug("Not found personal info.");
                         // パーソナル情報が登録されていない場合
                         var personalModel = new PersonalModel();
                         personalModel.set("loginId", this.get("loginId"));
                         personalModel.set("fontSize", "middle");
                         personalModel.save(null, {
                             success : $.proxy(function() {
-                                Log.info("personal info create success");
+                                app.logger.debug("personal info create success");
                                 // パーソナル情報新規登録成功
                                 app.user = personalModel;
                                 callback();
                             }, this),
                             error : $.proxy(function() {
-                                Log.info("personal info create faulure");
+                                app.logger.debug("personal info create faulure");
                                 // パーソナル情報新規登録に失敗
                                 callback("ユーザ情報の登録に失敗しました。再度ログインしてください。");
                                 app.logger.error("ユーザ情報の登録に失敗しました。再度ログインしてください。");
@@ -281,7 +280,7 @@ define(function(require, exports, module) {
                     }
                 }, this),
                 error : $.proxy(function() {
-                    Log.info("peronal collection fetch failure.");
+                    app.logger.debug("peronal collection fetch failure.");
                     // パーソナル情報検索に失敗
                     callback("ユーザ情報の取得に失敗しました。再度ログインしてください。");
                     app.logger.error("ユーザ情報の取得に失敗しました。再度ログインしてください。");

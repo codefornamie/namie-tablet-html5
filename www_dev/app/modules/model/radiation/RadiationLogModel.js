@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var Code = require("modules/util/Code");
 
     /**
      * 放射線量データのモデルクラスを作成する。
@@ -12,7 +13,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var RadiationLogModel = AbstractODataModel.extend({
-        entity : "radiation",
+        entity : "radiation_log",
 
         /**
          * 取得したOData情報のparse処理を行う。
@@ -32,6 +33,28 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         makeSaveData : function(saveData) {
+            saveData.date = this.get("date");
+            var latitude = null;
+            if (this.get("latitude")) {
+                latitude = Math.round(this.get("latitude") * Code.RAD_LAT_LONG_MAGNIFICATION);
+            }
+            saveData.latitude = latitude;
+            var longitude = null;
+            if (this.get("longitude")) {
+                longitude = Math.round(this.get("longitude") * Code.RAD_LAT_LONG_MAGNIFICATION);
+            }
+            saveData.longitude = longitude;
+            var altitude = null;
+            if (this.get("altitude")) {
+                altitude = Math.round(this.get("altitude") * Code.RAD_ALTITUDE_MAGNIFICATION);
+            }
+            saveData.altitude = altitude;
+            var value = null;
+            if (this.get("value")) {
+                value = Math.round(this.get("value") * Code.RAD_RADIATION_DOSE_MAGNIFICATION);
+            }
+            saveData.value = value;
+            saveData.collectionId = this.get("collectionId");
         },
 
         /**

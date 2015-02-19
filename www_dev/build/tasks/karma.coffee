@@ -61,6 +61,7 @@ module.exports = ->
         }
         { pattern: "bower_components/**/*.js", included: false }
         { pattern: "lib/**/*.js", included: false }
+        { pattern: "test/mocha/specs/*.js", included: false }
       ]
 
     # This creates a server that will automatically run your tests when you
