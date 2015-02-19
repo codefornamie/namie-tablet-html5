@@ -32,10 +32,6 @@ define(function(require, exports, module) {
          * </p>
          */
         afterRendered : function() {
-            if (this.model.get("type") === "1" || this.model.get("type") === "7" || this.model.get("type") === "8") {
-                // RSS収集記事は編集ボタンを非表示にする
-                this.$el.find("[data-article-edit-button]").hide();
-            }
             if (this.model.get("isRecommend")) {
                 // 今日のおすすめ記事フラグがある場合はラジオボタンを選択状態にする
                 this.$el.find("input[type='radio']").attr("checked", "checked");
