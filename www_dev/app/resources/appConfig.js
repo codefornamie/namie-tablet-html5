@@ -6,7 +6,7 @@ define(function(require, exports, module) {
             "boxName" : "data",
             "odataName" : "odata",
             "retryCount" : "3",
-            // view category (ex. news, dojo, letter, posting, ope ..).
+            // view category (ex. news, dojo, letter, rad, posting, ope ..).
             "mode" : "news"
         },
         "logger" : {
