@@ -13,12 +13,18 @@ define(function(require, exports, module) {
      */
     var RadiationClusterCollection = AbstractODataCollection.extend({
         model : RadiationClusterModel,
-        entity : "radiation",
-        condition : {
-            top : 1,
-            orderby : "dateTime desc",
-            filter : "station eq '浪江町役場'"
+        entity : "radiation_cluster",
+        /**
+         * 初期化処理
+         * @memberOf ArticleCollection#
+         */
+        initialize : function() {
+            this.condition = {
+                    top : 6,
+                    orderby : "createDate desc"
+            };
         },
+
         /**
          * 配列をマップに変換する。
          * 
@@ -27,8 +33,28 @@ define(function(require, exports, module) {
          * @return {Objecy} レスポンス情報
          * @memberOf RadiationClusterCollection#
          */
-        parseOData: function (response, options) {
-            var res = response.map(function (cluster) {
+        parseOData : function(response, options) {
+            // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
+            response = _.filter(response, function(ress) {
+                if (!ress.minLatitude || !ress.maxLatitude || !ress.minLongitude || !ress.maxLongitude ||
+                        !ress.averageValue || !ress.maxValue) {
+                    return false;
+                }
+                return true;
+            });
+            // ここまで
+            
+            
+            var res = response.map(function(cluster) {
+                // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
+                cluster.minLatitude = parseInt(cluster.minLatitude);
+                cluster.maxLatitude = parseInt(cluster.maxLatitude);
+                cluster.minLongitude = parseInt(cluster.minLongitude);
+                cluster.maxLongitude = parseInt(cluster.maxLongitude);
+                cluster.averageValue = parseInt(cluster.averageValue);
+                cluster.maxValue = parseInt(cluster.maxValue);
+                // ここまで
+
                 return _.extend(cluster, {
                     minLatitude : cluster.minLatitude / Math.pow(10, 6),
                     maxLatitude : cluster.maxLatitude / Math.pow(10, 6),
@@ -42,26 +68,7 @@ define(function(require, exports, module) {
             return res;
         },
 
-        // TODO: 開発用サーバにデータが入ったらこのメソッドは削除する
-        /**
-         * 開発用サーバにデータが無いのでダミーのsyncを利用する
-         */
-        sync : function (method, collection, opt) {
-            var self = this;
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/bIZCDwkkMO";
-
-            if (method === "read") {
-                collection.trigger("request", collection, null, opt);
-
-                return $.get(URL_DUMMY_JSON).done(function (data) {
-                    self.set(self.parseOData(data));
-                    self.trigger("sync", self, data, opt);
-                });
-            } else {
-                return AbstractODataCollection.prototype.sync.apply(this, arguments);
-            }
-        },
-
+        // TODO: 開発用サーバ
         /**
          * GeoJSON形式に変換する。
          * @return {Object}

@@ -13,12 +13,18 @@ define(function(require, exports, module) {
      */
     var RadiationLogCollection = AbstractODataCollection.extend({
         model : RadiationLogModel,
-        entity : "radiation",
-        condition : {
-            top : 1,
-            orderby : "dateTime desc",
-            filter : "station eq '浪江町役場'"
+        entity : "radiation_log",
+        /**
+         * 初期化処理
+         * @memberOf ArticleCollection#
+         */
+        initialize : function() {
+            this.condition = {
+                top : 10000,
+                orderby : "date desc"
+            };
         },
+
         /**
          * 配列をマップに変換する。
          * 
@@ -28,7 +34,25 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogCollection#
          */
         parseOData: function (response, options) {
+            // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
+            response = _.filter(response, function(ress) {
+                if (!ress.latitude || !ress.longitude || !ress.altitude || !ress.value) {
+                    return false;
+                }
+                return true;
+            });
+            // ここまで
+
+            
+            
             var res = response.map(function (log) {
+                // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
+                log.latitude = parseInt(log.latitude);
+                log.longitude = parseInt(log.longitude);
+                log.altitude = parseInt(log.altitude);
+                log.value = parseInt(log.value);
+                // ここまで
+
                 return _.extend(log, {
                     latitude : log.latitude / Math.pow(10, 6),
                     longitude : log.longitude / Math.pow(10, 6),
@@ -38,33 +62,6 @@ define(function(require, exports, module) {
             });
 
             return res;
-        },
-
-        // TODO: 開発用サーバにデータが入ったらこのメソッドは削除する
-        /**
-         * 開発用サーバにデータが無いのでダミーのsyncを利用する
-         *
-         * @return {undefined}
-         */
-        sync : function (method, collection, opt) {
-            var self = this;
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/cdPevbVobS";
-
-            if (method === "read") {
-                collection.trigger("request", collection, null, opt);
-
-                return $.get(URL_DUMMY_JSON).done(function (data) {
-                    data.forEach(function (log) {
-                        log.latitude = 35 * Math.pow(10, 6) + Math.random() * 5 * Math.pow(10, 6);
-                        log.longitude = 135 * Math.pow(10, 6) + Math.random() * 5 * Math.pow(10, 6);
-                    });
-
-                    self.set(self.parseOData(data));
-                    self.trigger("sync", self, data, opt);
-                });
-            } else {
-                return AbstractODataCollection.prototype.sync.apply(this, arguments);
-            }
         },
 
         /**
