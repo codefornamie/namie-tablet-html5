@@ -1,8 +1,7 @@
 define(function(require, exports, module) {
     "use strict";
 
-    var app = require("app");
-    var async = require("async");
+    var moment = require("moment");
     var leaflet = require("leaflet");
     var AbstractView = require("modules/view/AbstractView");
 
@@ -25,11 +24,47 @@ define(function(require, exports, module) {
          * @return {Object}
          */
         serialize : function () {
+            var clusterFeature = this.radiationClusterFeature;
+            var logFeatureCollection = this.radiationLogFeatureCollection;
+            var logFeature = this.radiationLogFeature;
+
+            var hasCollection = !!logFeatureCollection;
+            var date, dateStr, avg, max;
+            var stationType, numSample, sensorVendor, sensorModel, sensorSerialNo;
+
+            if (hasCollection) {
+                date = moment(clusterFeature.properties.startDate);
+                dateStr = date.format("YYYY/MM/DD");
+                avg = logFeatureCollection.features.reduce(function (total, feature) {
+                    return total + feature.properties.value;
+                }, 0) / logFeatureCollection.features.length;
+                max = _.max(logFeatureCollection.features, function (feature) {
+                    return feature.properties.value;
+                }).properties.value;
+            } else {
+                date = moment(logFeature.properties.date);
+                dateStr = date.format("YYYY/MM/DD HH:mm:ss");
+                avg = logFeature.properties.value;
+                max = logFeature.properties.value;
+            }
+
+            stationType = clusterFeature.properties.isFixedStation ? "固定局" : "移動局";
+            numSample = clusterFeature.properties.numSample;
+            sensorVendor = clusterFeature.properties.sensorVendor;
+            sensorModel = clusterFeature.properties.sensorModel;
+            sensorSerialNo = clusterFeature.properties.sensorSerialNo;
+
             return {
-                clusterFeature : this.radiationClusterFeature,
-                hasCollection : !!this.radiationLogFeatureCollection,
-                logFeatureCollection : this.radiationLogFeatureCollection,
-                logFeature : this.radiationLogFeature
+                data : {
+                    dateStr : dateStr,
+                    avg : avg,
+                    max : max,
+                    stationType : stationType,
+                    numSample : numSample,
+                    sensorVendor : sensorVendor,
+                    sensorModel : sensorModel,
+                    sensorSerialNo : sensorSerialNo
+                }
             };
         },
 

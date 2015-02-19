@@ -1,24 +1,18 @@
 <div class="rad-popup">
     <div class="rad-popup__header">
         <div class="rad-popup__date">
-            <% if (hasCollection) { %>
-                <%= moment(clusterFeature.properties.startDate).format("YYYY/MM/DD") %>
-                〜
-                <%= moment(clusterFeature.properties.endDate).format("YYYY/MM/DD") %>
-            <% } else { %>
-                <%= moment(logFeature).format("YYYY/MM/DD HH:mm:ss") %>
-            <% } %>
+            <%= data.dateStr %>
         </div>
 
         <h4 class="rad-popup__average-value">
             平均:
-            <b><%= clusterFeature.properties.averageValue %></b>
+            <b><%= data.avg %></b>
             μSv/h
         </h4>
 
         <p class="rad-popup__max-value">
             最大:
-            <b><%= clusterFeature.properties.maxValue %></b>
+            <b><%= data.max %></b>
             μSv/h
         </p>
     </div>
@@ -27,27 +21,27 @@
         <ul>
             <li>
                 タイプ:
-                <%= clusterFeature.properties.isFixedStation ? "固定局" : "移動局" %>
+                <%= data.stationType %>
             </li>
 
             <li>
                 測定標本数:
-                <%= clusterFeature.properties.numSample %>
+                <%= data.numSample %>
             </li>
 
             <li>
                 測定機器メーカー:
-                <%= clusterFeature.properties.sensorVendor %>
+                <%= data.sensorVendor %>
             </li>
 
             <li>
                 測定機器モデル:
-                <%= clusterFeature.properties.sensorModel %>
+                <%= data.sensorModel %>
             </li>
 
             <li>
                 測定機器シリアルNo.:
-                <%= clusterFeature.properties.sensorSerialNo %>
+                <%= data.sensorSerialNo %>
             </li>
         </ul>
     </div>
