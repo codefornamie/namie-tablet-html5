@@ -14,6 +14,10 @@ define(function(require, exports, module) {
      */
     var AbstractODataCollection = AbstractCollection.extend({
         /**
+         * searchで分割して撮る際のリクエストあたりの取得件数。
+         */
+        NUM_DOCS_PER_REQUEST : 10000,
+        /**
          * セルID
          * @memberOf AbstractODataCollection#
          */
@@ -123,7 +127,9 @@ define(function(require, exports, module) {
 
                     def.reject(res);
                 } else if (options.success) {
-                    if (res.bodyAsJson) {
+                    if (res.concatedJson) {
+                        json = res.concatedJson;
+                    } else if (res.bodyAsJson) {
                         json = res.bodyAsJson();
                     }
                     if (json && json.d) {
@@ -171,12 +177,52 @@ define(function(require, exports, module) {
         search : function(method, model, options, complete) {
             app.logger.info("AbstractODataCollection search");
             this.condition = Filter.searchCondition(this.condition);
-            this.entityset.query().filter(this.condition.filter).top(this.condition.top).orderby(this.condition.orderby).run({
-                complete : function(response) {
-                    app.logger.info("AbstractODataCollection search complete");
-                    complete(response);
-                }
-            });
+            // 件数が多い場合は、分割してリクエストを投げるが、内部的に__idでソートが必要なため、外からorderbyを指定できない。
+            console.assert(this.condition.top <= this.NUM_DOCS_PER_REQUEST || !this.condition.orderby,
+                    "can't spesify $orderby when $top over " + this.NUM_DOCS_PER_REQUEST + ".");
+            if (this.condition.top <= this.NUM_DOCS_PER_REQUEST) {
+                this.entityset.query().filter(this.condition.filter).top(this.condition.top).orderby(
+                        this.condition.orderby).run({
+                    complete : function(response) {
+                        app.logger.info("AbstractODataCollection search complete");
+                        complete(response);
+                    }
+                });
+            } else {
+                // 件数が多い場合は分割してリクエストを投げる。
+                (function findLoop(savedResults, nextId) {
+                    savedResults = savedResults || [];
+                    nextId = nextId || "0";
+                    var filter;
+                    if (this.condition) {
+                        filter = this.condition.filter;
+                    }
+                    if (filter) {
+                        filter = "(" + filter + ") and __id gt '" + nextId + "'";
+                    } else {
+                        filter = "__id gt '" + nextId + "'";
+                    }
+                    this.entityset.query().filter(filter).top(this.NUM_DOCS_PER_REQUEST).orderby("__id").run({
+                        complete : function(res) {
+                            app.logger.info("AbstractODataCollection search part complete");
+                            if (res.error) {
+                                complete(res);
+                                return;
+                            }
+                            var json = res.bodyAsJson();
+                            Array.prototype.push.apply(savedResults, json.d.results);
+                            if (json.d.results.length < this.NUM_DOCS_PER_REQUEST) {
+                                json.d.results = savedResults;
+                                res.concatedJson = json;
+                                app.logger.info("AbstractODataCollection search all complete");
+                                complete(res);
+                                return;
+                            }
+                            findLoop.bind(this)(savedResults, json.d.results[this.NUM_DOCS_PER_REQUEST - 1].__id);
+                        }.bind(this)
+                    });
+                }).bind(this)();
+            }
         }
     });
 
