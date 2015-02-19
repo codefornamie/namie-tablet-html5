@@ -46,20 +46,14 @@ define(function(require, exports, module) {
          * @memberOf RadMapView#
          */
         renderLayers : function () {
-            var map, svg, container;
+            var map;
 
             this.initMap();
-            this.initSVGLayer();
 
             map = this.map;
-            svg = this.svg;
-            container = this.container;
 
             this.layers.forEach(function (v) {
                 v.setMap(map);
-                v.setSVG(svg);
-                v.setContainer(container);
-                v.radiationLogCollection.fetch();
             });
         },
 
@@ -81,32 +75,7 @@ define(function(require, exports, module) {
                 }
             ).addTo(map);
 
-            map.on("viewreset", this.fitBounds.bind(this));
-
             this.map = map;
-        },
-
-        /**
-         * Leafletにオーバーラップさせるグラフのレイヤを初期化する
-         * @memberOf RadMapView#
-         */
-        initSVGLayer : function () {
-            console.assert(this.map, "should call initSVGLayer after initMap");
-
-            var map = this.map;
-            var svg = d3.select(map.getPanes().overlayPane).append("svg");
-            var container;
-
-            // TODO: fit svg bounds
-            svg.attr({
-                "width" : 10000,
-                "height" : 10000
-            });
-
-            container = svg.append("g").attr("class", "leaflet-zoom-hide");
-
-            this.svg = svg;
-            this.container = container;
         },
 
         /**
@@ -161,6 +130,7 @@ define(function(require, exports, module) {
             var features = _(this.layers).map(function (v) {
                 return v.radiationLogCollection.toGeoJSON().features;
             }).flatten(true).value();
+
             var featureCollection = {
                 "type" : "FeatureCollection",
                 "features" : features
@@ -170,40 +140,25 @@ define(function(require, exports, module) {
         },
 
         /**
-         * SVG要素をマッピングされているデータにfitさせる
-         * @memberOf RadMapView#
-         */
-        fitBounds : function () {
-            var featureCollection = this.generateFeatureCollection();
-            var bounds = GeoUtil.computeBounds(this.map, featureCollection);
-            var topLeft = bounds[0];
-            var bottomRight = bounds[1];
-            var AREA_MARGIN = 100;
-
-            this.svg
-                .attr("width", bottomRight[0] - topLeft[0] + AREA_MARGIN * 2)
-                .attr("height", bottomRight[1] - topLeft[1] + AREA_MARGIN * 2)
-                .style("left", topLeft[0] - AREA_MARGIN + "px")
-                .style("top", topLeft[1] - AREA_MARGIN + "px");
-
-            this.container.attr("transform", "translate(" + (-topLeft[0] + AREA_MARGIN) + "," + (-topLeft[1] + AREA_MARGIN) + ")");
-        },
-
-        /**
          * クラスターモデルの表示状態が変更されたら呼ばれる
          * @memberOf RadMapView#
          */
         onChangeClusterModel : function (model) {
-            var isHidden = model.get("hidden");
-
-            if (!isHidden) {
-                // 表示状態に切り替わったら地図の中心をクラスターの地点へ移動する
-                var feature = model.toGeoJSON();
-                var lat = feature.geometry.coordinates[1];
-                var lng = feature.geometry.coordinates[0];
-
-                this.map.panTo([lat, lng]);
+            if (model.get("hidden")) {
+                return;
             }
+
+            this.layers.forEach(function (layerView) {
+                if (layerView.radiationClusterModel.cid === model.cid) {
+                    return;
+                }
+
+                layerView.radiationClusterModel.set(
+                    {
+                        hidden : true
+                    }
+                );
+            });
         },
 
         /**
@@ -223,10 +178,7 @@ define(function(require, exports, module) {
                 radiationClusterModel : model
             });
 
-            // 試作検証用のため、1件のみ適用する
-            if (this.layers.length === 0) {
-                this.layers.push(layerView);
-            }
+            this.layers.push(layerView);
         },
 
         /**

@@ -54,7 +54,7 @@ define(function(require, exports, module) {
             this.isHidden = false;
             this.radiationClusterModel = param.radiationClusterModel;
 
-            this.initCollection();
+            //this.initCollection();
             this.initEvents();
 
             //this.radiationLogCollection.fetch();
@@ -63,11 +63,25 @@ define(function(require, exports, module) {
         /**
          * radiationClusterModelを元にradiationLogCollectionを初期化する
          * @memberOf RadMapLayerView#
+         * @param {Function} callback
          */
-        initCollection : function () {
+        initCollection : function (callback) {
+            if (this.radiationLogCollection) {
+                callback && callback(null);
+                return;
+            }
+
             this.radiationLogCollection = new RadiationLogCollection({
                 __id : this.radiationClusterModel.get("collectionId")
             });
+
+            this.listenTo(this.radiationLogCollection, "request", this.onRequestCollection);
+            this.listenTo(this.radiationLogCollection, "add", this.onAddCollection);
+            this.listenTo(this.radiationLogCollection, "sync", this.onSyncCollection);
+
+            this.radiationLogCollection
+                .fetch()
+                .then(callback);
         },
 
         /**
@@ -76,9 +90,6 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(this.radiationClusterModel, "change:hidden", this.onChangeClusterModel);
-            this.listenTo(this.radiationLogCollection, "request", this.onRequestCollection);
-            this.listenTo(this.radiationLogCollection, "add", this.onAddCollection);
-            this.listenTo(this.radiationLogCollection, "sync", this.onSyncCollection);
         },
 
         /**
@@ -89,18 +100,19 @@ define(function(require, exports, module) {
          */
         draw : function () {
             console.assert(this.map, "should call setMap before drawing");
-            console.assert(this.container, "should call setContainer before drawing");
 
             var self = this;
             var markerClusters = this.markerClusters;
 
             this.radiationLogCollection.each(function(model) {
                 var marker = leaflet.geoJson(model.toGeoJSON(), {
-                    pointToLayer : self.pointToLayer
+                    pointToLayer : self.pointToLayer.bind(self)
                 });
 
                 markerClusters.addLayer(marker);
             });
+
+            this.map.fitBounds(markerClusters.getBounds());
         },
 
         /**
@@ -114,10 +126,13 @@ define(function(require, exports, module) {
         pointToLayer : function(feature, latLng) {
             var iconDim = 20;
             var html, icon, marker;
-            var containerElement = document.createElement("div");
-            var container = d3.select(containerElement)
-                .attr("width", iconDim)
-                .attr("height", iconDim);
+            var $iconRoot = $("<div>");
+            var $container = $("<div>", {
+                "class" : "layer-" + this.cid
+            }).appendTo($iconRoot);
+            var container = d3.select($container[0])
+                .attr("width", 40)
+                .attr("height", 40);
 
             container.append("div")
                 .style({
@@ -136,7 +151,7 @@ define(function(require, exports, module) {
                     }
                 });
 
-            html = $(containerElement).html();
+            html = $iconRoot.html();
             icon = new leaflet.DivIcon({
                 html : html,
                 className : "marker",
@@ -160,8 +175,11 @@ define(function(require, exports, module) {
         defineClusterIcon : function(cluster) {
             var iconDim = 40;
             var html, icon;
-            var containerElement = document.createElement("div");
-            var container = d3.select(containerElement)
+            var $iconRoot = $("<div>");
+            var $container = $("<div>", {
+                "class" : "layer-" + this.cid
+            }).appendTo($iconRoot);
+            var container = d3.select($container[0])
                 .attr("width", 40)
                 .attr("height", 40);
 
@@ -192,7 +210,7 @@ define(function(require, exports, module) {
                 })
                 .text(cluster.getChildCount());
 
-            html = $(containerElement).html();
+            html = $iconRoot.html();
             icon = new leaflet.DivIcon({
                 html : html,
                 className : "marker-cluster",
@@ -222,7 +240,17 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         show : function () {
+            var self = this;
+
             $(".layer-" + this.cid).show();
+
+            this.initCollection(function (err) {
+                var clusterBounds = self.markerClusters.getBounds();
+                var center = clusterBounds.getCenter();
+
+                self.map.panTo(center);
+            });
+
             this.isHidden = false;
         },
 
@@ -233,6 +261,7 @@ define(function(require, exports, module) {
          */
         hide : function () {
             $(".layer-" + this.cid).hide();
+
             this.isHidden = true;
         },
 
@@ -245,6 +274,18 @@ define(function(require, exports, module) {
                 this.show();
             } else {
                 this.hide();
+            }
+        },
+
+        /**
+         * 表示状態を全マーカー・クラスタに反映する
+         * @memberOf RadMapLayerView#
+         */
+        updateVisibility : function () {
+            if (this.isHidden) {
+                this.hide();
+            } else {
+                this.show();
             }
         },
 
@@ -265,26 +306,9 @@ define(function(require, exports, module) {
             });
 
             this.markerClusters.on("clusterclick", this.onClusterClick.bind(this));
+            this.map.on("moveend", this.updateVisibility.bind(this));
 
             map.addLayer(this.markerClusters);
-        },
-
-        /**
-         * Viewがレンダリングされる先のsvgをsetする
-         * @memberOf RadMapLayerView#
-         * @param {D3.Selection} svg
-         */
-        setSVG : function (svg) {
-            this.svg = svg;
-        },
-
-        /**
-         * Viewがレンダリングされる先のcontainerをsetする
-         * @memberOf RadMapLayerView#
-         * @param {D3.Selection} container
-         */
-        setContainer : function (container) {
-            this.container = container;
         },
 
         /**
@@ -293,11 +317,12 @@ define(function(require, exports, module) {
          */
         onChangeClusterModel : function () {
             var isHidden = this.radiationClusterModel.get("hidden");
+            var isFirstChange = (this.radiationClusterModel.previous("hidden") === undefined);
 
             if (isHidden) {
                 this.hide();
             } else {
-                this.show();
+                this.show(isFirstChange);
             }
         },
 
