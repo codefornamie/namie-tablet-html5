@@ -109,6 +109,8 @@ define(function(require, exports, module) {
                     pointToLayer : self.pointToLayer.bind(self)
                 });
 
+                marker.on("click", self.onMarkerClick.bind(self));
+
                 markerClusters.addLayer(marker);
             });
 
@@ -131,8 +133,8 @@ define(function(require, exports, module) {
                 "class" : "layer-" + this.cid
             }).appendTo($iconRoot);
             var container = d3.select($container[0])
-                .attr("width", 40)
-                .attr("height", 40);
+                .attr("width", iconDim)
+                .attr("height", iconDim);
 
             container.append("div")
                 .style({
@@ -365,6 +367,28 @@ define(function(require, exports, module) {
                 data : {
                     radiationClusterFeature : this.radiationClusterModel.toGeoJSON(),
                     radiationLogFeatureCollection : fcol
+                },
+
+                position : ev.latlng
+            });
+
+            popupView.setMap(this.map);
+            popupView.show();
+        },
+
+        /**
+         * onMarkerClick
+         * @memberOf RadMapLayerView#
+         * @param {Object} ev
+         */
+        onMarkerClick : function (ev) {
+            var marker = ev.layer;
+
+            var popupView = new RadPopupView({
+                data : {
+                    radiationClusterFeature : this.radiationClusterModel.toGeoJSON(),
+                    radiationLogFeatureCollection : null,
+                    radiationLogFeature : marker.feature
                 },
 
                 position : ev.latlng

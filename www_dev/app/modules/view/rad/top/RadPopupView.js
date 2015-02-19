@@ -27,7 +27,9 @@ define(function(require, exports, module) {
         serialize : function () {
             return {
                 clusterFeature : this.radiationClusterFeature,
-                logFeatureCollection : this.radiationLogFeatureCollection
+                hasCollection : !!this.radiationLogFeatureCollection,
+                logFeatureCollection : this.radiationLogFeatureCollection,
+                logFeature : this.radiationLogFeature
             };
         },
 
@@ -62,6 +64,7 @@ define(function(require, exports, module) {
             this.data = param.data;
             this.radiationClusterFeature = this.data.radiationClusterFeature;
             this.radiationLogFeatureCollection = this.data.radiationLogFeatureCollection;
+            this.radiationLogFeature = this.data.radiationLogFeature;
 
             this.initEvents();
 

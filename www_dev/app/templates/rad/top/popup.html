@@ -1,9 +1,13 @@
 <div class="rad-popup">
     <div class="rad-popup__header">
         <div class="rad-popup__date">
-            <%= moment(clusterFeature.properties.startDate).format("YYYY/MM/DD") %>
-            〜
-            <%= moment(clusterFeature.properties.endDate).format("YYYY/MM/DD") %>
+            <% if (hasCollection) { %>
+                <%= moment(clusterFeature.properties.startDate).format("YYYY/MM/DD") %>
+                〜
+                <%= moment(clusterFeature.properties.endDate).format("YYYY/MM/DD") %>
+            <% } else { %>
+                <%= moment(logFeature).format("YYYY/MM/DD HH:mm:ss") %>
+            <% } %>
         </div>
 
         <h4 class="rad-popup__average-value">
@@ -47,22 +51,4 @@
             </li>
         </ul>
     </div>
-
-    <ul class="rad-log-list">
-        <% logFeatureCollection.features.forEach(function (log) { %>
-            <li class="clearfix">
-                <div class="pull-right">
-                    <small>
-                        <%= moment(log.properties.date).format("YYYY/MM/DD") %>
-                    </small>
-                </div>
-
-                <div>
-                    <span>
-                        <%= log.properties.value %> μSv/h
-                    </span>
-                </div>
-            </li>
-        <% }) %>
-    </ul>
 </div>
