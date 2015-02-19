@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var async = require("async");
     var Class = require("modules/util/Class");
     var LoginModel = require("modules/model/LoginModel");
+    var PersonalModel = require("modules/model/personal/PersonalModel");
 
     /**
      * personium.ioの単体テストで必要となる共通処理(認証や、テストデータ作成、削除など)を、提供するクラスを作成する。
@@ -108,6 +109,30 @@ define(function(require, exports, module) {
             done();
         });
     };
-
+    /**
+     * テスト用のパーソナルデータを作成する
+     * @param {Function} done 処理が完了した際に呼び出されるコールバック関数。
+     * @memberOf SpecHelper#
+     */
+    SpecHelper.createPersonalData = function(done) {
+        var model = new PersonalModel();
+        
+        model.set("loginId", SpecHelper.TEST_USER);
+        model.set("fontSize", "middle");
+        model.save(null, {
+            success : function(model, response, options) {
+                app.logger.debug("Success creating personal data.");
+                // パーソナル情報新規登録成功
+                app.logger.debug("save personal model. __id: " + response.__id);
+                var testDataId = response.__id;
+                done(testDataId);
+            },
+            error : function() {
+                app.logger.debug("Failed creating personal data.");
+                // パーソナル情報新規登録に失敗
+                done();
+            }
+        });
+    };
     module.exports = SpecHelper;
 });
