@@ -49,7 +49,11 @@ define(function(require) {
             // 変更されたかどうかの確認はTEST-05で実施
             setTimeout(done, 1000);
         });
-        it("TEST-05 PersonalModel#fetch パーソナル情報のshowLastPublishedが更新されていることを確認する", function(done) {
+        it("TEST-05 PersonalModel#hasRole ユーザーのロール情報が取得できることを確認する", function() {
+            var role = fetcheModel.hasRole("admin");
+            assert.equal(role, false, "hasRole is correct.");
+        });
+        it("TEST-06 PersonalModel#fetch パーソナル情報のshowLastPublishedが更新されていることを確認する", function(done) {
             fetcheModel = new PersonalModel();
             fetcheModel.set("__id", testDataId);
 
@@ -62,7 +66,7 @@ define(function(require) {
                 }
             });
         });
-        it("TEST-06 PersonalModel#destory パーソナル情報の削除ができることを確認する", function(done) {
+        it("TEST-07 PersonalModel#destory パーソナル情報の削除ができることを確認する", function(done) {
             fetcheModel.destroy({
                 success : function(model, response, options) {
                     assert.ok(true, "Success delete test data.");
