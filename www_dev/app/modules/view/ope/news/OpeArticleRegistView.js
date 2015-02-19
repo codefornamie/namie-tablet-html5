@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var OpeArticleRegistConfirmView = require("modules/view/ope/news/OpeArticleRegistConfirmView");
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
     var vexDialog = require("vexDialog");
+    var Code = require("modules/util/Code");
 
     /**
      * 記事新規登録・編集画面のViewクラス
@@ -161,6 +162,169 @@ define(function(require, exports, module) {
             } else {
                 app.router.go("ope-top", this.targetDate);
             }
+        },
+
+        /**
+         * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * @memberOf OpeArticleRegistView#
+         */
+        afterRendered : function() {
+            $("#snap-content").scrollTop(0);
+
+            // 記事カテゴリ選択肢
+            var mapCategory = _.indexBy(Code.ARTICLE_CATEGORY_LIST, "key");
+            _.each(Code.ARTICLE_CATEGORY_LIST_BY_MODE[app.config.basic.mode], function(key) {
+                var category = mapCategory[key];
+                var option = $("<option>");
+                option.attr("value", category.key);
+                option.text((category.valueByMode ? category.valueByMode[app.config.basic.mode] : null) ||
+                        category.value);
+                option.data("site", category.value);
+                $("#articleCategory").append(option);
+            });
+
+            if (this.model) {
+                // 編集時
+                this.setData();
+            } else {
+                var tomorrow = DateUtil.addDay(new Date(), 1);
+                $("#articleRangeDate1").val(DateUtil.formatDate(tomorrow, "yyyy-MM-dd"));
+                this.insertView("#fileArea", new ArticleRegistFileItemView()).render();
+
+                // 記事カテゴリ初期値
+                if (this.articleCategory) {
+                    $("#articleCategory").val(this.articleCategory);
+                }
+                // レポートを書く場合
+                if (this.parentModel) {
+                    $("#articleTitle").val(this.parentModel.get("title") + "の報告");
+                    $("#articleDate1").val(this.parentModel.get("startDate"));
+                    if (this.parentModel.get("endDate")) {
+                        $("#articleMultiDate").attr("checked", "checked");
+                        $("#articleDate2").val(this.parentModel.get("endDate"));
+                    }
+                    $("#articleTime1").val(this.parentModel.get("startTime"));
+                    $("#articleTime2").val(this.parentModel.get("endTime"));
+                    $("#articlePlace").val(this.parentModel.get("place"));
+                    $("#articleContact").val(this.parentModel.get("contactInfo"));
+                }
+            }
+
+            if (this.model.get("type") === "1" || this.model.get("type") === "7" || this.model.get("type") === "8") {
+                this.isMinpoArticle = this.model.isMinpoScraping();
+                this.showImage();
+                this.afterRenderCommon();
+                this.hideLoading();
+            }
+            this.chageMultiDateCheckbox();
+            this.onChangeCategory();
+        },
+
+        /**
+         * このViewが表示している記事に関連する画像データの取得と表示を行う。
+         * @memberOf OpeArticleRegistView#
+         */
+        showImage : function() {
+            var self = this;
+            var imageElems = $(this.el).find("img");
+
+            if (this.isMinpoArticle) {
+                // この記事のimg要素にはWebDAVのパスが設定されているため、取得しにいく
+                _.each(imageElems, function(imageElement) {
+                    var imageUrl = $(imageElement).attr("src");
+                    this.showPIOImage($(imageElement), {
+                        imageUrl : imageUrl
+                    }, true, $.proxy(this.onClickImage, this));
+                }.bind(this));
+            } else {
+                this.setColorbox(imageElems);
+            }
+
+            var articleImage = $(this.el).find(".articleDetailImage");
+
+            if (this.model.get("imageUrl")) {
+                articleImage.on("error", function() {
+                    articleImage.hide();
+                });
+                var imageUrl = this.model.get("imageUrl");
+                this.showPIOImage(articleImage, {
+                    imageUrl : imageUrl
+                }, true, $.proxy(this.onClickImage, this));
+            } else {
+                // ArticleListViewでiscrollを初期化する際に
+                // 記事内のimgの読み込みを待機しているので
+                // このimgは決して読み込まれないことを通知する
+                articleImage.trigger('error', "this image will never be loaded");
+                $(this.el).find(".articleDetailImageArea").hide();
+            }
+
+            if (this.model.get("imageUrl")) {
+                $(this.el).find("#nehan-articleDetailImage").parent().css("width", "auto");
+                $(this.el).find("#nehan-articleDetailImage").parent().css("height", "auto");
+                $(this.el).find("#nehan-articleDetailImage").css("width", "auto");
+                $(this.el).find("#nehan-articleDetailImage").css("height", "auto");
+            }
+        },
+
+        /**
+         * Viewの秒が処理の後の、記事表示処理で共通する処理を行う。
+         * <p>
+         * 以下の処理を行う。
+         * <ul>
+         * <li>お気に入りボタンの表示・非表示判定</li>
+         * <li>タグの表示</li>
+         * <li>画像クリックイベントのバインド<br/> 画像クリック時に、対象画像の保存処理を行うためのイベントをバインドする。 </li>
+         * </p>
+         * @memberOf OpeArticleRegistView#
+         */
+        afterRenderCommon : function() {
+            // 既にお気に入り登録されている記事のお気に入りボタンを非表示にする
+            if (this.model.get("isFavorite")) {
+                this.$el.find('[data-favorite-register-button]').hide();
+            } else {
+                this.$el.find('[data-favorite-delete-button]').hide();
+            }
+            if (this.model.get("isMyRecommend")) {
+                this.$el.find('[data-recommend-register-button]').hide();
+            } else {
+                this.$el.find('[data-recommend-delete-button]').hide();
+            }
+            $(".panzoom-elements").panzoom({
+                minScale : 1,
+                contain : "invert"
+            });
+        },
+
+        /**
+         * colorboxの設定を行う
+         * @param {Array} imageElems img要素の配列
+         * @memberOf OpeArticleRegistView#
+         */
+        setColorbox : function(imageElems) {
+            imageElems.each(function() {
+                if ($(this).attr("src")) {
+                    $(this).wrap("<a class='expansionPicture' href='" + $(this).attr("src") + "'></a>");
+                }
+            });
+            $(this.el).find(".expansionPicture").colorbox({
+                closeButton : false,
+                current : "",
+                photo : true,
+                maxWidth : "83%",
+                maxHeight : "100%",
+                onComplete : $.proxy(function() {
+                    $("#cboxOverlay").append("<button id='cboxCloseButton' class='small button'>閉じる</button>");
+                    $("#cboxOverlay").append("<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                    $("#cboxCloseButton").click(function() {
+                        $.colorbox.close();
+                    });
+                    $("#cboxSaveButton").click($.proxy(this.onClickImage, this));
+                }, this),
+                onClosed : function() {
+                    $("#cboxSaveButton").remove();
+                    $("#cboxCloseButton").remove();
+                }
+            });
         }
     });
     module.exports = OpeArticleRegistView;

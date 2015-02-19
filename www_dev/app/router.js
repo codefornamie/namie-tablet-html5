@@ -482,7 +482,7 @@ define(function(require, exports, module) {
          */
         opeArticleRegist : function(options) {
             app.logger.debug('[route] opeArticleRegist');
-            var opeArticleRegistView = new OpeArticleRegistView(options);            
+            var opeArticleRegistView = new OpeArticleRegistView(options);
             if(options.model){
                 if (options.model.get("type") === "1" || options.model.get("type") === "7" || options.model.get("type") === "8") {
                     opeArticleRegistView.template = require("ldsh!templates/{mode}/news/articleRegistPostPeriod");
