@@ -5,20 +5,28 @@ define(function(require) {
     var SpecHelper = require("specHelper");
 
     var app = require("app");
-    var AchievementModel = require("modules/model/misc/AchievementModel");
+    var ArticleModel = require("modules/model/article/ArticleModel");
+    var Code = require("modules/util/Code");
 
-    describe("AchievementModel", function() {
+    describe("ArticleModel", function() {
         before(function(done) {
             SpecHelper.before(this, done);
         });
 
         var testDataId;
-        it("TEST-01 AchievementModel#save", function(done) {
-            var model = new AchievementModel();
-            model.set("type", "dojo_solved");
-            model.set("action", "youtube-videoId");
-            model.set("count", "1");
-            model.set("lastActionDate", new Date().toISOString());
+        it("TEST-01 ArticleModel#save", function(done) {
+
+            var model = new ArticleModel();
+            var type = "6";
+            var category = _.find(Code.ARTICLE_CATEGORY_LIST, function(category) {
+                return category.key === type;
+            });
+            var publishedAt = moment(new Date()).format("YYYY-MM-DD");
+
+            model.set("type", type);
+            model.set("site", category.value);
+            model.set("title", "UnitTestData");
+            model.set("publishedAt", publishedAt);
 
             model.save(null, {
                 success : function(model, response, options) {
@@ -33,8 +41,8 @@ define(function(require) {
             });
         });
         var fetcheModel;
-        it("TEST-02 AchievementModel#fetch", function(done) {
-            fetcheModel = new AchievementModel();
+        it("TEST-02 ArticleModel#fetch", function(done) {
+            fetcheModel = new ArticleModel();
             fetcheModel.set("__id", testDataId);
 
             fetcheModel.fetch({
@@ -45,7 +53,7 @@ define(function(require) {
                 }
             });
         });
-        it("TEST-03 AchievementModel#destory", function(done) {
+        it("TEST-03 ArticleModel#destory", function(done) {
             fetcheModel.destroy({
                 success : function(model, response, options) {
                     assert.ok(true, "Success delete test data.");
