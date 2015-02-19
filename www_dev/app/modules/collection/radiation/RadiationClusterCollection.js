@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
+    var Equal = require("modules/util/filter/Equal");
 
     /**
      * 放射線量データのコレクションクラス
@@ -20,8 +21,8 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             this.condition = {
-                    top : 6,
-                    orderby : "createDate desc"
+                    top : 10,
+                    orderby : "createdAt desc"
             };
         },
 
@@ -66,6 +67,15 @@ define(function(require, exports, module) {
             });
 
             return res;
+        },
+        /**
+         * 自身がアップロードしたclusterの検索条件設定を行う
+         * @memberOf RadiationClusterCollection#
+         */
+        setSearchConditionByMyself : function() {
+            this.condition.filters = [
+                new Equal("userId", app.user.get("__id"))
+            ];
         },
 
         // TODO: 開発用サーバ

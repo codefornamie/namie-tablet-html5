@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var RadiationLogModel = require("modules/model/radiation/RadiationLogModel");
+    var Equal = require("modules/util/filter/Equal");
 
     /**
      * 放射線量データのコレクションクラス
@@ -36,7 +37,7 @@ define(function(require, exports, module) {
         parseOData: function (response, options) {
             // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
             response = _.filter(response, function(ress) {
-                if (!ress.latitude || !ress.longitude || !ress.altitude || !ress.value) {
+                if (!ress.latitude || !ress.longitude || !ress.value) {
                     return false;
                 }
                 return true;
@@ -49,7 +50,7 @@ define(function(require, exports, module) {
                 // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
                 log.latitude = parseInt(log.latitude);
                 log.longitude = parseInt(log.longitude);
-                log.altitude = parseInt(log.altitude);
+                log.altitude = parseInt(log.altitude) || 0;
                 log.value = parseInt(log.value);
                 // ここまで
 
@@ -62,6 +63,15 @@ define(function(require, exports, module) {
             });
 
             return res;
+        },
+        /**
+         * clusterに紐付いたradiationLogの検索条件設定を行う
+         * @memberOf RadiationLogCollection#
+         */
+        setSearchConditionIncludeInCluster : function() {
+            this.condition.filters = [
+                new Equal("collectionId", this.collectionId)
+            ];
         },
 
         /**

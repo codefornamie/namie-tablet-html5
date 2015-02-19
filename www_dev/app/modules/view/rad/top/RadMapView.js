@@ -123,7 +123,33 @@ define(function(require, exports, module) {
         /**
          * あるClusterModelが表示されたら、それ以外は非表示とする
          * @memberOf RadMapView#
+<<<<<<< Upstream, based on develop
          * @param {RadiationClusterModel} model
+=======
+         */
+        fitBounds : function () {
+            var featureCollection = this.generateFeatureCollection();
+            if (!featureCollection) {
+                return;
+            }
+            var bounds = GeoUtil.computeBounds(this.map, featureCollection);
+            var topLeft = bounds[0];
+            var bottomRight = bounds[1];
+            var AREA_MARGIN = 100;
+
+            this.svg
+                .attr("width", bottomRight[0] - topLeft[0] + AREA_MARGIN * 2)
+                .attr("height", bottomRight[1] - topLeft[1] + AREA_MARGIN * 2)
+                .style("left", topLeft[0] - AREA_MARGIN + "px")
+                .style("top", topLeft[1] - AREA_MARGIN + "px");
+
+            this.container.attr("transform", "translate(" + (-topLeft[0] + AREA_MARGIN) + "," + (-topLeft[1] + AREA_MARGIN) + ")");
+        },
+
+        /**
+         * クラスターモデルの表示状態が変更されたら呼ばれる
+         * @memberOf RadMapView#
+>>>>>>> 0339094 NAM-1008 線量データ一覧取得
          */
         onChangeClusterModel : function (model) {
             if (model.get("hidden")) {
@@ -164,7 +190,11 @@ define(function(require, exports, module) {
             var layerView = new RadMapLayerView({
                 radiationClusterModel : model
             });
-
+            
+            // 初回fitBounds()がcollectionFetch完了前に呼ばれてしまうため一旦。
+            this.listenTo(layerView.radiationLogCollection,"sync",function() {
+                this.fitBounds();
+            }.bind(this, layerView));
             this.layers.push(layerView);
         },
 

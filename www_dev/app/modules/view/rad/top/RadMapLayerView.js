@@ -1,6 +1,8 @@
 define(function(require, exports, module) {
     "use strict";
 
+    var app = require("app");
+    var async = require("async");
     var leaflet = require("leaflet");
     var d3 = require("d3");
     var GeoUtil = require("modules/util/GeoUtil");
@@ -56,6 +58,8 @@ define(function(require, exports, module) {
             this.radiationLogCollection = new RadiationLogCollection({
                 __id : this.radiationClusterModel.get("collectionId")
             });
+            this.radiationLogCollection.collectionId = this.radiationClusterModel.get("__id");
+            this.radiationLogCollection.setSearchConditionIncludeInCluster();
 
             this.listenTo(this.radiationLogCollection, "request", this.onRequestCollection);
             this.listenTo(this.radiationLogCollection, "add", this.onAddCollection);
