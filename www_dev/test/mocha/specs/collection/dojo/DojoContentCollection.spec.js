@@ -40,9 +40,10 @@ define(function(require) {
                 dojoContentCollection = collection;
             });
         });
+        var editionCollection;
         it("TEST-02 DojoContentCollection#groupByEditions, 道場のコース毎のDojoEditionCollectionが取得できることを確認する。", function() {
             this.timeout(20000);
-            var editionCollection = dojoContentCollection.groupByEditions();
+            editionCollection = dojoContentCollection.groupByEditions();
             app.logger.debug("editionCollection.size():" + editionCollection.size());
             assert.ok(editionCollection.size() > 0, "success groupByEditions.");
             var dojoEditionModel = editionCollection.at(0);
@@ -50,6 +51,16 @@ define(function(require) {
             assert.equal(dojoEditionModel.get("editionTitle"), "タブレットの使い方", "corrent dojoEditionModel.");
             var contentCollection = dojoEditionModel.get("contentCollection");
             assert.ok(contentCollection.size() > 0, "correct contentCollection.");
+        });
+        it("TEST-03 DojoContentCollection#groupByEditions, groupByEditionsで取得したDojoEditionCollection#getCurrentEditionが動作することを確認する", function() {
+            editionCollection.setEditionIndex(0)
+            var currentEdition = editionCollection.getCurrentEdition();
+            assert.ok(currentEdition === undefined, "corrent currentEdition.");
+        });
+        it("TEST-04 DojoContentCollection#getNotAchievementedLevel, 道場の達成情報の未達情報が取得できることを確認する。", function() {
+            this.timeout(20000);
+            var level = dojoContentCollection.getNotAchievementedLevel();
+            assert.equal(level, 0, "corrent getNotAchievementedLevel.");
         });
         after(function(done) {
             app.logger.debug("Start after().");
