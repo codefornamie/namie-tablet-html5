@@ -67,7 +67,9 @@ define(function(require, exports, module) {
          */
         initCollection : function (callback) {
             if (this.radiationLogCollection) {
-                callback && callback(null);
+                if (callback) {
+                    callback(null);
+                }
                 return;
             }
 
