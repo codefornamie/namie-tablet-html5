@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var Class = require("modules/util/Class");
     var LoginModel = require("modules/model/LoginModel");
     var PersonalModel = require("modules/model/personal/PersonalModel");
+    var AchievementModel = require("modules/model/misc/AchievementModel");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
 
     /**
@@ -117,7 +118,7 @@ define(function(require, exports, module) {
      */
     SpecHelper.createPersonalData = function(done) {
         var model = new PersonalModel();
-        
+
         model.set("loginId", SpecHelper.TEST_USER);
         model.set("fontSize", "middle");
         model.save(null, {
@@ -131,6 +132,31 @@ define(function(require, exports, module) {
             error : function() {
                 app.logger.debug("Failed creating personal data.");
                 // パーソナル情報新規登録に失敗
+                done();
+            }
+        });
+    };
+    /**
+     * テスト用の達成状況データを作成する
+     * @param {Function} done 処理が完了した際に呼び出されるコールバック関数。
+     * @memberOf SpecHelper#
+     */
+    SpecHelper.createAchievementData = function(done) {
+        var model = new AchievementModel();
+
+        model.set("type", "dojo_solved");
+        model.set("action", "NtUAbrgnmpM");
+        model.set("count", "1");
+        model.set("lastActionDate", new Date().toISOString());
+        model.save(null, {
+            success : function(model, response, options) {
+                app.logger.debug("Success creating Achievement data.");
+                app.logger.debug("save Achievement model. __id: " + response.__id);
+                var testDataId = response.__id;
+                done(testDataId);
+            },
+            error : function() {
+                app.logger.debug("Failed creating Achievement data.");
                 done();
             }
         });

@@ -6,33 +6,34 @@ define(function(require) {
 
     var app = require("app");
     var moment = require("moment");
-    var PersonalCollection = require("modules/collection/personal/PersonalCollection");
+    var AchievementCollection = require("modules/collection/misc/AchievementCollection");
 
     // 登録テストデータのID
     var testDataId;
 
-    describe("PersonalCollection", function() {
+    describe("AchievementCollection", function() {
         before(function(done) {
             SpecHelper.before(this, done);
         });
         var fetchedModel = null;
-        it("TEST-01 PersonalCollection#fetch, 作成したログインIDのパーソナル情報が取得できることを確認する。", function(done) {
+        it("TEST-01 AchievementCollection#fetch, 達成情報が取得できることを確認する。", function(done) {
             this.timeout(20000);
-            SpecHelper.createPersonalData(function(targetId) {
+            SpecHelper.createAchievementData(function(targetId) {
                 testDataId = targetId;
-                var collection = new PersonalCollection();
+                var collection = new AchievementCollection();
                 collection.condition.top = 1000;
                 collection.fetch({
                     success : function(model, response, options) {
-                        assert.ok(collection.size() > 0, "personal collection fetched.");
+                        assert.ok(collection.size() > 0, "Achievement collection fetched.");
                         fetchedModel = collection.find(function(model) {
                             return model.get("__id") === targetId;
                         });
                         app.logger.debug('fetchedModel.get("__id"):' + fetchedModel.get("__id"));
-                        app.logger.debug('create test personal id=' + targetId);
-                        assert.equal(fetchedModel.get("__id"), targetId, "fetched correct personal model.");
-                        assert.equal(fetchedModel.get("loginId"), SpecHelper.TEST_USER, "fetched correct personal model.");
-                        assert.equal(fetchedModel.get("fontSize"), "middle", "fetched correct personal model.");
+                        app.logger.debug('create test Achievement id=' + targetId);
+                        assert.equal(fetchedModel.get("__id"), targetId, "fetched correct Achievement model.");
+                        assert.equal(fetchedModel.get("type"), "dojo_solved", "fetched correct Achievement model.");
+                        assert.equal(fetchedModel.get("action"), "NtUAbrgnmpM", "fetched correct Achievement model.");
+                        assert.equal(fetchedModel.get("count"), "1", "fetched correct Achievement model.");
                         done();
                     }
                 });
