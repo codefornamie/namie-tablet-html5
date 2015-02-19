@@ -1,8 +1,6 @@
 define(function(require, exports, module) {
     "use strict";
 
-    var app = require("app");
-    var async = require("async");
     var leaflet = require("leaflet");
     var d3 = require("d3");
     var GeoUtil = require("modules/util/GeoUtil");
@@ -26,23 +24,6 @@ define(function(require, exports, module) {
         template : null,
 
         /**
-         * Viewの描画処理の開始前に呼び出されるコールバック関数。
-         * <p>
-         * 記事一覧の表示処理を開始する。
-         * </p>
-         * @memberOf RadMapLayerView#
-         */
-        beforeRendered : function() {
-        },
-
-        /**
-         * Viewの描画処理の終了後に呼び出されるコールバック関数。
-         * @memberOf RadMapLayerView#
-         */
-        afterRendered : function() {
-        },
-
-        /**
          * 初期化
          * @memberOf RadMapLayerView#
          * @param {Object} param
@@ -54,10 +35,7 @@ define(function(require, exports, module) {
             this.isHidden = false;
             this.radiationClusterModel = param.radiationClusterModel;
 
-            //this.initCollection();
             this.initEvents();
-
-            //this.radiationLogCollection.fetch();
         },
 
         /**
@@ -66,6 +44,7 @@ define(function(require, exports, module) {
          * @param {Function} callback
          */
         initCollection : function (callback) {
+            // Collectionが読込済であればコールバックを呼ぶ
             if (this.radiationLogCollection) {
                 if (callback) {
                     callback(null);
@@ -73,6 +52,7 @@ define(function(require, exports, module) {
                 return;
             }
 
+            // radiation_clusterに紐づくradiation_logを読み込む
             this.radiationLogCollection = new RadiationLogCollection({
                 __id : this.radiationClusterModel.get("collectionId")
             });
@@ -95,7 +75,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         * draw
+         * 地図にマーカーを描画する
          *
          * @memberOf RadMapLayerView#
          * @return {undefined}
@@ -120,7 +100,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         * pointToLayer
+         * マーカーを生成する
          *
          * @memberOf RadMapLayerView#
          * @param {Object} feature
@@ -170,7 +150,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         * defineClusterIcon
+         * クラスタのアイコンを生成する
          *
          * @memberOf RadMapLayerView#
          * @param {Object} cluster
@@ -184,13 +164,13 @@ define(function(require, exports, module) {
                 "class" : "layer-" + this.cid
             }).appendTo($iconRoot);
             var container = d3.select($container[0])
-                .attr("width", 40)
-                .attr("height", 40);
+                .attr("width", iconDim)
+                .attr("height", iconDim);
 
             container.append("div")
                 .style({
-                    "width" : "40px",
-                    "height" : "40px",
+                    "width" : iconDim + "px",
+                    "height" : iconDim + "px",
                     "border-radius" : "50%"
                 })
                 .attr({
@@ -225,35 +205,24 @@ define(function(require, exports, module) {
         },
 
         /**
-         * serializeXmlNode
-         *
-         * @memberOf RadMapLayerView#
-         */
-        serializeXmlNode : function(xmlNode) {
-            if (typeof window.XMLSerializer !== "undefined") {
-                return (new window.XMLSerializer()).serializeToString(xmlNode);
-            } else if (typeof xmlNode.xml !== "undefined") {
-                return xmlNode.xml;
-            }
-            return "";
-        },
-
-        /**
          * Viewを表示する
          *
          * @memberOf RadMapLayerView#
          */
         show : function () {
-            var self = this;
+            if (this.isHidden === false) {
+                $(".layer-" + this.cid).show();
+                return;
+            }
 
-            $(".layer-" + this.cid).show();
-
-            this.initCollection(function (err) {
-                var clusterBounds = self.markerClusters.getBounds();
+            // 1. collectionが読み込まれていなければ読み込む
+            // 2. マーカーが画面内に収まるようにpanする
+            this.initCollection(function () {
+                var clusterBounds = this.markerClusters.getBounds();
                 var center = clusterBounds.getCenter();
 
-                self.map.panTo(center);
-            });
+                this.map.panTo(center);
+            }.bind(this));
 
             this.isHidden = false;
         },
@@ -265,12 +234,11 @@ define(function(require, exports, module) {
          */
         hide : function () {
             $(".layer-" + this.cid).hide();
-
             this.isHidden = true;
         },
 
         /**
-         * toggle
+         * viewの表示/非表示を切り替える
          * @memberOf RadMapLayerView#
          */
         toggle : function () {
@@ -282,7 +250,8 @@ define(function(require, exports, module) {
         },
 
         /**
-         * 表示状態を全マーカー・クラスタに反映する
+         * 表示状態が反映されていないマーカー(例: viewが非表示中に追加されたマーカーなど)を
+         * 適切な表示状態に更新する
          * @memberOf RadMapLayerView#
          */
         updateVisibility : function () {
@@ -294,7 +263,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         * Viewがレンダリングされる先のmapをsetする
+         * Viewがレンダリングされる先のmapをsetするsetterメソッド
          * @memberOf RadMapLayerView#
          * @param {Leaflet.Map} map
          */
@@ -309,39 +278,29 @@ define(function(require, exports, module) {
                 iconCreateFunction : this.defineClusterIcon.bind(this)
             });
 
-            this.markerClusters.on("clusterclick", this.onClusterClick.bind(this));
-            this.map.on("moveend", this.updateVisibility.bind(this));
+            this.map.addLayer(this.markerClusters);
 
-            map.addLayer(this.markerClusters);
+            // event:
+            // クラスタがクリックされたら吹き出しを表示する
+            this.markerClusters.on("clusterclick", this.onClusterClick.bind(this));
+
+            // event:
+            // 地図移動によりマーカーが再描画されるため、表示状態を更新する
+            this.map.on("moveend", this.updateVisibility.bind(this));
         },
 
         /**
-         * onChangeClusterModel
+         * radiationClusterModelが変更されたら呼ばれる
          * @memberOf RadMapLayerView#
          */
         onChangeClusterModel : function () {
             var isHidden = this.radiationClusterModel.get("hidden");
-            var isFirstChange = (this.radiationClusterModel.previous("hidden") === undefined);
 
             if (isHidden) {
                 this.hide();
             } else {
-                this.show(isFirstChange);
+                this.show();
             }
-        },
-
-        /**
-         * コレクションが読み込み開始したら呼ばれる
-         * @memberOf RadMapLayerView#
-         */
-        onRequestCollection : function () {
-        },
-
-        /**
-         * コレクションが変化したら呼ばれる
-         * @memberOf RadMapLayerView#
-         */
-        onAddCollection : function (model) {
         },
 
         /**
@@ -353,7 +312,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         * onClusterClick
+         * クラスタがクリックされたら呼ばれる
          * @memberOf RadMapLayerView#
          * @param {Object} ev
          */
@@ -379,7 +338,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         * onMarkerClick
+         * マーカーがクリックされたら呼ばれる
          * @memberOf RadMapLayerView#
          * @param {Object} ev
          */

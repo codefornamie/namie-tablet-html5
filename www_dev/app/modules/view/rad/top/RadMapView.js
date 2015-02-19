@@ -1,14 +1,9 @@
 define(function(require, exports, module) {
     "use strict";
 
-    //var app = require("app");
-    //var async = require("async");
     var leaflet = require("leaflet");
-    var d3 = require("d3");
-    var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
     var RadMapLayerView = require("modules/view/rad/top/RadMapLayerView");
-    var RadiationClusterCollection = require("modules/collection/radiation/RadiationClusterCollection");
 
     /**
      * 放射線アプリの地図を表示するためのView
@@ -18,7 +13,6 @@ define(function(require, exports, module) {
      * @constructor
      */
     var RadMapView = AbstractView.extend({
-        manage : false,
         /**
          * このViewのテンプレートファイルパス
          */
@@ -42,15 +36,11 @@ define(function(require, exports, module) {
         },
 
         /**
-         * 地図にマッピングしているSVGのレイヤをレンダリングする
+         * 各レイヤを初期化する
          * @memberOf RadMapView#
          */
         renderLayers : function () {
-            var map;
-
-            this.initMap();
-
-            map = this.map;
+            var map = this.initMap();
 
             this.layers.forEach(function (v) {
                 v.setMap(map);
@@ -60,10 +50,11 @@ define(function(require, exports, module) {
         /**
          * Leafletのマップを初期化する
          * @memberOf RadMapView#
+         * @return {leaflet.Map}
          */
         initMap : function () {
             if (this.map) {
-                return;
+                return this.map;
             }
 
             var map = leaflet.map("map").setView([38, 140], 13);
@@ -76,10 +67,12 @@ define(function(require, exports, module) {
             ).addTo(map);
 
             this.map = map;
+
+            return this.map;
         },
 
         /**
-         * 初期化
+         * viewを初期化する
          * @memberOf RadMapView#
          * @param {Object} param
          */
@@ -87,27 +80,15 @@ define(function(require, exports, module) {
             console.assert(param, "param should be given");
             console.assert(param.radiationClusterCollection, "radiationClusterCollection should be specified");
 
-            this.radiationClusterCollection = param.radiationClusterCollection;
-
             // ローディングを開始
             this.showLoading();
 
+            this.radiationClusterCollection = param.radiationClusterCollection;
             this.layers = [];
-            //this.initCollection();
             this.initEvents();
-
-            //this.radiationClusterCollection.fetch();
 
             // ローディングを停止
             this.hideLoading();
-        },
-
-        /**
-         * collectionを初期化する
-         * @memberOf RadMapView#
-         */
-        initCollection : function () {
-            //this.radiationClusterCollection = new RadiationClusterCollection();
         },
 
         /**
@@ -140,8 +121,9 @@ define(function(require, exports, module) {
         },
 
         /**
-         * クラスターモデルの表示状態が変更されたら呼ばれる
+         * あるClusterModelが表示されたら、それ以外は非表示とする
          * @memberOf RadMapView#
+         * @param {RadiationClusterModel} model
          */
         onChangeClusterModel : function (model) {
             if (model.get("hidden")) {
@@ -162,16 +144,21 @@ define(function(require, exports, module) {
         },
 
         /**
-         * コレクションが読み込み開始したら呼ばれる
+         * Collectionが読み込み開始したら、レイヤは全て破棄する
          * @memberOf RadMapView#
          */
         onRequestCollection : function () {
+            this.layers.forEach(function (layerView) {
+                layerView.remove();
+            });
+
             this.layers.length = 0;
         },
 
         /**
-         * コレクションが変化したら呼ばれる
+         * ClusterModelが追加されたら、レイヤを生成する
          * @memberOf RadMapView#
+         * @param {RadiationClusterModel} model
          */
         onAddCollection : function (model) {
             var layerView = new RadMapLayerView({
@@ -182,7 +169,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         * コレクションが読み込み完了したら呼ばれる
+         * Collectionが読み込み完了したら、各レイヤを初期化する
          * @memberOf RadMapView#
          */
         onSyncCollection : function () {
@@ -191,6 +178,7 @@ define(function(require, exports, module) {
     }, {
         /**
          * タイルサーバのURL
+         * @memberOf RadMapView
          */
         URL_TILE_SERVER : "http://{s}.tile.osm.org/{z}/{x}/{y}.png"
     });
