@@ -16,6 +16,7 @@ define(function(require) {
         it("TEST-01 PersonalModel#save パーソナル情報の登録ができることを確認する", function(done) {
             var model = new PersonalModel();
             model.set("loginId", SpecHelper.TEST_USER + "-test");
+            model.set("roles", "admin");
             model.set("fontSize", "middle");
 
             model.save(null, {
@@ -51,9 +52,13 @@ define(function(require) {
         });
         it("TEST-05 PersonalModel#hasRole ユーザーのロール情報が取得できることを確認する", function() {
             var role = fetcheModel.hasRole("admin");
+            assert.equal(role, true, "hasRole is correct.");
+        });
+        it("TEST-06 PersonalModel#hasRole ユーザーのロール情報が取得できることを確認する", function() {
+            var role = fetcheModel.hasRole("test");
             assert.equal(role, false, "hasRole is correct.");
         });
-        it("TEST-06 PersonalModel#fetch パーソナル情報のshowLastPublishedが更新されていることを確認する", function(done) {
+        it("TEST-07 PersonalModel#fetch パーソナル情報のshowLastPublishedが更新されていることを確認する", function(done) {
             fetcheModel = new PersonalModel();
             fetcheModel.set("__id", testDataId);
 
