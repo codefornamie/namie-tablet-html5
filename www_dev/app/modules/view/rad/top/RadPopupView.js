@@ -21,6 +21,7 @@ define(function(require, exports, module) {
         /**
          * レンダリングに利用するオブジェクトを作成する
          *
+         * @memberOf RadPopupView#
          * @return {Object}
          */
         serialize : function () {
@@ -150,6 +151,7 @@ define(function(require, exports, module) {
         /**
          * ポップアップのcontentを取得する
          *
+         * @memberOf RadPopupView#
          * @return {String}
          */
         getContent : function () {
@@ -158,7 +160,7 @@ define(function(require, exports, module) {
 
         /**
          * radiationClusterModelが変更されたら呼ばれる
-         * @memberOf RadMapLayerView#
+         * @memberOf RadPopupView#
          */
         onChangeClusterModel : function () {
             var isHidden = this.radiationClusterModel.get("hidden");

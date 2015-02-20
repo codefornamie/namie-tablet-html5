@@ -78,7 +78,6 @@ define(function(require, exports, module) {
          * 地図にマーカーを描画する
          *
          * @memberOf RadMapLayerView#
-         * @return {undefined}
          */
         draw : function () {
             console.assert(this.map, "should call setMap before drawing");
