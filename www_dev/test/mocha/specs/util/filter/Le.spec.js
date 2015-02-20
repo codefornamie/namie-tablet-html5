@@ -4,8 +4,6 @@ define(function(require) {
     var Le = require("modules/util/filter/Le");
     var Filter = require("modules/util/filter/Filter");
 
-    app.noRendering = true;
-
     describe("Le", function() {
         it("TEST-01 Le#expression", function() {
             var operator = new Le("property", 111);

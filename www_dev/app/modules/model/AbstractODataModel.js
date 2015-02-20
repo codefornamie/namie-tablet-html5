@@ -3,7 +3,6 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractModel = require("modules/model/AbstractModel");
-    var Log = require("modules/util/Logger");
     var PIOEvent = require("modules/event/PIOEvent");
 
     /**
@@ -52,7 +51,7 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataModel#
          */
         sync : function(method, model, options) {
-            Log.info("AbstractODataModel sync");
+            app.logger.info("AbstractODataModel sync");
             var def = $.Deferred();
             if (!options) {
                 options = {};
@@ -67,7 +66,7 @@ define(function(require, exports, module) {
             this.entityset = odataCollection.entitySet(this.entity);
 
             var complete = function(res) {
-                Log.info("AbstractODataModel search complete handler");
+                app.logger.info("AbstractODataModel search complete handler");
                 // personium.ioのAPI呼び出し情報を保持するイベント
                 // 便宜上、resオブジェクトに紐付ける
                 var event = new PIOEvent(res);
@@ -98,7 +97,7 @@ define(function(require, exports, module) {
                     def.resolve(res);
                 }
             };
-            Log.info("Request personium. method : " + method);
+            app.logger.info("Request personium. method : " + method);
             try {
                 switch (method) {
                 case 'create':
@@ -115,7 +114,7 @@ define(function(require, exports, module) {
                     break;
                 }
             } catch (e) {
-                Log.info("Personium Exception : " + e);
+                app.logger.info("Personium Exception : " + e);
                 app.router.go("login");
             }
             return def.promise();
@@ -137,10 +136,10 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataModel#
          */
         create : function(method, model, options, complete) {
-            Log.info("AbstractODataModel create");
+            app.logger.info("AbstractODataModel create");
             this.entityset.createAsResponse(this.getSaveData(), {
                 complete : function(response) {
-                    Log.info("AbstractODataModel create complete");
+                    app.logger.info("AbstractODataModel create complete");
                     complete(response);
                 }
             });
@@ -162,10 +161,10 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataModel#
          */
         update : function(method, model, options, complete) {
-            Log.info("AbstractODataModel update");
+            app.logger.info("AbstractODataModel update");
             this.entityset.update(this.get("__id"), this.getSaveData(), this.get("etag"), {
                 complete : function(response) {
-                    Log.info("AbstractODataModel update complete");
+                    app.logger.info("AbstractODataModel update complete");
                     complete(response);
                 }
             });
@@ -187,10 +186,10 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataModel#
          */
         del : function(method, model, options, complete) {
-            Log.info("AbstractODataModel delete");
+            app.logger.info("AbstractODataModel delete");
             this.entityset.del(this.get("__id"), this.get("etag"), {
                 complete : function(response) {
-                    Log.info("AbstractODataModel delete complete");
+                    app.logger.info("AbstractODataModel delete complete");
                     complete(response);
                 }
             });
@@ -212,10 +211,10 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataModel#
          */
         retrieve : function(method, model, options, complete) {
-            Log.info("AbstractODataModel retrieve");
+            app.logger.info("AbstractODataModel retrieve");
             this.entityset.retrieveAsResponse(this.get("__id"), {
                 complete : function(response) {
-                    Log.info("AbstractODataModel retrieve complete");
+                    app.logger.info("AbstractODataModel retrieve complete");
                     complete(response);
                 }
             });
@@ -231,7 +230,7 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataModel#
          */
         parseResponse : function(response, options) {
-            //Log.info("AbstractODataModel parseResponse");
+            //app.logger.info("AbstractODataModel parseResponse");
             var res = this.parseOData(response, options);
             // 全ての情報で共通のパース処理を実施する
             if (response && response.__metadata) {
@@ -250,7 +249,7 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataModel#
          */
         parseOData : function(response, options) {
-            //Log.info("AbstractODataModel parseOData");
+            //app.logger.info("AbstractODataModel parseOData");
             return response;
         },
         /**
@@ -260,7 +259,7 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataModel#
          */
         getSaveData : function() {
-            Log.info("AbstractODataModel getSaveData");
+            app.logger.info("AbstractODataModel getSaveData");
             var saveData = {};
             if(this.id){
                 saveData.__id = this.id;

@@ -4,8 +4,6 @@ define(function(require) {
     var Equal = require("modules/util/filter/Equal");
     var Filter = require("modules/util/filter/Filter");
 
-    app.noRendering = true;
-
     describe("Equal", function() {
         it("TEST-01 Equal#expression", function() {
             var equal = new Equal("property", 111);
@@ -27,6 +25,15 @@ define(function(require) {
             var filterQueryString = Filter.queryString(filters);
             assert.equal(filterQueryString, "country eq 'Japan' and address eq 'Kanagawa'");
         });
-
+        it("TEST-05 Equal#expression", function() {
+            var equal = new Equal("property", true);
+            var query = Filter.queryString([equal]);
+            assert.equal(query, "property eq true");
+        });
+        it("TEST-06 Equal#expression", function() {
+            var equal = new Equal("property", 1);
+            var query = Filter.queryString([equal]);
+            assert.equal(query, "property eq 1");
+        });
     });
 });

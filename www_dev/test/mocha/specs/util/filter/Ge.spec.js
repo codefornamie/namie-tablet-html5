@@ -4,8 +4,6 @@ define(function(require) {
     var Ge = require("modules/util/filter/Ge");
     var Filter = require("modules/util/filter/Filter");
 
-    app.noRendering = true;
-
     describe("Ge", function() {
         it("TEST-01 Ge#expression", function() {
             var operator = new Ge("property", 111);
