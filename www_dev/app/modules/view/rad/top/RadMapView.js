@@ -1,14 +1,9 @@
 define(function(require, exports, module) {
     "use strict";
 
-    //var app = require("app");
-    //var async = require("async");
     var leaflet = require("leaflet");
-    var d3 = require("d3");
-    var GeoUtil = require("modules/util/GeoUtil");
     var AbstractView = require("modules/view/AbstractView");
     var RadMapLayerView = require("modules/view/rad/top/RadMapLayerView");
-    var RadiationClusterCollection = require("modules/collection/radiation/RadiationClusterCollection");
 
     /**
      * 放射線アプリの地図を表示するためのView
@@ -18,7 +13,6 @@ define(function(require, exports, module) {
      * @constructor
      */
     var RadMapView = AbstractView.extend({
-        manage : false,
         /**
          * このViewのテンプレートファイルパス
          */
@@ -42,34 +36,25 @@ define(function(require, exports, module) {
         },
 
         /**
-         * 地図にマッピングしているSVGのレイヤをレンダリングする
+         * 各レイヤを初期化する
          * @memberOf RadMapView#
          */
         renderLayers : function () {
-            var map, svg, container;
-
-            this.initMap();
-            this.initSVGLayer();
-
-            map = this.map;
-            svg = this.svg;
-            container = this.container;
+            var map = this.initMap();
 
             this.layers.forEach(function (v) {
                 v.setMap(map);
-                v.setSVG(svg);
-                v.setContainer(container);
-                v.radiationLogCollection.fetch();
             });
         },
 
         /**
          * Leafletのマップを初期化する
          * @memberOf RadMapView#
+         * @return {leaflet.Map}
          */
         initMap : function () {
             if (this.map) {
-                return;
+                return this.map;
             }
 
             var map = leaflet.map("map").setView([38, 140], 13);
@@ -81,36 +66,13 @@ define(function(require, exports, module) {
                 }
             ).addTo(map);
 
-            map.on("viewreset", this.fitBounds.bind(this));
-
             this.map = map;
+
+            return this.map;
         },
 
         /**
-         * Leafletにオーバーラップさせるグラフのレイヤを初期化する
-         * @memberOf RadMapView#
-         */
-        initSVGLayer : function () {
-            console.assert(this.map, "should call initSVGLayer after initMap");
-
-            var map = this.map;
-            var svg = d3.select(map.getPanes().overlayPane).append("svg");
-            var container;
-
-            // TODO: fit svg bounds
-            svg.attr({
-                "width" : 10000,
-                "height" : 10000
-            });
-
-            container = svg.append("g").attr("class", "leaflet-zoom-hide");
-
-            this.svg = svg;
-            this.container = container;
-        },
-
-        /**
-         * 初期化
+         * viewを初期化する
          * @memberOf RadMapView#
          * @param {Object} param
          */
@@ -118,27 +80,15 @@ define(function(require, exports, module) {
             console.assert(param, "param should be given");
             console.assert(param.radiationClusterCollection, "radiationClusterCollection should be specified");
 
-            this.radiationClusterCollection = param.radiationClusterCollection;
-
             // ローディングを開始
             this.showLoading();
 
+            this.radiationClusterCollection = param.radiationClusterCollection;
             this.layers = [];
-            //this.initCollection();
             this.initEvents();
-
-            //this.radiationClusterCollection.fetch();
 
             // ローディングを停止
             this.hideLoading();
-        },
-
-        /**
-         * collectionを初期化する
-         * @memberOf RadMapView#
-         */
-        initCollection : function () {
-            //this.radiationClusterCollection = new RadiationClusterCollection();
         },
 
         /**
@@ -161,6 +111,7 @@ define(function(require, exports, module) {
             var features = _(this.layers).map(function (v) {
                 return v.radiationLogCollection.toGeoJSON().features;
             }).flatten(true).value();
+
             var featureCollection = {
                 "type" : "FeatureCollection",
                 "features" : features
@@ -170,53 +121,44 @@ define(function(require, exports, module) {
         },
 
         /**
-         * SVG要素をマッピングされているデータにfitさせる
+         * あるClusterModelが表示されたら、それ以外は非表示とする
          * @memberOf RadMapView#
-         */
-        fitBounds : function () {
-            var featureCollection = this.generateFeatureCollection();
-            var bounds = GeoUtil.computeBounds(this.map, featureCollection);
-            var topLeft = bounds[0];
-            var bottomRight = bounds[1];
-            var AREA_MARGIN = 100;
-
-            this.svg
-                .attr("width", bottomRight[0] - topLeft[0] + AREA_MARGIN * 2)
-                .attr("height", bottomRight[1] - topLeft[1] + AREA_MARGIN * 2)
-                .style("left", topLeft[0] - AREA_MARGIN + "px")
-                .style("top", topLeft[1] - AREA_MARGIN + "px");
-
-            this.container.attr("transform", "translate(" + (-topLeft[0] + AREA_MARGIN) + "," + (-topLeft[1] + AREA_MARGIN) + ")");
-        },
-
-        /**
-         * クラスターモデルの表示状態が変更されたら呼ばれる
-         * @memberOf RadMapView#
+         * @param {RadiationClusterModel} model
          */
         onChangeClusterModel : function (model) {
-            var isHidden = model.get("hidden");
-
-            if (!isHidden) {
-                // 表示状態に切り替わったら地図の中心をクラスターの地点へ移動する
-                var feature = model.toGeoJSON();
-                var lat = feature.geometry.coordinates[1];
-                var lng = feature.geometry.coordinates[0];
-
-                this.map.panTo([lat, lng]);
+            if (model.get("hidden")) {
+                return;
             }
+
+            this.layers.forEach(function (layerView) {
+                if (layerView.radiationClusterModel.cid === model.cid) {
+                    return;
+                }
+
+                layerView.radiationClusterModel.set(
+                    {
+                        hidden : true
+                    }
+                );
+            });
         },
 
         /**
-         * コレクションが読み込み開始したら呼ばれる
+         * Collectionが読み込み開始したら、レイヤは全て破棄する
          * @memberOf RadMapView#
          */
         onRequestCollection : function () {
+            this.layers.forEach(function (layerView) {
+                layerView.remove();
+            });
+
             this.layers.length = 0;
         },
 
         /**
-         * コレクションが変化したら呼ばれる
+         * ClusterModelが追加されたら、レイヤを生成する
          * @memberOf RadMapView#
+         * @param {RadiationClusterModel} model
          */
         onAddCollection : function (model) {
             var layerView = new RadMapLayerView({
@@ -227,7 +169,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         * コレクションが読み込み完了したら呼ばれる
+         * Collectionが読み込み完了したら、各レイヤを初期化する
          * @memberOf RadMapView#
          */
         onSyncCollection : function () {
@@ -236,6 +178,7 @@ define(function(require, exports, module) {
     }, {
         /**
          * タイルサーバのURL
+         * @memberOf RadMapView
          */
         URL_TILE_SERVER : "http://{s}.tile.osm.org/{z}/{x}/{y}.png"
     });

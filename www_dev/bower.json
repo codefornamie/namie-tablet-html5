@@ -34,6 +34,7 @@
     "blueimp-canvas-to-blob": "~2.1.1",
     "oh-snap": "*",
     "leaflet": "~0.7.3",
-    "d3": "~3.5.3"
+    "d3": "~3.5.3",
+    "leaflet.markercluster": "~0.4.0"
   }
 }

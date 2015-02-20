@@ -185,9 +185,55 @@
 }
 
 /**
+ *  地図上に描画するマーカー
+ */
+
+.leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow {
+    -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+    -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+    -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+.marker-cluster {
+}
+
+.marker-cluster__circle {
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.22);
+}
+
+.marker-cluster__text {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1.6em;
+    text-align: center;
+    margin: auto;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+}
+
+.marker {
+}
+
+.marker__circle {
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.22);
+}
+
+/**
  *  ----------
  *  3. Cosmetic
  *  ----------
+ */
+.page-rad .rad-cluster-item--selected {
+    background-color: #ddd;
+}
+
+/**
+ *  マーカー、凡例
  */
 .page-rad .map-marker--1 {
     background-color: #0b24e5;
@@ -226,7 +272,7 @@
     fill: #ff0a21;
 }
 
- /**
+/**
  *  モーダル線量リストダイアログ
  */
 .modal-radiation-overlay {
