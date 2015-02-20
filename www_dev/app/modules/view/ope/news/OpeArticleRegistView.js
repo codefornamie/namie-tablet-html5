@@ -219,7 +219,10 @@ define(function(require, exports, module) {
             this.chageMultiDateCheckbox();
             this.onChangeCategory();
             this.$el.find("a").on("click", function(ev) {
-                    ev.preventDefault();
+                ev.preventDefault();
+            });
+            this.$el.find("a").hover(function() {
+                $(this).css("cursor", "default");
             });
         },
 
