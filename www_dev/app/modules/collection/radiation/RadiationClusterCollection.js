@@ -21,8 +21,8 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             this.condition = {
-                    top : 10,
-                    orderby : "createdAt desc"
+                    top : 50,
+                    orderby : "createDate desc"
             };
         },
 
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
          * @memberOf RadiationClusterCollection#
          */
         parseOData : function(response, options) {
-            // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
+            // 地図上に表示できないようなデータは省く
             response = _.filter(response, function(ress) {
                 if (!ress.minLatitude || !ress.maxLatitude || !ress.minLongitude || !ress.maxLongitude ||
                         !ress.averageValue || !ress.maxValue) {
@@ -43,19 +43,8 @@ define(function(require, exports, module) {
                 }
                 return true;
             });
-            // ここまで
-            
             
             var res = response.map(function(cluster) {
-                // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
-                cluster.minLatitude = parseInt(cluster.minLatitude);
-                cluster.maxLatitude = parseInt(cluster.maxLatitude);
-                cluster.minLongitude = parseInt(cluster.minLongitude);
-                cluster.maxLongitude = parseInt(cluster.maxLongitude);
-                cluster.averageValue = parseInt(cluster.averageValue);
-                cluster.maxValue = parseInt(cluster.maxValue);
-                // ここまで
-
                 return _.extend(cluster, {
                     minLatitude : cluster.minLatitude / Math.pow(10, 6),
                     maxLatitude : cluster.maxLatitude / Math.pow(10, 6),

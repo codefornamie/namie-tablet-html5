@@ -35,25 +35,15 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogCollection#
          */
         parseOData: function (response, options) {
-            // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
+            // 地図上に表示できないようなデータは省く
             response = _.filter(response, function(ress) {
                 if (!ress.latitude || !ress.longitude || !ress.value) {
                     return false;
                 }
                 return true;
             });
-            // ここまで
-
-            
             
             var res = response.map(function (log) {
-                // TODO Entityが正式にスキーマ定義され正しいデータが入ったら消す
-                log.latitude = parseInt(log.latitude);
-                log.longitude = parseInt(log.longitude);
-                log.altitude = parseInt(log.altitude) || 0;
-                log.value = parseInt(log.value);
-                // ここまで
-
                 return _.extend(log, {
                     latitude : log.latitude / Math.pow(10, 6),
                     longitude : log.longitude / Math.pow(10, 6),
@@ -61,7 +51,6 @@ define(function(require, exports, module) {
                     value : log.value / Math.pow(10, 3)
                 });
             });
-
             return res;
         },
         /**
