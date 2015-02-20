@@ -239,6 +239,7 @@ define(function(require, exports, module) {
             this.achievementCollection.condition.filters = [
                 new Equal("type", "dojo_solved")
             ];
+            this.achievementCollection.condition.top = 1000000;
             this.achievementCollection.fetch({
                 success : function() {
                     this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 20);
