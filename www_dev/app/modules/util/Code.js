@@ -213,6 +213,13 @@ define(function(require, exports, module) {
     // 道場のイントロダクション動画のID
     Code.DOJO_INTORODUCTION_VIDEO_ID = "NgVzppfZ-4Q";
 
+    // 放射線データ保存時の「線量」保存時倍率
+    Code.RAD_RADIATION_DOSE_MAGNIFICATION = 1000;
+    // 放射線データ保存時の「緯度経度」保存時倍率
+    Code.RAD_LAT_LONG_MAGNIFICATION = 1000000;
+    // 放射線データ保存時の「高度」保存時倍率
+    Code.RAD_ALTITUDE_MAGNIFICATION = 1000;
+
     /**
      * アプリモード毎に、キャッシュを有効にするかどうか定義する。
      */

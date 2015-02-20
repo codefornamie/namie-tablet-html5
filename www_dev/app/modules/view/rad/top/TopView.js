@@ -119,7 +119,14 @@ define(function(require, exports, module) {
         initCollection : function () {
             this.radClusterCollection = new RadiationClusterCollection();
 
-            this.radClusterCollection.fetch();
+            this.radClusterCollection
+                .fetch()
+                .done(function (col) {
+                    col.each(function (model) {
+                        model.set("hidden", true);
+                    });
+                    col.at(0).set("hidden", false);
+                });
             // TODO: テスト用データの作成を差し替える
             //_(10).times($.proxy(function(index) {
             //    this.radClusterCollection.push(

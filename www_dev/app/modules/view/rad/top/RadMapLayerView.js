@@ -55,7 +55,6 @@ define(function(require, exports, module) {
             this.initCollection();
             this.initEvents();
 
-
             //this.radiationLogCollection.fetch();
         },
 
@@ -89,6 +88,7 @@ define(function(require, exports, module) {
             console.assert(this.map, "should call setMap before drawing");
             console.assert(this.container, "should call setContainer before drawing");
 
+            var theView = this;
             var map = this.map;
             var container = this.container;
             var data = [{
@@ -114,11 +114,21 @@ define(function(require, exports, module) {
                     }.bind(this)
                 })
                 .each(function (d) {
+                    var $circle = $(this);
+
+                    // 各マーカーに対してRadPopupViewを生成する
                     var popupView = new RadPopupView({
                         origin : this,
                         data : d,
                         map : map
                     });
+
+                    // レンダリング直後はRadMapLayerViewの表示状態にあわせる
+                    if (theView.isHidden) {
+                        $circle.hide();
+                    } else {
+                        $circle.show();
+                    }
                 });
 
             circle.exit()

@@ -472,7 +472,8 @@ define(function(require, exports, module) {
                     articles : articleDateList,
                     newArrivals : newArrivals,
                     imagePath : imagePath,
-                    imageThumbUrl : imageThumbUrl
+                    imageThumbUrl : imageThumbUrl,
+                    period : _.indexBy(app.serverConfig.COLOR_LABEL, "type")[type].period
                 });
                 // isFirst指定がある場合は先頭に配置する。
                 if (isFirst) {
@@ -548,6 +549,15 @@ define(function(require, exports, module) {
         onClickGridItem : function(ev, param) {
             var articleId = $(ev.currentTarget).attr("data-article-id");
             app.newsView = this;
+
+            var model = this.articleCollection.find(function(article) {
+                return article.get("__id") === articleId;
+            });
+            if (model.isExpired()) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("掲載期間が終了しました。");
+                return;
+            }
             app.router.go("top", moment(app.currentDate).format("YYYY-MM-DD"), "article", articleId);
         },
 

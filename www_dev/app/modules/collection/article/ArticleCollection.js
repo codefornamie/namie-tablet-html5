@@ -60,6 +60,7 @@ define(function(require, exports, module) {
                 });
                 if (pr) {
                     res.priority = pr.priority;
+                    res.period = pr.period;
                 } else {
                     res.priority = Number.MAX_SAFE_INTEGER;
                 }
