@@ -54,6 +54,15 @@ define(function(require, exports, module) {
          * @memberOf RadClusterListItemView#
          */
         initialize : function() {
+            this.initEvents();
+        },
+
+        /**
+         * イベントを初期化する
+         * @memberOf RadClusterListItemView#
+         */
+        initEvents : function() {
+            this.listenTo(this.model, "change:hidden", this.onChangeClusterModel);
         },
 
         /**
@@ -65,6 +74,19 @@ define(function(require, exports, module) {
             var isHidden = !!radClusterModel.get("hidden");
 
             radClusterModel.set("hidden", !isHidden);
+        },
+
+        /**
+         * ClusterModelが表示されたら、クラスを変更する
+         * @memberOf RadClusterListItemView#
+         * @param {RadiationClusterModel} model
+         */
+        onChangeClusterModel : function (model) {
+            if (model.get("hidden")) {
+                $("> li", this.$el).removeClass("rad-cluster-item--selected");
+            } else {
+                $("> li", this.$el).addClass("rad-cluster-item--selected");
+            }
         }
     });
 

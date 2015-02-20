@@ -228,6 +228,13 @@
  *  3. Cosmetic
  *  ----------
  */
+.page-rad .rad-cluster-item--selected {
+    background-color: #ddd;
+}
+
+/**
+ *  マーカー、凡例
+ */
 .page-rad .map-marker--1 {
     background-color: #0b24e5;
     fill: #0b24e5;
@@ -265,7 +272,7 @@
     fill: #ff0a21;
 }
 
- /**
+/**
  *  モーダル線量リストダイアログ
  */
 .modal-radiation-overlay {

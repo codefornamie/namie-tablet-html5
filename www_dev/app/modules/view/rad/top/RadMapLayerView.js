@@ -216,12 +216,15 @@ define(function(require, exports, module) {
             }
 
             // 1. collectionが読み込まれていなければ読み込む
-            // 2. マーカーが画面内に収まるようにpanする
+            // 2. マーカーが画面内に収まるように表示領域を自動調整する
+            this.showLoading();
             this.initCollection(function () {
-                var clusterBounds = this.markerClusters.getBounds();
-                var center = clusterBounds.getCenter();
+                this.hideLoading();
 
-                this.map.panTo(center);
+                var clusterBounds = this.markerClusters.getBounds();
+                this.map.fitBounds(clusterBounds);
+
+                $(".layer-" + this.cid).show();
             }.bind(this));
 
             this.isHidden = false;
@@ -326,6 +329,7 @@ define(function(require, exports, module) {
 
             var popupView = new RadPopupView({
                 data : {
+                    radiationClusterModel : this.radiationClusterModel,
                     radiationClusterFeature : this.radiationClusterModel.toGeoJSON(),
                     radiationLogFeatureCollection : fcol
                 },

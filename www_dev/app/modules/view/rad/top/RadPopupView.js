@@ -41,6 +41,9 @@ define(function(require, exports, module) {
                 max = _.max(logFeatureCollection.features, function (feature) {
                     return feature.properties.value;
                 }).properties.value;
+
+                // 小数点以下3桁に丸める
+                avg = Math.round(avg * 1000) / 1000;
             } else {
                 date = moment(logFeature.properties.date);
                 dateStr = date.format("YYYY/MM/DD HH:mm:ss");
@@ -97,6 +100,7 @@ define(function(require, exports, module) {
 
             this.position = param.position;
             this.data = param.data;
+            this.radiationClusterModel = this.data.radiationClusterModel;
             this.radiationClusterFeature = this.data.radiationClusterFeature;
             this.radiationLogFeatureCollection = this.data.radiationLogFeatureCollection;
             this.radiationLogFeature = this.data.radiationLogFeature;
@@ -113,6 +117,7 @@ define(function(require, exports, module) {
          * @memberOf RadPopupView#
          */
         initEvents : function() {
+            this.listenTo(this.radiationClusterModel, "change:hidden", this.onChangeClusterModel);
         },
 
         /**
@@ -130,6 +135,7 @@ define(function(require, exports, module) {
          * @memberOf RadPopupView#
          */
         hide : function () {
+            this.map.closePopup(this.popup);
         },
 
         /**
@@ -148,6 +154,18 @@ define(function(require, exports, module) {
          */
         getContent : function () {
             return this.template(this.serialize());
+        },
+
+        /**
+         * radiationClusterModelが変更されたら呼ばれる
+         * @memberOf RadMapLayerView#
+         */
+        onChangeClusterModel : function () {
+            var isHidden = this.radiationClusterModel.get("hidden");
+
+            if (isHidden) {
+                this.hide();
+            }
         },
 
         /**
