@@ -129,7 +129,7 @@ define(function(require, exports, module) {
                 var testDataId = response.__id;
                 done(testDataId);
             },
-            error : function() {
+            error: function(model, response, options) {
                 app.logger.debug("Failed creating personal data.");
                 // パーソナル情報新規登録に失敗
                 done();
@@ -155,7 +155,7 @@ define(function(require, exports, module) {
                 var testDataId = response.__id;
                 done(testDataId);
             },
-            error : function() {
+            error: function(model, response, options) {
                 app.logger.debug("Failed creating Achievement data.");
                 done();
             }
@@ -185,7 +185,7 @@ define(function(require, exports, module) {
                 var testDataId = "dojo_movie1";
                 done(testDataId);
             },
-            error : function() {
+            error: function(model, response, options) {
                 app.logger.debug("Failed creating dojo_movie data.");
                 // 道場動画情報新規登録に失敗
                 done();

@@ -22,6 +22,10 @@ define(function(require) {
                 success : function(model, response, options) {
                     model.set("__id", response.__id);
                     done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "AbstractODataModel#save");
+                    done();
                 }
             });
         });
@@ -29,6 +33,10 @@ define(function(require) {
             this.timeout(20000);
             this.model.save(null, {
                 success : function(model, response, options) {
+                    done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "AbstractODataModel#update");
                     done();
                 }
             });
@@ -38,10 +46,14 @@ define(function(require) {
             var targetModel = new AbstractODataModel();
             targetModel.entity = "article";
 
-            targetModel.set("id", this.model.get("id"));
+            targetModel.set("__id", this.model.get("__id"));
             targetModel.fetch({
                 success : function(model, response, options) {
-                    assert.equal(targetModel.get("id"), model.get("id"));
+                    assert.equal(targetModel.get("__id"), response.__id);
+                    done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "AbstractODataModel#fetch");
                     done();
                 }
             });
@@ -51,9 +63,13 @@ define(function(require) {
             var targetModel = new AbstractODataModel();
             targetModel.entity = "article";
 
-            targetModel.set("id", this.model.get("id"));
+            targetModel.set("__id", this.model.get("__id"));
             targetModel.destroy({
                 success : function(model, response, options) {
+                    done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "AbstractODataModel#destroy");
                     done();
                 }
             });

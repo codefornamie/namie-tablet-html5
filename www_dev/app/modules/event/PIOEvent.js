@@ -51,6 +51,7 @@ define(function(require, exports, module) {
      * @returns {Boolean} 成功した場合、<code>true</code>を返す
      */
     PIOEvent.prototype.isSuccess = function() {
+        app.logger.debug("status" + this.status);
         if (200 <= this.status && this.status < 300) {
             return true;
         } else {
