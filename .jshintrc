@@ -60,6 +60,7 @@
 		"requirejs",
         "Camera",
         "canvasResize",
-        "LocalFileSystem"
+        "LocalFileSystem",
+        "moment"
     ]
 }

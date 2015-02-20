@@ -50,9 +50,15 @@ define(function(require, exports, module) {
                     success : $.proxy(function() {
                         this.onUnRecommendSave(recommendedModel);
                     }, this),
-                    error : $.proxy(function() {
-                        alert("おすすめ記事情報の保存に失敗しました");
+                    error : $.proxy(function(model, resp, options) {
+                        if (resp.event && resp.event.isConflict()) {
+                            this.showMessage("他のユーザーとおすすめ記事情報の保存操作が競合したため、保存できませんでした。<br/>再度、保存操作を行ってください。", resp.event);
+                        } else {
+                            this.showMessage("おすすめ記事情報の保存に失敗しました", resp.event, app.PIOLogLevel.ERROR);
+                        }
                         this.hideLoading();
+                        // 一覧を再読み込み
+                        this.parent.reloadNewsView();
                     }, this)
                 });
             } else {
@@ -114,9 +120,8 @@ define(function(require, exports, module) {
                 function onSaveAllSequence(err) {
                     self.hideLoading();
 
-                    if (err && err.httpClient && err.httpClient.status === 412) {
-                        //self.collection.fetch();
-                        // TODO: NAM-889 collectionの更新処理を行う
+                    if (err.event && err.event.isConflict()) {
+                        self.parent.reloadNewsView();
                     }
                 }
             );
@@ -170,8 +175,11 @@ define(function(require, exports, module) {
 
                     if (err) {
                         vexDialog.defaultOptions.className = 'vex-theme-default';
-                        vexDialog.alert("並び順の保存に失敗しました。");
-                        app.logger.error("並び順の保存に失敗しました。");
+                        if (err.event && err.event.isConflict()) {
+                            self.showMessage("他のユーザーと並び順の保存操作が競合したため、保存できませんでした。<br/>再度、保存操作を行ってください。", err.event);
+                        } else {
+                            self.showMessage("並び順の保存に失敗しました。", err.event, app.PIOLogLevel.ERROR);
+                        }
                     }
 
                     onSaveAllSequence(err);

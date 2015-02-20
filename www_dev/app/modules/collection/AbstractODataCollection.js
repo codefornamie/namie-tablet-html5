@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractCollection = require("modules/collection/AbstractCollection");
     var Filter = require("modules/util/filter/Filter");
     var Log = require("modules/util/Logger");
+    var PIOEvent = require("modules/event/PIOEvent");
 
     /**
      * PCS ODataの検索操作を行うモデルの基底クラスを作成する。
@@ -114,14 +115,17 @@ define(function(require, exports, module) {
             var complete = function(res) {
                 Log.info("AbstractODataCollection search complete handler");
 
+                // personium.ioのAPI呼び出し情報を保持するイベント
+                // 便宜上、resオブジェクトに紐付ける
+                var event = new PIOEvent(res);
+                res.event = event;
                 // 取得したJSONオブジェクト
                 var json = null;
 
-                if (res.error) {
+                if (!event.isSuccess()) {
                     if (options.error) {
                         options.error(res);
                     }
-
                     def.reject(res);
                 } else if (options.success) {
                     if (res.bodyAsJson) {

@@ -204,9 +204,15 @@ define(function(require, exports, module) {
             this.model.set("isRecommend", "true");
             this.model.save(null, {
                 success : $.proxy(this.onRecommendSave, this),
-                error : $.proxy(function() {
-                    alert("おすすめ記事情報の保存に失敗しました");
+                error : $.proxy(function(model, resp, options) {
+                    if (resp.event && resp.event.isConflict()) {
+                        this.showMessage("他のユーザーとおすすめ記事情報の保存操作が競合したため、保存できませんでした。<br/>再度、保存操作を行ってください。", resp.event);
+                    } else {
+                        this.showMessage("おすすめ記事情報の保存に失敗しました", resp.event, app.PIOLogLevel.ERROR);
+                    }
                     this.hideLoading();
+                    // 一覧を再読み込み
+                    this.parentView.parent.reloadNewsView();
                 }, this)
             });
         },
@@ -221,8 +227,8 @@ define(function(require, exports, module) {
                         this.model
                     ]);
                 }, this),
-                error : $.proxy(function() {
-                    alert("おすすめ記事情報の保存に失敗しました");
+                error : $.proxy(function(resp) {
+                    this.showMessage("おすすめ記事情報の保存に失敗しました", resp.event, app.PIOLogLevel.ERROR);
                     this.hideLoading();
                 }, this)
             });
