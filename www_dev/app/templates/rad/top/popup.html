@@ -4,44 +4,51 @@
             <%= data.dateStr %>
         </div>
 
-        <h4 class="rad-popup__average-value">
-            平均:
-            <b><%= data.avg %></b>
-            μSv/h
-        </h4>
-
-        <p class="rad-popup__max-value">
-            最大:
-            <b><%= data.max %></b>
-            μSv/h
-        </p>
+        <div class="rad-popup__radvalue">
+            <div class="rad-popup__radvalue__label">
+                平均値
+            </div>
+            <div class="rad-popup__radvalue__value">
+                <b><%= data.avg %></b>
+                μSv/h
+            </div>
+        </div>
+        <div class="rad-popup__radvalue">
+            <div class="rad-popup__radvalue__label">
+                最大値
+            </div>
+            <div class="rad-popup__radvalue__value">
+                <b><%= data.max %></b>
+                μSv/h
+            </div>
+        </div>
     </div>
 
     <div class="rad-popup__info">
         <ul>
             <li>
-                タイプ:
-                <%= data.stationType %>
+                タイプ :
+                <span class="rad-popup__info__value"><%= data.stationType %></span>
             </li>
 
             <li>
-                測定標本数:
-                <%= data.numSample %>
+                測定標本数 :
+                <span class="rad-popup__info__value"><%= data.numSample %></span>
             </li>
 
             <li>
-                測定機器メーカー:
-                <%= data.sensorVendor %>
+                測定機器メーカー :
+                <span class="rad-popup__info__value"><%= data.sensorVendor %></span>
             </li>
 
             <li>
-                測定機器モデル:
-                <%= data.sensorModel %>
+                測定機器モデル :
+                <span class="rad-popup__info__value"><%= data.sensorModel %></span>
             </li>
 
             <li>
-                測定機器シリアルNo.:
-                <%= data.sensorSerialNo %>
+                測定機器シリアルNo. :
+                <span class="rad-popup__info__value"><%= data.sensorSerialNo %></span>
             </li>
         </ul>
     </div>

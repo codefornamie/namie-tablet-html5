@@ -8,6 +8,7 @@
  */
 .page-rad {
     background-color: #fbfaf4;
+    color: #333;
 }
 
 .page-rad .header {
@@ -139,7 +140,8 @@
 }
 
 .page-rad .rad-popup__date {
-    font-size: 18px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
 }
 
 .page-rad .rad-popup__average-value {
@@ -153,14 +155,61 @@
     line-height: 1;
 }
 
+.page-rad .rad-popup__radvalue {
+    display: table;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.page-rad .rad-popup__radvalue__label {
+    display: table-cell;
+    vertical-align: middle;
+    width: 33.3%;
+
+    background-color: #e6e8e5;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 5px;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.page-rad .rad-popup__radvalue__value {
+    display: table-cell;
+    vertical-align: middle;
+
+    background-color: #f2f2f2;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    padding: 5px;
+    font-size: 1rem;
+    text-align: center;
+}
+.page-rad .rad-popup__radvalue__value b {
+    font-size: 1.4rem;
+}
+
 .page-rad .rad-popup__info {
     margin: 8px 0;
     font-size: 0.8rem;
 }
 
 .page-rad .rad-popup__info > ul {
-    margin: 16px 8px 16px 32px;
-    font-size: 0.8rem;
+    margin: 16px 0;
+    font-size: 0.7rem;
+    list-style-type: none;
+}
+
+.page-rad .rad-popup__info > ul li {
+    border-top: 1px solid #e6e8e5;
+    padding: 3px 0;
+}
+.page-rad .rad-popup__info > ul li:first-child {
+    border-top: none;
+}
+
+.page-rad .rad-popup__info__value {
+    font-weight: bold;
 }
 
 .page-rad .rad-info-list {
@@ -182,6 +231,68 @@
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 2px 0 rgba(0,0,0,0.16);
     margin-bottom: 8px;
     padding: 8px;
+}
+
+.page-rad .leaflet-container a.leaflet-popup-close-button {
+    background: white;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    color: #389514;
+    line-height: 34px;
+    font: inherit;
+    font-size: 24px;
+    box-shadow: 0px 2px 1px 0px #a4a4a4;
+    position: absolute;
+    top: -17px;
+    right: -17px;
+    text-align: center;
+}
+.page-rad .leaflet-container a.leaflet-popup-close-button::after {
+    content: "閉じる";
+    position: absolute;
+    top: 0.5rem;
+    left: 100%;
+    color: black;
+    white-space: nowrap;
+    margin-left: 10px;
+    font-size: 0.8rem;
+    /* 縁取り */
+    text-shadow: white 2px 2px 0px, white -2px 2px 0px, white 2px -2px 0px, white -2px -2px 0px,
+                 white -2px 0px 0px, white 2px 0px 0px, white 0px -2px 0px, white 0px 2px 0px;
+}
+
+.page-rad .leaflet-popup .leaflet-popup-content-wrapper {
+    border-radius: 3px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.page-rad .leaflet-popup .leaflet-popup-content {
+    margin: 24px 36px 36px 36px;
+}
+
+.page-rad .leaflet-popup .leaflet-popup-tip {
+    margin: -1px auto;
+    background: transparent;
+
+    /* 影を形状に沿わせるため、box-shadowに代わりfilter: drop-shadowを適用 */
+    box-shadow: none;
+    -webkit-filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4));
+    filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.4));
+
+    /* 下向き三角形 */
+    border-top: 18px solid #fff;
+    border-right: 9px solid transparent;
+    border-bottom: 18px solid transparent;
+    border-left: 9px solid transparent;
+
+    /* 回転を初期化 */
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 
 /**

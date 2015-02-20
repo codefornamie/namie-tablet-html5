@@ -35,7 +35,7 @@ define(function(require, exports, module) {
 
             if (hasCollection) {
                 date = moment(clusterFeature.properties.startDate);
-                dateStr = date.format("YYYY/MM/DD");
+                dateStr = date.format("YYYY年 M/D(ddd)");
                 avg = logFeatureCollection.features.reduce(function (total, feature) {
                     return total + feature.properties.value;
                 }, 0) / logFeatureCollection.features.length;
@@ -47,7 +47,7 @@ define(function(require, exports, module) {
                 avg = Math.round(avg * 1000) / 1000;
             } else {
                 date = moment(logFeature.properties.date);
-                dateStr = date.format("YYYY/MM/DD HH:mm:ss");
+                dateStr = date.format("YYYY年 M/D(ddd) H時mm分");
                 avg = logFeature.properties.value;
                 max = logFeature.properties.value;
             }
