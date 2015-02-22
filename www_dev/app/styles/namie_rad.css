@@ -39,7 +39,11 @@
 /**
  *  ヘッダ
  */
-.page-rad .header,
+.page-rad .header {
+    display: block;
+    background-image: none;
+}
+
 .page-rad .global-nav {
     display: none;
 }
