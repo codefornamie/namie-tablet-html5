@@ -45,6 +45,8 @@ define(function(require, exports, module) {
             this.layers.forEach(function (v) {
                 v.setMap(map);
             });
+
+            this.onLoadMap();
         },
 
         /**
@@ -60,8 +62,6 @@ define(function(require, exports, module) {
             var map = leaflet.map("map", {
                 zoomControl : false
             });
-
-            map.on("load", this.onLoadMap.bind(this));
 
             map.addControl(leaflet.control.zoom({
                 position : "bottomright"
