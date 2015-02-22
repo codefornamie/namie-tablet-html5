@@ -70,7 +70,7 @@ define(function(require, exports, module) {
             }));
 
             // ローディングを停止
-            this.hideLoading();
+            //this.hideLoading();
         },
         /**
          * 線量データアップロードボタンが押下された際のコールバック
