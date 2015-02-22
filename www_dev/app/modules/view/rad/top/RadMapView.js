@@ -57,7 +57,15 @@ define(function(require, exports, module) {
                 return this.map;
             }
 
-            var map = leaflet.map("map").setView([38, 140], 13);
+            var map = leaflet.map("map", {
+                zoomControl : false
+            });
+
+            map.on("load", this.onLoadMap.bind(this));
+
+            map.addControl(leaflet.control.zoom({
+                position : "bottomright"
+            }));
 
             leaflet.tileLayer(
                 RadMapView.URL_TILE_SERVER,
@@ -65,6 +73,8 @@ define(function(require, exports, module) {
                     attribution : "&copy; <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
                 }
             ).addTo(map);
+
+            map.setView([38, 140], 13);
 
             this.map = map;
 
@@ -118,6 +128,14 @@ define(function(require, exports, module) {
             };
 
             return featureCollection;
+        },
+
+        /**
+         * 地図が初期化されたらサイドバーを表示する
+         * @memberOf RadMapView#
+         */
+        onLoadMap : function () {
+            this.$el.trigger("sidebar.show");
         },
 
         /**

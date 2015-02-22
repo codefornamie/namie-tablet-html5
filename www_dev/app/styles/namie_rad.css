@@ -32,6 +32,52 @@
 .page-rad .contents__secondary {
     padding-top: 0;
     background: rgb(189, 189, 189);
+    margin-left: 0;
+    box-shadow: 3px 0px 3px 0px rgba(55, 88, 88, 0.15);
+    z-index: 1;
+    overflow: visible;
+    -webkit-transition: .3s ease margin-left;
+    transition: .3s ease margin-left;
+}
+
+.is-expanded .contents__secondary {
+    box-shadow: none;
+    margin-left: -25%;
+}
+
+/**
+ *  サイドバー開閉ボタン
+ */
+.contents__secondary .toggle-sidebar {
+    position: absolute;
+    top: 0;
+    right: -50px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 34px;
+    text-align: center;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.contents__secondary .toggle-sidebar:active {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.contents__secondary .toggle-sidebar i {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: .2s all ease;
+    transition: .2s all ease;
+}
+
+.is-expanded .contents__secondary .toggle-sidebar {
+}
+
+.is-expanded .contents__secondary .toggle-sidebar i {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 /**
@@ -164,6 +210,19 @@
     line-height: 1;
     box-shadow: 0 3px 8px #666;
 }
+
+/**
+ *  メインカラム（地図）
+ */
+.page-rad .contents__primary {
+    -webkit-transition: .3s ease width;
+    transition: .3s ease width;
+}
+
+.is-expanded .contents__primary {
+    width: 100%;
+}
+
 
 /**
  *  ----------
@@ -552,3 +611,28 @@
     line-height: 52px;
     border-radius: 50px;
 }
+
+.button.button--emerald:active {
+    /*
+    background: -webkit-linear-gradient(90deg, rgb(201, 253, 135) 0%, rgb(34, 123, 38) 100%);
+    background: -moz-linear-gradient(90deg, rgb(201, 253, 135) 0%, rgb(34, 123, 38) 100%);
+    background: -o-linear-gradient(90deg, rgb(201, 253, 135) 0%, rgb(34, 123, 38) 100%);
+    background: -ms-linear-gradient(90deg, rgb(201, 253, 135) 0%, rgb(34, 123, 38) 100%);
+    background: linear-gradient(0deg, rgb(201, 253, 135) 0%, rgb(34, 123, 38) 100%);
+    */
+    box-shadow: none;
+    padding: 0;
+}
+
+.button.button--emerald:active > div {
+    /*
+    background: -webkit-linear-gradient(90deg, #aae850 0%, #2d982a 100%);
+    background: -moz-linear-gradient(90deg, #aae850 0%, #2d982a 100%);
+    background: -o-linear-gradient(90deg, #aae850 0%, #2d982a 100%);
+    background: -ms-linear-gradient(90deg, #aae850 0%, #2d982a 100%);
+    background: linear-gradient(0deg, #aae850 0%, #2d982a 100%);
+    */
+    height: 60px;
+    line-height: 64px;
+}
+

@@ -25,7 +25,10 @@ define(function(require, exports, module) {
          */
         template : require("ldsh!templates/{mode}/top/top"),
         events : {
-            "click [data-radiation-upload-button]": "onClickRadiationUploadButton"
+            "click [data-radiation-upload-button]": "onClickRadiationUploadButton",
+            "click [data-toggle-sidebar]" : "toggleSidebar",
+            "sidebar.hide" : "hideSidebar",
+            "sidebar.show" : "showSidebar"
         },
 
         /**
@@ -144,6 +147,33 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(this.radClusterCollection, "sync", this.render);
+        },
+
+        /**
+         * サイドバーを表示する
+         * @memberOf RadTopView#
+         */
+        showSidebar : function () {
+            $("#snap-content").removeClass("is-expanded");
+            $(window).triggerHandler("resize");
+        },
+
+        /**
+         * サイドバーを非表示にする
+         * @memberOf RadTopView#
+         */
+        hideSidebar : function () {
+            $("#snap-content").addClass("is-expanded");
+            $(window).triggerHandler("resize");
+        },
+
+        /**
+         * サイドバーの表示/非表示を切り替える
+         * @memberOf RadTopView#
+         */
+        toggleSidebar : function () {
+            $("#snap-content").toggleClass("is-expanded");
+            $(window).triggerHandler("resize");
         }
     });
 
