@@ -25,7 +25,7 @@ define(function(require, exports, module) {
          */
         template : require("ldsh!templates/{mode}/top/top"),
         events : {
-            "click [data-radiation-upload-button]": "onClickRadiationUploadButton",
+            "click [data-radiation-upload-button]" : "onClickRadiationUploadButton",
             "click [data-toggle-sidebar]" : "toggleSidebar",
             "sidebar.hide" : "hideSidebar",
             "sidebar.show" : "showSidebar"
@@ -46,6 +46,9 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         afterRendered : function() {
+            $(".sidemenu-bottom__scroll")
+                .on("scroll", this.onScrollSidebar.bind(this))
+                .trigger("scroll");
         },
 
         /**
@@ -174,7 +177,32 @@ define(function(require, exports, module) {
         toggleSidebar : function () {
             $("#snap-content").toggleClass("is-expanded");
             $(window).triggerHandler("resize");
-        }
+        },
+
+        /**
+         * サイドバーがスクロールされたら呼ばれる
+         * @memberOf RadTopView#
+         * @param {Event} ev
+         */
+        onScrollSidebar : _.throttle(function (ev) {
+            var el = ev.currentTarget;
+            var $container = $(el);
+            var scrollTop = $container.scrollTop();
+            var containerHeight = $container.height();
+            var contentHeight = $container[0].scrollHeight;
+
+            if (scrollTop > 0) {
+                $container.addClass("has-before");
+            } else {
+                $container.removeClass("has-before");
+            }
+
+            if (containerHeight + scrollTop < contentHeight) {
+                $container.addClass("has-after");
+            } else {
+                $container.removeClass("has-after");
+            }
+        }, 150)
     });
 
     module.exports = RadTopView;
