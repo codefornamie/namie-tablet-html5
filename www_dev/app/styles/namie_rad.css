@@ -7,8 +7,26 @@
  *  ----------
  */
 .page-rad.snap-content {
-    background-color: #fbfaf4;
+    background: #b5d0d0;
     color: #333;
+}
+
+/**
+ *  ログイン画面背景
+ */
+.page-rad .contents {
+    background: #b5d0d0;
+}
+
+.page-rad #login label {
+    color: #2f3a3a;
+    font-weight: bold;
+}
+
+.page-rad #login .button {
+    color: #2f3a3a;
+    width: 100%;
+    margin: 15px 0;
 }
 
 /**
@@ -202,6 +220,9 @@
     padding: 0;
 }
 
+/**
+ *  サイドバーのradiation_cluster一覧
+ */
 .page-rad .rad-cluster-item {
     padding: 8px;
     margin: 10px 0;
@@ -209,6 +230,7 @@
     border: 3px solid white;
     -webkit-transition: .1s ease all;
     transition: .1s ease all;
+    display: flex;
 }
 
 .page-rad .rad-cluster-item:active {
@@ -219,6 +241,81 @@
     border-bottom-width: 1px;
 }
 
+.rad-cluster-item__left,
+.rad-cluster-item__right {
+    flex: 1 1 auto;
+    align-items: center;
+}
+
+.rad-cluster-item__left {
+    padding: 0 0 0 10px;
+}
+
+.rad-cluster-item__right {
+}
+
+.rad-cluster-item__date {
+    text-align: left;
+}
+
+.rad-cluster-item__date .date--year {
+    font-size: 14px;
+    line-height: 1;
+    vertical-align: top;
+}
+
+.rad-cluster-item__date .date--monthday {
+    font-size: 32px;
+    vertical-align: middle;
+    letter-spacing: .1em;
+}
+
+.rad-cluster-item__date .date--weekday {
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.rad-cluster-item__value-table {
+    background: none;
+    border: none;
+    margin: 0;
+    width: 100%;
+    font-size: 14px;
+    border-collapse: collapse;
+}
+
+.rad-cluster-item__value-table tr {
+    /* 奇数偶数行の背景色指定を打ち消す */
+    background: none !important;
+}
+
+.rad-cluster-item__value-table .rad-cluster-item__avg-value td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+    padding-bottom: 5px;
+}
+
+.rad-cluster-item__value-table .rad-cluster-item__max-value td {
+    padding-top: 5px;
+}
+
+.rad-cluster-item__value-table tr td {
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+}
+
+.rad-cluster-item__value-table span,
+.rad-cluster-item__value-table b {
+    line-height: 20px;
+}
+
+.rad-cluster-item__value-table b {
+    font-size: 18px;
+}
+
+/**
+ *  ボタン
+ */
 .page-rad .button {
     display: inline-block;
     background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e3e0d5));
