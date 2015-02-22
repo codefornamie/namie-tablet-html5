@@ -39,6 +39,7 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         beforeRendered : function() {
+            this.hideSidebar();
         },
 
         /**

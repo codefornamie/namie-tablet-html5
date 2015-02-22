@@ -747,31 +747,99 @@
     right: 0;
     top: 0;
     width: 80%;
-}
 
-.modal-radiation {
-    background: rgb(222, 234, 243);
+    background: rgb(255, 255, 255);
     text-align: center;
     padding: 15px 0;
-    color: rgb(8, 76, 129);
-    font-size: 1.5rem;
+    color: rgb(47, 58, 58);
+    font-size: 1rem;
     font-weight: bold;
 }
 
+.modal-radiation .button--float {
+    color: rgb(56, 149, 20);
+}
+
+.modal-radiation__header {
+    height: 80px;
+    line-height: 80px;
+}
+
+.modal-radiation__list-header {
+    position: relative;
+    width: 90%;
+    margin: auto;
+    z-index: 2;
+    text-align: left;
+    background: #dfeae3;
+    height: 40px;
+    line-height: 40px;
+}
+
+/**
+ *  モーダルウィンドウ内のスクロール部分
+ */
+.modal-radiation__scroll {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 90%;
+    margin: auto;
+    padding: 135px 0 120px 0;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.modal-radiation__scroll-content {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+/**
+ *  ファイル一覧
+ */
 .modal-radiation .radiationList {
-    height: 420px;
-    overflow: scroll;
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
+
+.modal-radiation .radiationListItem .columns {
+    height: 40px;
+    line-height: 40px;
+}
+
+.modal-radiation .radiationListItem label {
+    height: 40px;
+    line-height: 40px;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .modal-radiation .radiationListItem label.radiationItemFileName {
-    font-size: 1.2rem;
-}
-.modal-radiation .radiationListItem label.radiationItemFileLastModified {
     font-size: 1rem;
 }
+.modal-radiation .radiationListItem label.radiationItemFileLastModified {
+    font-size: 0.8rem;
+    font-weight: bold;
+}
 
-.modal-radiation .radiationList {
-        padding: 15px 0;
+/**
+ *  モーダルウィンドウ内のアップロードボタン
+ */
+.modal-radiation__upload {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 2;
 }
 
 /**
