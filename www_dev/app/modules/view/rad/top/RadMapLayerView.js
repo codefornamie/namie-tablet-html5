@@ -56,6 +56,8 @@ define(function(require, exports, module) {
             this.radiationLogCollection = new RadiationLogCollection({
                 __id : this.radiationClusterModel.get("collectionId")
             });
+            this.radiationLogCollection.collectionId = this.radiationClusterModel.get("__id");
+            this.radiationLogCollection.setSearchConditionIncludeInCluster();
 
             this.listenTo(this.radiationLogCollection, "request", this.onRequestCollection);
             this.listenTo(this.radiationLogCollection, "add", this.onAddCollection);

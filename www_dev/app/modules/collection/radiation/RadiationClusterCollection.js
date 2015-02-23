@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
+    var Equal = require("modules/util/filter/Equal");
 
     /**
      * 放射線量データのコレクションクラス
@@ -13,12 +14,18 @@ define(function(require, exports, module) {
      */
     var RadiationClusterCollection = AbstractODataCollection.extend({
         model : RadiationClusterModel,
-        entity : "radiation",
-        condition : {
-            top : 1,
-            orderby : "dateTime desc",
-            filter : "station eq '浪江町役場'"
+        entity : "radiation_cluster",
+        /**
+         * 初期化処理
+         * @memberOf RadiationClusterCollection#
+         */
+        initialize : function() {
+            this.condition = {
+                    top : 50,
+                    orderby : "createDate desc"
+            };
         },
+
         /**
          * 配列をマップに変換する。
          * 
@@ -27,8 +34,17 @@ define(function(require, exports, module) {
          * @return {Objecy} レスポンス情報
          * @memberOf RadiationClusterCollection#
          */
-        parseOData: function (response, options) {
-            var res = response.map(function (cluster) {
+        parseOData : function(response, options) {
+            // 地図上に表示できないようなデータは省く
+            response = _.filter(response, function(ress) {
+                if (!ress.minLatitude || !ress.maxLatitude || !ress.minLongitude || !ress.maxLongitude ||
+                        !ress.averageValue || !ress.maxValue) {
+                    return false;
+                }
+                return true;
+            });
+            
+            var res = response.map(function(cluster) {
                 return _.extend(cluster, {
                     minLatitude : cluster.minLatitude / Math.pow(10, 6),
                     maxLatitude : cluster.maxLatitude / Math.pow(10, 6),
@@ -41,25 +57,14 @@ define(function(require, exports, module) {
 
             return res;
         },
-
-        // TODO: 開発用サーバにデータが入ったらこのメソッドは削除する
         /**
-         * 開発用サーバにデータが無いのでダミーのsyncを利用する
+         * 自身がアップロードしたclusterの検索条件設定を行う
+         * @memberOf RadiationClusterCollection#
          */
-        sync : function (method, collection, opt) {
-            var self = this;
-            var URL_DUMMY_JSON = "http://www.json-generator.com/api/json/get/bIZCDwkkMO";
-
-            if (method === "read") {
-                collection.trigger("request", collection, null, opt);
-
-                return $.get(URL_DUMMY_JSON).done(function (data) {
-                    self.set(self.parseOData(data));
-                    self.trigger("sync", self, data, opt);
-                });
-            } else {
-                return AbstractODataCollection.prototype.sync.apply(this, arguments);
-            }
+        setSearchConditionByMyself : function() {
+            this.condition.filters = [
+                new Equal("userId", app.user.get("__id"))
+            ];
         },
 
         /**

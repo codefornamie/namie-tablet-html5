@@ -24,7 +24,7 @@ define(function(require, exports, module) {
          */
         parseOData : function(response, options) {
             console.log(response);
-
+            
             return response;
         },
         /**
@@ -69,7 +69,10 @@ define(function(require, exports, module) {
             }
             saveData.maxLongitude = maxLongitude;
             saveData.isFixedStation = this.get("isFixedStation");
-
+            
+            // TODO 他の端末対応をした際には切り分ける
+            saveData.sensorVendor = "HORIBA";
+            saveData.sensorModel = "PA-1100";
         },
 
         /**
