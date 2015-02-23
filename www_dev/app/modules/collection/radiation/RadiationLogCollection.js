@@ -17,7 +17,7 @@ define(function(require, exports, module) {
         entity : "radiation_log",
         /**
          * 初期化処理
-         * @memberOf RadiationClusterCollection#
+         * @memberOf RadiationLogCollection#
          */
         initialize : function() {
             this.condition = {

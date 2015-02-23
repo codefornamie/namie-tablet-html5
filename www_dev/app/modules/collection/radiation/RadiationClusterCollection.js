@@ -67,7 +67,6 @@ define(function(require, exports, module) {
             ];
         },
 
-        // TODO: 開発用サーバ
         /**
          * GeoJSON形式に変換する。
          * @return {Object}
