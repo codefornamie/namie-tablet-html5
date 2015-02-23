@@ -1,8 +1,6 @@
 define(function(require, exports, module) {
     "use strict";
 
-    var app = require("app");
-    var async = require("async");
     var leaflet = require("leaflet");
     var d3 = require("d3");
     var GeoUtil = require("modules/util/GeoUtil");

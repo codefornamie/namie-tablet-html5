@@ -121,7 +121,7 @@ define(function(require, exports, module) {
         },
 
         /**
-         * クラスターモデルの表示状態が変更されたら呼ばれる
+         * あるClusterModelが表示されたら、それ以外は非表示とする
          * @memberOf RadMapView#
          * @param {RadiationClusterModel} model
          */
