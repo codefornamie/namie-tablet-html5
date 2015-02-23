@@ -1,0 +1,25 @@
+/**
+ *  浪江町アプリ管理ツールCSS
+ */
+/**
+ *  ----------
+ *  1. Base
+ *  ----------
+ */
+.page-ope {
+    
+}
+
+/**
+ *  ----------
+ *  2. Project
+ *  ----------
+ */
+.page-ope .contents__primary {
+    position: relative;
+    overflow: auto;
+    padding: 0px;
+}
+.page-ope .panel {
+    margin-bottom: 0px;
+}

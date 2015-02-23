@@ -28,10 +28,12 @@ define(function(require, exports, module) {
     // 運用管理
     login.ope = require("modules/view/ope/login/index");
     var TopView = require("modules/view/ope/top/TopView");
+    var OpeHeaderView = require("modules/view/ope/common/HeaderView");
     var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
     var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
     var OpeSlideshowRegistView = require("modules/view/ope/slideshow/OpeSlideshowRegistView");
     var OpeSlideshowListView = require("modules/view/ope/slideshow/OpeSlideshowListView");
+    var OpeCharacterMessageListView = require("modules/view/ope/message/CharacterMessageListView");
     var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
@@ -266,6 +268,7 @@ define(function(require, exports, module) {
             'ope-top' : 'opeTop',
             'ope-top/:date' : 'opeTop',
             'ope-slideshow' : 'opeSlideshow',
+            'ope-message' : 'opeMessage',
 
             // 道場アプリ
             'dojo-top' : 'dojoTop',
@@ -460,7 +463,7 @@ define(function(require, exports, module) {
         opeTop : function(targetDate) {
             if( targetDate ) {
                 this.layout.showView(new TopView({targetDate:targetDate}));
-                this.layout.setHeader(new common.HeaderView());
+                this.layout.setHeader(new OpeHeaderView());
                 this.layout.setFooter(new common.FooterView());
             } else {
                 BusinessUtil.calcNextPublication(function(dateString){
@@ -474,7 +477,14 @@ define(function(require, exports, module) {
         opeSlideshow : function() {
             app.logger.debug('[route] opeSlideshow');
             var slideshowListView = new OpeSlideshowListView();
-            this.layout.setView("#opeNewsList", slideshowListView);
+            this.layout.showView(slideshowListView);
+        },
+        /**
+         * キャラクターメッセージ一覧へ遷移する
+         */
+        opeMessage : function() {
+            app.logger.debug('[route] opeMessage');
+            this.layout.showView(new OpeCharacterMessageListView());
         },
 
         /**
