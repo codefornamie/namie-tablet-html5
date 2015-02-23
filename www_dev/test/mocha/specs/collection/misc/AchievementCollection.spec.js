@@ -35,6 +35,10 @@ define(function(require) {
                         assert.equal(fetchedModel.get("action"), "NtUAbrgnmpM", "fetched correct Achievement model.");
                         assert.equal(fetchedModel.get("count"), "1", "fetched correct Achievement model.");
                         done();
+                    },
+                    error: function(model, response, options) {
+                        assert.ok(false, "Achievement collection fetched.");
+                        done();
                     }
                 });
             });

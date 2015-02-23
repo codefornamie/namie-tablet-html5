@@ -7,6 +7,8 @@ define(function(require, exports, module) {
     var CommonUtil = require("modules/util/CommonUtil");
     var colorbox = require("colorbox");
     var canvasToBlob = require("canvas-to-blob");
+    var vexDialog = require("vexDialog");
+    var PIOLogLevel = require("modules/util/logging/PIOLogLevel");
 
     /**
      * 全てのViewの基底クラスを作成する。
@@ -137,7 +139,7 @@ define(function(require, exports, module) {
                     color : '#fff'
                 }
             });
-            this.$progressBar = $("progress"); 
+            this.$progressBar = $("progress");
             this.$progressBar.attr("value", 0);
         },
         /**
@@ -169,6 +171,48 @@ define(function(require, exports, module) {
                 });
             }
         },
+
+        /**
+         * メッセージダイアログを表示する.
+         * <p>
+         * personium.ioのAPI呼び出しでエラーが発生した場合に、
+         * 画面にエラーメッセージを表示するために利用する。
+         * <br>
+         * personium.io のAPI呼び出しエラーが、端末の通信状態に起因するものであった場合、<br>
+         * 指定されたメッセージに加えて、通信状態に問題があることを示すメッセージを表示する。
+         * これを回避する場合、showNetworkErrorパラメタに<code>false</code>を指定する。
+         * </p>
+         * @param {String} message メッセージ
+         * @param {PIOEvent} event エラーとなったイベント
+         * @param {String} level ログ出力レベル。PIOLogLevelのINFO, WARN, ERRORのいすれかを指定する。未指定の場合、INFOとなる。
+         * @param {Boolean} showNetworkError ネットワークエラーメッセージを表示するかどうか
+         */
+        showMessage : function(message, event, level, showNetworkError) {
+            if (!level) {
+                level = PIOLogLevel.INFO;
+            }
+            if (showNetworkError === undefined) {
+                showNetworkError = true;
+            }
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            if (showNetworkError) {
+                if (event.isNetworkError()) {
+                    message = "通信エラーが発生したため、以下のエラーが発生しました。通信状態をご確認ください。<br/><br/>" + message;
+                }
+            }
+            vexDialog.alert(message);
+            switch (level) {
+            case PIOLogLevel.INFO:
+                app.logger.info(message + " [event: " + event + "]");
+                break;
+            case PIOLogLevel.WARN:
+                app.logger.warn(message + " [event: " + event + "]");
+                break;
+            case PIOLogLevel.ERROR:
+                app.logger.error(message + " [event: " + event + "]");
+                break;
+            }
+        },
         /**
          * 指定されたimg要素に、imgArrayパラメタで指定された画像のコンテンツを表示する。
          * 
@@ -189,8 +233,7 @@ define(function(require, exports, module) {
         /**
          * 指定されたimg要素に、itemパラメタで指定された画像のコンテンツを表示する。
          * @param imgElement 画像を表示する要素
-         * @param item 画像情報を含むオブジェクト。<br/> 以下のプロパティを含める。<br/>
-         * imageUrl: 画像のDAVのファイルパス
+         * @param item 画像情報を含むオブジェクト。<br/> 以下のプロパティを含める。<br/> imageUrl: 画像のDAVのファイルパス
          * @param isExpansion 画像拡大処理を設定するかどうか
          * @param saveFunc 拡大表示画面の「画像保存」ボタン押下時に呼び出されるコールバック関数
          * @memberOf AbstractView#
@@ -215,7 +258,7 @@ define(function(require, exports, module) {
                                     photo : true,
                                     maxWidth : "83%",
                                     maxHeight : "100%",
-                                    onOpen : function () {
+                                    onOpen : function() {
                                         // ライトボックスが開いている時に
                                         // OSの戻るボタンで記事詳細画面に戻れるように
                                         // URLを変更しておく
@@ -236,7 +279,7 @@ define(function(require, exports, module) {
 
                                         // OSの戻るボタンで戻った際に
                                         // closeLightBoxイベントが呼ばれる @app/router.js
-                                        app.once("closeLightBox", function () {
+                                        app.once("closeLightBox", function() {
                                             $colorbox.colorbox.close();
                                             $colorbox.data("isClosingByBack", true);
                                         });
@@ -251,8 +294,7 @@ define(function(require, exports, module) {
                                             app.router.back();
                                         }
                                     }
-                                }
-                        );
+                                });
                     }
                     window.URL.revokeObjectURL($(this).attr("src"));
                 }, this, url, blob));

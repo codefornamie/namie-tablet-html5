@@ -35,6 +35,10 @@ define(function(require) {
                         app.logger.debug('create test dojo_movie id=' + targetId);
                         assert.equal(fetchedModel.get("__id"), targetId, "fetched correct dojo_movie model.");
                         done();
+                    },
+                    error: function(model, response, options) {
+                        assert.ok(false, "dojoContents collection fetched.");
+                        done();
                     }
                 });
                 dojoContentCollection = collection;

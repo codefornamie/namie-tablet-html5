@@ -19,7 +19,8 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/{mode}/login/login"),
         model : null,
         events : {
-            "click #loginButton" : "onClickLoginButton"
+            "click #loginButton" : "onClickLoginButton",
+            "click #guestLoginButton" : "onClickGuestLoginButton"
         },
         beforeRendered : function() {
             app.logger.info("Start LoginView:beforeRendered");
@@ -97,6 +98,22 @@ define(function(require, exports, module) {
                 vexDialog.defaultOptions.className = 'vex-theme-default';
                 return vexDialog.alert(errmsg);
             }
+            this.model.login($.proxy(this.onLogin, this));
+        },
+        /**
+         * ゲストとしてログインボタンクリック時のコールバック関数
+         *
+         * @memberOf LoginView
+         */
+        onClickGuestLoginButton : function() {
+            Log.info("onClickGuestLoginButton(Login button click handler) called ");
+
+            var loginId = Code.GUEST_LOGIN_ID;
+            var password = Code.GUEST_LOGIN_PASSWORD;
+
+            this.model.set("loginId", loginId);
+            this.model.set("password", password);
+
             this.model.login($.proxy(this.onLogin, this));
         },
         /**

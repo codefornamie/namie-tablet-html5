@@ -26,7 +26,14 @@ define(function(require, exports, module) {
         "ope" : "浪江町アプリ管理ツール",
         "dojo" : "なみえ道場"
     };
-
+    /**
+     * ゲストとしてログイン時のID
+     */
+    Code.GUEST_LOGIN_ID = "guest";
+    /**
+     * ゲストとしてログイン時のpassword
+     */
+    Code.GUEST_LOGIN_PASSWORD = "guest";
     // 記事カテゴリ
     Code.ARTICLE_CATEGORY_LIST = [
             {

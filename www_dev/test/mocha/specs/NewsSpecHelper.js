@@ -44,7 +44,7 @@ define(function(require, exports, module) {
                 app.logger.debug("Success creating test article data.");
                 done(testDataId);
             },
-            error : function() {
+            error: function(model, response, options) {
                 assert.ok(false, "Failed creating article data.");
                 done();
             }

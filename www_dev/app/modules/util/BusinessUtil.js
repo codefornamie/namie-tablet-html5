@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var moment = require("moment");
     var IsNull = require("modules/util/filter/IsNull");
+    var Code = require("modules/util/Code");
     var Le = require("modules/util/filter/Le");
     var Ge = require("modules/util/filter/Ge");
     
@@ -54,8 +55,10 @@ define(function(require, exports, module) {
                 considerDate = moment(prevPublishDate).format("YYYY-MM-DD");
             }
             app.currentPublishDate = considerDate;
-            // 既読管理のためにパーソナル情報を更新。
-            app.user.updateShowLastPublished();
+            if (app.user.get("loginId") !== Code.GUEST_LOGIN_ID) {
+                // 既読管理のためにパーソナル情報を更新。
+                app.user.updateShowLastPublished();
+            }
             callback(considerDate);
         });
     };
