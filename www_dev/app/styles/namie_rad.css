@@ -740,13 +740,13 @@
 
 .modal-radiation {
     bottom: 0;
-    height: 80%;
+    height: 70%;
     left: 0;
     margin: auto;
     position: absolute;
     right: 0;
     top: 0;
-    width: 80%;
+    width: 60%;
 
     background: rgb(255, 255, 255);
     text-align: center;
@@ -762,7 +762,9 @@
 
 .modal-radiation__header {
     height: 80px;
-    line-height: 80px;
+    line-height: 70px;
+    z-index: 2;
+    position: relative;
 }
 
 .modal-radiation__list-header {
@@ -774,6 +776,7 @@
     background: #dfeae3;
     height: 40px;
     line-height: 40px;
+    font-size: 14px;
 }
 
 /**
@@ -808,11 +811,15 @@
 }
 
 .modal-radiation .radiationListItem .columns {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+}
+
+.modal-radiation .radiationListItem .columns {
     height: 40px;
     line-height: 40px;
 }
 
-.modal-radiation .radiationListItem label {
+.modal-radiation .radiationListItem .radiation-file {
     height: 40px;
     line-height: 40px;
     margin: 0;
@@ -822,10 +829,10 @@
     text-overflow: ellipsis;
 }
 
-.modal-radiation .radiationListItem label.radiationItemFileName {
+.modal-radiation .radiationListItem .radiation-file.radiationItemFileName {
     font-size: 1rem;
 }
-.modal-radiation .radiationListItem label.radiationItemFileLastModified {
+.modal-radiation .radiationListItem .radiation-file.radiationItemFileLastModified {
     font-size: 0.8rem;
     font-weight: bold;
 }
@@ -835,7 +842,7 @@
  */
 .modal-radiation__upload {
     position: absolute;
-    bottom: 15px;
+    bottom: 30px;
     left: 0;
     width: 100%;
     text-align: center;
