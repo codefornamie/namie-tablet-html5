@@ -44,6 +44,17 @@ define(function(require, exports, module) {
          * @memberOf ArticleCollection#
          */
         parseOData : function(response, options) {
+            if (app.user.isGuest()) {
+                // ゲストユーザの場合には福島民報系記事は表示しない
+                var restrictionItems = _.filter(app.serverConfig.COLOR_LABEL, function(item) {
+                    return !!item.guestRestriction;
+                });
+                response = _.filter(response, function(res) {
+                    return !_.find(restrictionItems, function(ri) {
+                        return ri.site === res.site;
+                    });
+                });
+            }
             _.each(response, function(res) {
                 res.dispCreatedAt = DateUtil.formatDate(new Date(res.createdAt), "yyyy年MM月dd日 HH時mm分");
                 res.tagsArray = [];
