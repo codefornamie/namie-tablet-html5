@@ -97,6 +97,8 @@ define(function(require, exports, module) {
          * @memberOf OpeArticleRegistView#
          */
         setInputValue : function() {
+            PostingArticleRegistView.prototype.setInputValue.apply(this, arguments);
+            this.model.set("isRecommend",$("#articleRecommendCheck").is(":checked") ? "true" : null);
             var type = this.model.get("type");
             if (type === "1" || type === "7" || type === "8") {
                 this.model.set("publishedAt", $("#articleRangeDate1").val());
@@ -104,7 +106,6 @@ define(function(require, exports, module) {
             } else {
                 PostingArticleRegistView.prototype.setInputValue.apply(this, arguments);
             }
-            this.model.set("isRecommend", $("#articleRecommendCheck").is(":checked") ? "true" : null);
         },
         /**
          * バリデーションチェックがOKとなり、登録処理が開始された際に呼び出されるコールバック関数。
@@ -170,8 +171,10 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             PostingArticleRegistView.prototype.afterRendered.apply(this, arguments);
-            this.isMinpoArticle = this.model.isMinpoScraping();
-            this.showImage();
+            if(this.model){
+                this.isMinpoArticle = this.model.isMinpoScraping();
+                this.showImage();
+            }
             this.hideLoading();
             this.$el.find("a").on("click", function(ev) {
                 ev.preventDefault();
