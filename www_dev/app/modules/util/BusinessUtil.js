@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var moment = require("moment");
     var IsNull = require("modules/util/filter/IsNull");
+    var Code = require("modules/util/Code");
     var Le = require("modules/util/filter/Le");
     var Ge = require("modules/util/filter/Ge");
     
