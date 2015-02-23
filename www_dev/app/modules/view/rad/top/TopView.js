@@ -78,7 +78,20 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         onClickRadiationUploadButton : function() {
-            if (CommonUtil.isCordova()) {
+            if (!!~navigator.userAgent.indexOf("namie-debug")) {
+                // XXX: dummy
+                this.setRadiationList([
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()}
+                ]);
+            } else if (CommonUtil.isCordova()) {
                 this.showLoading();
                 FileAPIUtil.getHoribaRadiationList(this.setRadiationList.bind(this));
             } else {
