@@ -97,15 +97,17 @@ define(function(require, exports, module) {
          * @memberOf OpeArticleRegistView#
          */
         setInputValue : function() {
-            PostingArticleRegistView.prototype.setInputValue.apply(this, arguments);
-            this.model.set("isRecommend",$("#articleRecommendCheck").is(":checked") ? "true" : null);
-            var type = this.model.get("type");
+            var type = null;
+            if(this.model){
+                type = this.model.get("type");
+            }
             if (type === "1" || type === "7" || type === "8") {
                 this.model.set("publishedAt", $("#articleRangeDate1").val());
                 this.model.set("depublishedAt", $("#articleRangeDate2").val());
             } else {
                 PostingArticleRegistView.prototype.setInputValue.apply(this, arguments);
             }
+            this.model.set("isRecommend",$("#articleRecommendCheck").is(":checked") ? "true" : null);
         },
         /**
          * バリデーションチェックがOKとなり、登録処理が開始された際に呼び出されるコールバック関数。
@@ -171,7 +173,8 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             PostingArticleRegistView.prototype.afterRendered.apply(this, arguments);
-            if(this.model){
+            if (this.model) {
+                console.log("type=" + this.model.get("type") + ",site=" + this.model.get("site"));
                 this.isMinpoArticle = this.model.isMinpoScraping();
                 this.showImage();
             }
