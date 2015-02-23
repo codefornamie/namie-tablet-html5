@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var RadiationLogModel = require("modules/model/radiation/RadiationLogModel");
+    var Equal = require("modules/util/filter/Equal");
 
     /**
      * 放射線量データのコレクションクラス
@@ -13,12 +14,18 @@ define(function(require, exports, module) {
      */
     var RadiationLogCollection = AbstractODataCollection.extend({
         model : RadiationLogModel,
-        entity : "radiation",
-        condition : {
-            top : 1,
-            orderby : "dateTime desc",
-            filter : "station eq '浪江町役場'"
+        entity : "radiation_log",
+        /**
+         * 初期化処理
+         * @memberOf RadiationLogCollection#
+         */
+        initialize : function() {
+            this.condition = {
+                top : 10000,
+                orderby : "date desc"
+            };
         },
+
         /**
          * 配列をマップに変換する。
          * 
@@ -28,6 +35,14 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogCollection#
          */
         parseOData: function (response, options) {
+            // 地図上に表示できないようなデータは省く
+            response = _.filter(response, function(ress) {
+                if (!ress.latitude || !ress.longitude || !ress.value) {
+                    return false;
+                }
+                return true;
+            });
+            
             var res = response.map(function (log) {
                 return _.extend(log, {
                     latitude : log.latitude / Math.pow(10, 6),
@@ -36,8 +51,17 @@ define(function(require, exports, module) {
                     value : log.value / Math.pow(10, 3)
                 });
             });
-
             return res;
+        },
+
+        /**
+         * clusterに紐付いたradiationLogの検索条件設定を行う
+         * @memberOf RadiationLogCollection#
+         */
+        setSearchConditionIncludeInCluster : function() {
+            this.condition.filters = [
+                new Equal("collectionId", this.collectionId)
+            ];
         },
 
         /**

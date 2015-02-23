@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
+    var Equal = require("modules/util/filter/Equal");
 
     /**
      * 放射線量データのコレクションクラス
@@ -13,12 +14,18 @@ define(function(require, exports, module) {
      */
     var RadiationClusterCollection = AbstractODataCollection.extend({
         model : RadiationClusterModel,
-        entity : "radiation",
-        condition : {
-            top : 1,
-            orderby : "dateTime desc",
-            filter : "station eq '浪江町役場'"
+        entity : "radiation_cluster",
+        /**
+         * 初期化処理
+         * @memberOf RadiationClusterCollection#
+         */
+        initialize : function() {
+            this.condition = {
+                    top : 50,
+                    orderby : "createDate desc"
+            };
         },
+
         /**
          * 配列をマップに変換する。
          * 
@@ -27,8 +34,17 @@ define(function(require, exports, module) {
          * @return {Objecy} レスポンス情報
          * @memberOf RadiationClusterCollection#
          */
-        parseOData: function (response, options) {
-            var res = response.map(function (cluster) {
+        parseOData : function(response, options) {
+            // 地図上に表示できないようなデータは省く
+            response = _.filter(response, function(ress) {
+                if (!ress.minLatitude || !ress.maxLatitude || !ress.minLongitude || !ress.maxLongitude ||
+                        !ress.averageValue || !ress.maxValue) {
+                    return false;
+                }
+                return true;
+            });
+            
+            var res = response.map(function(cluster) {
                 return _.extend(cluster, {
                     minLatitude : cluster.minLatitude / Math.pow(10, 6),
                     maxLatitude : cluster.maxLatitude / Math.pow(10, 6),
@@ -40,6 +56,16 @@ define(function(require, exports, module) {
             });
 
             return res;
+        },
+
+        /**
+         * 自身がアップロードしたclusterの検索条件設定を行う
+         * @memberOf RadiationClusterCollection#
+         */
+        setSearchConditionByMyself : function() {
+            this.condition.filters = [
+                new Equal("userId", app.user.get("__id"))
+            ];
         },
 
         /**

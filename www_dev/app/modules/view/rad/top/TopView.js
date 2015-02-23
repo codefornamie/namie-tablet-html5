@@ -138,10 +138,14 @@ define(function(require, exports, module) {
          */
         initCollection : function () {
             this.radClusterCollection = new RadiationClusterCollection();
-
+            // 自身のアップロードしたデータのみ検索
+            this.radClusterCollection.setSearchConditionByMyself();
             this.radClusterCollection
                 .fetch()
                 .done(function (col) {
+                    if (col.size() === 0) {
+                        return;
+                    }
                     col.each(function (model) {
                         model.set("hidden", true);
                     });
