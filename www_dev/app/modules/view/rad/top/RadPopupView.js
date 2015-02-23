@@ -146,6 +146,7 @@ define(function(require, exports, module) {
          */
         setMap : function (map) {
             this.map = map;
+            this.map.once("popupopen", this.onPopupOpen.bind(this));
         },
 
         /**
@@ -159,6 +160,17 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ポップアップが表示されたら呼ばれる
+         * @memberOf RadPopupView#
+         * @param {Event} ev
+         */
+        onPopupOpen : function (ev) {
+            this.el = ev.popup._contentNode;
+
+            $(".rad-popup__info__more--button", this.el).one("click", this.onShowMore.bind(this));
+        },
+
+        /**
          * radiationClusterModelが変更されたら呼ばれる
          * @memberOf RadPopupView#
          */
@@ -168,6 +180,16 @@ define(function(require, exports, module) {
             if (isHidden) {
                 this.hide();
             }
+        },
+
+        /**
+         * 「もっと見る」がクリックされたら呼ばれる
+         * @memberOf RadPopupView#
+         * @param {Event} ev
+         */
+        onShowMore : function (ev) {
+            $(".rad-popup__info__more--button", this.el).hide();
+            $(".rad-popup__info", this.el).show();
         },
 
         /**
