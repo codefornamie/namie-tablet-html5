@@ -54,8 +54,10 @@ define(function(require, exports, module) {
                 considerDate = moment(prevPublishDate).format("YYYY-MM-DD");
             }
             app.currentPublishDate = considerDate;
-            // 既読管理のためにパーソナル情報を更新。
-            app.user.updateShowLastPublished();
+            if (app.user.get("loginId") !== Code.GUEST_LOGIN_ID) {
+                // 既読管理のためにパーソナル情報を更新。
+                app.user.updateShowLastPublished();
+            }
             callback(considerDate);
         });
     };
