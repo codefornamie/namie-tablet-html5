@@ -137,6 +137,7 @@ define(function(require, exports, module) {
             var listView = new OpeFeedListView();
             listView.targetDate = this.targetDate;
             listView.setFeedListItemViewClass(OpeFeedListItemView);
+            listView.parent = this;
             return listView;
         },
         /**
@@ -171,6 +172,12 @@ define(function(require, exports, module) {
          *  @memberOf OpeNewsView#
          */
         onClickOpePreviewBackButton: function () {
+            this.reloadNewsView();
+        },
+        /**
+         * 記事一覧を再読み込みする
+         */
+        reloadNewsView: function() {
             this.setDate(new Date(this.targetDate));
         },
         /**

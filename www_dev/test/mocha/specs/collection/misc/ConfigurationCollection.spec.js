@@ -30,6 +30,10 @@ define(function(require) {
                     app.logger.debug('fetchedModel.get("__id"):' + fetchedModel.get("__id"));
                     assert.equal(fetchedModel.get("__id"), testDataId, "fetched correct Configuration model.");
                     done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "Configuration collection fetched.");
+                    done();
                 }
             });
         });

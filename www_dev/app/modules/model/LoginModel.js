@@ -10,6 +10,7 @@ define(function(require, exports, module) {
     var Equal = require("modules/util/filter/Equal");
     var And = require("modules/util/filter/And");
     var IsNull = require("modules/util/filter/IsNull");
+    var Code = require("modules/util/Code");
 
     /**
      * ログイン画面のモデルクラスを作成する。
@@ -243,6 +244,14 @@ define(function(require, exports, module) {
          * @param {Function} callback 取得処理完了後に呼び出すコールバック関数
          */
         fetchPersonalInfo : function(collection, callback) {
+            if (this.get("loginId") === Code.GUEST_LOGIN_ID) {
+                var guest = new PersonalModel();
+                guest.set("__id", Code.GUEST_LOGIN_ID);
+                guest.set("loginId", Code.GUEST_LOGIN_ID);
+                app.user = guest;
+                callback();
+                return;
+            }
             collection.condition.filters = [
                 new And([
                         new Equal("loginId", this.get("loginId")), new IsNull("deletedAt")

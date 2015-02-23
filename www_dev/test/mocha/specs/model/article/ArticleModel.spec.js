@@ -35,7 +35,7 @@ define(function(require) {
                     testDataId = response.__id;
                     done();
                 },
-                error : function() {
+                error: function(model, response, options) {
                     assert.ok(false, "failed creating data.");
                     done();
                 }
@@ -54,6 +54,10 @@ define(function(require) {
                     assert.equal(fetcheModel.get("site"), category.value, "fetched model's site is correct.");
                     assert.equal(fetcheModel.get("title"), "UnitTestData", "fetched model's type is correct.");
                     done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "fetched model is not undefined.");
+                    done();
                 }
             });
         });
@@ -63,7 +67,7 @@ define(function(require) {
                     assert.ok(true, "Success delete test data.");
                     done();
                 },
-                error : function() {
+                error: function(model, response, options) {
                     assert.ok(false, "Failed delete test data.");
                     done();
                 }
@@ -75,8 +79,11 @@ define(function(require) {
 
             fetcheModel.fetch({
                 success : function(model, response, options) {
-                    app.logger.debug("response:" + JSON.stringify(response));
-                    assert.equal(response.code, "PR404-OD-0002", "fetched model's type is correct.");
+                    assert.ok(false, "not found delete test data.");
+                    done();
+                },
+                error: function(model, response, options) {
+                    assert.equal(response.event.code, "PR404-OD-0002", "fetched model's type is correct.");
                     assert.ok(true, "not found delete test data.");
                     done();
                 }

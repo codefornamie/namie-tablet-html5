@@ -34,6 +34,10 @@ define(function(require) {
                         assert.equal(fetchedModel.get("loginId"), SpecHelper.TEST_USER, "fetched correct personal model.");
                         assert.equal(fetchedModel.get("fontSize"), "middle", "fetched correct personal model.");
                         done();
+                    },
+                    error: function(model, response, options) {
+                        assert.ok(false, "personal collection fetched.");
+                        done();
                     }
                 });
             });
