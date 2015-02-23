@@ -66,13 +66,8 @@ public class WidgetContentManager {
         if (recommendArticles == null) {
             recommendArticles = new ArrayList<Map<String, Object>>();
         }
-        if(messages == null){
-            String[] messageArray = context.getResources().getStringArray(R.array.messages);
-            messages = new ArrayList<String>();
-            for (String msg : messageArray) {
-                addMessage(msg);
-            }
-        }
+        CloudContents.setContext(context);
+        messages = CloudContents.getInstance().getCharaMessages();
     }
 
     /**
@@ -82,7 +77,7 @@ public class WidgetContentManager {
         imageIndex = (imageIndex + 1) % images.length;
 
         if (frameIndex == 0) {
-
+            messages = CloudContents.getInstance().getCharaMessages();
             synchronized(recommendArticles){
                 // メッセージ表示モードの遷移
                 displayMode = nextDisplayMode(displayMode);
