@@ -39,7 +39,8 @@ define(function(require, exports, module) {
             // 連絡先
             $("#articleContactInfo").html(CommonUtil.sanitizing(this.model.get("contactInfo")));
 
-            if (this.model.get("type") !== "2") {
+            var type = this.model.get("type");
+            if ( type !== "1" && type !== "2" && type !== "7" && type !== "8" ) {
                 // 画像
                 var $figure = this.$el.find('[data-figure]');
                 var images = this.model.get('images');
@@ -89,7 +90,8 @@ define(function(require, exports, module) {
          */
         onClickArticleRegistButton : function() {
             this.showLoading();
-            if (this.model.get("type") !== "2") {
+            var type = this.model.get("type");
+            if ( type !== "1" && type !== "2" && type !== "7" && type !== "8" ) {
                 this.saveArticlePicture();
             } else {
                 this.saveModel();
