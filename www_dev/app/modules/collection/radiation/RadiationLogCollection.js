@@ -53,6 +53,7 @@ define(function(require, exports, module) {
             });
             return res;
         },
+
         /**
          * clusterに紐付いたradiationLogの検索条件設定を行う
          * @memberOf RadiationLogCollection#

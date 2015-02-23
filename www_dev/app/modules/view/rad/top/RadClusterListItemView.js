@@ -23,7 +23,7 @@ define(function(require, exports, module) {
         serialize : function () {
             return {
                 model : this.model,
-                clusterFeature : this.model.toGeoJSON()
+                prop : this.model.toGeoJSON().properties
             };
         },
 

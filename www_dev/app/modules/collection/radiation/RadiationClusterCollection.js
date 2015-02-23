@@ -57,6 +57,7 @@ define(function(require, exports, module) {
 
             return res;
         },
+
         /**
          * 自身がアップロードしたclusterの検索条件設定を行う
          * @memberOf RadiationClusterCollection#

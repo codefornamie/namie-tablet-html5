@@ -652,7 +652,9 @@ define(function(require, exports, module) {
          */
         radTop : function () {
             var radTopView = new RadTopView();
+            var radHeaderView = new radCommon.HeaderView();
 
+            this.layout.setHeader(radHeaderView);
             this.layout.showView(radTopView);
         },
 
