@@ -31,6 +31,10 @@ define(function(require) {
                     app.logger.debug('fetchedModel.get("__id"):' + fetchedModel.get("__id"));
                     assert.equal(fetchedModel.get("__id"), testDataId, "fetched correct NewspaperHoliday model.");
                     done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "NewspaperHoliday collection fetched.");
+                    done();
                 }
             });
             newspaperHolidayCollection = collection;

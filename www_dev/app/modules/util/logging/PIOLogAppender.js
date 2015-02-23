@@ -23,6 +23,7 @@ define(function(require, exports, module) {
      */
     var PIOLogAppender = function(app) {
         this.app = app;
+        this.app.PIOLogLevel = PIOLogLevel;
         // PCS設定情報読み込み
         this.cell = app.config.basic.cellId;
         this.box = app.config.basic.boxName;

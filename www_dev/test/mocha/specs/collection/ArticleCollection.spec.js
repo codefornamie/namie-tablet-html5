@@ -36,6 +36,10 @@ define(function(require) {
                         app.logger.debug('create test article id=' + articleId);
                         assert.equal(fetchedModel.get("__id"), articleId, "fetched correct article model.");
                         done();
+                    },
+                    error: function(model, response, options) {
+                        assert.ok(false, "article collection fetched.");
+                        done();
                     }
                 });
             });
@@ -54,6 +58,10 @@ define(function(require) {
                         return model.get("publishedAt") === fetchedModel.get("publishedAt");
                     });
                     assert.equal(fetchedModel.get("__id"), testDataId, "fetched correct article model.");
+                    done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "article collection size than 0.");
                     done();
                 }
             });

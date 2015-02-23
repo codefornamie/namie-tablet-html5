@@ -25,7 +25,7 @@ define(function(require) {
                     testDataId = response.__id;
                     done();
                 },
-                error : function() {
+                error: function(model, response, options) {
                     assert.ok(false, "failed creating data.");
                     done();
                 }
@@ -40,6 +40,10 @@ define(function(require) {
                 success : function(model, response, options) {
                     assert.notEqual(model, undefined, 'fetched model is not undefined.');
                     assert.equal(fetcheModel.get("__id"), testDataId, "fetched model's id is correct.");
+                    done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "fetched model is not undefined.");
                     done();
                 }
             });
@@ -68,6 +72,10 @@ define(function(require) {
                     assert.equal(fetcheModel.get("__id"), testDataId, "fetched model's id is correct.");
                     assert.equal(fetcheModel.get("showLastPublished"), "2015-02-19", "fetched model's showLastPublished is correct.");
                     done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "fetched model is not undefined.");
+                    done();
                 }
             });
         });
@@ -77,7 +85,7 @@ define(function(require) {
                     assert.ok(true, "Success delete test data.");
                     done();
                 },
-                error : function() {
+                error: function(model, response, options) {
                     assert.ok(false, "Failed delete test data.");
                     done();
                 }

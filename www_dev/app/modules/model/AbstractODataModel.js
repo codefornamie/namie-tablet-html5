@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractModel = require("modules/model/AbstractModel");
+    var PIOEvent = require("modules/event/PIOEvent");
 
     /**
      * PCS ODataの操作を行うモデルの基底クラスを作成する。
@@ -66,9 +67,14 @@ define(function(require, exports, module) {
 
             var complete = function(res) {
                 app.logger.info("AbstractODataModel search complete handler");
+                // personium.ioのAPI呼び出し情報を保持するイベント
+                // 便宜上、resオブジェクトに紐付ける
+                var event = new PIOEvent(res);
+                res.event = event;
                 // 取得したJSONオブジェクト
                 var json = null;
-                if (res.error) {
+
+                if (!event.isSuccess()) {
                     if (options.error) {
                         options.error(res);
                     }

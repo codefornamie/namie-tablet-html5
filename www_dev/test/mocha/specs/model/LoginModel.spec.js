@@ -105,7 +105,7 @@ define(function(require) {
                         assert.ok(false, "failed personai info creating.");
                     }
                 },
-                error : function() {
+                error: function(model, response, options) {
                     assert.ok(false, "failed personai info creating.");
                     done();
                 }

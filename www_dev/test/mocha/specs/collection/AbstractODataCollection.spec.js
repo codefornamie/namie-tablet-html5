@@ -20,6 +20,10 @@ define(function(require) {
             collection.fetch({
                 success : function(model, response, options) {
                     done();
+                },
+                error: function(model, response, options) {
+                    assert.ok(false, "AbstractODataCollection#fetch");
+                    done();
                 }
             });
         });
