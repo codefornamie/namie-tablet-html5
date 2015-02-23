@@ -138,6 +138,7 @@ define(function(require, exports, module) {
                 app.router.opeArticleDetail({
                     model : this.model,
                     template : template,
+                    recommendArticle : this.parentView.recommendArticle,
                     targetDate : this.parentView.targetDate
                 });
                 break;
