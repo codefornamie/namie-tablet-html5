@@ -187,12 +187,6 @@ define(function(require, exports, module) {
                     }
                 });
 
-            container.append("span")
-                .attr({
-                    "class" : "marker-cluster__text"
-                })
-                .text(cluster.getChildCount());
-
             html = $iconRoot.html();
             icon = new leaflet.DivIcon({
                 html : html,
