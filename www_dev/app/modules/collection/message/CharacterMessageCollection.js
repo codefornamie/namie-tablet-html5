@@ -25,12 +25,13 @@ define(function(require, exports, module) {
         entity : "character_message",
         /**
          * 初期化処理
-         * @memberOf SlideshowCollection#
+         * @memberOf CharacterMessageCollection#
          */
         initialize : function() {
             this.condition = {
                 top : 100,
-                orderby : "createdAt desc"
+                orderby : "createdAt desc",
+                filter : "deletedAt eq null"
             };
         }
     });

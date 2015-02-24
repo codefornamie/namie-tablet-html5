@@ -34,6 +34,7 @@ define(function(require, exports, module) {
     var OpeSlideshowRegistView = require("modules/view/ope/slideshow/OpeSlideshowRegistView");
     var OpeSlideshowListView = require("modules/view/ope/slideshow/OpeSlideshowListView");
     var OpeCharacterMessageListView = require("modules/view/ope/message/CharacterMessageListView");
+    var OpeCharacterMessageRegistView = require("modules/view/ope/message/CharacterMessageRegistView");
     var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
@@ -516,7 +517,24 @@ define(function(require, exports, module) {
             this.navigate("opeSlideshowRegist");
             $("#contents__primary").scrollTop(0);
         },
-
+        /**
+         * このメソッドは手動で呼ばれる
+         */
+        opeMessageRegist : function(options) {
+            app.logger.debug('[route] opeMessageRegist');
+            this.layout.showView(new OpeCharacterMessageRegistView(options));
+            this.navigate("opeMessageRegist");
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         * このメソッドは手動で呼ばれる
+         */
+        opeMessageEdit : function(options) {
+            app.logger.debug('[route] opeMessageEdit');
+            this.layout.showView(new OpeCharacterMessageRegistView(options));
+            this.navigate("opeMessageEdit");
+            $("#contents__primary").scrollTop(0);
+        },
         /**
          * このメソッドは手動で呼ばれる
          */

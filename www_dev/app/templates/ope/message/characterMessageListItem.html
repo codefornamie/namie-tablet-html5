@@ -1,5 +1,4 @@
-<td ><input type="checkbox" class="isShowCheckBox" checked="checked"></td>
-<td ><%= model.get("dispType") %></td>
-<td ><%= model.get("message") %></td>
+<td ><input type="checkbox" data-character-message-enable-check class="isShowCheckBox" checked="checked"></td>
+<td ><%= model.getAndReplaceLineBreaks("message") %></td>
 <td ><button data-character-message-edit-button class="button radius">編集</button>
 <button data-character-message-delete-button class="button radius">削除</button></td>

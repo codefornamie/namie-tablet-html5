@@ -18,7 +18,8 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/ope/message/characterMessageList"),
         characterMessageCollection : new CharacterMessageCollection(),
         events : {
-            
+            "click [data-character-message-register-button]" : "onClickCharacterMessageRegisterButton",
+                "click [data-character-message-edit-button]" : "onClickCharacterMessageEditButton"
         },
         /**
          * ViewのテンプレートHTMLの描画処理が完了前に呼び出される。
@@ -50,11 +51,18 @@ define(function(require, exports, module) {
                 success : function() {
                     app.logger.debug("Search successful");
                 },
-
                 error : function onErrorLoadSlideshow() {
                     //this.showMessage("メッセージ情報取得に失敗しました。");
-                }
+                },
+                reset : true
             });
+        },
+        /**
+         *  新規キャラクターメッセージ登録ボタン押下時に呼び出される
+         *  @memberOf CharacterMessageListView#
+         */
+        onClickCharacterMessageRegisterButton: function () {
+            app.router.opeMessageRegist();
         }
     });
     module.exports = CharacterMessageListView;
