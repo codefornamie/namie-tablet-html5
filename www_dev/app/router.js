@@ -512,7 +512,7 @@ define(function(require, exports, module) {
          */
         opeSlideshowRegist : function(options) {
             app.logger.debug('[route] opeSlideshowRegist');
-            this.layout.setView("#opeNewsList", new OpeSlideshowRegistView(options)).render();
+            this.layout.showView(new OpeSlideshowRegistView(options));
             this.navigate("opeSlideshowRegist");
             $("#contents__primary").scrollTop(0);
         },
