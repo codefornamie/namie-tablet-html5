@@ -333,12 +333,14 @@ define(function(require, exports, module) {
             }
 
             // 新聞アプリおよび管理アプリプレビュー表示の場合、写真投稿、おくやみを1件の表示するための処理を行う
-            this.summarizeArticle("8", {
-                targetDate : targetDate,
-                idPreffex : "condolence-",
-                dispTitle : (moment(targetDate).format("YYYY年M月DD日")) + "の" + "おくやみ",
-                sortOrder: -1
-            });
+            if (!app.user.isGuest()) {
+                this.summarizeArticle("8", {
+                    targetDate : targetDate,
+                    idPreffex : "condolence-",
+                    dispTitle : (moment(targetDate).format("YYYY年M月DD日")) + "の" + "おくやみ",
+                    sortOrder: -1
+                });
+            }
             this.summarizeArticle("6", {
                 targetDate : targetDate,
                 idPreffex : "letter-",
