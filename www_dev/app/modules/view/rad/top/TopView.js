@@ -32,6 +32,16 @@ define(function(require, exports, module) {
         },
 
         /**
+         * リストのスクロールオーバーレイ（上）が表示されているかどうか
+         */
+        isShowScrollUp : true,
+        
+        /**
+         * リストのスクロールオーバーレイ（下）が表示されているかどうか
+         */
+        isShowScrollDown : true,
+        
+        /**
          * Viewの描画処理の開始前に呼び出されるコールバック関数。
          * <p>
          * 記事一覧の表示処理を開始する。
@@ -47,10 +57,9 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         afterRendered : function() {
-/*            $(".sidemenu-bottom__scroll")
-                .on("scroll", this.onScrollSidebar.bind(this))
-                .trigger("scroll");
-*/        },
+            $(".sidemenu-bottom__scroll")
+                .on("scroll", this.onScrollSidebar.bind(this));
+        },
 
         /**
          * 初期化
@@ -129,6 +138,7 @@ define(function(require, exports, module) {
                 trigger: true,
                 replace: false
             });
+            $(".sidemenu-bottom__scroll").trigger("scroll");
             this.hideLoading();
         },
 
@@ -143,6 +153,7 @@ define(function(require, exports, module) {
             this.radClusterCollection
                 .fetch()
                 .done(function (col) {
+                    $(".sidemenu-bottom__scroll").trigger("scroll");
                     if (col.size() === 0) {
                         return;
                     }
@@ -202,7 +213,7 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          * @param {Event} ev
          */
-        onScrollSidebar : _.throttle(function (ev) {
+        onScrollSidebar : _.throttle(function(ev) {
             var el = ev.currentTarget;
             var $container = $(el);
             var scrollTop = $container.scrollTop();
@@ -210,15 +221,39 @@ define(function(require, exports, module) {
             var contentHeight = $container[0].scrollHeight;
 
             if (scrollTop > 0) {
-                $container.addClass("has-before");
+                if(!this.isShowScrollUp){
+                    this.isShowScrollUp = true;
+                    $("#radiation-scrollUp").animate({
+                        height : "50px",
+                        opacity : 1
+                    });
+                }
             } else {
-                $container.removeClass("has-before");
+                if(this.isShowScrollUp){
+                    this.isShowScrollUp = false;
+                    $("#radiation-scrollUp").animate({
+                        height : 0,
+                        opacity : 0
+                    });
+                }
             }
 
-            if (containerHeight + scrollTop < contentHeight) {
-                $container.addClass("has-after");
+            if (scrollTop < contentHeight - containerHeight) {
+                if(!this.isShowScrolldown){
+                    this.isShowScrolldown = true;
+                    $("#radiation-scrollDown").animate({
+                        height : "50px",
+                        opacity : 1
+                    });
+                }
             } else {
-                $container.removeClass("has-after");
+                if(this.isShowScrolldown){
+                    this.isShowScrolldown = false;
+                    $("#radiation-scrollDown").animate({
+                        height : 0,
+                        opacity : 0
+                    });
+                }
             }
         }, 150)
     });

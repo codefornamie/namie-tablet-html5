@@ -158,7 +158,7 @@
     height: 100%;
     padding: 0 10px;
 }
-#has-before {
+#radiation-scrollUp {
     background: rgba(0,0,0,0.3);
     width: 100%;
     height: 50px;
@@ -166,7 +166,7 @@
     top: 140px;
     z-index: 2;
 }
-#has-scroll-before::before {
+#radiation-scrollUp-before::before {
     content: "\f106";
     font-family: FontAwesome;
     color: white;
@@ -175,14 +175,15 @@
     top: -25%;
     left: 43%;
 }
-#has-after {
+#radiation-scrollDown {
     background: rgba(0,0,0,0.3);
     width: 100%;
     height: 50px;
     position: absolute;
     bottom: 0px;
+    z-index: 2;
 }
-#has-scroll-after::before {
+#radiation-scrollDown-after::before {
     content: "\f107";
     font-family: FontAwesome;
     color: white;
