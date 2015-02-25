@@ -14,11 +14,41 @@
         <div class="modal-radiation__header">
             アップロードする放射線量データを選択してください。</div>
 
-        <ul
-            id="radiationList"
-            class="radiationList"
-            style="list-style: none;"
-        ></ul>
-        <button type="button" id="radiationUploadButton">アップロード</button>
+        <div class="modal-radiation__list-header">
+            <div class="row">
+                <div class="columns small-1">
+                    &nbsp;
+                </div>
+
+                <div class="columns small-5">
+                    ファイル名
+                </div>
+
+                <div class="columns small-6">
+                    日時
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-radiation__scroll">
+            <div class="modal-radiation__scroll-content">
+                <div
+                    id="radiationList"
+                    class="radiationList"
+                ></div>
+            </div>
+        </div>
+
+        <div class="modal-radiation__upload">
+            <button
+                id="radiationUploadButton"
+                class="button button--emerald button--upload"
+                type="button"
+            >
+                <div>
+                    アップロード
+                </div>
+            </button>
+        </div>
     </div>
 </div>

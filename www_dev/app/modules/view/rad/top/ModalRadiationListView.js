@@ -9,7 +9,9 @@ define(function(require, exports, module) {
     var RadiationLogModel = require("modules/model/radiation/RadiationLogModel");
     var vexDialog = require("vexDialog");
     var async = require("async");
-
+    var moment = require("moment");
+    require("moment/locale/ja");
+    
     /**
      * 線量データのアップロード用リストダイアログクラス
      * @class 線量データのアップロード用リストダイアログクラス
@@ -163,6 +165,7 @@ define(function(require, exports, module) {
             // modelにデータを詰める
             radiationClusterModel.set("userId", app.user.get("__id"));
             radiationClusterModel.set("startDate", file.startDate);
+            radiationClusterModel.set("createDate", moment(file.lastModifiedDate).format());
             radiationClusterModel.set("endDate", file.endDate);
             radiationClusterModel.set("numSample", file.numSample);
             radiationClusterModel.set("maxValue", file.maxValue);

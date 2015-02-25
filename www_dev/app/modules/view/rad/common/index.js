@@ -1,5 +1,9 @@
 define(function(require, exports, module) {
     "use strict";
 
-    module.exports = {};
+    var RadHeaderView = require("modules/view/rad/top/HeaderView");
+
+    module.exports = {
+        HeaderView : RadHeaderView
+    };
 });

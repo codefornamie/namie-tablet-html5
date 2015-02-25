@@ -2,21 +2,64 @@
     data-article-id="<%= model.get('__id') %>"
     class="rad-cluster-item feed-item"
 >
-    <div class="rad-popup__date">
-        <%= moment(clusterFeature.properties.createDate).format("YYYY/MM/DD") %>
-        〜
-        <%= moment(clusterFeature.properties.endDate).format("YYYY/MM/DD") %>
+    <div class="rad-cluster-item__left">
+        <div class="rad-cluster-item__date">
+            <div>
+                <span class="date--year">
+                    <%= moment(prop.startDate).format("YYYY") %>
+                    年
+                </span>
+            </div>
+
+            <div>
+                <span class="date--monthday"><b><%= moment(prop.startDate).format("M") %></b><span style="margin: 0 3px;">/</span><b><%= moment(prop.startDate).format("D") %></b></span>
+
+                <span class="date--weekday">(<%= moment(prop.startDate).format("ddd") %>)</span>
+            </div>
+        </div>
     </div>
 
-    <h4 class="rad-popup__average-value">
-        平均:
-        <b><%= clusterFeature.properties.averageValue %></b>
-        μSv/h
-    </h4>
+    <div class="rad-cluster-item__right">
+        <table class="rad-cluster-item__value-table">
+            <tr class="rad-cluster-item__avg-value">
+                <td>
+                    <span>
+                        平均値
+                    </span>
+                </td>
 
-    <div class="rad-popup__max-value">
-        最大:
-        <b><%= clusterFeature.properties.maxValue %></b>
-        μSv/h
+                <td>
+                    <b>
+                        <%= prop.averageValue %>
+                    </b>
+                </td>
+
+                <td>
+                    <span>
+                        μSv/h
+                    </span>
+                </td>
+            </tr>
+
+            <tr class="rad-cluster-item__max-value">
+                <td>
+                    <span>
+                        最大値
+                    </span>
+                </td>
+
+                <td>
+                    <b>
+                        <%= prop.maxValue %>
+                    </b>
+                </td>
+
+                <td>
+                    <span>
+                        μSv/h
+                    </span>
+                </td>
+            </tr>
+        </table>
     </div>
 </li>

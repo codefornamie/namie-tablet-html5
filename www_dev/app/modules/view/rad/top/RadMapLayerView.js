@@ -56,6 +56,8 @@ define(function(require, exports, module) {
             this.radiationLogCollection = new RadiationLogCollection({
                 __id : this.radiationClusterModel.get("collectionId")
             });
+            this.radiationLogCollection.collectionId = this.radiationClusterModel.get("__id");
+            this.radiationLogCollection.setSearchConditionIncludeInCluster();
 
             this.listenTo(this.radiationLogCollection, "request", this.onRequestCollection);
             this.listenTo(this.radiationLogCollection, "add", this.onAddCollection);
@@ -187,12 +189,6 @@ define(function(require, exports, module) {
                     }
                 });
 
-            container.append("span")
-                .attr({
-                    "class" : "marker-cluster__text"
-                })
-                .text(cluster.getChildCount());
-
             html = $iconRoot.html();
             icon = new leaflet.DivIcon({
                 html : html,
@@ -266,6 +262,18 @@ define(function(require, exports, module) {
 
         /**
          * Viewがレンダリングされる先のmapをsetするsetterメソッド
+         * 各ズームレベル毎のクラスター半径を返す
+         * @memberOf RadMapLayerView#
+         * @param {Number} zoom
+         */
+        defineMaxClusterRadius : function (zoom) {
+            var radius = 80;
+            console.log("zoom: " + zoom + ", radius: " + radius);
+            return radius;
+        },
+
+        /**
+         * Viewがレンダリングされる先のmapをsetする
          * @memberOf RadMapLayerView#
          * @param {Leaflet.Map} map
          */
@@ -276,7 +284,7 @@ define(function(require, exports, module) {
                 showCoverageOnHover : false,
                 zoomToBoundsOnClick : false,
                 animateAddingMarkers : true,
-                maxClusterRadius : 80,
+                maxClusterRadius : this.defineMaxClusterRadius,
                 iconCreateFunction : this.defineClusterIcon.bind(this)
             });
 

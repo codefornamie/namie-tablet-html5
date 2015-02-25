@@ -39,9 +39,23 @@ define(function(require, exports, module) {
          * @memberOf OpeArticleDetailView#
          */
         events : {
+            'click [data-goto-edit]': 'onClickGotoEdit',
             'click [data-goto-cancel]' : 'onClickGotoCancel',
             "click a:not(.expansionPicture)" : "onClickAnchorTag"
         },
+        /**
+         *  編集ボタンをクリックしたら呼ばれる
+         * @memberOf ArticleDetailView#
+         */
+        onClickGotoEdit: function () {
+            this.showLoading();
+            app.router.opeArticleRegist({
+                model : this.model,
+                recommendArticle : this.recommendArticle,
+                targetDate : this.targetDate
+            });
+        },
+
         /**
          * キャンセルボタンをクリックしたら呼ばれる
          * @memberOf OpeArticleDetailView#

@@ -32,6 +32,8 @@ define(function(require, exports, module) {
             this.hideLoading();
         },
 
+        initialize : function () {
+        }
     });
 
     module.exports = ModalRadiationListItemView;

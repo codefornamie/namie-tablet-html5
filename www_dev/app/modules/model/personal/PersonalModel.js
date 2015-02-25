@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var Code = require("modules/util/Code");
     /**
      * パーソナル情報のモデルクラスを作成する。
      * 
@@ -67,6 +68,14 @@ define(function(require, exports, module) {
             } else {
                 return false;
             }
+        },
+        /**
+         * このユーザがguestユーザかどうかを判定する。
+         * @returns {Boolean} guestユーザの場合はtrue
+         * @memberOf PersonalModel#
+         */
+        isGuest : function() {
+            return this.get("loginId") === Code.GUEST_LOGIN_ID;
         }
     });
 

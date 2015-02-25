@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var OpeArticleRegistConfirmView = require("modules/view/ope/news/OpeArticleRegistConfirmView");
     var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
     var vexDialog = require("vexDialog");
+    var Code = require("modules/util/Code");
 
     /**
      * 記事新規登録・編集画面のViewクラス
@@ -96,7 +97,16 @@ define(function(require, exports, module) {
          * @memberOf OpeArticleRegistView#
          */
         setInputValue : function() {
-            PostingArticleRegistView.prototype.setInputValue.apply(this, arguments);
+            var type = null;
+            if(this.model){
+                type = this.model.get("type");
+            }
+            if (type === "1" || type === "7" || type === "8") {
+                this.model.set("publishedAt", $("#articleRangeDate1").val());
+                this.model.set("depublishedAt", $("#articleRangeDate2").val());
+            } else {
+                PostingArticleRegistView.prototype.setInputValue.apply(this, arguments);
+            }
             this.model.set("isRecommend",$("#articleRecommendCheck").is(":checked") ? "true" : null);
         },
         /**
@@ -155,7 +165,68 @@ define(function(require, exports, module) {
             } else {
                 app.router.go("ope-top", this.targetDate);
             }
-        }
+        },
+
+        /**
+         * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * @memberOf OpeArticleRegistView#
+         */
+        afterRendered : function() {
+            PostingArticleRegistView.prototype.afterRendered.apply(this, arguments);
+            if (this.model) {
+                console.log("type=" + this.model.get("type") + ",site=" + this.model.get("site"));
+                this.isMinpoArticle = this.model.isMinpoScraping();
+                this.showImage();
+            }
+            this.hideLoading();
+            this.$el.find("a").on("click", function(ev) {
+                ev.preventDefault();
+            });
+            this.$el.find("a").hover(function() {
+                $(this).css("cursor", "default");
+            });
+        },
+
+        /**
+         * このViewが表示している記事に関連する画像データの取得と表示を行う。
+         * @memberOf OpeArticleRegistView#
+         */
+        showImage : function() {
+            var self = this;
+            var imageElems = $(this.el).find("img");
+
+            if (this.isMinpoArticle) {
+                // この記事のimg要素にはWebDAVのパスが設定されているため、取得しにいく
+                _.each(imageElems, function(imageElement) {
+                    var imageUrl = $(imageElement).attr("src");
+                    this.showPIOImage($(imageElement), {
+                        imageUrl : imageUrl
+                    }, true, $.proxy(this.onClickImage, this));
+                }.bind(this));
+            }
+
+            var articleImage = $(this.el).find(".articleDetailImage");
+
+            if (this.model.get("imageUrl")) {
+                articleImage.on("error", function() {
+                    articleImage.hide();
+                });
+                var imageUrl = this.model.get("imageUrl");
+                this.showPIOImage(articleImage, {
+                    imageUrl : imageUrl
+                }, true, $.proxy(this.onClickImage, this));
+            } else {
+                articleImage.trigger('error', "this image will never be loaded");
+                $(this.el).find(".articleDetailImageArea").hide();
+            }
+
+            if (this.model.get("imageUrl")) {
+                $(this.el).find("#nehan-articleDetailImage").parent().css("width", "auto");
+                $(this.el).find("#nehan-articleDetailImage").parent().css("height", "auto");
+                $(this.el).find("#nehan-articleDetailImage").css("width", "auto");
+                $(this.el).find("#nehan-articleDetailImage").css("height", "auto");
+            }
+        },
     });
     module.exports = OpeArticleRegistView;
 });

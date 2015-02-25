@@ -25,7 +25,10 @@ define(function(require, exports, module) {
          */
         template : require("ldsh!templates/{mode}/top/top"),
         events : {
-            "click [data-radiation-upload-button]": "onClickRadiationUploadButton"
+            "click [data-radiation-upload-button]" : "onClickRadiationUploadButton",
+            "click [data-toggle-sidebar]" : "toggleSidebar",
+            "sidebar.hide" : "hideSidebar",
+            "sidebar.show" : "showSidebar"
         },
 
         /**
@@ -36,6 +39,7 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         beforeRendered : function() {
+            this.hideSidebar();
         },
 
         /**
@@ -43,6 +47,9 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         afterRendered : function() {
+            $(".sidemenu-bottom__scroll")
+                .on("scroll", this.onScrollSidebar.bind(this))
+                .trigger("scroll");
         },
 
         /**
@@ -64,14 +71,27 @@ define(function(require, exports, module) {
             }));
 
             // ローディングを停止
-            this.hideLoading();
+            //this.hideLoading();
         },
         /**
          * 線量データアップロードボタンが押下された際のコールバック
          * @memberOf RadTopView#
          */
         onClickRadiationUploadButton : function() {
-            if (CommonUtil.isCordova()) {
+            if (!!~navigator.userAgent.indexOf("namie-debug")) {
+                // XXX: dummy
+                this.setRadiationList([
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
+                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()}
+                ]);
+            } else if (CommonUtil.isCordova()) {
                 this.showLoading();
                 FileAPIUtil.getHoribaRadiationList(this.setRadiationList.bind(this));
             } else {
@@ -118,10 +138,14 @@ define(function(require, exports, module) {
          */
         initCollection : function () {
             this.radClusterCollection = new RadiationClusterCollection();
-
+            // 自身のアップロードしたデータのみ検索
+            this.radClusterCollection.setSearchConditionByMyself();
             this.radClusterCollection
                 .fetch()
                 .done(function (col) {
+                    if (col.size() === 0) {
+                        return;
+                    }
                     col.each(function (model) {
                         model.set("hidden", true);
                     });
@@ -144,7 +168,59 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(this.radClusterCollection, "sync", this.render);
-        }
+        },
+
+        /**
+         * サイドバーを表示する
+         * @memberOf RadTopView#
+         */
+        showSidebar : function () {
+            $("#snap-content").removeClass("is-expanded");
+            $(window).triggerHandler("resize");
+        },
+
+        /**
+         * サイドバーを非表示にする
+         * @memberOf RadTopView#
+         */
+        hideSidebar : function () {
+            $("#snap-content").addClass("is-expanded");
+            $(window).triggerHandler("resize");
+        },
+
+        /**
+         * サイドバーの表示/非表示を切り替える
+         * @memberOf RadTopView#
+         */
+        toggleSidebar : function () {
+            $("#snap-content").toggleClass("is-expanded");
+            $(window).triggerHandler("resize");
+        },
+
+        /**
+         * サイドバーがスクロールされたら呼ばれる
+         * @memberOf RadTopView#
+         * @param {Event} ev
+         */
+        onScrollSidebar : _.throttle(function (ev) {
+            var el = ev.currentTarget;
+            var $container = $(el);
+            var scrollTop = $container.scrollTop();
+            var containerHeight = $container.height();
+            var contentHeight = $container[0].scrollHeight;
+
+            if (scrollTop > 0) {
+                $container.addClass("has-before");
+            } else {
+                $container.removeClass("has-before");
+            }
+
+            if (containerHeight + scrollTop < contentHeight) {
+                $container.addClass("has-after");
+            } else {
+                $container.removeClass("has-after");
+            }
+        }, 150)
     });
 
     module.exports = RadTopView;
