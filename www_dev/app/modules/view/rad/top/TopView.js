@@ -47,10 +47,10 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         afterRendered : function() {
-            $(".sidemenu-bottom__scroll")
+/*            $(".sidemenu-bottom__scroll")
                 .on("scroll", this.onScrollSidebar.bind(this))
                 .trigger("scroll");
-        },
+*/        },
 
         /**
          * 初期化
