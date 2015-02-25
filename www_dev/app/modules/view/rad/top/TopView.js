@@ -28,7 +28,8 @@ define(function(require, exports, module) {
             "click [data-radiation-upload-button]" : "onClickRadiationUploadButton",
             "click [data-toggle-sidebar]" : "toggleSidebar",
             "sidebar.hide" : "hideSidebar",
-            "sidebar.show" : "showSidebar"
+            "sidebar.show" : "showSidebar",
+            "click #radiation-scrollDown" : "scrollDown"
         },
 
         /**
@@ -255,7 +256,19 @@ define(function(require, exports, module) {
                     });
                 }
             }
-        }, 150)
+        }, 150),
+
+        /**
+         * スクロールバー（下）が押されたら呼ばれる
+         * @memberOf RadTopView#
+         * @param {Event} ev
+         */
+        scrollDown : function(ev) {
+            var $target = $(".sidemenu-bottom__scroll");
+            var outerHeight = $(".rad-cluster-item").outerHeight();
+            var scrollTop = $target.scrollTop();
+            $target.animate({scrollTop : scrollTop + outerHeight});
+        }
     });
 
     module.exports = RadTopView;
