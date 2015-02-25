@@ -96,10 +96,6 @@ define(function(require, exports, module) {
 
                 markerClusters.addLayer(marker);
             });
-
-            setTimeout(function() {
-                this.map.fitBounds(markerClusters.getBounds());
-            }, 0);
         },
 
         /**
