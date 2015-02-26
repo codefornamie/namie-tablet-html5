@@ -31,7 +31,7 @@ define(function(require, exports, module) {
 
             var hasCollection = !!logFeatureCollection;
             var date, dateStr, avg, max;
-            var stationType, numSample, sensorVendor, sensorModel, sensorSerialNo;
+            var stationType, numSample, sensorVendor, sensorModel;
 
             if (hasCollection) {
                 date = moment(clusterFeature.properties.startDate);
@@ -56,7 +56,6 @@ define(function(require, exports, module) {
             numSample = clusterFeature.properties.numSample;
             sensorVendor = clusterFeature.properties.sensorVendor;
             sensorModel = clusterFeature.properties.sensorModel;
-            sensorSerialNo = clusterFeature.properties.sensorSerialNo;
 
             return {
                 data : {
@@ -66,8 +65,7 @@ define(function(require, exports, module) {
                     stationType : stationType,
                     numSample : numSample,
                     sensorVendor : sensorVendor,
-                    sensorModel : sensorModel,
-                    sensorSerialNo : sensorSerialNo
+                    sensorModel : sensorModel
                 }
             };
         },

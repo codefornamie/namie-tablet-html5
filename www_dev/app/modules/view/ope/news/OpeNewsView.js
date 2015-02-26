@@ -104,7 +104,7 @@ define(function(require, exports, module) {
          * @memberOf OpeNewsView#
          */
         setArticleSearchCondition : function(from, to) {
-            this.articleCollection.setSearchConditionRange(from, to, true, true);
+            this.articleCollection.setSearchConditionRange(from, to, false, true);
         },
         /**
          * 左ペインの記事一覧メニューを表示する。

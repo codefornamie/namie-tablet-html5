@@ -96,8 +96,6 @@ define(function(require, exports, module) {
 
                 markerClusters.addLayer(marker);
             });
-
-            this.map.fitBounds(markerClusters.getBounds());
         },
 
         /**
@@ -206,7 +204,7 @@ define(function(require, exports, module) {
          */
         show : function () {
             if (this.isHidden === false) {
-                $(".layer-" + this.cid).show();
+                this.map.addLayer(this.markerClusters);
                 return;
             }
 
@@ -219,7 +217,7 @@ define(function(require, exports, module) {
                 var clusterBounds = this.markerClusters.getBounds();
                 this.map.fitBounds(clusterBounds);
 
-                $(".layer-" + this.cid).show();
+                this.map.addLayer(this.markerClusters);
             }.bind(this));
 
             this.isHidden = false;
@@ -231,7 +229,7 @@ define(function(require, exports, module) {
          * @memberOf RadMapLayerView#
          */
         hide : function () {
-            $(".layer-" + this.cid).hide();
+            this.map.removeLayer(this.markerClusters);
             this.isHidden = true;
         },
 
@@ -285,6 +283,7 @@ define(function(require, exports, module) {
                 zoomToBoundsOnClick : false,
                 animateAddingMarkers : true,
                 maxClusterRadius : this.defineMaxClusterRadius,
+                disableClusteringAtZoom : this.map.getMaxZoom(),
                 iconCreateFunction : this.defineClusterIcon.bind(this)
             });
 

@@ -93,6 +93,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
         } else if (action.equals(WIDGET_UPDATE_STATUS)) {
             // 新聞発行情報を取得
             initPublishStatus(context);
+            CloudContents.getInstance().requestRefresh();
         } else if (action.equals(WIDGET_UPDATE_READED)) {
             // 新聞の発行、未読状態を更新
             checkAlreadyReaded(context);
