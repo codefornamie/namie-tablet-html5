@@ -96,8 +96,6 @@ define(function(require, exports, module) {
 
                 markerClusters.addLayer(marker);
             });
-
-            this.map.fitBounds(markerClusters.getBounds());
         },
 
         /**
