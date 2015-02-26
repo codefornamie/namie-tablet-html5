@@ -65,6 +65,24 @@ define(function(require, exports, module) {
                 });
             }
 
+            // 並び順JSON文字列を配列に変換
+            var seqArray = [];
+            if (response.sequence) {
+                if (!isNaN(parseInt(response.sequence))) {
+                    // 掲載期間中表示対応前のデータのコンバート
+                    var seqObj = {};
+                    seqObj[response.publishedAt] = response.sequence;
+                    seqArray.push(seqObj);
+                } else if (typeof response.sequence === "string") {
+                    // sequenceがオブジェクト型でない場合
+                    seqArray = JSON.parse(response.sequence);
+                } else {
+                    // すでにparse処理を一度通っている場合
+                    seqArray = response.sequence;
+                }
+            }
+            response.sequence = seqArray;
+
             if (response.dispDescription && response.dispDescription.length > 50) {
                 // 記事が100文字以上の場合、50文字に切り取り
                 response.dispDescriptionSummary = response.dispDescription.substring(0, 50) + " ...";
@@ -125,7 +143,7 @@ define(function(require, exports, module) {
 
             saveData.nickname = this.get("nickname");
 
-            saveData.sequence = this.get("sequence");
+            saveData.sequence = JSON.stringify(this.get("sequence"));
             // タグ文字列の生成
             var tags = "";
             if (this.get("tagsArray") && this.get("tagsArray").length) {

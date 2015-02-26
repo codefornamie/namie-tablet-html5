@@ -81,7 +81,7 @@ define(function(require, exports, module) {
             $("[data-sequence-register-button]").hide();
             $("#sequenceConfirm").hide();
             app.router.opeSlideshowRegist();
-        },
+        }
     });
     module.exports = OpeSlideshowListView;
 });
