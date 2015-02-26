@@ -62,13 +62,13 @@ define(function(require, exports, module) {
             this.model.save(null, {
                 success : $.proxy(function() {
                     this.hideLoading();
-                    app.router.go("ope-message");
+                    app.router.opeMessage();
                 }, this),
                 error : $.proxy(function(e) {
                     this.hideLoading();
                     // vexDialog.alert("削除に失敗しました。");
                     app.logger.error("error LetterListItemView:deleteLetter()");
-                    app.router.go("ope-message");
+                    app.router.opeMessage();
                 }, this)
             });
         },
