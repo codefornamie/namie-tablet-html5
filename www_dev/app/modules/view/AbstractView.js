@@ -248,56 +248,66 @@ define(function(require, exports, module) {
                     type : "image/jpg"
                 });
                 var url = FileAPIUtil.createObjectURL(blob);
-                $targetElem.load($.proxy(function() {
-                    if (isExpansion) {
-                        $targetElem.wrap("<a class='expansionPicture' href='" + url + "'></a>");
-                        var $colorbox = $targetElem.parent().colorbox(
-                                {
-                                    closeButton : false,
-                                    current : "",
-                                    photo : true,
-                                    maxWidth : "83%",
-                                    maxHeight : "100%",
-                                    onOpen : function() {
-                                        // ライトボックスが開いている時に
-                                        // OSの戻るボタンで記事詳細画面に戻れるように
-                                        // URLを変更しておく
-                                        location.hash = encodeURIComponent(url);
-                                    },
-                                    onComplete : function() {
-                                        $("#colorbox").append(
-                                                "<button id='cboxCloseButton' class='small button'>閉じる</button>");
-                                        $("#colorbox").append(
-                                                "<button id='cboxSaveButton' class='small button'>画像を保存</button>");
-                                        $("#cboxCloseButton").click(function() {
-                                            $.colorbox.close();
-                                        });
-                                        $("#cboxSaveButton").click(function(ev) {
-                                            saveFunc(ev);
-                                        });
-                                        $("#colorbox").find("img").data("blob", blob);
+                if (!item.imageThumbUrl) {
+                    $targetElem.attr("src", url);
+                  }
+                if (isExpansion) {
+                    $targetElem.wrap("<a class='expansionPicture' href='" + url + "'></a>");
+                    var $colorbox = $targetElem.parent().colorbox(
+                            {
+                                closeButton : false,
+                                current : "",
+                                photo : true,
+                                maxWidth : "83%",
+                                maxHeight : "100%",
+                                onOpen : function() {
+                                    // ライトボックスが開いている時に
+                                    // OSの戻るボタンで記事詳細画面に戻れるように
+                                    // URLを変更しておく
+                                    location.hash = encodeURIComponent(url);
+                                },
+                                onComplete : function() {
+                                    $("#colorbox").append(
+                                            "<button id='cboxCloseButton' class='small button'>閉じる</button>");
+                                    $("#colorbox").append(
+                                            "<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                                    $("#cboxCloseButton").click(function() {
+                                        $.colorbox.close();
+                                    });
+                                    $("#cboxSaveButton").click(function(ev) {
+                                        saveFunc(ev);
+                                    });
+                                    $("#colorbox").find("img").data("blob", blob);
 
-                                        // OSの戻るボタンで戻った際に
-                                        // closeLightBoxイベントが呼ばれる @app/router.js
-                                        app.once("closeLightBox", function() {
-                                            $colorbox.colorbox.close();
-                                            $colorbox.data("isClosingByBack", true);
-                                        });
-                                    },
-                                    onClosed : function() {
-                                        $("#cboxSaveButton").remove();
-                                        $("#cboxCloseButton").remove();
+                                    // OSの戻るボタンで戻った際に
+                                    // closeLightBoxイベントが呼ばれる @app/router.js
+                                    app.once("closeLightBox", function() {
+                                        $colorbox.colorbox.close();
+                                        $colorbox.data("isClosingByBack", true);
+                                    });
+                                },
+                                onClosed : function() {
+                                    $("#cboxSaveButton").remove();
+                                    $("#cboxCloseButton").remove();
 
-                                        // OSの戻るボタンで戻った際に
-                                        // 二重でbackしないようにする
-                                        if (!$colorbox.data("isClosingByBack")) {
-                                            app.router.back();
-                                        }
+                                    // OSの戻るボタンで戻った際に
+                                    // 二重でbackしないようにする
+                                    if (!$colorbox.data("isClosingByBack")) {
+                                        app.router.back();
                                     }
-                                });
-                    }
-                    window.URL.revokeObjectURL($(this).attr("src"));
-                }, this, url, blob));
+                                }
+                            });
+                }
+            }, this);
+
+            var onGetBinaryThumb = $.proxy(function(binary, item) {
+                var arrayBufferView = new Uint8Array(binary);
+                var blob = new Blob([
+                    arrayBufferView
+                ], {
+                    type : "image/jpg"
+                });
+                var url = FileAPIUtil.createObjectURL(blob);
                 $targetElem.attr("src", url);
             }, this);
 
@@ -307,7 +317,6 @@ define(function(require, exports, module) {
 
             try {
                 if (item.imageUrl) {
-                    var davModel = new WebDavModel();
                     var path = this.model.get("imagePath");
 
                     if (item.hasPath) {
@@ -315,6 +324,8 @@ define(function(require, exports, module) {
                     } else {
                         path = path ? path + "/" : "";
                     }
+
+                    var davModel = new WebDavModel();
                     davModel.id = path + item.imageUrl;
                     davModel.fetch({
                         success : function(model, binary) {
@@ -325,6 +336,20 @@ define(function(require, exports, module) {
                             onError(resp, item);
                         }
                     });
+
+                    if (item.imageThumbUrl) {
+                        var davModelThumb = new WebDavModel();
+                        davModelThumb.id = path + item.imageThumbUrl;
+                        davModelThumb.fetch({
+                            success : function(model, binary) {
+                                onGetBinaryThumb(binary, item);
+                            },
+
+                            error : function(resp) {
+                                onError(resp, item);
+                            }
+                        });
+                    }
                 }
             } catch (e) {
                 console.error(e);
