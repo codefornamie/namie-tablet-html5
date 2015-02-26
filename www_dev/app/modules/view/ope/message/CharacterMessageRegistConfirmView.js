@@ -57,13 +57,13 @@ define(function(require, exports, module) {
          */
         saveModel : function(){
             this.model.save(null, {
-                success : $.proxy(function() {
-                    app.router.go("ope-message");
+                success : $.proxy(function(model, resp, options) {
+                    this.showSuccessMessage("キャラクターメッセージの保存", model);
+                    app.router.opeMessage();
                 }, this),
-                error: function(e){
+                error: function(model, resp, options){
                     this.hideLoading();
-//                    vexDialog.alert("保存に失敗しました。");
-//                    app.logger.error("保存に失敗しました。");
+                    this.showErrorMessage("キャラクターメッセージの保存", resp);
                 }
             });
         }

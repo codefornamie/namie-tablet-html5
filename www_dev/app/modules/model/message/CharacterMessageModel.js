@@ -54,6 +54,15 @@ define(function(require, exports, module) {
             saveData.message = this.get("message");
             saveData.weight = this.get("weight");
             saveData.enabled = this.get("enabled");
+        },
+        /**
+         * このモデルの文字列情報を取得する
+         * @memberOf CharacterMessageModel#
+         * @return {String} このモデルの文字列情報
+         */
+        toString : function() {
+            return "CharacterMessageModel [type:" + this.get("type") + ", message:" + this.get("message") +
+                    ", weight:" + this.get("weight") + ", enabled:" + this.get("enabled") + "]";
         }
     });
 

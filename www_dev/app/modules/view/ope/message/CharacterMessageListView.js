@@ -16,7 +16,7 @@ define(function(require, exports, module) {
      */
     var CharacterMessageListView = AbstractView.extend({
         template : require("ldsh!templates/ope/message/characterMessageList"),
-        characterMessageCollection : new CharacterMessageCollection(),
+        characterMessageCollection : null,
         events : {
             "click [data-character-message-register-button]" : "onClickCharacterMessageRegisterButton",
                 "click [data-character-message-edit-button]" : "onClickCharacterMessageEditButton"
@@ -46,14 +46,15 @@ define(function(require, exports, module) {
          * @memberOf CharacterMessageListView#
          */
         initialize : function() {
+            this.characterMessageCollection = new CharacterMessageCollection();
             this.listenTo(this.characterMessageCollection, "reset sync request destroy", this.render);
             this.characterMessageCollection.fetch({
-                success : function() {
-                    app.logger.debug("Search successful");
-                },
-                error : function onErrorLoadSlideshow() {
-                    //this.showMessage("メッセージ情報取得に失敗しました。");
-                },
+                success : function(model, resp, options) {
+                    this.showSuccessMessage("キャラクターメッセージの検索", model);
+                }.bind(this),
+                error : function onErrorLoadSlideshow(model, resp, options) {
+                    this.showErrorMessage("キャラクターメッセージの検索", resp);
+                }.bind(this),
                 reset : true
             });
         },

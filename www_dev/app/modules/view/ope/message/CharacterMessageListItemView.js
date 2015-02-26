@@ -60,14 +60,14 @@ define(function(require, exports, module) {
 
             this.model.set("enabled", checked);
             this.model.save(null, {
-                success : $.proxy(function() {
+                success : $.proxy(function(model, resp, options) {
                     this.hideLoading();
+                    this.showSuccessMessage("キャラクターメッセージの表示有無の更新", model);
                     app.router.opeMessage();
                 }, this),
-                error : $.proxy(function(e) {
+                error : $.proxy(function(model, resp, options) {
                     this.hideLoading();
-                    // vexDialog.alert("削除に失敗しました。");
-                    app.logger.error("error LetterListItemView:deleteLetter()");
+                    this.showErrorMessage("キャラクターメッセージの表示有無の更新", resp);
                     app.router.opeMessage();
                 }, this)
             });
@@ -82,15 +82,15 @@ define(function(require, exports, module) {
 
             this.model.set("isDelete", true);
             this.model.save(null, {
-                success : $.proxy(function() {
+                success : $.proxy(function(model, resp, options) {
                     this.hideLoading();
-                    app.router.go("ope-message");
+                    this.showSuccessMessage("キャラクターメッセージ情報の削除", model);
+                    app.router.opeMessage();
                 }, this),
-                error : $.proxy(function(e) {
+                error : $.proxy(function(model, resp, options) {
                     this.hideLoading();
-                    // vexDialog.alert("削除に失敗しました。");
-                    app.logger.error("error LetterListItemView:deleteLetter()");
-                    app.router.go("ope-message");
+                    this.showErrorMessage("キャラクターメッセージ情報の削除", resp);
+                    app.router.opeMessage();
                 }, this)
             });
         }
