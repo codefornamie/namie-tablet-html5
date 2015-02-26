@@ -244,8 +244,8 @@ define(function(require, exports, module) {
          */
         showErrorMessage: function(operation, resp) {
             if (resp.event && resp.event.isConflict()) {
-                this.showMessage("他のユーザーと" + operation + "が競合したため、削除できませんでした。" +
-                		"<br/>再度、保存操作を行ってください。", resp.event);
+                this.showMessage("他のユーザーと操作が競合したため、" + operation + "を完了できませんでした。" +
+                            "<br/>再度、操作を行ってください。", resp.event);
             } else {
                 this.showMessage(operation + "に失敗しました。", resp.event, app.PIOLogLevel.ERROR);
             }
