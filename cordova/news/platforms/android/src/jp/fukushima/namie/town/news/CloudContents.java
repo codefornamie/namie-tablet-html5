@@ -133,13 +133,4 @@ public class CloudContents extends Thread {
     public List<String> getCharaMessages() {
         return new ArrayList<String>(charaMessages);
     }
-    
-    /**
-     * ウィジェットに表示するキャラの表示パターンを返す。
-     * 
-     * @return キャラの表示パターンの画像リソースIDの配列。
-     */
-    public int[] getCharaPatterns() {
-        return new int[] { R.drawable.img_ukedon_1, R.drawable.img_ukedon_2 };
-    }
 }

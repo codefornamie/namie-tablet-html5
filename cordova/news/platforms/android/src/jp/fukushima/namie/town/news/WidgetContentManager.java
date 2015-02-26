@@ -48,7 +48,7 @@ public class WidgetContentManager {
     };
 
     private int imageIndex = 0;
-    private int[] images = null;
+    private int[] images = { R.drawable.img_ukedon_1, R.drawable.img_ukedon_2};
     private int messageIndex = 0;
     private List<String> messages = null;
     private int recommendArticleIndex = 0;
@@ -77,9 +77,7 @@ public class WidgetContentManager {
         imageIndex = (imageIndex + 1) % images.length;
 
         if (frameIndex == 0) {
-            CloudContents cloudContents = CloudContents.getInstance();
-            messages = cloudContents.getCharaMessages();
-            images = cloudContents.getCharaPatterns();
+            messages = CloudContents.getInstance().getCharaMessages();
             synchronized(recommendArticles){
                 // メッセージ表示モードの遷移
                 displayMode = nextDisplayMode(displayMode);
