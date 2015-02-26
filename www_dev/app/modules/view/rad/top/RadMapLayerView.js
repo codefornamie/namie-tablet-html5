@@ -359,6 +359,7 @@ define(function(require, exports, module) {
 
             var popupView = new RadPopupView({
                 data : {
+                    radiationClusterModel : this.radiationClusterModel,
                     radiationClusterFeature : this.radiationClusterModel.toGeoJSON(),
                     radiationLogFeatureCollection : null,
                     radiationLogFeature : marker.feature

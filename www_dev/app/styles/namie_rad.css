@@ -461,7 +461,18 @@
     font-size: 1.4rem;
 }
 
+.page-rad .rad-popup__info__more {
+    text-align: center;
+}
+
+.page-rad .rad-popup__info__more--button {
+    color: #6eb859;
+    font-size: 1rem;
+    border-bottom: 1px solid #6eb859;
+}
+
 .page-rad .rad-popup__info {
+    display: none;
     margin: 8px 0;
     font-size: 0.8rem;
 }
