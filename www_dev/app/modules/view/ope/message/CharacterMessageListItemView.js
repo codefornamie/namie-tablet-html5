@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-
+    var vexDialog = require("vexDialog");
     /**
      * スライドショー画面一覧アイテムのViewクラス
      * @class スライドショー画面一覧アイテムのViewクラス
@@ -78,19 +78,30 @@ define(function(require, exports, module) {
          * @memberOf CharacterMessageListItemView#
          */
         onClickCharacterMessageDeleteButton : function(event) {
-            this.showLoading();
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.buttons.YES.text = 'はい';
+            vexDialog.buttons.NO.text = 'いいえ';
+            vexDialog.open({
+                message : 'このメッセージを削除していいですか？',
+                callback : $.proxy(function(value) {
+                    if (value) {
+                        this.showLoading();
 
-            this.model.set("isDelete", true);
-            this.model.save(null, {
-                success : $.proxy(function(model, resp, options) {
-                    this.hideLoading();
-                    this.showSuccessMessage("キャラクターメッセージ情報の削除", model);
-                    app.router.opeMessage();
-                }, this),
-                error : $.proxy(function(model, resp, options) {
-                    this.hideLoading();
-                    this.showErrorMessage("キャラクターメッセージ情報の削除", resp);
-                    app.router.opeMessage();
+                        this.model.set("isDelete", true);
+                        this.model.save(null, {
+                            success : $.proxy(function(model, resp, options) {
+                                this.hideLoading();
+                                this.showSuccessMessage("キャラクターメッセージ情報の削除", model);
+                                app.router.opeMessage();
+                            }, this),
+                            error : $.proxy(function(model, resp, options) {
+                                this.hideLoading();
+                                this.showErrorMessage("キャラクターメッセージ情報の削除", resp);
+                                app.router.opeMessage();
+                            }, this)
+                        });
+                    }
+                    return;
                 }, this)
             });
         }
