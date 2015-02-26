@@ -32,10 +32,14 @@
 
         <div class="modal-radiation__scroll">
             <div class="modal-radiation__scroll-content">
-                <div
-                    id="radiationList"
-                    class="radiationList"
-                ></div>
+                <% if (mode === "form") { %>
+                    <input id="radiation_csv" type="file" name="radiation_csv" multiple>
+                <% } else { %>
+                    <div
+                        id="radiationList"
+                        class="radiationList"
+                    ></div>
+                <% } %>
             </div>
         </div>
 

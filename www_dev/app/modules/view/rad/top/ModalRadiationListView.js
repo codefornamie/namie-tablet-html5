@@ -24,6 +24,19 @@ define(function(require, exports, module) {
          * @memberOf ModalRadiationListView#
          */
         template : require("ldsh!templates/rad/top/modal-radiationList"),
+
+        /**
+         * レンダリングに利用するオブジェクトを作成する
+         *
+         * @memberOf RadPopupView#
+         * @return {Object}
+         */
+        serialize : function () {
+            return {
+                mode : this.mode
+            };
+        },
+
         /**
          * Viewの描画処理の開始前に呼び出されるコールバック関数。
          * <p>
@@ -54,8 +67,33 @@ define(function(require, exports, module) {
         events : {
             "click #modal-calendar-overlay" : "onClickOverlay",
             "click [data-close]" : "onClickCloser",
-            "click #radiationUploadButton" : "onClickRadiationUploadButton"
+            "click #radiationUploadButton" : "onClickRadiationUploadButton",
+            "change #radiation_csv" : "onChangeRadiationCSV"
         },
+
+        /**
+         * 初期化処理
+         * @memberOf ModalRadiationListView#
+         */
+        initialize : function (opt) {
+            opt = opt || {};
+
+            // ファイル選択形式のモード
+            // "list" : HORIBAのディレクトリから自動でリストアップする
+            // "form" : HTMLのファイルアップロードのフォームが出る
+            this.mode = opt.mode || "list";
+
+            // HORIBAのディレクトリのファイル一覧
+            this.fileEntryArray = opt.fileEntryArray;
+
+            if (this.mode === "list") {
+                console.assert(
+                    this.fileEntryArray,
+                    'if modalRadiationListView is "list" mode, it should have fileEntryArray'
+                );
+            }
+        },
+
         /**
          * 線量データ一覧の表示処理
          * @memberOf ModalRadiationListView#
@@ -68,35 +106,55 @@ define(function(require, exports, module) {
                 })).render();
             }, this));
         },
+
+        /**
+         * onChangeRadiationCSV
+         * @memberOf ModalRadiationListView#
+         */
+        onChangeRadiationCSV : function (ev) {
+            var files = ev.target.files;
+        },
+
         /**
          * アップロードボタンが押下された際のコールバック関数
          * @memberOf ModalRadiationListView#
          */
         onClickRadiationUploadButton : function() {
             var self = this;
-            // ListItemView取得
-            var itemViews = this.getViews("#radiationList") ? this.getViews("#radiationList").value() : [];
-            // チェックボックスで選んだItemViewのみに絞る
-            var selectedItemViews = itemViews.filter(function(item) {
-                return !!item.$el.find("input:checked").length;
-            });
+            var fileEntries;
 
-            this.failFileNames = [];
+            if (this.mode === "list") {
+                // ListItemView取得
+                var itemViews = this.getViews("#radiationList") ? this.getViews("#radiationList").value() : [];
+                // チェックボックスで選んだItemViewのみに絞る
+                var selectedItemViews = itemViews.filter(function(item) {
+                    return !!item.$el.find("input:checked").length;
+                });
 
-            if (!selectedItemViews) {
-                vexDialog.defaultOptions.className = 'vex-theme-default';
-                vexDialog.alert("アップロードするファイルを選択してください。");
-                return;
+                this.failFileNames = [];
+
+                if (!selectedItemViews) {
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("アップロードするファイルを選択してください。");
+                    return;
+                }
+
+                // チェックされたCSVファイルのfileEntryを配列に詰める
+                fileEntries = [];
+                _.each(selectedItemViews, function(selectItem) {
+                    if (selectItem.fileEntry) {
+                        fileEntries.push(selectItem.fileEntry);
+                    }
+                });
+            } else if (this.mode === "form") {
+                var $fileUploader = $("#radiation_csv");
+                fileEntries = $fileUploader[0].files;
+            } else {
+                throw new Error("Invalid mode of ModalRadiationListView");
             }
+
             this.showProgressBarLoading();
 
-            // チェックされたCSVファイルのfileEntryを配列に詰める
-            var fileEntries = [];
-            _.each(selectedItemViews, function(selectItem) {
-                if (selectItem.fileEntry) {
-                    fileEntries.push(selectItem.fileEntry);
-                }
-            });
             this.perProgress = 100 / fileEntries.length / 2;
             // radiationClusterの保存からradiationLogの保存の1セットをシリアルに処理する
             async.eachSeries(fileEntries, function(fileEntry, next) {
@@ -121,7 +179,7 @@ define(function(require, exports, module) {
          * @param {Function} next
          */
         convertFileEntry : function(fileEntry, next) {
-            fileEntry.file(function(file) {
+            var readFile = function (file) {
                 var reader = new FileReader();
                 // fileのロード完了後のコールバック
                 reader.onload = function(ev) {
@@ -146,11 +204,17 @@ define(function(require, exports, module) {
 
                 // テキストとしてファイルを読み込む
                 reader.readAsText(file);
-            }.bind(this), function(err) {
-                // fileでエラー
-                app.logger.error("convertFileEntry(): file(): error" + err.code);
-                next(fileEntry.name + "の読み込みに失敗しました。");
-            });
+            };
+
+            if (fileEntry instanceof window.File) {
+                readFile.call(this, fileEntry);
+            } else {
+                fileEntry.file(readFile.bind(this), function(err) {
+                    // fileでエラー
+                    app.logger.error("convertFileEntry(): file(): error" + err.code);
+                    next(fileEntry.name + "の読み込みに失敗しました。");
+                });
+            }
         },
         /**
          * clusterModelにデータをセットする
