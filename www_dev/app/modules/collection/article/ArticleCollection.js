@@ -1,3 +1,4 @@
+/* jshint loopfunc:true */
 define(function(require, exports, module) {
     "use strict";
 
@@ -12,6 +13,7 @@ define(function(require, exports, module) {
     var And = require("modules/util/filter/And");
     var Or = require("modules/util/filter/Or");
     var IsNull = require("modules/util/filter/IsNull");
+    var moment = require("moment");
 
     /**
      * 記事情報のコレクションクラス。
@@ -92,7 +94,29 @@ define(function(require, exports, module) {
                 }
 
                 for (var i = 0; i < response.length; i++) {
-                    if (isNaN(parseInt(response[i].sequence)) || response[i].publishedAt < fromDateString) {
+                    var sequenceArr = [];
+                    if (response[i].sequence) {
+                        if (!isNaN(parseInt(response[i].sequence))) {
+                            // 掲載期間中表示対応前のデータのコンバート
+                            var seqObj = {};
+                            seqObj[response[i].publishedAt] = response[i].sequence;
+                            sequenceArr.push(seqObj);
+                        } else if (typeof response[i].sequence === "string") {
+                            sequenceArr = JSON.parse(response[i].sequence);
+                        } else {
+                            // すでにparse処理を一度通っている場合
+                            sequenceArr = response[i].sequence;
+                        }
+                    }
+                    response[i].currentSequence = _.find(sequenceArr, function(so) {
+                        return !!so[fromDateString];
+                    });
+                    
+                    if (response[i].currentSequence) {
+                        response[i].currentSequence = response[i].currentSequence[fromDateString];
+                    }
+                        
+                    if (isNaN(parseInt(response[i].currentSequence))) {
                         unsequenced.push(response[i]);
                     } else {
                         sequenced.push(response[i]);
@@ -101,7 +125,7 @@ define(function(require, exports, module) {
 
                 // 最初に順序付けありのデータをその順序でソート
                 sequenced = _.sortBy(sequenced, function(res) {
-                    return parseInt(res.sequence, 10);
+                    return parseInt(res.currentSequence, 10);
                 });
 
                 // 次に順序付けなしのデータを優先度 > 更新日時降順でソート
