@@ -542,4 +542,30 @@ public class PersoniumModel {
         Log.d(TAG, "COLOR_LABEL : " + value);
         return value;
     }
+
+    /**
+     * キャラクターメッセージ(character_message)を取得する。
+     * @param context コンテキスト
+     * @return json形式リスト
+     */
+    @SuppressWarnings("unchecked")
+    public List<Object> getCharaMessage(Context context) {
+        Log.d(TAG, "start getCharaMessage");
+
+        // Perosonium接続
+        ODataCollection odata = initializePersonium(context);
+        if (odata == null) {
+            Log.w(TAG, "perosonium initialize error");
+            return null;
+        }
+
+        try {
+            HashMap<String, Object> json = odata.entitySet("character_message").query().top(1000).run();
+            HashMap<String, Object> d = (HashMap<String, Object>) json.get("d");
+            return (List<Object>) d.get("results");
+        } catch (DaoException e) {
+            Log.w(TAG, "configuration.COLOR_LABEL not defined : " + e.getMessage());
+            return null;
+        }
+    }
 }

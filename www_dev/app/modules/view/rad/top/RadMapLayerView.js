@@ -285,6 +285,7 @@ define(function(require, exports, module) {
                 zoomToBoundsOnClick : false,
                 animateAddingMarkers : true,
                 maxClusterRadius : this.defineMaxClusterRadius,
+                disableClusteringAtZoom : this.map.getMaxZoom(),
                 iconCreateFunction : this.defineClusterIcon.bind(this)
             });
 
