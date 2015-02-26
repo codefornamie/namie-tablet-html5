@@ -560,11 +560,14 @@ public class PersoniumModel {
         }
 
         try {
-            HashMap<String, Object> json = odata.entitySet("character_message").query().top(1000).run();
+            HashMap<String, Object> json = odata.entitySet("character_message")
+                    .query().filter("enabled eq true and deletedAt eq null")
+                    .top(1000).run();
             HashMap<String, Object> d = (HashMap<String, Object>) json.get("d");
             return (List<Object>) d.get("results");
         } catch (DaoException e) {
-            Log.w(TAG, "configuration.COLOR_LABEL not defined : " + e.getMessage());
+            Log.w(TAG,
+                    "configuration.COLOR_LABEL not defined : " + e.getMessage());
             return null;
         }
     }
