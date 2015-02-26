@@ -58,11 +58,11 @@ define(function(require, exports, module) {
                 _.each(modelDayList, $.proxy(function(modelDay) {
                     var modelArray = modelDay.get("articles");
                     _.each(modelArray, $.proxy(function(model) {
-                        if (model.get("imageUrl")) {
+                        if (model.get("imageThumbUrl")) {
                             var imagePath = model.get("imagePath") ? model.get("imagePath") + "/" : "";
                             imgArray.push({
                                 hasPath : true,
-                                imageUrl : imagePath + model.get("imageUrl"),
+                                imageUrl : imagePath + model.get("imageThumbUrl"),
                                 imageComment : model.get("imageComment"),
                                 imageIndex : index
                             });
