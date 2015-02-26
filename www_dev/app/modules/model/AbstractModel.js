@@ -17,6 +17,18 @@ define(function(require, exports, module) {
         parseResponse : function(response, options) {
             return response;
         },
+        /**
+         * 指定されたプロパティの文字列情報内の改行コードを<br/>に変換する。
+         * @return {String} 改行コードが<br/>に変換された文字列
+         */
+        getAndReplaceLineBreaks: function(name) {
+            var value = this.get(name);
+            if (value && typeof value.replace === "function") {
+                return value.replace(/\r?\n/g, '<br />');
+            } else {
+                return value;
+            }
+        }
     });
 
     /**
