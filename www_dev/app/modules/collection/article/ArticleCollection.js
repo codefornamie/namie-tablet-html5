@@ -85,12 +85,11 @@ define(function(require, exports, module) {
                 // 順序付け(sequence)ありとなしで分ける
                 var sequenced = [];
                 var unsequenced = [];
-                var fromDateString = app.currentDate;
+                var currentDateString = app.currentDate;
 
-                if (this.searchConditionFromDate) {
-                    // 記事の検索が範囲指定のばあい、その範囲の開始日とする。
-                    // この日付以前の記事は、sequenceを無視する。
-                    fromDateString = moment(this.searchConditionFromDate).format("YYYY-MM-DD");
+                if (this.searchConditionToDate) {
+                    // 休刊日を考慮し、検索条件の最終日を現在閲覧している日付として設定する
+                    currentDateString = moment(this.searchConditionToDate).format("YYYY-MM-DD");
                 }
 
                 for (var i = 0; i < response.length; i++) {
@@ -109,11 +108,11 @@ define(function(require, exports, module) {
                         }
                     }
                     response[i].currentSequence = _.find(sequenceArr, function(so) {
-                        return !!so[fromDateString];
+                        return !!so[currentDateString];
                     });
                     
                     if (response[i].currentSequence) {
-                        response[i].currentSequence = response[i].currentSequence[fromDateString];
+                        response[i].currentSequence = response[i].currentSequence[currentDateString];
                     }
                         
                     if (isNaN(parseInt(response[i].currentSequence))) {
@@ -167,7 +166,7 @@ define(function(require, exports, module) {
          * @param {boolean} isDepublish trueの場合、検索結果に掲載中止を含める。
          */
         setSearchConditionRange : function(fDate, tDate, isOnlyPublish, isDepublish) {
-            this.searchConditionFromDate = fDate;
+            this.searchConditionToDate = tDate;
             var f = moment(fDate).format("YYYY-MM-DD");
             var t = moment(tDate).format("YYYY-MM-DD");
 
