@@ -185,6 +185,7 @@ define(function(require, exports, module) {
                 reader.onload = function(ev) {
                     try {
                         // テキスト形式で返却されたデータをjsonオブジェクトに変換
+                        // TODO: PNGファイルもconvertできてしまう...
                         file.jsonObject = CommonUtil.convertJsonObject(reader.result);
                     } catch (e) {
                         app.logger.error("CommonUtil.convertJsonObject():error=" + e);
@@ -192,6 +193,7 @@ define(function(require, exports, module) {
                         return;
                     }
                     // 線量値や緯度経度情報が無いレコードは省く
+                    // TODO: 省かれたレコードがあれば不完全なデータとみなす
                     file.jsonObject = _.filter(file.jsonObject, function(json) {
                         return !!json[ModalRadiationListView.HORIBA_TITLE_DOSE] &&
                                 !!json[ModalRadiationListView.HORIBA_TITLE_POSITION];
