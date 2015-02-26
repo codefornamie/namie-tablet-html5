@@ -285,6 +285,7 @@ define(function(require, exports, module) {
                 zoomToBoundsOnClick : false,
                 animateAddingMarkers : true,
                 maxClusterRadius : this.defineMaxClusterRadius,
+                disableClusteringAtZoom : this.map.getMaxZoom(),
                 iconCreateFunction : this.defineClusterIcon.bind(this)
             });
 
@@ -358,6 +359,7 @@ define(function(require, exports, module) {
 
             var popupView = new RadPopupView({
                 data : {
+                    radiationClusterModel : this.radiationClusterModel,
                     radiationClusterFeature : this.radiationClusterModel.toGeoJSON(),
                     radiationLogFeatureCollection : null,
                     radiationLogFeature : marker.feature

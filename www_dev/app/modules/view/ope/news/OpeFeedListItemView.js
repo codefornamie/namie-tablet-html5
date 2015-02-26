@@ -4,6 +4,8 @@ define(function(require, exports, module) {
     var app = require("app");
     var FeedListItemView = require("modules/view/news/FeedListItemView");
     var TagListView = require("modules/view/news/TagListView");
+    var vexDialog = require("vexDialog");
+    var moment = require("moment");
 
     /**
      * 運用管理ツールの記事一覧テーブルの記事レコードのViewを作成する。
@@ -32,7 +34,7 @@ define(function(require, exports, module) {
          * </p>
          */
         afterRendered : function() {
-            if (this.model.get("isRecommend")) {
+            if (this.model.get("isRecommend") && (this.model.get("publishedAt") === this.parentView.targetDate)) {
                 // 今日のおすすめ記事フラグがある場合はラジオボタンを選択状態にする
                 this.$el.find("input[type='radio']").attr("checked", "checked");
             }
@@ -46,6 +48,7 @@ define(function(require, exports, module) {
             "click [data-article-edit-button]" : "onClickArticleEditButton",
             "change .isPublishCheckBox" : "onChangeIsPublishCheckBox",
             "change .today-recommend-radio" : "onChangeTodayRecommendRadio",
+            "click .today-recommend-radio" : "onClickTodayRecommendRadio",
             "click .ope-title-anchor" : "onClickOpeTitleAnchor"
         },
         /**
@@ -191,6 +194,18 @@ define(function(require, exports, module) {
                     this.saveEnd();
                 }, this)
             });
+        },
+        /**
+         * おすすめ記事のラジオボタンがクリックされた際のコールバック関数
+         * @memberOf OpeFeedListItemView#
+         */
+        onClickTodayRecommendRadio : function(ev) {
+            if (this.model.get("publishedAt") !== this.parentView.targetDate) {
+                ev.preventDefault();
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert("記事の配信開始日のみ、おすすめの設定が可能です。<br>当該記事配信開始日：" +
+                        moment(this.model.get("publishedAt")).format("YYYY年MM月DD日"));
+            }
         },
         /**
          * おすすめ記事のラジオボタンが変更された際のコールバック関数
