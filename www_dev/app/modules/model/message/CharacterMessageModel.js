@@ -28,7 +28,7 @@ define(function(require, exports, module) {
          * @memberOf CharacterMessageModel#
          */
         parseOData : function(response, options) {
-            switch (this.get("type")) {
+            switch (response.type) {
             case 1:
                 response.dispType = "通常";
                 break;
@@ -39,6 +39,8 @@ define(function(require, exports, module) {
                 response.dispType = "通常";
                 break;
             }
+            response.message = this.getAndReplaceBrElement(response.message);
+
             return response;
         },
         /**
@@ -51,7 +53,7 @@ define(function(require, exports, module) {
          */
         makeSaveData : function(saveData) {
             saveData.type = this.get("type");
-            saveData.message = this.get("message");
+            saveData.message = this.getAndReplaceLineBreaks("message");
             saveData.weight = this.get("weight");
             saveData.enabled = this.get("enabled");
         },

@@ -47,7 +47,7 @@ define(function(require, exports, module) {
         app.logger.debug("Setting personium.io enveironments.");
         app.config.basic.mode = "news";
         // テスト用セル
-        app.config.basic.cellId = "kizunatest04";
+        app.config.basic.cellId = "kizunatest05";
         app.logger.debug("app.config.basic:" + JSON.stringify(app.config.basic));
         // タイムアウト値を拡大
         spec.timeout(20000);
