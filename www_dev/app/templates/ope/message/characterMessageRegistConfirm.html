@@ -4,24 +4,20 @@
             <div class="confirmAttention alert-box info radius">入力した項目の確認です。
                 入力内容が正しければ「登録する」を押してください。</div>
             <div class="large-12 columns">
-                <div class="large-12 columns">
-                    <div class="eventColumnsHeader">メッセージ</div>
-                </div>
-                <div class="large-11 large-centered columns">
-                    <div class="eventFile" data-figure>
-                        <div class="eventFileImage">
-                            <img data-figure-image>
-                        </div>
-
-                        <p data-figure-caption></p>
+                <div class="row">
+                    <div class="large-3 columns">
+                        <div class="eventColumnsHeader right inline">メッセージ</div>
+                    </div>
+                    <div class="large-9 columns end">
+                        <div id="characterMessageConfirm"><%= model.getAndReplaceLineBreaks("message") %></div>
                     </div>
                 </div>
             </div>
         </section>
         <div class="post-action">
-            <button id="slideshowRegistButton" type="button"
+            <button id="characterMessageRegistButton" type="button"
                 class="small button">登録する</button>
-            <button id="slideshowBackButton" type="button"
+            <button id="characterMessageBackButton" type="button"
                 class="small button">戻る</button>
         </div>
     </div>

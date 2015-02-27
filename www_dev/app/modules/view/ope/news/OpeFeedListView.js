@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var FeedListView = require("modules/view/news/FeedListView");
     var jquerySortable = require("jquery-sortable");
     var vexDialog = require("vexDialog");
+    var moment = require("moment");
 
     /**
      * 運用管理ツールの記事一覧テーブルのViewクラスを作成する。
@@ -31,7 +32,7 @@ define(function(require, exports, module) {
                 handle : '.handle'
             }).bind("sortupdate", $.proxy(this.onSortUpdate,this));
             this.recommendArticle = this.collection.find($.proxy(function(model) {
-                return model.get("isRecommend");
+                return model.get("isRecommend") && (model.get("publishedAt") === this.targetDate);
             }, this));
             $("#sequenceConfirm").hide();
             $("[data-sequence-register-button]").unbind("click");
@@ -92,9 +93,22 @@ define(function(require, exports, module) {
                     var remoteSequence = itemView.model.get("sequence");
                     var localSequence = itemView.$el.index().toString();
 
+                    var preSeq = itemView.model.get("currentSequence");
                     // 並び順に変更がないものは保存対象としない
-                    if (remoteSequence !== localSequence) {
-                        itemView.model.set("sequence", localSequence);
+                    if (preSeq !== localSequence) {
+                        var targetSeq = _.find(remoteSequence, function(rs) {
+                            return !!rs[self.targetDate];
+                        });
+                        if (targetSeq) {
+                            // すでにその日に並び順オブジェクトがあった場合
+                            targetSeq[self.targetDate] = localSequence;
+                        } else {
+                            // 当該日付に初めて並び順をセットする場合
+                            var seqObj = {};
+                            seqObj[self.targetDate] = localSequence;
+                            remoteSequence.push(seqObj);
+                        }
+                        itemView.model.set("sequence", remoteSequence);
 
                         return itemView.model;
                     }
@@ -120,7 +134,7 @@ define(function(require, exports, module) {
                 function onSaveAllSequence(err) {
                     self.hideLoading();
 
-                    if (err.event && err.event.isConflict()) {
+                    if (err && err.event && err.event.isConflict()) {
                         self.parent.reloadNewsView();
                     }
                 }

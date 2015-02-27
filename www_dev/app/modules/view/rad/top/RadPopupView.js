@@ -31,7 +31,7 @@ define(function(require, exports, module) {
 
             var hasCollection = !!logFeatureCollection;
             var date, dateStr, avg, max;
-            var stationType, numSample, sensorVendor, sensorModel, sensorSerialNo;
+            var stationType, numSample, sensorVendor, sensorModel;
 
             if (hasCollection) {
                 date = moment(clusterFeature.properties.startDate);
@@ -56,7 +56,6 @@ define(function(require, exports, module) {
             numSample = clusterFeature.properties.numSample;
             sensorVendor = clusterFeature.properties.sensorVendor;
             sensorModel = clusterFeature.properties.sensorModel;
-            sensorSerialNo = clusterFeature.properties.sensorSerialNo;
 
             return {
                 data : {
@@ -66,8 +65,7 @@ define(function(require, exports, module) {
                     stationType : stationType,
                     numSample : numSample,
                     sensorVendor : sensorVendor,
-                    sensorModel : sensorModel,
-                    sensorSerialNo : sensorSerialNo
+                    sensorModel : sensorModel
                 }
             };
         },
@@ -146,6 +144,7 @@ define(function(require, exports, module) {
          */
         setMap : function (map) {
             this.map = map;
+            this.map.once("popupopen", this.onPopupOpen.bind(this));
         },
 
         /**
@@ -159,6 +158,17 @@ define(function(require, exports, module) {
         },
 
         /**
+         * ポップアップが表示されたら呼ばれる
+         * @memberOf RadPopupView#
+         * @param {Event} ev
+         */
+        onPopupOpen : function (ev) {
+            this.el = ev.popup._contentNode;
+
+            $(".rad-popup__info__more--button", this.el).one("click", this.onShowMore.bind(this));
+        },
+
+        /**
          * radiationClusterModelが変更されたら呼ばれる
          * @memberOf RadPopupView#
          */
@@ -168,6 +178,16 @@ define(function(require, exports, module) {
             if (isHidden) {
                 this.hide();
             }
+        },
+
+        /**
+         * 「もっと見る」がクリックされたら呼ばれる
+         * @memberOf RadPopupView#
+         * @param {Event} ev
+         */
+        onShowMore : function (ev) {
+            $(".rad-popup__info__more--button", this.el).hide();
+            $(".rad-popup__info", this.el).show();
         },
 
         /**

@@ -207,7 +207,7 @@ main {
 .opeHeader nav {
     height: 100%;
     line-height: 20px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 .date-picker .header {
     display: block;

@@ -1,3 +1,4 @@
+/* jshint loopfunc:true */
 define(function(require, exports, module) {
     "use strict";
 
@@ -12,6 +13,7 @@ define(function(require, exports, module) {
     var And = require("modules/util/filter/And");
     var Or = require("modules/util/filter/Or");
     var IsNull = require("modules/util/filter/IsNull");
+    var moment = require("moment");
 
     /**
      * 記事情報のコレクションクラス。
@@ -83,16 +85,37 @@ define(function(require, exports, module) {
                 // 順序付け(sequence)ありとなしで分ける
                 var sequenced = [];
                 var unsequenced = [];
-                var fromDateString = app.currentDate;
+                var currentDateString = app.currentDate;
 
-                if (this.searchConditionFromDate) {
-                    // 記事の検索が範囲指定のばあい、その範囲の開始日とする。
-                    // この日付以前の記事は、sequenceを無視する。
-                    fromDateString = moment(this.searchConditionFromDate).format("YYYY-MM-DD");
+                if (this.searchConditionToDate) {
+                    // 休刊日を考慮し、検索条件の最終日を現在閲覧している日付として設定する
+                    currentDateString = moment(this.searchConditionToDate).format("YYYY-MM-DD");
                 }
 
                 for (var i = 0; i < response.length; i++) {
-                    if (isNaN(parseInt(response[i].sequence)) || response[i].publishedAt < fromDateString) {
+                    var sequenceArr = [];
+                    if (response[i].sequence) {
+                        if (!isNaN(parseInt(response[i].sequence))) {
+                            // 掲載期間中表示対応前のデータのコンバート
+                            var seqObj = {};
+                            seqObj[response[i].publishedAt] = response[i].sequence;
+                            sequenceArr.push(seqObj);
+                        } else if (typeof response[i].sequence === "string") {
+                            sequenceArr = JSON.parse(response[i].sequence);
+                        } else {
+                            // すでにparse処理を一度通っている場合
+                            sequenceArr = response[i].sequence;
+                        }
+                    }
+                    response[i].currentSequence = _.find(sequenceArr, function(so) {
+                        return !!so[currentDateString];
+                    });
+                    
+                    if (response[i].currentSequence) {
+                        response[i].currentSequence = response[i].currentSequence[currentDateString];
+                    }
+                        
+                    if (isNaN(parseInt(response[i].currentSequence))) {
                         unsequenced.push(response[i]);
                     } else {
                         sequenced.push(response[i]);
@@ -101,7 +124,7 @@ define(function(require, exports, module) {
 
                 // 最初に順序付けありのデータをその順序でソート
                 sequenced = _.sortBy(sequenced, function(res) {
-                    return parseInt(res.sequence, 10);
+                    return parseInt(res.currentSequence, 10);
                 });
 
                 // 次に順序付けなしのデータを優先度 > 更新日時降順でソート
@@ -143,7 +166,7 @@ define(function(require, exports, module) {
          * @param {boolean} isDepublish trueの場合、検索結果に掲載中止を含める。
          */
         setSearchConditionRange : function(fDate, tDate, isOnlyPublish, isDepublish) {
-            this.searchConditionFromDate = fDate;
+            this.searchConditionToDate = tDate;
             var f = moment(fDate).format("YYYY-MM-DD");
             var t = moment(tDate).format("YYYY-MM-DD");
 

@@ -28,13 +28,17 @@ define(function(require, exports, module) {
     // 運用管理
     login.ope = require("modules/view/ope/login/index");
     var TopView = require("modules/view/ope/top/TopView");
+    var OpeHeaderView = require("modules/view/ope/common/HeaderView");
     var OpeArticleRegistView = require("modules/view/ope/news/OpeArticleRegistView");
     var OpeYouTubeRegistView = require("modules/view/ope/news/OpeYouTubeRegistView");
     var OpeSlideshowRegistView = require("modules/view/ope/slideshow/OpeSlideshowRegistView");
     var OpeSlideshowListView = require("modules/view/ope/slideshow/OpeSlideshowListView");
+    var OpeCharacterMessageListView = require("modules/view/ope/message/CharacterMessageListView");
+    var OpeCharacterMessageRegistView = require("modules/view/ope/message/CharacterMessageRegistView");
     var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
+    var DojoAchievementDownloadView = require("modules/view/ope/dojoAchievement/DojoAchievementDownloadView");
 
     // 道場
     login.dojo = require("modules/view/dojo/login/index");
@@ -150,7 +154,13 @@ define(function(require, exports, module) {
         setHeader : function(headerView) {
             this.setView("#header", headerView).render();
         },
-
+        /**
+         * ヘッダーViewを取得する
+         * @returns {View} ヘッダーViewのインスタンス
+         */
+        getHeader : function() {
+            return this.getView("#header");
+        },
         /**
          *  グローバルナビのviewをsetする
          *  @memberOf AppLayout#
@@ -266,6 +276,8 @@ define(function(require, exports, module) {
             'ope-top' : 'opeTop',
             'ope-top/:date' : 'opeTop',
             'ope-slideshow' : 'opeSlideshow',
+            'ope-message' : 'opeMessage',
+            'ope-achievement' : 'opeAchievement',
 
             // 道場アプリ
             'dojo-top' : 'dojoTop',
@@ -460,8 +472,9 @@ define(function(require, exports, module) {
         opeTop : function(targetDate) {
             if( targetDate ) {
                 this.layout.showView(new TopView({targetDate:targetDate}));
-                this.layout.setHeader(new common.HeaderView());
+                this.layout.setHeader(new OpeHeaderView());
                 this.layout.setFooter(new common.FooterView());
+                this.layout.getHeader().setActiveMenu("ope-top");
             } else {
                 BusinessUtil.calcNextPublication(function(dateString){
                     this.go("ope-top", dateString);
@@ -474,9 +487,25 @@ define(function(require, exports, module) {
         opeSlideshow : function() {
             app.logger.debug('[route] opeSlideshow');
             var slideshowListView = new OpeSlideshowListView();
-            this.layout.setView("#opeNewsList", slideshowListView);
+            this.layout.showView(slideshowListView);
+            this.layout.getHeader().setActiveMenu("ope-slideshow");
         },
-
+        /**
+         * キャラクターメッセージ一覧へ遷移する
+         */
+        opeMessage : function() {
+            app.logger.debug('[route] opeMessage');
+            this.layout.showView(new OpeCharacterMessageListView());
+            this.layout.getHeader().setActiveMenu("ope-message");
+        },
+        /**
+         * 達成状況ダウンロード画面へ遷移する
+         */
+        opeAchievement : function() {
+            app.logger.debug('[route] opeAchievement');
+            this.layout.showView(new DojoAchievementDownloadView());
+            this.layout.getHeader().setActiveMenu("ope-achievement");
+        },
         /**
          * このメソッドは手動で呼ばれる
          */
@@ -508,11 +537,28 @@ define(function(require, exports, module) {
          */
         opeSlideshowRegist : function(options) {
             app.logger.debug('[route] opeSlideshowRegist');
-            this.layout.setView("#opeNewsList", new OpeSlideshowRegistView(options)).render();
+            this.layout.showView(new OpeSlideshowRegistView(options));
             this.navigate("opeSlideshowRegist");
             $("#contents__primary").scrollTop(0);
         },
-
+        /**
+         * このメソッドは手動で呼ばれる
+         */
+        opeMessageRegist : function(options) {
+            app.logger.debug('[route] opeMessageRegist');
+            this.layout.showView(new OpeCharacterMessageRegistView(options));
+            this.navigate("opeMessageRegist");
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         * このメソッドは手動で呼ばれる
+         */
+        opeMessageEdit : function(options) {
+            app.logger.debug('[route] opeMessageEdit');
+            this.layout.showView(new OpeCharacterMessageRegistView(options));
+            this.navigate("opeMessageEdit");
+            $("#contents__primary").scrollTop(0);
+        },
         /**
          * このメソッドは手動で呼ばれる
          */
