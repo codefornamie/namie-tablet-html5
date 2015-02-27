@@ -23,3 +23,12 @@
 .page-ope .panel {
     margin-bottom: 0px;
 }
+
+
+.character__image {
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 200px;
+    height: 200px;
+    display: inline-block;
+}
