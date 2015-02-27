@@ -222,7 +222,7 @@ define(function(require, exports, module) {
             var contentHeight = $container[0].scrollHeight;
 
             if (scrollTop > 0) {
-                if(!this.isShowScrollUp){
+                if (!this.isShowScrollUp) {
                     this.isShowScrollUp = true;
                     $("#radiation-scrollUp").animate({
                         opacity : 1
@@ -233,7 +233,7 @@ define(function(require, exports, module) {
                     });
                 }
             } else {
-                if(this.isShowScrollUp){
+                if (this.isShowScrollUp) {
                     this.isShowScrollUp = false;
                     $("#radiation-scrollUp").animate({
                         opacity : 0
@@ -245,7 +245,6 @@ define(function(require, exports, module) {
                 }
             }
 
-            
             if (scrollTop < contentHeight - containerHeight) {
                 if (!this.isShowScrolldown) {
                     this.isShowScrolldown = true;
