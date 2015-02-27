@@ -2,64 +2,74 @@
     data-article-id="<%= model.get('__id') %>"
     class="rad-cluster-item feed-item"
 >
-    <div class="rad-cluster-item__left">
-        <div class="rad-cluster-item__date">
-            <div>
-                <span class="date--year">
-                    <%= moment(prop.startDate).format("YYYY") %>
-                    年
-                </span>
+    <div class="rad-cluster-item__row">
+        <div class="rad-cluster-item__left">
+            <div class="rad-cluster-item__date">
+                <div>
+                    <span class="date--year">
+                        <%= moment(prop.startDate).format("YYYY") %>
+                        年
+                    </span>
+                </div>
+    
+                <div>
+                    <span class="date--monthday"><b><%= moment(prop.startDate).format("M") %></b><span style="margin: 0 3px;">/</span><b><%= moment(prop.startDate).format("D") %></b></span>
+    
+                    <span class="date--weekday">(<%= moment(prop.startDate).format("ddd") %>)</span>
+                </div>
             </div>
-
-            <div>
-                <span class="date--monthday"><b><%= moment(prop.startDate).format("M") %></b><span style="margin: 0 3px;">/</span><b><%= moment(prop.startDate).format("D") %></b></span>
-
-                <span class="date--weekday">(<%= moment(prop.startDate).format("ddd") %>)</span>
-            </div>
+        </div>
+    
+        <div class="rad-cluster-item__right">
+            <table class="rad-cluster-item__value-table">
+                <tr class="rad-cluster-item__avg-value">
+                    <td>
+                        <span>
+                            平均値
+                        </span>
+                    </td>
+    
+                    <td>
+                        <b>
+                            <%= prop.averageValue %>
+                        </b>
+                    </td>
+    
+                    <td>
+                        <span>
+                            μSv/h
+                        </span>
+                    </td>
+                </tr>
+    
+                <tr class="rad-cluster-item__max-value">
+                    <td>
+                        <span>
+                            最大値
+                        </span>
+                    </td>
+    
+                    <td>
+                        <b>
+                            <%= prop.maxValue %>
+                        </b>
+                    </td>
+    
+                    <td>
+                        <span>
+                            μSv/h
+                        </span>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 
-    <div class="rad-cluster-item__right">
-        <table class="rad-cluster-item__value-table">
-            <tr class="rad-cluster-item__avg-value">
-                <td>
-                    <span>
-                        平均値
-                    </span>
-                </td>
-
-                <td>
-                    <b>
-                        <%= prop.averageValue %>
-                    </b>
-                </td>
-
-                <td>
-                    <span>
-                        μSv/h
-                    </span>
-                </td>
-            </tr>
-
-            <tr class="rad-cluster-item__max-value">
-                <td>
-                    <span>
-                        最大値
-                    </span>
-                </td>
-
-                <td>
-                    <b>
-                        <%= prop.maxValue %>
-                    </b>
-                </td>
-
-                <td>
-                    <span>
-                        μSv/h
-                    </span>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <% if (hasError) { %>
+        <div class="rad-cluster-item__row">
+            <p class="rad-cluster-item__error">
+                ※データに一部不備があります。
+            </p>
+        </div>
+    <% } %>
 </li>

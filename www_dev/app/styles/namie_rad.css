@@ -8,7 +8,7 @@
  */
 .page-rad.snap-content {
     background: #b5d0d0;
-    color: #333;
+    color: #2e3a3a;
 }
 
 /**
@@ -53,7 +53,7 @@
  */
 .page-rad .contents__secondary {
     padding-top: 0;
-    background: rgb(189, 189, 189);
+    background: rgb(115, 199, 67);
     margin-left: 0;
     box-shadow: 3px 0px 3px 0px rgba(55, 88, 88, 0.15);
     z-index: 1;
@@ -117,7 +117,7 @@
  */
 .side-header {
     height: 50px;
-    background-color: rgb(37, 50, 38);
+    background-color: rgb(48, 64, 51);
 }
 
 .side-header h1 {
@@ -130,10 +130,54 @@
 }
 
 /**
+ *  切り替えタブ
+ */
+.page-rad .contents__secondary .sidemenu .tab {
+    background-color: rgb(48, 64,51);
+    width: 100%;
+    height: 40px;
+}
+
+.page-rad .contents__secondary .sidemenu .tab-back {
+    width: 50%;
+    display: inline-block;
+}
+
+.page-rad .contents__secondary .sidemenu .tab-button {
+    margin: 0 5px;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    letter-spacing: 0.4rem;
+    text-indent: 0.4rem;
+    font-weight: bold;
+    
+}
+.page-rad .contents__secondary .sidemenu .tab-back:first-child .tab-button {
+    margin-left: 10px;
+}
+.page-rad .contents__secondary .sidemenu .tab-back:last-child .tab-button {
+    margin-right: 10px;
+}
+
+.page-rad .contents__secondary .sidemenu .tab-button--1 {
+    background-color: rgb(114, 199,67);
+    color: #fff;
+}
+.page-rad .contents__secondary .sidemenu .tab-button--2 {
+    background-color: rgb(235, 236, 234);
+    box-shadow: 0 -5px 10px -3px rgba(0,0,0,0.3) inset;
+}
+
+/**
  *  アップロードボタン
  */
-.side-upload {
-    padding: 15px 10px;
+.page-rad .side-upload {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 15px 10px 5px 10px;
+    z-index: 1;
+    background-color: rgb(208, 208, 208);
 }
 
 .page-rad .contents__secondary .sidemenu .button--upload {
@@ -147,7 +191,7 @@
     text-align: center;
     position: absolute;
     top: 0;
-    padding: 140px 0 0 0;
+    padding: 90px 0 90px 0;
     width: 100%;
     z-index: 1;
     height: 100%;
@@ -178,7 +222,7 @@
 }
 
 .sidemenu-bottom__scroll.has-before::before {
-    top: 140px;
+    top: 90px;
     opacity: 1;
     -webkit-transition: .5s ease top, .5s ease opacity;
     transition: .5s ease top, .5s ease opacity;
@@ -203,7 +247,7 @@
 }
 
 .sidemenu-bottom__scroll.has-after::after {
-    bottom: 0px;
+    bottom: 90px;
     opacity: 1;
     -webkit-transition: .5s ease bottom, .5s ease opacity;
     transition: .5s ease bottom, .5s ease opacity;
@@ -211,7 +255,7 @@
 
 .page-rad .contents__secondary .sidemenu-bottom h3 {
     font-size: 17px;
-    background: rgb(58, 66, 59);
+    background: rgb(94, 182, 38);
     color: white;
     padding: 8px 0;
     text-align: center;
@@ -234,8 +278,6 @@
     border: 3px solid white;
     -webkit-transition: .1s ease all;
     transition: .1s ease all;
-    display: flex;
-    align-items: center;
 }
 
 .page-rad .rad-cluster-item:active {
@@ -244,6 +286,11 @@
     box-shadow: none;
     border-top-width: 5px;
     border-bottom-width: 1px;
+}
+
+.rad-cluster-item__row {
+    display: flex;
+    align-items: center;
 }
 
 .rad-cluster-item__left,
@@ -318,6 +365,13 @@
     font-size: 18px;
 }
 
+.rad-cluster-item__error {
+    color: rgb(227, 86, 79);
+    margin: 0;
+    padding: 0 0 0 5px;
+    font-size: 0.7rem;
+}
+
 /**
  *  ボタン
  */
@@ -368,8 +422,23 @@
     height: 100%;
 }
 
-.page-rad .map-legend {
+.page-rad .nav-menu {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.page-rad .nav-menu .nav-menu__button {
+    display: inline-block;
     background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
+    padding: 12px 10px;
+    font-size: 0.9rem;
+}
+
+.page-rad .map-legend {
+    background-color: #ebecea;
     position: absolute;
     bottom: 0;
     height: 50px;
@@ -389,15 +458,29 @@
     text-align: center;
     vertical-align: middle;
 }
+.page-rad .map-legend-list li.map-legend-item--header {
+}
 
 .page-rad .map-legend-symbol {
     border-radius: 3px;
-    width: 80px;
+    width: 88px;
     height: 12px;
+}
+
+.page-rad .map-legend-header {
+    font-size: 0.7rem;
+    background-color: #dadada;
+    padding: 8px;
+    border-radius: 3px;
 }
 
 .page-rad .map-legend-label {
     font-size: 0.8rem;
+}
+
+.page-rad .map-legend-label .map-legend-unit {
+    margin: 0 2px;
+    font-size: 0.7rem;
 }
 
 /**
@@ -623,8 +706,8 @@
  *  ----------
  */
 .page-rad .rad-cluster-item--selected {
-    background-color: rgb(154, 234, 92);
-    border: 3px solid rgb(94, 182, 24);
+    background-color: rgb(255, 255, 132);
+    border: 3px solid rgb(239, 227, 21);
 }
 
 /**

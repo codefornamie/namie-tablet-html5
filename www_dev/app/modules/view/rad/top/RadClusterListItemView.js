@@ -23,7 +23,8 @@ define(function(require, exports, module) {
         serialize : function () {
             return {
                 model : this.model,
-                prop : this.model.toGeoJSON().properties
+                prop : this.model.toGeoJSON().properties,
+                hasError : !!this.model.get("errorCode")
             };
         },
 

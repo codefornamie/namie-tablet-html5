@@ -18,19 +18,24 @@
             </h1>
         </div>
 
-        <div class="side-upload">
-            <button data-radiation-upload-button type="button" class="button button--emerald button--upload">
-                <div>
-                    アップロード
+        <div class="tab">
+            <div class="tab-back">
+                <div class="tab-button tab-button--1">
+                    役場
                 </div>
-            </button>
+            </div
+            ><div class="tab-back">
+                <div class="tab-button tab-button--2">
+                    自分
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="sidemenu-bottom">
         <div class="sidemenu-bottom__scroll">
             <h3>
-                測定した放射線データ
+                車載線量計の測定データ
             </h3>
 
             <div class="sidebar">
@@ -38,47 +43,63 @@
             </div>
         </div>
     </div>
+
+    <div class="side-upload">
+        <button data-radiation-upload-button type="button" class="button button--emerald button--upload">
+            <div>
+                アップロード
+            </div>
+        </button>
+    </div>
 </aside>
 
 <div id='contents__primary' class="contents__primary columns small-9" role='content'>
     <div id="map-container"></div>
+    <div class="nav-menu">
+        <div class="nav-menu__button">
+            使い方
+        </div>
+    </div>
     <div class="map-legend">
         <ul class="map-legend-list">
+            <li class="map-legend-item--header">
+                <span class="map-legend-header">凡例</span>
+            </li>
             <li>
                 <div class="map-legend-symbol map-marker--1"></div>
-                <span class="map-legend-label">0.1以下</span>
+                <span class="map-legend-label">0.1<span class="map-legend-unit">μSv</span>以下</span>
             </li>
             <li>
                 <div class="map-legend-symbol map-marker--2"></div>
-                <span class="map-legend-label">〜0.2</span>
+                <span class="map-legend-label">〜0.2<span class="map-legend-unit">μSv</span></span>
             </li>
             <li>
                 <div class="map-legend-symbol map-marker--3"></div>
-                <span class="map-legend-label">〜0.5</span>
+                <span class="map-legend-label">〜0.5<span class="map-legend-unit">μSv</span></span>
             </li>
             <li>
                 <div class="map-legend-symbol map-marker--4"></div>
-                <span class="map-legend-label">〜1</span>
+                <span class="map-legend-label">〜1<span class="map-legend-unit">μSv</span></span>
             </li>
             <li>
                 <div class="map-legend-symbol map-marker--5"></div>
-                <span class="map-legend-label">〜1.9</span>
+                <span class="map-legend-label">〜1.9<span class="map-legend-unit">μSv</span></span>
             </li>
             <li>
                 <div class="map-legend-symbol map-marker--6"></div>
-                <span class="map-legend-label">〜3.8</span>
+                <span class="map-legend-label">〜3.8<span class="map-legend-unit">μSv</span></span>
             </li>
             <li>
                 <div class="map-legend-symbol map-marker--7"></div>
-                <span class="map-legend-label">〜9.5</span>
+                <span class="map-legend-label">〜9.5<span class="map-legend-unit">μSv</span></span>
             </li>
             <li>
                 <div class="map-legend-symbol map-marker--8"></div>
-                <span class="map-legend-label">〜19</span>
+                <span class="map-legend-label">〜19<span class="map-legend-unit">μSv</span></span>
             </li>
             <li>
                 <div class="map-legend-symbol map-marker--9"></div>
-                <span class="map-legend-label">19より大</span>
+                <span class="map-legend-label">19<span class="map-legend-unit">μSv</span>以上</span>
             </li>
         </ul>
     </div>
