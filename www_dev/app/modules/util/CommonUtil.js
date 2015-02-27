@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
     "use strict";
     var Code = require("modules/util/Code");
+    var CSV = require("CSV");
 
     /**
      * 汎用ユーティリティクラス
@@ -167,20 +168,8 @@ define(function(require, exports, module) {
      * @return {String} csv
      * @memberOf CommonUtil#
      */
-    CommonUtil.convertJsonObject = function(csv) {
-        var lines = csv.split("\n");
-        var result = [];
-        var headers = lines[0].split(",");
-
-        for (var i = 1; i < lines.length; i++) {
-            var obj = {};
-            var currentline = lines[i].split(",");
-            for (var j = 0; j < headers.length; j++) {
-                obj[headers[j]] = currentline[j];
-            }
-            result.push(obj);
-        }
-        return result;
+    CommonUtil.convertJsonObject = function(csv, opt) {
+        return new CSV(csv, { header : true }).parse();
     };
 
     module.exports = CommonUtil;
