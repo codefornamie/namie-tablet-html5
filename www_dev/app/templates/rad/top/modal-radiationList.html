@@ -14,34 +14,36 @@
         <div class="modal-radiation__header">
             アップロードする放射線量データを選択してください。</div>
 
-        <div class="modal-radiation__list-header">
-            <div class="row">
-                <div class="columns small-1">
-                    &nbsp;
-                </div>
+        <% if (mode === "form") { %>
+            <div class="modal-radiation__file-chooser">
+                <input id="radiation_csv" type="file" name="radiation_csv" multiple>
+            </div>
+        <% } else { %>
+            <div class="modal-radiation__list-header">
+                <div class="row">
+                    <div class="columns small-1">
+                        &nbsp;
+                    </div>
 
-                <div class="columns small-5">
-                    ファイル名
-                </div>
+                    <div class="columns small-5">
+                        ファイル名
+                    </div>
 
-                <div class="columns small-6">
-                    日時
+                    <div class="columns small-6">
+                        日時
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="modal-radiation__scroll">
-            <div class="modal-radiation__scroll-content">
-                <% if (mode === "form") { %>
-                    <input id="radiation_csv" type="file" name="radiation_csv" multiple>
-                <% } else { %>
-                    <div
-                        id="radiationList"
-                        class="radiationList"
-                    ></div>
-                <% } %>
+            <div class="modal-radiation__scroll">
+                <div class="modal-radiation__scroll-content">
+                        <div
+                            id="radiationList"
+                            class="radiationList"
+                        ></div>
+                </div>
             </div>
-        </div>
+        <% } %>
 
         <div class="modal-radiation__upload">
             <button
