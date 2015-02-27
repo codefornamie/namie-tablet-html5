@@ -225,34 +225,47 @@ define(function(require, exports, module) {
                 if(!this.isShowScrollUp){
                     this.isShowScrollUp = true;
                     $("#radiation-scrollUp").animate({
-                        height : "50px",
                         opacity : 1
+                    }, {
+                        complete : function() {
+                            $(this).css("z-index", 10);
+                        }
                     });
                 }
             } else {
                 if(this.isShowScrollUp){
                     this.isShowScrollUp = false;
                     $("#radiation-scrollUp").animate({
-                        height : 0,
                         opacity : 0
+                    }, {
+                        complete : function() {
+                            $(this).css("z-index", 0);
+                        }
                     });
                 }
             }
 
+            
             if (scrollTop < contentHeight - containerHeight) {
-                if(!this.isShowScrolldown){
+                if (!this.isShowScrolldown) {
                     this.isShowScrolldown = true;
                     $("#radiation-scrollDown").animate({
-                        height : "50px",
                         opacity : 1
+                    }, {
+                        complete : function() {
+                            $(this).css("z-index", 10);
+                        }
                     });
                 }
             } else {
-                if(this.isShowScrolldown){
+                if (this.isShowScrolldown) {
                     this.isShowScrolldown = false;
                     $("#radiation-scrollDown").animate({
-                        height : 0,
                         opacity : 0
+                    }, {
+                        complete : function() {
+                            $(this).css("z-index", 0);
+                        }
                     });
                 }
             }
