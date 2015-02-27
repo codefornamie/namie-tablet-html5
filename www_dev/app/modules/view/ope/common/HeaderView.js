@@ -26,11 +26,27 @@ define(function(require, exports, module) {
         afterRendered : function() {
             this.$el.foundation();
         },
+        /**
+         * ヘッダーリンクのイベント定義
+         */
         events : {
-            'click a': 'onClickAnchor',
+            'click a' : 'onClickAnchor',
         },
-        onClickAnchor: function(event) {
+        /**
+         * アンカー要素をクリックした際の共通処理を設定する。
+         * @param {Event} event クリックイベント
+         */
+        onClickAnchor : function(event) {
             this.followAnchor(event);
+        },
+        /**
+         * 指定したメニューアイテムをアクティブにする
+         * @param {String} item アクティブにするメニュー(ope-top or ope-message or ope-slideshow)
+         */
+        setActiveMenu : function(item) {
+            this.$("#ope-drowdown").children().removeClass("active");
+            this.$("#" + item).addClass("active");
+            this.$el.foundation();
         }
     });
 

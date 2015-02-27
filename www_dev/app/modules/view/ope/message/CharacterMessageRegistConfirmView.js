@@ -5,7 +5,7 @@ define(function(require, exports, module) {
 
     /**
      * キャラクターメッセージ登録確認画面のViewクラス
-     *
+     * 
      * @class キャラクターメッセージ登録確認画面のViewクラス
      * @exports CharacterMessageRegistConfirmView
      * @constructor
@@ -17,11 +17,11 @@ define(function(require, exports, module) {
         template : require("ldsh!templates/ope/message/characterMessageRegistConfirm"),
 
         /**
-         *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * @memberOf CharacterMessageRegistConfirmView#
          */
         afterRendered : function() {
-            
+
         },
 
         events : {
@@ -33,7 +33,7 @@ define(function(require, exports, module) {
          * 戻るボタンを押下された際に呼び出されるコールバック関数。
          * @memberOf CharacterMessageRegistConfirmView#
          */
-        onClickCharacterMessageBackButton : function(){
+        onClickCharacterMessageBackButton : function() {
             this.$el.remove();
             $("#characterMessageRegistPage").show();
             $("#snap-content").scrollTop(0);
@@ -45,7 +45,6 @@ define(function(require, exports, module) {
          * @memberOf CharacterMessageRegistConfirmView#
          */
         onClickCharacterMessageRegistButton : function() {
-            this.showLoading();
             this.saveModel();
         },
         /**
@@ -55,16 +54,19 @@ define(function(require, exports, module) {
          * </p>
          * @memberOf CharacterMessageRegistConfirmView#
          */
-        saveModel : function(){
+        saveModel : function() {
+            this.showLoading();
             this.model.save(null, {
-                success : $.proxy(function() {
-                    app.router.go("ope-message");
-                }, this),
-                error: function(e){
+                success : $.proxy(function(model, resp, options) {
                     this.hideLoading();
-//                    vexDialog.alert("保存に失敗しました。");
-//                    app.logger.error("保存に失敗しました。");
-                }
+                    this.showSuccessMessage("キャラクターメッセージの保存", model);
+                    app.router.opeMessage();
+                }, this),
+                error : $.proxy(function(model, resp, options) {
+                    this.hideLoading();
+                    this.showErrorMessage("キャラクターメッセージの保存", resp);
+                    app.router.opeMessage();
+                }, this)
             });
         }
     });

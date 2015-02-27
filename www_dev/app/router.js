@@ -153,7 +153,13 @@ define(function(require, exports, module) {
         setHeader : function(headerView) {
             this.setView("#header", headerView).render();
         },
-
+        /**
+         * ヘッダーViewを取得する
+         * @returns {View} ヘッダーViewのインスタンス
+         */
+        getHeader : function() {
+            return this.getView("#header");
+        },
         /**
          *  グローバルナビのviewをsetする
          *  @memberOf AppLayout#
@@ -466,6 +472,7 @@ define(function(require, exports, module) {
                 this.layout.showView(new TopView({targetDate:targetDate}));
                 this.layout.setHeader(new OpeHeaderView());
                 this.layout.setFooter(new common.FooterView());
+                this.layout.getHeader().setActiveMenu("ope-top");
             } else {
                 BusinessUtil.calcNextPublication(function(dateString){
                     this.go("ope-top", dateString);
@@ -479,6 +486,7 @@ define(function(require, exports, module) {
             app.logger.debug('[route] opeSlideshow');
             var slideshowListView = new OpeSlideshowListView();
             this.layout.showView(slideshowListView);
+            this.layout.getHeader().setActiveMenu("ope-slideshow");
         },
         /**
          * キャラクターメッセージ一覧へ遷移する
@@ -486,6 +494,7 @@ define(function(require, exports, module) {
         opeMessage : function() {
             app.logger.debug('[route] opeMessage');
             this.layout.showView(new OpeCharacterMessageListView());
+            this.layout.getHeader().setActiveMenu("ope-message");
         },
 
         /**

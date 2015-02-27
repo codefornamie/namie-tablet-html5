@@ -183,11 +183,11 @@ define(function(require, exports, module) {
          * これを回避する場合、showNetworkErrorパラメタに<code>false</code>を指定する。
          * </p>
          * @param {String} message メッセージ
-         * @param {PIOEvent} event エラーとなったイベント
+         * @param {PIOEvent|Model} object エラーとなったイベント、または、操作対象のModel
          * @param {String} level ログ出力レベル。PIOLogLevelのINFO, WARN, ERRORのいすれかを指定する。未指定の場合、INFOとなる。
          * @param {Boolean} showNetworkError ネットワークエラーメッセージを表示するかどうか
          */
-        showMessage : function(message, event, level, showNetworkError) {
+        showMessage : function(message, object, level, showNetworkError) {
             if (!level) {
                 level = PIOLogLevel.INFO;
             }
@@ -195,22 +195,59 @@ define(function(require, exports, module) {
                 showNetworkError = true;
             }
             vexDialog.defaultOptions.className = 'vex-theme-default';
-            if (showNetworkError) {
-                if (event.isNetworkError()) {
+            if (showNetworkError && typeof object.isNetworkError === "function") {
+                if (object.isNetworkError()) {
                     message = "通信エラーが発生したため、以下のエラーが発生しました。通信状態をご確認ください。<br/><br/>" + message;
                 }
             }
             vexDialog.alert(message);
             switch (level) {
             case PIOLogLevel.INFO:
-                app.logger.info(message + " [event: " + event + "]");
+                app.logger.info(message + " [object: " + object + "]");
                 break;
             case PIOLogLevel.WARN:
-                app.logger.warn(message + " [event: " + event + "]");
+                app.logger.warn(message + " [object: " + object + "]");
                 break;
             case PIOLogLevel.ERROR:
-                app.logger.error(message + " [event: " + event + "]");
+                app.logger.error(message + " [object: " + object + "]");
                 break;
+            }
+        },
+        /**
+         * 操作に成功した際のメッセージを表示する。
+         * <p>
+         * loggingOnlyに<code>true</code>を指定した場合、ダイアログでのメッセージ表示は行わない。
+         * </p>
+         * @param {String} operation 成功した操作を表す文字列 (ex. メッセージ情報の保存)
+         * @param {Object} target 操作対象オブジェクト
+         * @param loggingOnly ログ記録のみかどうか。未指定の場合、<code>true</code>が設定される
+         */
+        showSuccessMessage: function(operation, target, loggingOnly) {
+            if (loggingOnly === undefined) {
+                // デフォルトはダイアログには表示しない
+                loggingOnly = true;
+            }
+            var message = operation + "に成功しました。";
+            if (!loggingOnly) {
+                this.showMessage(message, target, app.PIOLogLevel.INFO);
+            } else {
+                app.logger.info(message + " object=" + target);
+            }
+        },
+        /**
+         * 操作に失敗した際のメッセージを表示する。
+         * <p>
+         * ダイアログに指定された操作のエラーメッセージを表示し、エラーログを記録する。
+         * </p>
+         * @param {String} operation 成功した操作を表す文字列 (ex. メッセージ情報の保存)
+         * @param {Object} resp 処理の結果、personium.io が返却したエラー情報を含むレスポンス
+         */
+        showErrorMessage: function(operation, resp) {
+            if (resp.event && resp.event.isConflict()) {
+                this.showMessage("他のユーザーと操作が競合したため、" + operation + "を完了できませんでした。" +
+                            "<br/>再度、操作を行ってください。", resp.event);
+            } else {
+                this.showMessage(operation + "に失敗しました。", resp.event, app.PIOLogLevel.ERROR);
             }
         },
         /**

@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractView = require("modules/view/AbstractView");
-
+    var vexDialog = require("vexDialog");
     /**
      * スライドショー画面一覧アイテムのViewクラス
      * @class スライドショー画面一覧アイテムのViewクラス
@@ -60,15 +60,15 @@ define(function(require, exports, module) {
 
             this.model.set("enabled", checked);
             this.model.save(null, {
-                success : $.proxy(function() {
+                success : $.proxy(function(model, resp, options) {
                     this.hideLoading();
-                    app.router.go("ope-message");
+                    this.showSuccessMessage("キャラクターメッセージの表示有無の更新", model);
+                    app.router.opeMessage();
                 }, this),
-                error : $.proxy(function(e) {
+                error : $.proxy(function(model, resp, options) {
                     this.hideLoading();
-                    // vexDialog.alert("削除に失敗しました。");
-                    app.logger.error("error LetterListItemView:deleteLetter()");
-                    app.router.go("ope-message");
+                    this.showErrorMessage("キャラクターメッセージの表示有無の更新", resp);
+                    app.router.opeMessage();
                 }, this)
             });
         },
@@ -78,19 +78,30 @@ define(function(require, exports, module) {
          * @memberOf CharacterMessageListItemView#
          */
         onClickCharacterMessageDeleteButton : function(event) {
-            this.showLoading();
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.buttons.YES.text = 'はい';
+            vexDialog.buttons.NO.text = 'いいえ';
+            vexDialog.open({
+                message : 'このメッセージを削除していいですか？',
+                callback : $.proxy(function(value) {
+                    if (value) {
+                        this.showLoading();
 
-            this.model.set("isDelete", true);
-            this.model.save(null, {
-                success : $.proxy(function() {
-                    this.hideLoading();
-                    app.router.go("ope-message");
-                }, this),
-                error : $.proxy(function(e) {
-                    this.hideLoading();
-                    // vexDialog.alert("削除に失敗しました。");
-                    app.logger.error("error LetterListItemView:deleteLetter()");
-                    app.router.go("ope-message");
+                        this.model.set("isDelete", true);
+                        this.model.save(null, {
+                            success : $.proxy(function(model, resp, options) {
+                                this.hideLoading();
+                                this.showSuccessMessage("キャラクターメッセージ情報の削除", model);
+                                app.router.opeMessage();
+                            }, this),
+                            error : $.proxy(function(model, resp, options) {
+                                this.hideLoading();
+                                this.showErrorMessage("キャラクターメッセージ情報の削除", resp);
+                                app.router.opeMessage();
+                            }, this)
+                        });
+                    }
+                    return;
                 }, this)
             });
         }
