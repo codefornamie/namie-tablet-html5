@@ -234,8 +234,6 @@
     border: 3px solid white;
     -webkit-transition: .1s ease all;
     transition: .1s ease all;
-    display: flex;
-    align-items: center;
 }
 
 .page-rad .rad-cluster-item:active {
@@ -244,6 +242,11 @@
     box-shadow: none;
     border-top-width: 5px;
     border-bottom-width: 1px;
+}
+
+.rad-cluster-item__row {
+    display: flex;
+    align-items: center;
 }
 
 .rad-cluster-item__left,
