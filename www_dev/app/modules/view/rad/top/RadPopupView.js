@@ -42,6 +42,7 @@ define(function(require, exports, module) {
                 max = _.max(logFeatureCollection.features, function (feature) {
                     return feature.properties.value;
                 }).properties.value;
+                numSample = logFeatureCollection.features.length;
 
                 // 小数点以下3桁に丸める
                 avg = Math.round(avg * 1000) / 1000;
@@ -50,10 +51,10 @@ define(function(require, exports, module) {
                 dateStr = date.format("YYYY年 M/D(ddd) H時mm分");
                 avg = logFeature.properties.value;
                 max = logFeature.properties.value;
+                numSample = 1;
             }
 
             stationType = clusterFeature.properties.isFixedStation ? "固定局" : "移動局";
-            numSample = clusterFeature.properties.numSample;
             sensorVendor = clusterFeature.properties.sensorVendor;
             sensorModel = clusterFeature.properties.sensorModel;
 
