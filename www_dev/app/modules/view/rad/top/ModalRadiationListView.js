@@ -195,7 +195,11 @@ define(function(require, exports, module) {
                         originalRecords = CommonUtil.convertJsonObject(reader.result);
                     } catch (e) {
                         app.logger.error("CommonUtil.convertJsonObject():error=" + e);
-                        next(file.name + " のファイル形式が正しくありません。");
+                        next([
+                            file.name,
+                            " をCSVファイルとして読み込むことができませんでした。",
+                            "ファイル形式を再度ご確認下さい。"
+                        ].join(""));
                         return;
                     }
 
