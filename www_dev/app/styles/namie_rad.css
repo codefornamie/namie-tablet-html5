@@ -53,7 +53,6 @@
  */
 .page-rad .contents__secondary {
     padding-top: 0;
-    background: rgb(115, 199, 67);
     margin-left: 0;
     box-shadow: 3px 0px 3px 0px rgba(55, 88, 88, 0.15);
     z-index: 1;
@@ -150,13 +149,16 @@
     letter-spacing: 0.4rem;
     text-indent: 0.4rem;
     font-weight: bold;
-    
+    box-shadow: 0 -5px 10px -3px rgba(0,0,0,0.3) inset;
 }
 .page-rad .contents__secondary .sidemenu .tab-back:first-child .tab-button {
     margin-left: 10px;
 }
 .page-rad .contents__secondary .sidemenu .tab-back:last-child .tab-button {
     margin-right: 10px;
+}
+.page-rad .contents__secondary .sidemenu .tab-button.tab-button--selected {
+    box-shadow: none;
 }
 
 .page-rad .contents__secondary .sidemenu .tab-button--1 {
@@ -165,7 +167,6 @@
 }
 .page-rad .contents__secondary .sidemenu .tab-button--2 {
     background-color: rgb(235, 236, 234);
-    box-shadow: 0 -5px 10px -3px rgba(0,0,0,0.3) inset;
 }
 
 /**
@@ -201,7 +202,15 @@
     overflow: auto;
     height: 100%;
     padding: 0 10px;
+    background-color: rgb(115, 199, 67);
 }
+.contents__secondary[data-selected-tab="1"] .sidemenu-bottom__scroll {
+    background-color: rgb(115, 199, 67);
+}
+.contents__secondary[data-selected-tab="2"] .sidemenu-bottom__scroll {
+    background-color: rgb(230, 232, 229);
+}
+
 
 .sidemenu-bottom__scroll::before {
     content: "\f106";

@@ -25,6 +25,7 @@ define(function(require, exports, module) {
          */
         template : require("ldsh!templates/{mode}/top/top"),
         events : {
+            "click [data-tab-button]" : "onClickTabButton",
             "click [data-radiation-upload-button]" : "onClickRadiationUploadButton",
             "click [data-toggle-sidebar]" : "toggleSidebar",
             "sidebar.hide" : "hideSidebar",
@@ -50,6 +51,8 @@ define(function(require, exports, module) {
             $(".sidemenu-bottom__scroll")
                 .on("scroll", this.onScrollSidebar.bind(this))
                 .trigger("scroll");
+
+            $(".tab-button--1").click();
         },
 
         /**
@@ -72,6 +75,23 @@ define(function(require, exports, module) {
 
             // ローディングを停止
             //this.hideLoading();
+        },
+        /**
+         * タブ切り替えボタンが押下された際のコールバック
+         * @memberOf RadTopView#
+         * @param {Event} ev
+         */
+        onClickTabButton : function(ev) {
+            var $tab = $(".contents__secondary .sidemenu .tab");
+            var selectedTabIndex = $(ev.target).data("tab");
+
+            $(".tab-button", $tab).removeClass("tab-button--selected");
+            $(".tab-button--" + selectedTabIndex, $tab).addClass("tab-button--selected");
+            $("#contents__secondary").attr("data-selected-tab", selectedTabIndex);
+
+            $(".sidemenu-bottom__scroll").scrollTop(0);
+
+            this.radClusterCollection.trigger("tabSwitched");
         },
         /**
          * 線量データアップロードボタンが押下された際のコールバック

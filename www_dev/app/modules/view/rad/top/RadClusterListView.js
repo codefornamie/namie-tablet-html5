@@ -41,6 +41,17 @@ define(function(require, exports, module) {
          */
         initialize : function() {
             Super.prototype.setFeedListItemViewClass.call(this, RadClusterListItemView);
+
+            this.listenTo(this.collection, "tabSwitched", this.onTabSwitched.bind(this));
+        },
+
+        /**
+         * タブが切り替わると呼ばれる
+         * @memberOf RadClusterListView#
+         */
+        onTabSwitched : function() {
+            // TODO タブの選択状態に応じてコレクションから抽出したモデルでリストの内容を置き換える
+            //this.render();
         }
     });
 
