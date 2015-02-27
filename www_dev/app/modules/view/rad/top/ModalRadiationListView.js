@@ -163,8 +163,10 @@ define(function(require, exports, module) {
                 self.$progressBar.attr("value", 100);
                 self.hideLoading();
                 if (err) {
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert(err);
+                    vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-rad';
+                    vexDialog.alert({
+                        message : err
+                    });
                     app.logger.error("ModalRadiationListView#onClickRadiationUploadButton():error:" + err);
                     return;
                 }
