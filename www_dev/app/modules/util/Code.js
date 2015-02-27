@@ -228,6 +228,15 @@ define(function(require, exports, module) {
     Code.RAD_ALTITUDE_MAGNIFICATION = 1000;
 
     /**
+     *  放射線データのエラーコード
+     */
+    // 省かれたレコードがある
+    Code.ERR_DATA_MISSING = 1 << 0;
+
+    // ファイル形式が間違っている
+    Code.ERR_INVALID_FILETYPE = 1 << 1;
+
+    /**
      * アプリモード毎に、キャッシュを有効にするかどうか定義する。
      */
     Code.CACHE_MODE = {

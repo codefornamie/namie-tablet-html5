@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var Code = require("modules/util/Code");
     var AbstractView = require("modules/view/AbstractView");
     var ModalRadiationListItemView = require("modules/view/rad/top/ModalRadiationListItemView");
     var CommonUtil = require("modules/util/CommonUtil");
@@ -183,25 +184,35 @@ define(function(require, exports, module) {
         convertFileEntry : function(fileEntry, next) {
             var readFile = function (file) {
                 var reader = new FileReader();
+
                 // fileのロード完了後のコールバック
-                reader.onload = function(ev) {
+                reader.onload = function() {
+                    var originalRecords;
+                    var errorCode = 0;
+
                     try {
                         // テキスト形式で返却されたデータをjsonオブジェクトに変換
-                        // TODO: PNGファイルもconvertできてしまう...
-                        file.jsonObject = CommonUtil.convertJsonObject(reader.result);
+                        originalRecords = CommonUtil.convertJsonObject(reader.result);
                     } catch (e) {
                         app.logger.error("CommonUtil.convertJsonObject():error=" + e);
-                        next(file.name + "の形式が正しくありません。");
+                        next(file.name + " のファイル形式が正しくありません。");
                         return;
                     }
+
                     // 線量値や緯度経度情報が無いレコードは省く
-                    // TODO: 省かれたレコードがあれば不完全なデータとみなす
-                    file.jsonObject = _.filter(file.jsonObject, function(json) {
+                    file.jsonObject = _.filter(originalRecords, function(json) {
                         return !!json[ModalRadiationListView.HORIBA_TITLE_DOSE] &&
                                 !!json[ModalRadiationListView.HORIBA_TITLE_POSITION];
                     });
+
+                    // 省かれたレコードがあれば不完全なデータとみなす
+                    if (file.jsonObject.length !== originalRecords.length) {
+                        errorCode |= Code.ERR_DATA_MISSING;
+                    }
+
                     // データからcluster保存用のモデル作成
-                    var radiationClusterModel = this.createRadiationClusterModel(file);
+                    var radiationClusterModel = this.createRadiationClusterModel(file, errorCode);
+
                     // 保存処理
                     this.saveClusterModel(radiationClusterModel, file, next);
                 }.bind(this, file);
@@ -224,12 +235,16 @@ define(function(require, exports, module) {
          * clusterModelにデータをセットする
          * @memberOf ModalRadiationListView#
          * @param {Object} file ファイルオブジェクト
+         * @param {Number} errorCode アップロード時のエラーコード
          */
-        createRadiationClusterModel : function(file) {
-            var radiationClusterModels = [];
+        createRadiationClusterModel : function(file, errorCode) {
+            console.assert(typeof errorCode === "number", "errorCode should be a number");
+
             var radiationClusterModel = new RadiationClusterModel();
+
             // clustermodelに必要なデータの計算処理を実施
             this.calcDataForCluster(file);
+
             // modelにデータを詰める
             radiationClusterModel.set("userId", app.user.get("__id"));
             radiationClusterModel.set("startDate", file.startDate);
@@ -242,7 +257,9 @@ define(function(require, exports, module) {
             radiationClusterModel.set("minLatitude", file.minLatitude);
             radiationClusterModel.set("minLongitude", file.minLongitude);
             radiationClusterModel.set("maxLongitude", file.maxLongitude);
+            radiationClusterModel.set("errorCode", errorCode);
             radiationClusterModel.set("isFixedStation", false);
+
             return radiationClusterModel;
         },
 
