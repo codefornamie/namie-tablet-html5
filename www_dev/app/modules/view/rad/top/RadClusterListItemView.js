@@ -2,6 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var moment = require("moment");
     var AbstractView = require("modules/view/AbstractView");
     var Super = AbstractView;
 
@@ -21,10 +22,23 @@ define(function(require, exports, module) {
          * @return {Object}
          */
         serialize : function () {
+            var prop = this.model.toGeoJSON().properties;
+            var m = moment(prop.startDate);
+            var isInvalid = !m.isValid();
+            var generateKeyFormatPair = function (key) {
+                return [key, isInvalid ? "--" : m.format(key)];
+            };
+
+            var date = _(["YYYY", "M", "D", "ddd"])
+                .map(generateKeyFormatPair)
+                .object()
+                .value();
+
             return {
                 model : this.model,
-                prop : this.model.toGeoJSON().properties,
-                hasError : !!this.model.get("errorCode")
+                prop : prop,
+                hasError : !!this.model.get("errorCode"),
+                date : date
             };
         },
 

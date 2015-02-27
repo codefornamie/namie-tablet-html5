@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var Code = require("modules/util/Code");
+    var HoribaRecordValidator = require("modules/util/HoribaRecordValidator");
     var AbstractView = require("modules/view/AbstractView");
     var ModalRadiationListItemView = require("modules/view/rad/top/ModalRadiationListItemView");
     var CommonUtil = require("modules/util/CommonUtil");
@@ -187,12 +188,19 @@ define(function(require, exports, module) {
 
                 // fileのロード完了後のコールバック
                 reader.onload = function() {
+                    var validator = new HoribaRecordValidator();
                     var originalRecords;
-                    var errorCode = 0;
 
+                    // 1. CSV形式のデータをJSONオブジェクトに変換
                     try {
-                        // テキスト形式で返却されたデータをjsonオブジェクトに変換
-                        originalRecords = CommonUtil.convertJsonObject(reader.result);
+                        originalRecords = CommonUtil.convertJsonObject(reader.result, {
+                            cast : [
+                                "String",
+                                "Number",
+                                "String",
+                                "Number"
+                            ]
+                        });
                     } catch (e) {
                         app.logger.error("CommonUtil.convertJsonObject():error=" + e);
                         next([
@@ -203,21 +211,13 @@ define(function(require, exports, module) {
                         return;
                     }
 
-                    // 線量値や緯度経度情報が無いレコードは省く
-                    file.jsonObject = _.filter(originalRecords, function(json) {
-                        return !!json[ModalRadiationListView.HORIBA_TITLE_DOSE] &&
-                                !!json[ModalRadiationListView.HORIBA_TITLE_POSITION];
-                    });
+                    // 2. 不正なレコードは省く
+                    file.jsonObject = validator.validate(originalRecords);
 
-                    // 省かれたレコードがあれば不完全なデータとみなす
-                    if (file.jsonObject.length !== originalRecords.length) {
-                        errorCode |= Code.ERR_DATA_MISSING;
-                    }
+                    // 3. レコードをもとにRadiationClusterModelを作成
+                    var radiationClusterModel = this.createRadiationClusterModel(file, validator.errorCode);
 
-                    // データからcluster保存用のモデル作成
-                    var radiationClusterModel = this.createRadiationClusterModel(file, errorCode);
-
-                    // 保存処理
+                    // 4. Model保存処理
                     this.saveClusterModel(radiationClusterModel, file, next);
                 }.bind(this, file);
 
@@ -277,7 +277,7 @@ define(function(require, exports, module) {
 
             // データから時間のみの配列を取得
             var dateTimes = _.map(data, function(obj) {
-                return obj[ModalRadiationListView.HORIBA_TITLE_DATE];
+                return obj[Code.HORIBA_TITLE_DATE];
             });
             file.startDate = _.min(dateTimes, function(date) {
                 return new Date(date).getTime();
@@ -289,7 +289,7 @@ define(function(require, exports, module) {
 
             // データから線量のみの配列を取得
             var svs = _.map(data, function(obj) {
-                return parseFloat(obj[ModalRadiationListView.HORIBA_TITLE_DOSE]);
+                return parseFloat(obj[Code.HORIBA_TITLE_DOSE]);
             });
             file.maxValue = _.max(svs, function(sv) {
                 return sv;
@@ -303,11 +303,11 @@ define(function(require, exports, module) {
 
             // データから緯度のみの配列を取得
             var latitudes = _.map(data, function(obj) {
-                return parseFloat(obj[ModalRadiationListView.HORIBA_TITLE_POSITION].split(" ")[0]);
+                return parseFloat(obj[Code.HORIBA_TITLE_POSITION].split(" ")[0]);
             });
             // データから軽度のみの配列を取得
             var longitudes = _.map(data, function(obj) {
-                return parseFloat(obj[ModalRadiationListView.HORIBA_TITLE_POSITION].split(" ")[1]);
+                return parseFloat(obj[Code.HORIBA_TITLE_POSITION].split(" ")[1]);
             });
 
             file.maxLatitude = _.max(latitudes, function(lat) {
@@ -340,7 +340,10 @@ define(function(require, exports, module) {
                 }.bind(this),
                 error : function(e) {
                     app.logger.debug("saveClusterModel():error" + e.code);
-                    next(file.name + "の保存処理に失敗しました。");
+                    next([
+                        file.name,
+                        " の保存処理に失敗しました。"
+                    ].join(""));
                 }
             });
         },
@@ -355,14 +358,14 @@ define(function(require, exports, module) {
             var logModels = [];
             _.each(file.jsonObject, function(rec) {
                 var model = new RadiationLogModel();
-                model.set("date", rec[ModalRadiationListView.HORIBA_TITLE_DATE]);
-                model.set("value", rec[ModalRadiationListView.HORIBA_TITLE_DOSE]);
-                var position = rec[ModalRadiationListView.HORIBA_TITLE_POSITION];
+                model.set("date", rec[Code.HORIBA_TITLE_DATE]);
+                model.set("value", rec[Code.HORIBA_TITLE_DOSE]);
+                var position = rec[Code.HORIBA_TITLE_POSITION];
                 var latitude = position ? position.split(" ")[0] : null;
                 var longitude = position ? position.split(" ")[1] : null;
                 model.set("latitude", latitude);
                 model.set("longitude", longitude);
-                model.set("altitude", rec[ModalRadiationListView.HORIBA_TITLE_ALTITUDE]);
+                model.set("altitude", rec[Code.HORIBA_TITLE_ALTITUDE]);
                 model.set("collectionId", radiationClusterModel.get("__id"));
                 logModels.push(model);
             });
@@ -438,24 +441,6 @@ define(function(require, exports, module) {
         onClickCloser : function(ev) {
             this.trigger("closeModalRadiationList");
         }
-    }, {
-        /**
-         * HORIBAcsvの収集時刻ヘッダ名
-         */
-        HORIBA_TITLE_DATE : "Date/Time",
-        /**
-         * HORIBAcsvの線量ヘッダ名
-         */
-        HORIBA_TITLE_DOSE : "Dose equivalent rate (uSv/h)",
-        /**
-         * HORIBAcsvの緯度経度ヘッダ名
-         */
-        HORIBA_TITLE_POSITION : "Position",
-        /**
-         * HORIBAcsvの高度ヘッダ名
-         */
-        HORIBA_TITLE_ALTITUDE : "Altitude(m)"
-
     });
 
     module.exports = ModalRadiationListView;

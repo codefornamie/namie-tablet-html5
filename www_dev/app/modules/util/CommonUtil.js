@@ -169,7 +169,11 @@ define(function(require, exports, module) {
      * @memberOf CommonUtil#
      */
     CommonUtil.convertJsonObject = function(csv, opt) {
-        return new CSV(csv, { header : true }).parse();
+        opt = _.defaults(opt || {}, {
+            header : true
+        });
+
+        return new CSV(csv, opt).parse();
     };
 
     module.exports = CommonUtil;
