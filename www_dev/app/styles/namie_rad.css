@@ -350,8 +350,27 @@
 }
 
 .rad-cluster-item__date .date--weekday {
-    font-size: 18px;
+    font-size: 16px;
     vertical-align: middle;
+}
+.rad-cluster-item__date .date--weekday0 {
+    color: rgb(188, 54, 49);
+    
+}
+.rad-cluster-item__date .date--weekday6 {
+    color: rgb(49, 62, 188);
+}
+
+.rad-cluster-item__date .date--time {
+    margin-top: 4px;
+}
+
+.rad-cluster-item__date .date--starttime {
+    font-size: 22px;
+}
+
+.rad-cluster-item__date .date--endtime {
+    font-size: 14px;
 }
 
 .rad-cluster-item__value-table {
@@ -563,9 +582,9 @@
     background-color: #f2f2f2;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
-    padding: 5px;
+    padding: 5px 20px 5px 5px;
     font-size: 1rem;
-    text-align: center;
+    text-align: right;
 }
 .page-rad .rad-popup__radvalue__value b {
     font-size: 1.4rem;

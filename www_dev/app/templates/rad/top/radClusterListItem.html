@@ -15,7 +15,13 @@
                 <div>
                     <span class="date--monthday"><b><%= moment(prop.startDate).format("M") %></b><span style="margin: 0 3px;">/</span><b><%= moment(prop.startDate).format("D") %></b></span>
     
-                    <span class="date--weekday">(<%= moment(prop.startDate).format("ddd") %>)</span>
+                    <span class="date--weekday date--weekday<%= moment(prop.startDate).format("d") %>">(<%= moment(prop.startDate).format("ddd") %>)</span>
+                </div>
+
+                <div class="date--time">
+                    <span class="date--starttime"><%= moment(prop.startDate).format("HH:MM") %></span>
+                    -
+                    <span class="date--endtime"><%= moment(prop.endDate).format("HH:MM") %></span>
                 </div>
             </div>
         </div>
@@ -25,13 +31,13 @@
                 <tr class="rad-cluster-item__avg-value">
                     <td>
                         <span>
-                            平均値
+                            最大値
                         </span>
                     </td>
     
                     <td>
                         <b>
-                            <%= prop.averageValue %>
+                            <%= prop.maxValue ? prop.maxValue.toFixed(3) : '' %>
                         </b>
                     </td>
     
@@ -45,13 +51,13 @@
                 <tr class="rad-cluster-item__max-value">
                     <td>
                         <span>
-                            最大値
+                            最小値
                         </span>
                     </td>
     
                     <td>
                         <b>
-                            <%= prop.maxValue %>
+                            <%= prop.minValue ? prop.minValue.toFixed(3) : '' %>
                         </b>
                     </td>
     

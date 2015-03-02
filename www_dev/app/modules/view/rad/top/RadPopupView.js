@@ -66,7 +66,8 @@ define(function(require, exports, module) {
                     stationType : stationType,
                     numSample : numSample,
                     sensorVendor : sensorVendor,
-                    sensorModel : sensorModel
+                    sensorModel : sensorModel,
+                    hasCollection: hasCollection
                 }
             };
         },
