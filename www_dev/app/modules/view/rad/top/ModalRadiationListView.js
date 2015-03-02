@@ -251,6 +251,13 @@ define(function(require, exports, module) {
                                 "正常な情報については、登録が完了しました。"
                             ].join("")
                         });
+                    } else if (validator.hasError(Code.ERR_NO_RECORD)) {
+                        vexDialog.alert({
+                            message : [
+                                file.name,
+                                " は何らかの原因により壊れているため、情報を登録できませんでした。"
+                            ].join("")
+                        });
                     }
 
                     // 4. レコードをもとにRadiationClusterModelを作成

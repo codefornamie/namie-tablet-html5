@@ -40,7 +40,13 @@
          * @return {Array}
          */
         HoribaRecordValidator.prototype.validate = function (records) {
-            return _.filter(records, this.selectValidRecord.bind(this));
+            if (records.length) {
+                return _.filter(records, this.selectValidRecord.bind(this));
+            } else {
+                // レコードが無い場合
+                this.errorCode |= Code.ERR_NO_RECORD;
+                return [];
+            }
         };
 
         /**

@@ -259,6 +259,9 @@ define(function(require, exports, module) {
     // 日付が不正である
     Code.ERR_INVALID_DATE = 1 << 3;
 
+    // レコードが無い
+    Code.ERR_NO_RECORD = 1 << 4;
+
     /**
      * アプリモード毎に、キャッシュを有効にするかどうか定義する。
      */
