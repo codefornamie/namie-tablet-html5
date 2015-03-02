@@ -732,9 +732,14 @@
  *  3. Cosmetic
  *  ----------
  */
-.page-rad .rad-cluster-item--selected {
+.page-rad .contents__secondary[data-selected-tab="fixed"] .rad-cluster-item--selected {
     background-color: rgb(255, 255, 132);
     border: 3px solid rgb(239, 227, 21);
+}
+
+.page-rad .contents__secondary[data-selected-tab="mobile"] .rad-cluster-item--selected {
+    background-color: rgb(154, 234, 92);
+    border: 3px solid rgb(94, 182, 24);
 }
 
 /**
