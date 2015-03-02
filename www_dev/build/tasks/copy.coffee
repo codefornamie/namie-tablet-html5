@@ -12,3 +12,7 @@ module.exports = ->
         {src: "daydream.html", dest: "../www/"},
         {src: "app/resources/**", dest: "../www/"}
       ]
+    us:
+      files:[
+        {expand: true,flatten: true, filter: 'isFile', src: "userscript/endpoint/**", dest: "../userscript/"}
+      ]
