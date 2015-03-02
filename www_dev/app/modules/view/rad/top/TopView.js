@@ -97,43 +97,60 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          */
         onClickRadiationUploadButton : function() {
-            if (!!~navigator.userAgent.indexOf("namie-debug")) {
-                // XXX: dummy
-                this.setRadiationList([
-                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
-                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
-                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
-                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
-                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
-                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
-                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
-                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()},
-                    {name: "dummy" + Math.random(), lastModifiedDate: new Date()}
-                ]);
-            } else if (CommonUtil.isCordova()) {
-                this.showLoading();
-                FileAPIUtil.getHoribaRadiationList(this.setRadiationList.bind(this));
+            var self = this;
+
+            this.showLoading();
+
+            // Cordova環境下ならば、HORIBAのディレクトリから自動でファイルをリストアップする
+            // それ以外の環境ならば、ファイル選択のフォームを表示する
+            if (CommonUtil.isCordova()) {
+                this.loadHoribaRadiationList(function (err, fileEntryArray) {
+                    if (err) {
+                        app.logger.debug("ModalRadiationListView#onClickRadiationUploadButton():" + err);
+                        self.hideLoading();
+                        return;
+                    }
+
+                    self.initModalRadiationListView({
+                        mode : "list",
+                        fileEntryArray : fileEntryArray
+                    });
+
+                    self.hideLoading();
+                });
             } else {
-                alert("ご使用の端末ではアップロードできません。");
-                return;
+                this.initModalRadiationListView({
+                    mode : "form"
+                });
+
+                this.hideLoading();
             }
         },
+
         /**
-         * 画面に線量データ一覧を表示する関数
-         * @param {Array} fileEntryArray FileEntryオブジェクトの配列
+         * getHoribaRadiationList
+         * @param {Function} next errorを第一引数にとるコールバック関数
          * @memberOf RadTopView#
          */
-        setRadiationList : function(fileEntryArray) {
-            var urls = [];
-            var fileCount = 0;
-            if (!fileEntryArray || fileEntryArray.length === 0) {
-                vexDialog.defaultOptions.className = 'vex-theme-default';
-                vexDialog.alert("放射線量データがありません。");
-                this.hideLoading();
-                return;
-            }
-            var modalRadiationListView = new ModalRadiationListView();
-            modalRadiationListView.fileEntryArray = fileEntryArray;
+        loadHoribaRadiationList : function (next) {
+            FileAPIUtil.getHoribaRadiationList(function (fileEntryArray) {
+                if (!fileEntryArray || fileEntryArray.length === 0) {
+                    vexDialog.defaultOptions.className = 'vex-theme-default';
+                    vexDialog.alert("放射線量データがありません。");
+                    return next(new Error("radiation data not found"));
+                }
+
+                next(null, fileEntryArray);
+            });
+        },
+
+        /**
+         * 画面に線量データ一覧を表示する関数
+         * @param {Object} opt ModalRadiationListViewのコンストラクタに渡すオプション
+         * @memberOf RadTopView#
+         */
+        initModalRadiationListView : function(opt) {
+            var modalRadiationListView = new ModalRadiationListView(opt);
 
             this.setView("#radiation-list-container", modalRadiationListView);
             this.listenTo(modalRadiationListView, "closeModalRadiationList", function () {

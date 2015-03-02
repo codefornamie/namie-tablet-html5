@@ -38,6 +38,8 @@ define(function(require, exports, module) {
             saveData.startDate = this.get("startDate");
             saveData.endDate = this.get("endDate");
             saveData.numSample = this.get("numSample");
+            saveData.errorCode = this.get("errorCode");
+
             // 線量最大値
             var maxValue = null;
             if (this.get("maxValue")) {
@@ -115,7 +117,8 @@ define(function(require, exports, module) {
                         "isFixedStation": this.get("isFixedStation"),
                         "sensorVendor": this.get("sensorVendor"),
                         "sensorModel": this.get("sensorModel"),
-                        "sensorSerialNo": this.get("sensorSerialNo")
+                        "sensorSerialNo": this.get("sensorSerialNo"),
+                        "errorCode": this.get("errorCode")
                     }
             };
 

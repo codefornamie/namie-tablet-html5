@@ -41,7 +41,8 @@ require.config({
         "exif": "../lib/canvasResize/exif",
         "leaflet": "../bower_components/leaflet/dist/leaflet",
         "d3": "../bower_components/d3/d3.min",
-        "leaflet.markercluster": "../bower_components/leaflet.markercluster/dist/leaflet.markercluster"
+        "leaflet.markercluster": "../bower_components/leaflet.markercluster/dist/leaflet.markercluster",
+        "CSV": "../bower_components/comma-separated-values/csv.min"
     },
 
     deps : [ "main" ],
