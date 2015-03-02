@@ -66,10 +66,24 @@
     </div>
 
     <% if (hasError) { %>
-        <div class="rad-cluster-item__row">
-            <p>
-                {アップロードエラーの文言が入ります}
-            </p>
-        </div>
+        <% if (hasErrDoseMissing) { %>
+            <div class="rad-cluster-item__row">
+                <p>
+                    ※ 一部の測定値が登録されていません。
+                </p>
+            </div>
+        <% } else if (hasErrPositionMissing) { %>
+            <div class="rad-cluster-item__row">
+                <p>
+                    ※ 一部の座標情報が無いため地図に表示されません。
+                </p>
+            </div>
+        <% } else if (hasErrInvalidDate) { %>
+            <div class="rad-cluster-item__row">
+                <p>
+                    ※ 一部の日付情報が壊れています。
+                </p>
+            </div>
+        <% } %>
     <% } %>
 </li>
