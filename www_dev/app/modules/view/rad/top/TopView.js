@@ -10,6 +10,7 @@ define(function(require, exports, module) {
     var ModalRadiationListView = require("modules/view/rad/top/ModalRadiationListView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
+    var Code = require("modules/util/Code");
     var vexDialog = require("vexDialog");
 
     /**
@@ -51,8 +52,6 @@ define(function(require, exports, module) {
             $(".sidemenu-bottom__scroll")
                 .on("scroll", this.onScrollSidebar.bind(this))
                 .trigger("scroll");
-
-            $(".tab-button--1").click();
         },
 
         /**
@@ -83,15 +82,15 @@ define(function(require, exports, module) {
          */
         onClickTabButton : function(ev) {
             var $tab = $(".contents__secondary .sidemenu .tab");
-            var selectedTabIndex = $(ev.target).data("tab");
+            var selectedTabName = $(ev.target).data("tab");
 
             $(".tab-button", $tab).removeClass("tab-button--selected");
-            $(".tab-button--" + selectedTabIndex, $tab).addClass("tab-button--selected");
-            $("#contents__secondary").attr("data-selected-tab", selectedTabIndex);
+            $(".tab-button--" + selectedTabName, $tab).addClass("tab-button--selected");
+            $("#contents__secondary").attr("data-selected-tab", selectedTabName);
 
             $(".sidemenu-bottom__scroll").scrollTop(0);
 
-            this.radClusterCollection.trigger("tabSwitched");
+            this.radClusterCollection.trigger("tabSwitched", selectedTabName);
         },
         /**
          * 線量データアップロードボタンが押下された際のコールバック
@@ -158,8 +157,8 @@ define(function(require, exports, module) {
          */
         initCollection : function () {
             this.radClusterCollection = new RadiationClusterCollection();
-            // 自身のアップロードしたデータのみ検索
-            this.radClusterCollection.setSearchConditionByMyself();
+            // 車載または自身がアップロードしたデータのみ検索
+            this.radClusterCollection.setSearchConditionFixedOrByMyself();
             this.radClusterCollection
                 .fetch()
                 .done(function (col) {
@@ -169,7 +168,17 @@ define(function(require, exports, module) {
                     col.each(function (model) {
                         model.set("hidden", true);
                     });
-                    col.at(0).set("hidden", false);
+
+                    // 車載の情報のうち先頭の1件を表示
+                    var firstFixedClusterModel = col.find(function (model) {
+                        return model.get("isFixedStation");
+                    });
+                    if (firstFixedClusterModel) {
+                        firstFixedClusterModel.set("hidden", false);
+                    }
+
+                    // タブを「役場」に切り替える
+                    $(".tab-button--fixed").click();
                 });
             // TODO: テスト用データの作成を差し替える
             //_(10).times($.proxy(function(index) {
@@ -188,6 +197,7 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(this.radClusterCollection, "sync", this.render);
+            this.listenTo(this.radClusterCollection, "clusterListUpdated", this.onClusterListUpdated.bind(this));
         },
 
         /**
@@ -240,7 +250,16 @@ define(function(require, exports, module) {
             } else {
                 $container.removeClass("has-after");
             }
-        }, 150)
+        }, 150),
+
+        /**
+         * サイドバーのクラスター一覧の更新後に呼ばれる
+         * @memberOf RadTopView#
+         * @param {Event} ev
+         */
+        onClusterListUpdated : function () {
+            $(".sidemenu-bottom__scroll").trigger("scroll");
+        }
     });
 
     module.exports = RadTopView;

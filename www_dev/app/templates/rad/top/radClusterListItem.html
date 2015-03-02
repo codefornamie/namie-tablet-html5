@@ -1,6 +1,6 @@
 <li
     data-article-id="<%= model.get('__id') %>"
-    class="rad-cluster-item feed-item"
+    class="rad-cluster-item feed-item <%= !model.get('hidden') ? 'rad-cluster-item--selected' : '' %>"
 >
     <div class="rad-cluster-item__row">
         <div class="rad-cluster-item__left">

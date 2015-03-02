@@ -161,11 +161,11 @@
     box-shadow: none;
 }
 
-.page-rad .contents__secondary .sidemenu .tab-button--1 {
+.page-rad .contents__secondary .sidemenu .tab-button--fixed {
     background-color: rgb(114, 199,67);
     color: #fff;
 }
-.page-rad .contents__secondary .sidemenu .tab-button--2 {
+.page-rad .contents__secondary .sidemenu .tab-button--mobile {
     background-color: rgb(235, 236, 234);
 }
 
@@ -173,12 +173,16 @@
  *  アップロードボタン
  */
 .page-rad .side-upload {
+    display: none;
     position: absolute;
     bottom: 0;
     width: 100%;
     padding: 15px 10px 5px 10px;
     z-index: 1;
     background-color: rgb(208, 208, 208);
+}
+.page-rad .contents__secondary[data-selected-tab="mobile"] .side-upload {
+     display: block;
 }
 
 .page-rad .contents__secondary .sidemenu .button--upload {
@@ -192,10 +196,13 @@
     text-align: center;
     position: absolute;
     top: 0;
-    padding: 90px 0 90px 0;
+    padding: 90px 0 0 0;
     width: 100%;
     z-index: 1;
     height: 100%;
+}
+.page-rad .contents__secondary[data-selected-tab="mobile"] .sidemenu-bottom {
+    padding-bottom: 90px;
 }
 
 .sidemenu-bottom__scroll {
@@ -204,10 +211,10 @@
     padding: 0 10px;
     background-color: rgb(115, 199, 67);
 }
-.contents__secondary[data-selected-tab="1"] .sidemenu-bottom__scroll {
+.contents__secondary[data-selected-tab="fixed"] .sidemenu-bottom__scroll {
     background-color: rgb(115, 199, 67);
 }
-.contents__secondary[data-selected-tab="2"] .sidemenu-bottom__scroll {
+.contents__secondary[data-selected-tab="mobile"] .sidemenu-bottom__scroll {
     background-color: rgb(230, 232, 229);
 }
 
@@ -256,21 +263,32 @@
 }
 
 .sidemenu-bottom__scroll.has-after::after {
-    bottom: 90px;
+    bottom: 0px;
     opacity: 1;
     -webkit-transition: .5s ease bottom, .5s ease opacity;
     transition: .5s ease bottom, .5s ease opacity;
 }
+.page-rad .contents__secondary[data-selected-tab="mobile"] .sidemenu-bottom__scroll.has-after::after {
+    bottom: 90px;
+}
 
 .page-rad .contents__secondary .sidemenu-bottom h3 {
+    display: none;
     font-size: 17px;
-    background: rgb(94, 182, 38);
-    color: white;
     padding: 8px 0;
     text-align: center;
     border-radius: 3px;
     margin: 10px 0;
     line-height: 1;
+}
+.page-rad .contents__secondary[data-selected-tab="fixed"] .sidemenu-bottom h3.sidemenu-bottom__header--fixed {
+    display: block;
+    background: rgb(94, 182, 38);
+    color: white;
+}
+.page-rad .contents__secondary[data-selected-tab="mobile"] .sidemenu-bottom h3.sidemenu-bottom__header--mobile {
+    display: block;
+    background: rgb(206, 211, 204);
 }
 
 .page-rad .contents__secondary .sidemenu-bottom .sidebar {

@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractView = require("modules/view/AbstractView");
     var RadClusterListItemView = require("modules/view/rad/top/RadClusterListItemView");
     var FeedListView = require("modules/view/news/FeedListView");
+    var Code = require("modules/util/Code");
     var Super = FeedListView;
 
     /**
@@ -28,11 +29,20 @@ define(function(require, exports, module) {
         listElementSelector : "#rad-cluster-list",
 
         /**
+         * 車載（役場）の情報を表示するかどうか
+         * trueであれば「役場」、falseであれば「自分」の情報を一覧に表示する
+         * @memberOf RadClusterListView#
+         */
+        isListOfFixedStation: true,
+
+        /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
          * @memberOf RadClusterListView#
          */
         afterRendered : function() {
             Super.prototype.afterRendered.call(this);
+
+            this.collection.trigger("clusterListUpdated");
         },
 
         /**
@@ -46,12 +56,42 @@ define(function(require, exports, module) {
         },
 
         /**
-         * タブが切り替わると呼ばれる
+         * 取得した項目一覧を描画する
          * @memberOf RadClusterListView#
          */
-        onTabSwitched : function() {
-            // TODO タブの選択状態に応じてコレクションから抽出したモデルでリストの内容を置き換える
-            //this.render();
+        setFeedList : function() {
+            var self = this;
+            var originalCollection = this.collection;
+            var currentCollection = new Backbone.Collection();
+
+            // 一覧の表示対象となるモデルをコレクションに追加する
+            currentCollection.add(originalCollection.filter(function(model) {
+                return (model.get("isFixedStation")) === self.isListOfFixedStation;
+            }));
+
+            // 一時的にコレクションを入れ替え、一覧を表示する
+            this.collection = currentCollection;
+            Super.prototype.setFeedList.call(this);
+            this.collection = originalCollection;
+        },
+
+        /**
+         * タブが切り替わると呼ばれる
+         * @memberOf RadClusterListView#
+         * @param {String} selectedTabName
+         */
+        onTabSwitched : function(selectedTabName) {
+            // タブの選択状態に応じて一覧の表示対象を変更する
+            switch(selectedTabName) {
+            case "fixed":
+                this.isListOfFixedStation = true;
+                break;
+            case "mobile":
+                this.isListOfFixedStation = false;
+                break;
+            }
+
+            this.render();
         }
     });
 
