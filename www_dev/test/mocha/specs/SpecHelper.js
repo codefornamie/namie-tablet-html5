@@ -177,18 +177,22 @@ define(function(require, exports, module) {
             saveData.category = "";
             saveData.sequence = "1";
         };
+        var testDataId = "dojo_movie1";
         model.save(null, {
             success : function(model, response, options) {
                 app.logger.debug("Success creating dojo_movie data.");
                 // 道場動画情報新規登録成功
                 app.logger.debug("save dojo_movie model. __id: " + response.__id);
-                var testDataId = "dojo_movie1";
                 done(testDataId);
             },
             error: function(model, response, options) {
-                app.logger.debug("Failed creating dojo_movie data.");
-                // 道場動画情報新規登録に失敗
-                done();
+                if (response.event.isConflict()) {
+                    done(testDataId);
+                } else {
+                    app.logger.debug("Failed creating dojo_movie data.");
+                    // 道場動画情報新規登録に失敗
+                    done();
+                }
             }
         });
     };

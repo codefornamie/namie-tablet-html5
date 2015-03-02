@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var CommonUtil = require("modules/util/CommonUtil");
 
     /**
      * キャラクターメッセージ情報のモデルクラスを作成する。
@@ -42,6 +43,16 @@ define(function(require, exports, module) {
             response.message = this.getAndReplaceBrElement(response.message);
 
             return response;
+        },
+        /**
+         * 画面表示用のメッセージの文字列を取得する。
+         * <p>
+         * 画面表示用のためのサニタイジングされた文字列を返却する。
+         * </p>
+         * @return {String} メッセージ
+         */
+        getDisplayMessage: function() {
+            return CommonUtil.sanitizing(this.get("message"));
         },
         /**
          * モデル固有の永続化データを生成する。
