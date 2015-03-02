@@ -235,7 +235,14 @@ define(function(require, exports, module) {
                     // 3. 不正なレコードを省いた旨を通知する
                     vexDialog.defaultOptions.className = "vex-theme-default vex-theme-rad";
 
-                    if (validator.hasError(Code.ERR_POSITION_MISSING)) {
+                    if (validator.hasError(Code.ERR_NO_RECORD)) {
+                        vexDialog.alert({
+                            message : [
+                                file.name,
+                                " は何らかの原因により壊れているため、情報を登録できませんでした。"
+                            ].join("")
+                        });
+                    } else if (validator.hasError(Code.ERR_POSITION_MISSING)) {
                         vexDialog.alert({
                             message : [
                                 file.name,
@@ -249,13 +256,6 @@ define(function(require, exports, module) {
                                 file.name,
                                 " は何らかの原因により壊れているため、一部の情報を登録できませんでした。",
                                 "正常な情報については、登録が完了しました。"
-                            ].join("")
-                        });
-                    } else if (validator.hasError(Code.ERR_NO_RECORD)) {
-                        vexDialog.alert({
-                            message : [
-                                file.name,
-                                " は何らかの原因により壊れているため、情報を登録できませんでした。"
                             ].join("")
                         });
                     }

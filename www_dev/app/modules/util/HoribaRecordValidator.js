@@ -40,8 +40,10 @@
          * @return {Array}
          */
         HoribaRecordValidator.prototype.validate = function (records) {
-            if (records.length) {
-                return _.filter(records, this.selectValidRecord.bind(this));
+            var ret = _.filter(records, this.selectValidRecord.bind(this));
+
+            if (ret.length) {
+                return ret;
             } else {
                 // レコードが無い場合
                 this.errorCode |= Code.ERR_NO_RECORD;
