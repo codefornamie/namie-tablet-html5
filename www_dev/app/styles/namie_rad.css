@@ -234,8 +234,6 @@
     border: 3px solid white;
     -webkit-transition: .1s ease all;
     transition: .1s ease all;
-    display: flex;
-    align-items: center;
 }
 
 .page-rad .rad-cluster-item:active {
@@ -244,6 +242,11 @@
     box-shadow: none;
     border-top-width: 5px;
     border-bottom-width: 1px;
+}
+
+.rad-cluster-item__row {
+    display: flex;
+    align-items: center;
 }
 
 .rad-cluster-item__left,
@@ -790,6 +793,20 @@
     font-size: 14px;
 }
 
+.modal-radiation__file-chooser {
+}
+
+.modal-radiation__file-chooser > input {
+    display: inline-block;
+    width: 80%;
+    padding: 30px;
+    border: 3px dashed rgb(56, 149, 20);
+}
+
+.modal-radiation__file-chooser > input:active {
+    background: #eee;
+}
+
 /**
  *  モーダルウィンドウ内のスクロール部分
  */
@@ -914,3 +931,10 @@
     line-height: 64px;
 }
 
+/**
+ *  放射線アプリ用のvex alertテーマ
+ */
+.vex.vex-theme-rad .vex-dialog-button.vex-dialog-button-primary {
+    background: rgb(45, 152, 42);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.16);
+}

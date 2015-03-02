@@ -35,6 +35,7 @@
     "oh-snap": "*",
     "leaflet": "~0.7.3",
     "d3": "~3.5.3",
-    "leaflet.markercluster": "master"
+    "leaflet.markercluster": "master",
+    "comma-separated-values": "~3.6.1"
   }
 }
