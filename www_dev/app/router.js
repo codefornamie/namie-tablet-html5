@@ -35,6 +35,7 @@ define(function(require, exports, module) {
     var OpeSlideshowListView = require("modules/view/ope/slideshow/OpeSlideshowListView");
     var OpeCharacterMessageListView = require("modules/view/ope/message/CharacterMessageListView");
     var OpeCharacterMessageRegistView = require("modules/view/ope/message/CharacterMessageRegistView");
+    var OpeCharacterImageListView = require("modules/view/ope/character/CharacterImageListView");
     var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
@@ -278,6 +279,7 @@ define(function(require, exports, module) {
             'ope-slideshow' : 'opeSlideshow',
             'ope-message' : 'opeMessage',
             'ope-achievement' : 'opeAchievement',
+            'ope-character' : 'opeCharacter',
 
             // 道場アプリ
             'dojo-top' : 'dojoTop',
@@ -505,6 +507,13 @@ define(function(require, exports, module) {
             app.logger.debug('[route] opeAchievement');
             this.layout.showView(new DojoAchievementDownloadView());
             this.layout.getHeader().setActiveMenu("ope-achievement");
+        },
+        /**
+         * キャラクター画像一覧へ遷移する
+         */
+        opeCharacter : function() {
+            app.logger.debug('[route] opeCharacter');
+            this.layout.showView(new OpeCharacterImageListView());
         },
         /**
          * このメソッドは手動で呼ばれる
