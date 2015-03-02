@@ -28,40 +28,40 @@
     
         <div class="rad-cluster-item__right">
             <table class="rad-cluster-item__value-table">
-                <tr class="rad-cluster-item__avg-value">
+                <tr class="rad-cluster-item__max-value">
                     <td>
                         <span>
                             最大値
                         </span>
                     </td>
     
-                    <td>
+                    <td class="rad-cluster-item__value">
                         <b>
                             <%= prop.maxValue ? prop.maxValue.toFixed(3) : '' %>
                         </b>
                     </td>
     
-                    <td>
+                    <td class="rad-cluster-item__unit">
                         <span>
                             μSv/h
                         </span>
                     </td>
                 </tr>
     
-                <tr class="rad-cluster-item__max-value">
+                <tr class="rad-cluster-item__min-value">
                     <td>
                         <span>
                             最小値
                         </span>
                     </td>
     
-                    <td>
+                    <td class="rad-cluster-item__value">
                         <b>
                             <%= prop.minValue ? prop.minValue.toFixed(3) : '' %>
                         </b>
                     </td>
     
-                    <td>
+                    <td class="rad-cluster-item__unit">
                         <span>
                             μSv/h
                         </span>
