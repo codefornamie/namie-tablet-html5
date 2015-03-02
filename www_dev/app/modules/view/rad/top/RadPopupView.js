@@ -30,7 +30,7 @@ define(function(require, exports, module) {
             var logFeature = this.radiationLogFeature;
 
             var hasCollection = !!logFeatureCollection;
-            var date, dateStr, avg, max;
+            var date, dateStr, avg, max , min;
             var stationType, numSample, sensorVendor, sensorModel;
 
             if (hasCollection) {
@@ -40,6 +40,9 @@ define(function(require, exports, module) {
                     return total + feature.properties.value;
                 }, 0) / logFeatureCollection.features.length;
                 max = _.max(logFeatureCollection.features, function (feature) {
+                    return feature.properties.value;
+                }).properties.value;
+                min = _.min(logFeatureCollection.features, function (feature) {
                     return feature.properties.value;
                 }).properties.value;
                 numSample = logFeatureCollection.features.length;
@@ -63,6 +66,7 @@ define(function(require, exports, module) {
                     dateStr : dateStr,
                     avg : avg,
                     max : max,
+                    min : min,
                     stationType : stationType,
                     numSample : numSample,
                     sensorVendor : sensorVendor,
