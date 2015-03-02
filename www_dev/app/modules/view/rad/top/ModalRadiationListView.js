@@ -158,24 +158,35 @@ define(function(require, exports, module) {
             this.showProgressBarLoading();
 
             this.perProgress = 100 / fileEntries.length / 2;
+
             // radiationClusterの保存からradiationLogの保存の1セットをシリアルに処理する
             async.eachSeries(fileEntries, function(fileEntry, next) {
                 self.convertFileEntry(fileEntry, next);
-            }, function complete(err) {
-                self.$progressBar.attr("value", 100);
-                self.hideLoading();
-                if (err) {
-                    vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-rad';
-                    vexDialog.alert({
-                        message : err
-                    });
-                    app.logger.error("ModalRadiationListView#onClickRadiationUploadButton():error:" + err);
-                    return;
-                }
-                app.logger.debug("success all to save radiationCluster and radiationLog");
-                self.trigger("closeModalRadiationList");
-            });
+            }, this.onSaveAll.bind(this));
         },
+
+        /**
+         * 全ファイルのアップロードが完了したか、または一部ファイルのアップロードに失敗したら呼ばれる
+         * @memberOf ModalRadiationListView#
+         * @param {Error} err
+         */
+        onSaveAll : function (err) {
+            this.$progressBar.attr("value", 100);
+            this.hideLoading();
+
+            if (err) {
+                vexDialog.defaultOptions.className = "vex-theme-default vex-theme-rad";
+                vexDialog.alert({
+                    message : err
+                });
+                app.logger.error("ModalRadiationListView#onClickRadiationUploadButton():error:" + err);
+                return;
+            }
+
+            app.logger.debug("success all to save radiationCluster and radiationLog");
+            this.trigger("closeModalRadiationList");
+        },
+
         /**
          * 選択されたファイルをデータとして扱える形に変換する
          * @memberOf ModalRadiationListView#
@@ -188,8 +199,8 @@ define(function(require, exports, module) {
 
                 // fileのロード完了後のコールバック
                 reader.onload = function() {
-                    var validator = new HoribaRecordValidator();
                     var originalRecords;
+                    var validator = new HoribaRecordValidator();
 
                     // 1. CSV形式のデータをJSONオブジェクトに変換
                     try {
@@ -214,10 +225,31 @@ define(function(require, exports, module) {
                     // 2. 不正なレコードは省く
                     file.jsonObject = validator.validate(originalRecords);
 
-                    // 3. レコードをもとにRadiationClusterModelを作成
+                    // 3. 不正なレコードを省いた旨を通知する
+                    vexDialog.defaultOptions.className = "vex-theme-default vex-theme-rad";
+
+                    if (validator.hasError(Code.ERR_POSITION_MISSING)) {
+                        vexDialog.alert({
+                            message : [
+                                file.name,
+                                " は何らかの原因により壊れているため、一部の情報を登録できませんでした。",
+                                "正常な情報については、登録が完了しました。"
+                            ].join("")
+                        });
+                    } else if (validator.hasError(Code.ERR_DOSE_MISSING)) {
+                        vexDialog.alert({
+                            message : [
+                                file.name,
+                                " は何らかの原因により壊れているため、一部の情報を登録できませんでした。",
+                                "正常な情報については、登録が完了しました。"
+                            ].join("")
+                        });
+                    }
+
+                    // 4. レコードをもとにRadiationClusterModelを作成
                     var radiationClusterModel = this.createRadiationClusterModel(file, validator.errorCode);
 
-                    // 4. Model保存処理
+                    // 5. Model保存処理
                     this.saveClusterModel(radiationClusterModel, file, next);
                 }.bind(this, file);
 

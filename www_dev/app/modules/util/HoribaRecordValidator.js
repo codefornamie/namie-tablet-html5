@@ -6,19 +6,52 @@
         var moment = require("moment");
         var Code = require("modules/util/Code");
 
+        /**
+         * 線量データのアップロード用リストダイアログクラス
+         *
+         * @class 線量データのアップロード用リストダイアログクラス
+         * @exports ModalRadiationListView
+         * @constructor
+         */
         var HoribaRecordValidator = _.extend(function () {
             console.assert(typeof _ !== "undefined", "underscore should be defined");
 
             this.errorCode = 0;
         }, Backbone.Events);
 
+        /**
+         * hasError
+         *
+         * @param {Boolean} expected
+         * @return {Boolean}
+         */
+        HoribaRecordValidator.prototype.hasError = function (expected) {
+            if (expected !== undefined) {
+                return this.errorCode & expected;
+            } else {
+                return !!this.errorCode;
+            }
+        };
+
+        /**
+         * validate
+         *
+         * @param {Array} records
+         * @return {Array}
+         */
         HoribaRecordValidator.prototype.validate = function (records) {
             return _.filter(records, this.selectValidRecord.bind(this));
         };
 
+        /**
+         * selectValidRecord
+         *
+         * @param {Object} record
+         * @return {Boolean}
+         */
         HoribaRecordValidator.prototype.selectValidRecord = function (record) {
             var date = record[Code.HORIBA_TITLE_DATE];
-            var hasDose = (record[Code.HORIBA_TITLE_DOSE] != null);
+            var hasDose = record[Code.HORIBA_TITLE_DOSE];
             var hasPosition = !!record[Code.HORIBA_TITLE_POSITION];
 
             // 線量が無い場合
