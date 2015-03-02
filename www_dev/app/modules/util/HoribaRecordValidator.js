@@ -76,7 +76,7 @@
     });
 
 }(
-     typeof module === "object" && typeof define !== "function"
-    ? function (factory) { module.exports = factory(require, exports, module); }
-    : define
+     typeof module === "object" && typeof define !== "function" ?
+        function (factory) { module.exports = factory(require, exports, module); } :
+        define
 ));
