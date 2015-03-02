@@ -59,8 +59,12 @@
          */
         HoribaRecordValidator.prototype.selectValidRecord = function (record) {
             var date = record[Code.HORIBA_TITLE_DATE];
+            var position = record[Code.HORIBA_TITLE_POSITION];
             var hasDose = record[Code.HORIBA_TITLE_DOSE];
-            var hasPosition = !!record[Code.HORIBA_TITLE_POSITION];
+            var hasPosition = (
+                typeof position === "string" &&
+                position.split(" ").every(function (s) { return !!parseInt(s, 10); })
+            );
 
             // 線量が無い場合
             if (!hasDose) {
