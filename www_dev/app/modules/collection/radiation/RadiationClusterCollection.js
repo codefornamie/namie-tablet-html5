@@ -22,7 +22,7 @@ define(function(require, exports, module) {
         initialize : function() {
             this.condition = {
                     top : 50,
-                    orderby : "createDate desc"
+                    orderby : "startDate desc"
             };
         },
 
@@ -38,7 +38,7 @@ define(function(require, exports, module) {
             // 地図上に表示できないようなデータは省く
             response = _.filter(response, function(ress) {
                 if (!ress.minLatitude || !ress.maxLatitude || !ress.minLongitude || !ress.maxLongitude ||
-                        !ress.averageValue || !ress.maxValue) {
+                        !ress.averageValue || !ress.maxValue || !ress.minValue) {
                     return false;
                 }
                 return true;
@@ -51,7 +51,8 @@ define(function(require, exports, module) {
                     minLongitude : cluster.minLongitude / Math.pow(10, 6),
                     maxLongitude : cluster.maxLongitude / Math.pow(10, 6),
                     averageValue : cluster.averageValue / Math.pow(10, 3),
-                    maxValue : cluster.maxValue / Math.pow(10, 3)
+                    maxValue : cluster.maxValue / Math.pow(10, 3),
+                    minValue : cluster.minValue / Math.pow(10, 3)
                 });
             });
 
