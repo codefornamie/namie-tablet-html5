@@ -1,9 +1,7 @@
 define(function(require, exports, module) {
 
     var app = require("app");
-    var AbstractView = require("modules/view/AbstractView");
     var ArticleRegistView = require("modules/view/posting/news/ArticleRegistView");
-    var ArticleRegistFileItemView = require("modules/view/posting/news/ArticleRegistFileItemView");
     var OpeSlideshowRegistFileItemView = require("modules/view/ope/slideshow/OpeSlideshowRegistFileItemView");
     var OpeSlideshowRegistConfirmView = require("modules/view/ope/slideshow/OpeSlideshowRegistConfirmView");
     var AbstractModel = require("modules/model/AbstractModel");
@@ -27,33 +25,29 @@ define(function(require, exports, module) {
          */
         formId : '#slideshowRegistForm',
         events : {
+            "click #addFileForm" : "onAddFileForm",
             "click #slideshowCancelButton" : "onClickSlideshowCancelButton",
             "click #slideshowConfirmButton" : "onClickSlideshowConfirmButton"
         },
 
         /**
-         *  ViewのテンプレートHTMLの描画処理が完了前に呼び出される。
-         * @memberOf OpeSlidoshowRegistView#
-         */
-        beforeRendered : function() {
-        },
-
-        /**
-         *  ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
+         * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * @memberOf OpeSlidoshowRegistView#
          */
         afterRendered : function() {
-            this.setData();
-        },
-
-        /**
-         * 編集時にデータを各フォームにセットする
-         * @memberOf OpeSlidoshowRegistView#
-         */
-        setData: function () {
             var today = DateUtil.addDay(new Date());
             $("#slideshowRangeDate1").val(DateUtil.formatDate(today, "yyyy-MM-dd"));
             this.insertView("#slideshowFileArea", new OpeSlideshowRegistFileItemView()).render();
+        },
+        /**
+         * 画像を追加ボタンを押された際のコールバック関数
+         * @memberOf ArticleRegistView#
+         */
+        onAddFileForm : function() {
+            this.insertView("#slideshowFileArea", new OpeSlideshowRegistFileItemView()).render();
+            if ($("#slideshowFileArea").children().size() >= 5) {
+                this.$el.find("#addFileForm").hide();
+            }
         },
         /**
          * 確認画面押下時のコールバック関数
@@ -90,7 +84,7 @@ define(function(require, exports, module) {
             this.setInputValue();
             $("#slideshowRegistPage").hide();
             this.setView("#slideshowRegistConfirmWrapperPage", new OpeSlideshowRegistConfirmView({
-                model : this.model,
+                models : this.models,
             })).render();
             $("#snap-content").scrollTop(0);
         },
@@ -100,17 +94,14 @@ define(function(require, exports, module) {
          * @return {String} エラーメッセージ。正常の場合はnullを返す
          */
         validate : function() {
-            var $fileArea = this.$el.find("#slideshowFileArea").children().eq(0);
-            var $previewImg = $fileArea.find("[data-preview-file]");
-            if (!($previewImg.prop("file"))) {
-                return "画像が選択されていません";
+            var $fileAreas = this.$el.find("#slideshowFileArea").children();
+            var $previewImgs = $fileAreas.find("[data-preview-file]");
+            var existFile = _.find($previewImgs, function(prevImg) {
+                return !!$(prevImg).prop("file");
+            });
+            if (!existFile) {
+                return "画像を1つ以上登録してください。";
             }
-            this.file = $previewImg.prop("file");
-
-            this.image.contentType = this.file.type;
-            this.image.data = $fileArea.find("#articleFile").prop("data");
-            this.image.src = $previewImg.attr("src");
-
             return null;
         },
         /**
@@ -118,17 +109,38 @@ define(function(require, exports, module) {
          * @memberOf ArticleRegistView#
          */
         setInputValue : function() {
-            if (this.model === null) {
-                this.model = new SlideshowModel();
-                this.model.id = AbstractModel.createNewId();
+            this.models = [];
+            var images = [];
+            var $fileAreas = this.$el.find("#slideshowFileArea").children();
+            var $previewImgs = $fileAreas.find("[data-preview-file]");
+            // 画像に変更があるかチェックする
+            for (var i = 0; i < $previewImgs.length; i++) {
+                var $previewImg = $previewImgs.eq(i);
+                var file = $previewImg.prop("file");
+                var src = $previewImg.attr("src");
+                var image;
+
+                if (!src) {
+                    continue;
+                }
+                var model = new SlideshowModel();
+                model.id = AbstractModel.createNewId();
+
+                if (file) {
+                    image = {};
+                    image.src = src;
+                    image.fileName = this.generateFileName(file.name);
+                    image.contentType = file.type;
+                    image.data = $fileAreas.eq(i).find("#articleFile").prop("data");
+                    model.set("image", image);
+                    model.set("filename", image.fileName);
+                    model.set("published", "1");
+                } else {
+                    continue;
+                }
+
+                this.models.push(model);
             }
-
-            var fileName = this.generateFileName(this.file.name);
-            this.image.fileName = fileName;
-            this.model.set("image", this.image);
-
-            this.model.set("filename", fileName);
-            this.model.set("published", "1");
         }
 
     });
