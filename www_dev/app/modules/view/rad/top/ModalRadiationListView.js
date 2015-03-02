@@ -204,6 +204,13 @@ define(function(require, exports, module) {
 
                     // 1. CSV形式のデータをJSONオブジェクトに変換
                     try {
+                        if (
+                            file.type !== "text/csv" &&
+                            file.type !== "text/comma-separated-values"
+                        ) {
+                            throw new Error("couldn't accept file type: " + file.type);
+                        }
+
                         originalRecords = CommonUtil.convertJsonObject(reader.result, {
                             cast : [
                                 "String",
