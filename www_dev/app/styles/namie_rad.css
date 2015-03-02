@@ -52,6 +52,7 @@
  *  サイドバー
  */
 .page-rad .contents__secondary {
+    width: 26%;
     padding-top: 0;
     margin-left: 0;
     box-shadow: 3px 0px 3px 0px rgba(55, 88, 88, 0.15);
@@ -63,7 +64,7 @@
 
 .is-expanded .contents__secondary {
     box-shadow: none;
-    margin-left: -25%;
+    margin-left: -26%;
 }
 
 /**
@@ -327,12 +328,12 @@
 
 .rad-cluster-item__left {
     padding: 0 0 0 5px;
-    width: 45%;
+    width: 50%;
 }
 
 .rad-cluster-item__right {
     padding: 0 5px 0 0;
-    width: 55%;
+    width: 50%;
 }
 
 .rad-cluster-item__date {
@@ -367,11 +368,11 @@
 }
 
 .rad-cluster-item__date .date--starttime {
-    font-size: 22px;
+    font-size: 17px;
 }
 
 .rad-cluster-item__date .date--endtime {
-    font-size: 14px;
+    font-size: 17px;
 }
 
 .rad-cluster-item__value-table {
@@ -442,6 +443,7 @@
  *  メインカラム（地図）
  */
 .page-rad .contents__primary {
+    width: 74%;
     -webkit-transition: .3s ease width;
     transition: .3s ease width;
 }
@@ -514,7 +516,7 @@
 
 .page-rad .map-legend-symbol {
     border-radius: 3px;
-    width: 88px;
+    width: 86px;
     height: 12px;
 }
 
