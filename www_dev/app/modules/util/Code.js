@@ -271,10 +271,5 @@ define(function(require, exports, module) {
                              ["ukedon_7_p_1.png", "ukedon_7_p_2.png"]
                             ];
 
-    /**
-     * ウィジェット表示候補の画像数を定義する。
-     */
-    Code.WIDGET_CHARACTER_NUM = 25;
-
     module.exports = Code;
 });
