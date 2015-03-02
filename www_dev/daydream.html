@@ -92,6 +92,34 @@ body {
 .popup #date {
 	left: 282px;
 }
+.pageArea {
+    width:220px;
+    height:100px;
+    position:fixed;
+    right:10px;
+    bottom:10px;
+    background-color: rgba(40,40,40,0.5);
+    border-radius:10px;
+}
+.pageArea p {
+    margin:0;
+    padding:12px 0 0 0;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    font-size: 4rem;
+}
+#currentPage {
+    position: relative;
+    bottom: 15px;
+    margin-right: -10px;
+}
+#allPages {
+    position: relative;
+    top: 15px;
+    margin-left: -10px;
+}
+
 </style>
 <script>
     /** Personium URL. */
@@ -306,9 +334,24 @@ body {
             log("Personium odata failure : " + e);
             ohSnap('スライドショー画像を取得できませんでした。', 'red');
         }
-        return list;
+        $("#allPages").text(list.length);
+        return arrayShuffle(list);
     }
-
+    /**
+     * 配列シャッフル関数
+     **/
+    function arrayShuffle(array) {
+        var n = array.length;
+        var t;
+        var i;
+        while (n) {
+            i = Math.floor(Math.random() * n--);
+            t = array[n];
+            array[n] = array[i];
+            array[i] = t;
+        }
+        return array;
+    }
     /**
      *　スライドショー開始。
      */
@@ -336,11 +379,11 @@ body {
      */
     function getNextImage() {
         log("start getNextImage / fileList.length :  " + _fileList.length + " / _index : " + _index);
-        if ((_index + 1) >= _fileList.length) {
+        if (_index >= _fileList.length) {
             _index = 0;
         }
         var fileName = _fileList[_index];
-        _index += 1;
+        _index++;
         return fileName;
     }
 
@@ -514,6 +557,7 @@ body {
                 var img = $("<img id='slideImage'>").attr("src", url).data("blob", blob);
                 img.prependTo($("#container")).addClass("animated fadeIn");
                 log("end onGetBinary");
+                $("#currentPage").text(_index);
             }, 2000);
         });
     }
@@ -526,5 +570,10 @@ body {
 		</div>
 	</div>
 	<div id="ohsnap"></div>
+    <div class="pageArea">
+        <p>
+            <label id="currentPage"></label>／<label id="allPages"></label>
+        </p>
+    </div>
 </body>
 </html>

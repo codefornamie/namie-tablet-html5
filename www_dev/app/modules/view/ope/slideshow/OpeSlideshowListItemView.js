@@ -40,7 +40,16 @@ define(function(require, exports, module) {
          * @memberOf OpeSlideshowListItemView#
          */
         afterRendered : function() {
-            this.showPIOImages(".slideshowImage", [
+            this.$(".slideshowImage img").load(function() {
+                this.$(".slideshowImage img").addClass("fadeIn");
+                this.$(".slideshowImage a").attr("href", this.$(".slideshowImage img").attr("src"));
+                this.$(".slideshowImage a").colorbox({
+                    photo : true,
+                    maxWidth : "83%",
+                    maxHeight : "100%",
+                });
+            }.bind(this));
+            this.showPIOImages(".slideshowImage img", [
                 {
                     imageUrl : "slideshow/" + this.model.get("filename"),
                     imageIndex : 1
@@ -75,8 +84,7 @@ define(function(require, exports, module) {
             });
         },
         /**
-         * スライドショー画像の削除関数
-         * WebDavファイルとODataを物理削除する
+         * スライドショー画像の削除関数 WebDavファイルとODataを物理削除する
          * @memberOf OpeSlideshowListItemView#
          */
         deleteArticle : function() {

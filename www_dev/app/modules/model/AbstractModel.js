@@ -18,8 +18,8 @@ define(function(require, exports, module) {
             return response;
         },
         /**
-         * 指定されたプロパティの文字列情報内の改行コードを<br/>に変換する。
-         * @return {String} 改行コードが<br/>に変換された文字列
+         * 指定されたプロパティの文字列情報内の改行コードを<br />に変換する。
+         * @return {String} 改行コードが<br />に変換された文字列
          */
         getAndReplaceLineBreaks: function(name) {
             var value = this.get(name);
@@ -28,7 +28,19 @@ define(function(require, exports, module) {
             } else {
                 return value;
             }
+        },
+        /**
+         * 指定されたプロパティの文字列情報内の<br />を改行コードに変換する。
+         * @return {String} <br />が改行コードに変換された文字列
+         */
+        getAndReplaceBrElement: function(value) {
+            if (value && typeof value.replace === "function") {
+                return value.replace(/<br \/>/g, '\r\n');
+            } else {
+                return value;
+            }
         }
+        
     });
 
     /**

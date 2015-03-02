@@ -31,6 +31,7 @@ define(function(require) {
                         fetchedModel = collection.find(function(model) {
                             return model.get("__id") === targetId;
                         });
+                        assert.ok(fetchedModel !== undefined, "target dojoContents model fetched.");
                         app.logger.debug('fetchedModel.get("__id"):' + fetchedModel.get("__id"));
                         app.logger.debug('create test dojo_movie id=' + targetId);
                         assert.equal(fetchedModel.get("__id"), targetId, "fetched correct dojo_movie model.");

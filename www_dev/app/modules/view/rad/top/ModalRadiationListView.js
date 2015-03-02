@@ -302,6 +302,7 @@ define(function(require, exports, module) {
             radiationClusterModel.set("endDate", file.endDate);
             radiationClusterModel.set("numSample", file.numSample);
             radiationClusterModel.set("maxValue", file.maxValue);
+            radiationClusterModel.set("minValue", file.minValue);
             radiationClusterModel.set("averageValue", file.averageValue);
             radiationClusterModel.set("maxLatitude", file.maxLatitude);
             radiationClusterModel.set("minLatitude", file.minLatitude);
