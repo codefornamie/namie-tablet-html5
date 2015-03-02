@@ -43,16 +43,16 @@ define(function(require, exports, module) {
             }
 
             // 画像表示処理
-            var characterPath = "../../app/img/chara/";
+            var characterPath = app.root + "app/img/chara/";
             var character1 = characterPath + this.character[0];
             var character2 = characterPath + this.character[1];
-            this.$(".character__image--1").css("background-image", "url(" + character1 + ")");
-            this.$(".character__image--2").css("background-image", "url(" + character2 + ")").parent().hide();
+            this.$(".character__image--1").css("background-image", "url(" + character1 + ")").show();
+            this.$(".character__image--2").css("background-image", "url(" + character2 + ")").hide();
 
             // ウィジェット画像に動きを入れるため、画像を0.5秒毎に差し替える。
             setInterval(function(character1, character2) {
-                    this.$(".character__image--1").parent().toggle();
-                    this.$(".character__image--2").parent().toggle();
+                this.$(".character__image--1").toggle();
+                this.$(".character__image--2").toggle();
             }.bind(this), 500);
         },
         /**
@@ -63,7 +63,7 @@ define(function(require, exports, module) {
             this.showLoading();
 
             // ファイル名から登録する値を取得する
-            var value = this.character[0].substring(0, this.character[0].indexOf(".png"));
+            var value = this.character[0].substring(0, this.character[0].lastIndexOf("_"));
 
             this.model.set("__id", "WIDGET_CHARACTER_PATTERN");
             this.model.set("value", value);
@@ -71,15 +71,16 @@ define(function(require, exports, module) {
             this.model.set("etag","*");
             // configulatio(WIDGET_CHARACTER_PATTERN)の更新
             this.model.save(null, {
-                success : $.proxy(function() {
+                success : $.proxy(function(model) {
                     this.hideLoading();
+                    this.showSuccessMessage("ウィジェット画像切り替え", model);
                     app.router.go("ope-character");
                 }, this),
                 error : $.proxy(function(resp, options) {
                     if (resp.event && resp.event.isConflict()) {
-                        this.showMessage("他のユーザーとウィジェット画像の切り替え操作が競合したため、保存できませんでした。<br/>再度、保存操作を行ってください。", resp.event);
+                        this.showErrorMessage("ウィジェット画像切り替え", resp.event);
                     } else {
-                        this.showMessage("ウィジェット画像切り替えに失敗しました", resp.event, app.PIOLogLevel.ERROR);
+                        this.showErrorMessage("ウィジェット画像切り替え", resp.event, app.PIOLogLevel.ERROR);
                     }
                     this.hideLoading();
                 }, this)

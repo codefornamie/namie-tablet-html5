@@ -42,13 +42,13 @@ define(function(require, exports, module) {
          * @memberOf CharacterImageListView#
          */
         showWidgetImageList : function() {
-            for (var i = 0; i <= Code.WIDGET_CHARACTER_NUM; i++) {
-                var widget = Code.WIDGET_CHARACTER[i];
-                this.insertView("#characterImageCollectionList", new CharacterImageListItemView({
+            var self = this;
+            _.each(Code.WIDGET_CHARACTER, function(widget) {
+                self.insertView("#characterImageCollectionList", new CharacterImageListItemView({
                     character : widget,
-                    model : this.characterImageModel
+                    model : self.characterImageModel
                 })).render();
-            }
+            });
         },
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
