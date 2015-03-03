@@ -56,7 +56,7 @@ PIOUserScriptException.prototype.serialize = function() {
         status = this.statusCode;
     }
     // クライアントに返却するステータスコード
-    response.status = String(status);
+    response.status = status;
 
     response.setResponseData({
         "message" : this.message,

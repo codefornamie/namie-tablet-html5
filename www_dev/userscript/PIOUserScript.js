@@ -21,10 +21,13 @@ function PIOUserScript(request, allowdMethods) {
     try {
         this.request = request;
         this.accessor = this.getAccessor();
+        // このユーザスクリプトが実行されているセルを取得する
+        this.cell = this.accessor.cell();
         // このユーザスクリプトが実行されているセルのURLを取得する
-        this.cellUrl = this.accessor.cell().getUrl();
+        this.cellUrl = this.cell.getUrl();
         // このユーザスクリプトが実行されているセルのIDを取得する
         this.cellId = CommonUtil.getCellNameByUrl(this.cellUrl);
+
         // 実行メソッドを取得する
         this.method = CommonUtil.getHttpMethod(request);
         this.allowdMethods = allowdMethods;
@@ -139,6 +142,11 @@ PIOUserScript.prototype.post = function() {
         // なければ、デフォルトの正常終了レスポンスを返す
         response = new JSGIResponse();
         response.status = StatusCode.HTTP_OK;
+        response.setResponseData({
+            "message" : Message.getMessage("Script execution finished successfully. UserScript: %1", [
+                CommonUtil.getClassName(this)
+            ])
+        });
         return response;
     }
 };

@@ -1,12 +1,18 @@
 /* global fn: true */
 /* global require: false */
+
 fn = function(request) {
     var userscript;
     try {
         userscript = new common.RadiationUserScript(request);
+        return userscript.execute();
     } catch (e) {
-        return e.serialize();
+        if (e instanceof common.PIOUserScriptException) {
+            return e.serialize();
+        } else {
+            return new common.PIOUserScriptException('Script Execution Failed.', [], e).serialize();
+        }
+        
     }
-    return userscript.execute();
 };
 var common = require("common");
