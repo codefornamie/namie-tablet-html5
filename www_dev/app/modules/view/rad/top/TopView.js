@@ -312,6 +312,7 @@ define(function(require, exports, module) {
          * @param {Event} ev
          */
         onClusterListUpdated : function () {
+            this.isShowScrollUp = true;
             $(".sidemenu-bottom__scroll").trigger("scroll");
         },
 

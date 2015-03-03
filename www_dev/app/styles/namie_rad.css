@@ -225,7 +225,7 @@
     width: 100%;
     height: 50px;
     position: absolute;
-    top: 140px;
+    top: 90px;
     z-index: 2;
 }
 #radiation-scrollUp::before {
@@ -238,7 +238,7 @@
     left: 43%;
     z-index: 1;
 }
- #radiation-scrollDown {
+#radiation-scrollDown {
     background: rgba(0,0,0,0.3);
     width: 100%;
     height: 50px;
@@ -256,7 +256,7 @@
     left: 43%;
     z-index: 1;
 }
-.page-rad .contents__secondary[data-selected-tab="mobile"] .sidemenu-bottom__scroll.has-after::after {
+.page-rad .contents__secondary[data-selected-tab="mobile"] #radiation-scrollDown {
     bottom: 90px;
 }
 
