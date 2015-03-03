@@ -22,6 +22,12 @@
                 μSv/h
             </div>
         </div>
+
+        <% if (data.hasErrDoseMissing) { %>
+            <p class="rad-cluster-item__error">
+                ※ 測定値が登録されていません。
+            </p>
+        <% } %>
     </div>
 
     <div class="rad-popup__info__more">

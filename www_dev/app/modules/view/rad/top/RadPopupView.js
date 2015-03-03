@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
     "use strict";
 
+    var Code = require("modules/util/code");
     var moment = require("moment");
     var leaflet = require("leaflet");
     var AbstractView = require("modules/view/AbstractView");
@@ -32,6 +33,7 @@ define(function(require, exports, module) {
             var hasCollection = !!logFeatureCollection;
             var date, dateStr, avg, max;
             var stationType, numSample, sensorVendor, sensorModel;
+            var hasErrDoseMissing;
 
             if (hasCollection) {
                 date = moment(clusterFeature.properties.startDate);
@@ -42,6 +44,9 @@ define(function(require, exports, module) {
                 max = _.max(logFeatureCollection.features, function (feature) {
                     return feature.properties.value;
                 }).properties.value;
+                hasErrDoseMissing = _.some(logFeatureCollection.features, function (feature) {
+                    return feature.properties.errorCode & Code.ERR_DOSE_MISSING;
+                });
 
                 // 小数点以下3桁に丸める
                 avg = Math.round(avg * 1000) / 1000;
@@ -50,6 +55,7 @@ define(function(require, exports, module) {
                 dateStr = date.format("YYYY年 M/D(ddd) H時mm分");
                 avg = logFeature.properties.value;
                 max = logFeature.properties.value;
+                hasErrDoseMissing = logFeature.properties.errorCode & Code.ERR_DOSE_MISSING;
             }
 
             stationType = clusterFeature.properties.isFixedStation ? "固定局" : "移動局";
@@ -65,7 +71,8 @@ define(function(require, exports, module) {
                     stationType : stationType,
                     numSample : numSample,
                     sensorVendor : sensorVendor,
-                    sensorModel : sensorModel
+                    sensorModel : sensorModel,
+                    hasErrDoseMissing : hasErrDoseMissing
                 }
             };
         },
