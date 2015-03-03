@@ -28,7 +28,8 @@ define(function(require) {
                         "__id" : "RADIATION_LOG_UUID",
                         "date" : "2000-01-23T12:34:56+0900",
                         "value" : "1234",
-                        "collectionId" : "COLLECTION_ID"
+                        "collectionId" : "COLLECTION_ID",
+                        "errorCode" : "0"
                     }
             };
             var targetJSON = {
@@ -51,7 +52,8 @@ define(function(require) {
                     latitude : modelJSON.geometry.coordinates[1],
                     altitude : modelJSON.geometry.coordinates[2],
                     value : modelJSON.properties.value,
-                    collectionId : modelJSON.properties.collectionId
+                    collectionId : modelJSON.properties.collectionId,
+                    errorCode : modelJSON.properties.errorCode
                 });
                 radiationLogCollection.push(radiationLogModel);
             });

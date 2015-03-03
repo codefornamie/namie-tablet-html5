@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     "use strict";
 
-    var Code = require("modules/util/code");
+    var Code = require("modules/util/Code");
     var moment = require("moment");
     var leaflet = require("leaflet");
     var AbstractView = require("modules/view/AbstractView");
