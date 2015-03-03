@@ -18,7 +18,11 @@ define(function(require, exports, module) {
          */
         formId : '#radiationRegistForm',
         events : {
-            "click #addFileForm" : "onAddFileForm",
+            "change #radiationFile" : "onChangeFileData",
+            "click #fileInputButton" : "onClickFileInputButton",
+            "click #fileDeleteButton" : "onClickFileDeleteButton",
+            "click #radiationUploadButton" : "onClickRadiationUploadButton",
+            "click #radiationCancelButton" : "onClickRadiationCancelButton"
         },
 
         /**
@@ -28,27 +32,45 @@ define(function(require, exports, module) {
         afterRendered : function() {
         },
         /**
-         * 画像を追加ボタンを押された際のコールバック関数
+         * 画像選択ボタン押下時のハンドラ
          * @memberOf RadiationRegistView#
          */
-        onAddFileForm : function() {
-//            this.insertView("#radiationFileArea", new OpeSlideshowRegistFileItemView()).render();
-//            if ($("#radiationFileArea").children().size() >= 5) {
-//                this.$el.find("#addFileForm").hide();
-//            }
+        onClickFileInputButton : function() {
+            $("#uploadFileName").text("");
+            $(this.el).find("#radiationFile")[0].click();
         },
         /**
-         * 確認画面押下時のコールバック関数
+         * ファイル選択時のハンドラ
+         * @memberOf RadiationRegistView#
+         * @param {Event} event チェンジイベント
+         */
+        onChangeFileData : function(event) {
+            var file = event.target.files[0];
+            $("#uploadFileName").text(file.name);
+            $(this.el).find("#fileDeleteButton").show();
+        },
+        /**
+         * ファイル削除ボタン押下時のハンドラ
          * @memberOf RadiationRegistView#
          */
-        onClickRadiationConfirmButton : function() {
+        onClickFileDeleteButton : function() {
+            $(this.el).find("#radiationFile").val("");
+            $("#uploadFileName").text("");
+            $(this.el).find("#fileDeleteButton").hide();
+        },
+        /**
+         * アップロードボタン押下時のコールバック関数
+         * @memberOf RadiationRegistView#
+         */
+        onClickRadiationUploadButton : function() {
             if ($(this.formId).validate().form()) {
                 var errmsg = this.validate();
                 if (errmsg) {
                     vexDialog.defaultOptions.className = 'vex-theme-default';
                     vexDialog.alert(errmsg);
                 } else {
-                    this.onSubmit();
+                    alert("バリデータチェックOK！");
+//                    this.onSubmit();
                 }
             }
         },
@@ -82,13 +104,9 @@ define(function(require, exports, module) {
          * @return {String} エラーメッセージ。正常の場合はnullを返す
          */
         validate : function() {
-            var $fileAreas = this.$el.find("#radiationFileArea").children();
-            var $previewImgs = $fileAreas.find("[data-preview-file]");
-            var existFile = _.find($previewImgs, function(prevImg) {
-                return !!$(prevImg).prop("file");
-            });
-            if (!existFile) {
-                return "CSVファイルを1つ以上登録してください。";
+            var $file = this.$el.find("#radiationFile");
+            if ($file.prop("files").length < 1) {
+                return "アップロードファイルを選択してください。";
             }
             return null;
         },

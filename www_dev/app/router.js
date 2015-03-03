@@ -36,7 +36,7 @@ define(function(require, exports, module) {
     var OpeCharacterMessageListView = require("modules/view/ope/message/CharacterMessageListView");
     var OpeCharacterMessageRegistView = require("modules/view/ope/message/CharacterMessageRegistView");
     var OpeCharacterImageListView = require("modules/view/ope/character/CharacterImageListView");
-    var OpeRadiationListView = require("modules/view/ope/radiation/radiationListView");
+    var OpeRadiationListView = require("modules/view/ope/radiation/RadiationListView");
     var OpeRadiationRegistView = require("modules/view/ope/radiation/RadiationRegistView");
     var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
