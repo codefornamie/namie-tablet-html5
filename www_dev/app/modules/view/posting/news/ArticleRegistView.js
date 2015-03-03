@@ -348,6 +348,8 @@ define(function(require, exports, module) {
             var generateFileName = function(fileName) {
                 fileName = CommonUtil.blankTrim(fileName);
                 var preName = fileName.substr(0, fileName.lastIndexOf("."));
+                preName = preName.substr(0,100);
+                preName = preName.replace(/[\[\]()\{\}]/g,"_");
                 var suffName = fileName.substr(fileName.lastIndexOf("."));
 
                 return preName + "_" + new Date().getTime() + _.uniqueId("") + suffName;
