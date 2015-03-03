@@ -81,11 +81,13 @@ define(function(require, exports, module) {
          */
         onClickSlideshowRegistButton : function() {
             var self = this;
-            this.showLoading();
+            this.showProgressBarLoading();
+            this.perProgress = 100 / this.models.length / 2;
 
             async.each(this.models, function(model, done) {
                 self.saveSlideshowPicture(model, done);
             }, function complete(err) {
+                self.$progressBar.attr("value", 100);
                 self.hideLoading();
                 if (err) {
                     vexDialog.defaultOptions.className = 'vex-theme-default';
@@ -124,6 +126,7 @@ define(function(require, exports, module) {
         saveDavFile : function(davModel, model, done) {
             davModel.save(null, {
                 success : function() {
+                    this.increaseProgress();
                     this.saveModel(model, done);
                 }.bind(this),
                 error : function(e) {
@@ -140,8 +143,9 @@ define(function(require, exports, module) {
         saveModel : function(model, done) {
             model.save(null, {
                 success : function() {
+                    this.increaseProgress();
                     done();
-                },
+                }.bind(this),
                 error : function(e) {
                     done("スライドショー画像の登録に失敗しました。");
                 }
