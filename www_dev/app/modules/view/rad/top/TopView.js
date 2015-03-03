@@ -61,6 +61,7 @@ define(function(require, exports, module) {
         afterRendered : function() {
             $(".sidemenu-bottom__scroll")
                 .on("scroll", this.onScrollSidebar.bind(this));
+            $("#radiation-scrollDown").css("opacity",0);
         },
 
         /**
@@ -224,23 +225,17 @@ define(function(require, exports, module) {
             if (scrollTop > 0) {
                 if (!this.isShowScrollUp) {
                     this.isShowScrollUp = true;
+                    $(this).css("z-index", 10);
                     $("#radiation-scrollUp").animate({
                         opacity : 1
-                    }, {
-                        complete : function() {
-                            $(this).css("z-index", 10);
-                        }
                     });
                 }
             } else {
                 if (this.isShowScrollUp) {
                     this.isShowScrollUp = false;
+                    $(this).css("z-index", 0);
                     $("#radiation-scrollUp").animate({
                         opacity : 0
-                    }, {
-                        complete : function() {
-                            $(this).css("z-index", 0);
-                        }
                     });
                 }
             }
@@ -248,23 +243,17 @@ define(function(require, exports, module) {
             if (scrollTop < contentHeight - containerHeight) {
                 if (!this.isShowScrolldown) {
                     this.isShowScrolldown = true;
+                    $(this).css("z-index", 10);
                     $("#radiation-scrollDown").animate({
                         opacity : 1
-                    }, {
-                        complete : function() {
-                            $(this).css("z-index", 10);
-                        }
                     });
                 }
             } else {
                 if (this.isShowScrolldown) {
                     this.isShowScrolldown = false;
+                    $(this).css("z-index", 0);
                     $("#radiation-scrollDown").animate({
                         opacity : 0
-                    }, {
-                        complete : function() {
-                            $(this).css("z-index", 0);
-                        }
                     });
                 }
             }
@@ -278,9 +267,10 @@ define(function(require, exports, module) {
         scrollDown : _.throttle(function(ev) {
             var $target = $(".sidemenu-bottom__scroll");
             var outerHeight = $(".rad-cluster-item").outerHeight();
+            var marginTop = parseInt($(".rad-cluster-item").css("margin-top"));
             var scrollTop = $target.scrollTop();
             $target.animate({
-                scrollTop : scrollTop + outerHeight
+                scrollTop : scrollTop + outerHeight + marginTop
             }, 300);
         }, 500),
 
@@ -292,9 +282,10 @@ define(function(require, exports, module) {
         scrollUp : _.throttle(function(ev) {
             var $target = $(".sidemenu-bottom__scroll");
             var outerHeight = $(".rad-cluster-item").outerHeight();
+            var marginTop = parseInt($(".rad-cluster-item").css("margin-top"));
             var scrollTop = $target.scrollTop();
             $target.animate({
-                scrollTop : scrollTop - outerHeight
+                scrollTop : scrollTop - outerHeight - marginTop
             }, 300);
         }, 500)
     });
