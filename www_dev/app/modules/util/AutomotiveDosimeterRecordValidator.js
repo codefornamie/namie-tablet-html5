@@ -28,11 +28,11 @@
          * @return {Boolean}
          */
         AutomotiveDosimeterRecordValidator.prototype.hasError = function (expected) {
-//            if (expected !== undefined) {
-//                return this.errorCode & expected;
-//            } else {
-//                return !!this.errorCode;
-//            }
+            if (expected !== undefined) {
+                return this.errorCode & expected;
+            } else {
+                return !!this.errorCode;
+            }
         };
 
         /**
@@ -42,15 +42,15 @@
          * @return {Array}
          */
         AutomotiveDosimeterRecordValidator.prototype.validate = function (records) {
-//            var ret = _.filter(records, this.selectValidRecord.bind(this));
-//
-//            if (ret.length) {
-//                return ret;
-//            } else {
-//                // レコードが無い場合
-//                this.errorCode |= Code.ERR_NO_RECORD;
-//                return [];
-//            }
+            var ret = _.filter(records, this.selectValidRecord.bind(this));
+
+            if (ret.length) {
+                return ret;
+            } else {
+                // レコードが無い場合
+                this.errorCode |= Code.ERR_NO_RECORD;
+                return [];
+            }
         };
 
         /**
@@ -60,24 +60,22 @@
          * @return {Boolean}
          */
         AutomotiveDosimeterRecordValidator.prototype.selectValidRecord = function (record) {
-//            var date = record[Code.HORIBA_TITLE_DATE];
-//            var position = record[Code.HORIBA_TITLE_POSITION];
-//            var hasDose = record[Code.HORIBA_TITLE_DOSE];
-//            var hasPosition = (
-//                typeof position === "string" &&
-//                position.split(" ").every(function (s) { return !!parseInt(s, 10); })
-//            );
-//
+//            var time = record[Code.AUTOMOTIVE_TITLE_TIME];
+            var lat = record[Code.AUTOMOTIVE_TITLE_LATITUDE];
+            var long = record[Code.AUTOMOTIVE_TITLE_LONGITUDE];
+//            var hasDose = record[Code.AUTOMOTIVE_TITLE_DOSE1];
+            var hasPosition = lat && long;
+
 //            // 線量が無い場合
 //            if (!hasDose) {
 //                this.errorCode |= Code.ERR_DOSE_MISSING;
 //            }
-//
-//            // 緯度経度が無い場合
-//            if (!hasPosition) {
-//                this.errorCode |= Code.ERR_POSITION_MISSING;
-//            }
-//
+
+            // 緯度経度が無い場合
+            if (!hasPosition) {
+                this.errorCode |= Code.ERR_POSITION_MISSING;
+            }
+
 //            // 日付が不正な場合
 //            if (!moment(date).isValid()) {
 //                this.errorCode |= Code.ERR_INVALID_DATE;

@@ -125,9 +125,8 @@ define(function(require, exports, module) {
                     });
                 } catch (e) {
                     app.logger.error("CommonUtil.convertJsonObject():error=" + e);
-                    next([
-                            file.name, " をCSVファイルとして読み込むことができませんでした。", "ファイル形式を再度ご確認下さい。"
-                    ].join(""));
+                    vexDialog.defaultOptions.className = "vex-theme-default";
+                    vexDialog.alert(file.name + " をCSVファイルとして読み込むことができませんでした。", "ファイル形式を再度ご確認下さい。");
                     return;
                 }
 
@@ -136,7 +135,7 @@ define(function(require, exports, module) {
                 file.jsonObject = originalRecords;
 
                 // TODO 3. 不正なレコードを省いた旨を通知する
-//                vexDialog.defaultOptions.className = "vex-theme-default";
+                vexDialog.defaultOptions.className = "vex-theme-default";
 //
 //                if (validator.hasError(Code.ERR_NO_RECORD)) {
 //                    vexDialog.alert({
