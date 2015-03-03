@@ -72,7 +72,8 @@ define(function(require, exports, module) {
                     numSample : numSample,
                     sensorVendor : sensorVendor,
                     sensorModel : sensorModel,
-                    hasErrDoseMissing : hasErrDoseMissing
+                    hasErrDoseMissing : hasErrDoseMissing,
+                    hasCollection : hasCollection
                 }
             };
         },

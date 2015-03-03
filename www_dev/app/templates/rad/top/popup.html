@@ -24,9 +24,15 @@
         </div>
 
         <% if (data.hasErrDoseMissing) { %>
-            <p class="rad-cluster-item__error">
-                ※ 測定値が登録されていません。
-            </p>
+            <% if (data.hasCollection) { %>
+                <p class="rad-cluster-item__error">
+                    ※ 一部の測定値が登録されていません。
+                </p>
+            <% } else { %>
+                <p class="rad-cluster-item__error">
+                    ※ 測定値が登録されていません。
+                </p>
+            <% } %>
         <% } %>
     </div>
 
