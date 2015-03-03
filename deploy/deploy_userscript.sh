@@ -12,11 +12,10 @@ RETRY_COUNT=3
 deploy_api() {
     _url=$1
     _expect="$2"
-    
     requestUrl=${_url}
     printf "${requestUrl}"
 
-    _result=`curl "${requestUrl}" -X PUT -H "Authorization:Bearer \"${TOKEN}\"" --data-binary @${SRC_DIR}/${endpoint} -i -s -H "Content-Type: text/javascript" -k --retry ${RETRY_COUNT}`
+    _result=`curl "${requestUrl}" -X PUT -H "Authorization:Bearer \"${TOKEN}\"" --data-binary @${SRC_DIR}/${scriptFile} -i -s -H "Content-Type: text/javascript" -k --retry ${RETRY_COUNT}`
 
     if [[ "$_result" =~ $_expect ]]; then
         echo " ..OK"
@@ -89,9 +88,9 @@ fi
 
 echo "start deploy userscript."
 
-for endpoint in ${endpoints[@]}
+for scriptFile in ${endpoints[@]}
 do
-    deploy_api "${service_url}/__src/${endpoint}" "(HTTP/1.1 201|HTTP/1.1 204)"
+    deploy_api "${service_url}/__src/${scriptFile}" "(HTTP/1.1 201|HTTP/1.1 204)"
 
     if [ $? -eq 1 ]; then
         echo "failed deploy userscript."
@@ -99,9 +98,9 @@ do
     fi
 done
 
-for require in ${requirejs[@]}
+for scriptFile in ${requirejs[@]}
 do
-    deploy_api "${service_url}/__src/${require}" "(HTTP/1.1 201|HTTP/1.1 204)"
+    deploy_api "${service_url}/__src/${scriptFile}" "(HTTP/1.1 201|HTTP/1.1 204)"
 
     if [ $? -eq 1 ]; then
         echo "failed deploy userscript."
