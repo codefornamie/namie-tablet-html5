@@ -36,6 +36,8 @@ define(function(require, exports, module) {
     var OpeCharacterMessageListView = require("modules/view/ope/message/CharacterMessageListView");
     var OpeCharacterMessageRegistView = require("modules/view/ope/message/CharacterMessageRegistView");
     var OpeCharacterImageListView = require("modules/view/ope/character/CharacterImageListView");
+    var OpeRadiationListView = require("modules/view/ope/radiation/RadiationListView");
+    var OpeRadiationRegistView = require("modules/view/ope/radiation/RadiationRegistView");
     var OpeArticleDetailView = require("modules/view/ope/news/OpeArticleDetailView");
     var OpeEventDetailView = require("modules/view/ope/news/OpeEventDetailView");
     var OpeYouTubeDetailView = require("modules/view/ope/news/OpeYouTubeDetailView");
@@ -280,6 +282,7 @@ define(function(require, exports, module) {
             'ope-message' : 'opeMessage',
             'ope-achievement' : 'opeAchievement',
             'ope-character' : 'opeCharacter',
+            'ope-radiation' : 'opeRadiation',
 
             // 道場アプリ
             'dojo-top' : 'dojoTop',
@@ -514,6 +517,16 @@ define(function(require, exports, module) {
         opeCharacter : function() {
             app.logger.debug('[route] opeCharacter');
             this.layout.showView(new OpeCharacterImageListView());
+            this.layout.getHeader().setActiveMenu("ope-character");
+        },
+        /**
+         * 車載線量計データ一覧へ遷移する
+         */
+        opeRadiation : function() {
+            app.logger.debug('[route] opeRadiation');
+            this.layout.showView(new OpeRadiationListView());
+            this.layout.getHeader().setActiveMenu("ope-radiation");
+
         },
         /**
          * このメソッドは手動で呼ばれる
@@ -566,6 +579,15 @@ define(function(require, exports, module) {
             app.logger.debug('[route] opeMessageEdit');
             this.layout.showView(new OpeCharacterMessageRegistView(options));
             this.navigate("opeMessageEdit");
+            $("#contents__primary").scrollTop(0);
+        },
+        /**
+         * このメソッドは手動で呼ばれる
+         */
+        opeRadiationRegist : function(options) {
+            app.logger.debug('[route] opeRadiationRegist');
+            this.layout.showView(new OpeRadiationRegistView(options));
+            this.navigate("opeRadiationRegist");
             $("#contents__primary").scrollTop(0);
         },
         /**
