@@ -38,16 +38,27 @@ define(function(require, exports, module) {
             saveData.startDate = this.get("startDate");
             saveData.endDate = this.get("endDate");
             saveData.numSample = this.get("numSample");
+            saveData.errorCode = this.get("errorCode");
+
+            // 線量最大値
             var maxValue = null;
             if (this.get("maxValue")) {
                 maxValue = Math.round(this.get("maxValue") * Code.RAD_RADIATION_DOSE_MAGNIFICATION);
             }
             saveData.maxValue = maxValue;
+            // 線量最小値
+            var minValue = null;
+            if (this.get("minValue")) {
+                minValue = Math.round(this.get("minValue") * Code.RAD_RADIATION_DOSE_MAGNIFICATION);
+            }
+            saveData.minValue = minValue;
+            // 線量平均値
             var averageValue = null;
             if (this.get("averageValue")) {
                 averageValue = Math.round(this.get("averageValue") * Code.RAD_RADIATION_DOSE_MAGNIFICATION);
             }
             saveData.averageValue = averageValue;
+            
             var maxLatitude = null;
             if (this.get("maxLatitude")) {
                 maxLatitude = Math.round(this.get("maxLatitude") * Code.RAD_LAT_LONG_MAGNIFICATION);
@@ -101,11 +112,13 @@ define(function(require, exports, module) {
                         "endDate": this.get("endDate"),
                         "numSample": this.get("numSample"),
                         "maxValue": this.get("maxValue"),
+                        "minValue": this.get("minValue"),
                         "averageValue": this.get("averageValue"),
                         "isFixedStation": this.get("isFixedStation"),
                         "sensorVendor": this.get("sensorVendor"),
                         "sensorModel": this.get("sensorModel"),
-                        "sensorSerialNo": this.get("sensorSerialNo")
+                        "sensorSerialNo": this.get("sensorSerialNo"),
+                        "errorCode": this.get("errorCode")
                     }
             };
 

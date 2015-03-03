@@ -562,7 +562,7 @@ public class PersoniumModel {
         try {
             HashMap<String, Object> json = odata.entitySet("character_message")
                     .query().filter("enabled eq true and deletedAt eq null")
-                    .top(1000).run();
+                    .top(1000).orderby("createdAt desc").run();
             HashMap<String, Object> d = (HashMap<String, Object>) json.get("d");
             return (List<Object>) d.get("results");
         } catch (DaoException e) {
@@ -570,5 +570,32 @@ public class PersoniumModel {
                     "configuration.COLOR_LABEL not defined : " + e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * 設定情報(WIDGET_CHARA_PATTERN)を取得する。
+     * @param context コンテキスト
+     * @return WIDGET_CHARA_PATTERN
+     */
+    public String getCharaPattern(Context context) {
+        Log.d(TAG, "start getCharaPattern");
+
+        // Perosonium接続
+        ODataCollection odata = initializePersonium(context);
+        if (odata == null) {
+            Log.w(TAG, "perosonium initialize error");
+            return null;
+        }
+
+        HashMap<String, Object> json;
+        try {
+            json = odata.entitySet("configuration").retrieveAsJson("WIDGET_CHARACTER_PATTERN");
+        } catch (DaoException e) {
+            Log.w(TAG, "configuration.COLOR_LABEL not defined : " + e.getMessage());
+            return null;
+        }
+        String value = (String) json.get("value");
+        Log.d(TAG, "WIDGET_CHARACTER_PATTERN : " + value);
+        return value;
     }
 }

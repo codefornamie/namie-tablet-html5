@@ -426,12 +426,6 @@ define(function(require, exports, module) {
                     this.newsCollection.remove(article);
                     articleList.push(article);
 
-                    // 一番最初の記事のサムネイルを
-                    // まとめた後の記事のサムネイルとして設定する
-                    if (!imagePath) {
-                        imagePath = article.get("imagePath");
-                        imageThumbUrl = article.get("imageThumbUrl");
-                    }
                 }, this));
                 if (firstArticleIdx < 0) {
                     firstArticleIdx = this.newsCollection.size();
@@ -460,6 +454,25 @@ define(function(require, exports, module) {
                     var currentPublishLetters = articleDateMap[app.currentPublishDate];
                     if (currentPublishLetters) {
                         newArrivals = currentPublishLetters.get("articles").length;
+                    }
+                    
+                    _.each(articleDateList, function(articleData) {
+                        var articleList = articleData.get("articles");
+                        articleList = _.sortBy(articleData.get("articles"),function(article) {
+                            return -new Date(article.get("createdAt")).getTime();
+                        });
+                        articleData.set("articles", articleList);
+                    });
+                    var firstArticles = _.first(articleDateList) && _.first(articleDateList).get("articles");
+                    var firstArticle;
+                    if (firstArticles && firstArticles.length > 0) {
+                        firstArticle = firstArticles[0];
+                    }
+                    // 一番最初の記事のサムネイルを
+                    // まとめた後の記事のサムネイルとして設定する
+                    if (firstArticle) {
+                        imagePath = firstArticle.get("imagePath") ;
+                        imageThumbUrl = firstArticle.get("imageThumbUrl");
                     }
                 }
 

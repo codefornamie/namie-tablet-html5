@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 /**
@@ -37,6 +38,11 @@ public class CloudContents implements Runnable {
      * データ更新中か否か
      */
     private volatile boolean isRefreshing = false;
+
+    /**
+     * キャラクターの画像パターン
+     */
+    private int[] charaPattern = null;
 
     /**
      * コンストラクタ 外部からは、getInstance()を使用する。
@@ -88,34 +94,64 @@ public class CloudContents implements Runnable {
     /**
      * データ更新
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void run() {
         try {
-            List<String>[] lists = new List[2];
-            for (int i = 0; i < lists.length; i++) {
-                lists[i] = new ArrayList<String>();
-            }
-            PersoniumModel model = new PersoniumModel();
-            List<Object> res = model.getCharaMessage(context);
-            for (Object rec : res) {
-                Map<String, Object> r = (Map<String, Object>) rec;
-                try {
-                    int type = ((Long) r.get("type")).intValue();
-                    lists[type - 1].add((String) r.get("message"));
-                } catch (RuntimeException e) {
-                    Log.w(TAG, "character_message parse error.");
-                }
-            }
-            if (lists[0].size() > 0) {
-                charaMessages = lists[0];
-            }
-            if (lists[1].size() > 0) {
-                charaMessagesOnRecommend = lists[1];
-            }
+            Log.i(TAG, "CloudContents thread start.");
+            updateMessage();
+            updateCharaPattern();
         } finally {
             isRefreshing = false;
+            Log.i(TAG, "CloudContents thread end.");
         }
+    }
+
+    /**
+     * メッセージの更新
+     */
+    @SuppressWarnings("unchecked")
+    private void updateMessage() {
+        PersoniumModel model = new PersoniumModel();
+        List<String>[] lists = new List[2];
+        for (int i = 0; i < lists.length; i++) {
+            lists[i] = new ArrayList<String>();
+        }
+        List<Object> res = model.getCharaMessage(context);
+        for (Object rec : res) {
+            Map<String, Object> r = (Map<String, Object>) rec;
+            try {
+                int type = ((Long) r.get("type")).intValue();
+                lists[type - 1].add((String) r.get("message"));
+            } catch (RuntimeException e) {
+                Log.w(TAG, "character_message parse error.");
+            }
+        }
+        if (lists[0].size() > 0) {
+            charaMessages = lists[0];
+        }
+        if (lists[1].size() > 0) {
+            charaMessagesOnRecommend = lists[1];
+        }
+    }
+
+    private void updateCharaPattern() {
+        PersoniumModel model = new PersoniumModel();
+        String pat = model.getCharaPattern(context);
+        Resources res = context.getResources();
+        String pname = context.getPackageName();
+        List<Integer> rlist = new ArrayList<Integer>();
+        for (int i = 1; i < 10; i++) {
+            int rid = res.getIdentifier(pat + "_" + i, "drawable", pname);
+            if (rid == 0) {
+                break;
+            }
+            rlist.add(rid);
+        }
+        int[] arrRes = new int[rlist.size()];
+        for (int i = 0; i < rlist.size(); i++) {
+            arrRes[i] = rlist.get(i);
+        }
+        charaPattern = arrRes;
     }
 
     /**
@@ -125,5 +161,17 @@ public class CloudContents implements Runnable {
      */
     public List<String> getCharaMessages() {
         return new ArrayList<String>(charaMessages);
+    }
+
+    /**
+     * ウィジェットに表示するキャラの表示パターンを返す。
+     * 
+     * @return キャラの表示パターンの画像リソースIDの配列。
+     */
+    public int[] getCharaPatterns() {
+        if (charaPattern == null || charaPattern.length == 0) {
+            return new int[] { R.drawable.img_ukedon_1, R.drawable.img_ukedon_2 };
+        }
+        return charaPattern;
     }
 }

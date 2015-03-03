@@ -47,7 +47,7 @@ define(function(require, exports, module) {
         app.logger.debug("Setting personium.io enveironments.");
         app.config.basic.mode = "news";
         // テスト用セル
-        app.config.basic.cellId = "kizunatest04";
+        app.config.basic.cellId = "kizunatest05";
         app.logger.debug("app.config.basic:" + JSON.stringify(app.config.basic));
         // タイムアウト値を拡大
         spec.timeout(20000);
@@ -177,18 +177,22 @@ define(function(require, exports, module) {
             saveData.category = "";
             saveData.sequence = "1";
         };
+        var testDataId = "dojo_movie1";
         model.save(null, {
             success : function(model, response, options) {
                 app.logger.debug("Success creating dojo_movie data.");
                 // 道場動画情報新規登録成功
                 app.logger.debug("save dojo_movie model. __id: " + response.__id);
-                var testDataId = "dojo_movie1";
                 done(testDataId);
             },
             error: function(model, response, options) {
-                app.logger.debug("Failed creating dojo_movie data.");
-                // 道場動画情報新規登録に失敗
-                done();
+                if (response.event.isConflict()) {
+                    done(testDataId);
+                } else {
+                    app.logger.debug("Failed creating dojo_movie data.");
+                    // 道場動画情報新規登録に失敗
+                    done();
+                }
             }
         });
     };

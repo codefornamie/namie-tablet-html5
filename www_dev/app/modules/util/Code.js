@@ -228,6 +228,41 @@ define(function(require, exports, module) {
     Code.RAD_ALTITUDE_MAGNIFICATION = 1000;
 
     /**
+     * HORIBAcsvの収集時刻ヘッダ名
+     */
+    Code.HORIBA_TITLE_DATE = "Date/Time";
+    /**
+     * HORIBAcsvの線量ヘッダ名
+     */
+    Code.HORIBA_TITLE_DOSE = "Dose equivalent rate (uSv/h)";
+    /**
+     * HORIBAcsvの緯度経度ヘッダ名
+     */
+    Code.HORIBA_TITLE_POSITION = "Position";
+    /**
+     * HORIBAcsvの高度ヘッダ名
+     */
+    Code.HORIBA_TITLE_ALTITUDE = "Altitude(m)";
+
+    /**
+     *  放射線データのエラーコード
+     */
+    // 緯度経度が抜けているレコードがある
+    Code.ERR_DOSE_MISSING = 1 << 0;
+
+    // 線量が抜けているレコードがある
+    Code.ERR_POSITION_MISSING = 1 << 1;
+
+    // ファイル形式が間違っている
+    Code.ERR_INVALID_FILETYPE = 1 << 2;
+
+    // 日付が不正である
+    Code.ERR_INVALID_DATE = 1 << 3;
+
+    // レコードが無い
+    Code.ERR_NO_RECORD = 1 << 4;
+
+    /**
      * アプリモード毎に、キャッシュを有効にするかどうか定義する。
      */
     Code.CACHE_MODE = {
@@ -237,5 +272,39 @@ define(function(require, exports, module) {
         "posting" : false,
         "dojo" : false
     };
+
+    /**
+     * ウィジェット画像を定義する。
+     * ウィジェット表示候補の画像が増えたらここに定義する
+     */
+    Code.WIDGET_CHARACTER = [
+                             ["ukedon_1_b_1.png", "ukedon_1_b_2.png"],
+                             ["ukedon_1_c_1.png", "ukedon_1_c_2.png"],
+                             ["ukedon_1_n_1.png", "ukedon_1_n_2.png"],
+                             ["ukedon_1_p_1.png", "ukedon_1_p_2.png"],
+                             ["ukedon_2_b_1.png", "ukedon_2_b_2.png"],
+                             ["ukedon_2_c_1.png", "ukedon_2_c_2.png"],
+                             ["ukedon_2_n_1.png", "ukedon_2_n_2.png"],
+                             ["ukedon_2_p_1.png", "ukedon_2_p_2.png"],
+                             ["ukedon_3_b_1.png", "ukedon_3_b_2.png"],
+                             ["ukedon_3_c_1.png", "ukedon_3_c_2.png"],
+                             ["ukedon_3_n_1.png", "ukedon_3_n_2.png"],
+                             ["ukedon_3_p_1.png", "ukedon_3_p_2.png"],
+                             ["ukedon_4_c_1.png", "ukedon_4_c_2.png"],
+                             ["ukedon_4_k_1.png", "ukedon_4_k_2.png"],
+                             ["ukedon_4_w_1.png", "ukedon_4_w_2.png"],
+                             ["ukedon_5_b_1.png", "ukedon_5_b_2.png"],
+                             ["ukedon_5_c_1.png", "ukedon_5_c_2.png"],
+                             ["ukedon_5_n_1.png", "ukedon_5_n_2.png"],
+                             ["ukedon_5_p_1.png", "ukedon_5_p_2.png"],
+                             ["ukedon_6_b_1.png", "ukedon_6_b_2.png"],
+                             ["ukedon_6_c_1.png", "ukedon_6_c_2.png"],
+                             ["ukedon_6_n_1.png", "ukedon_6_n_2.png"],
+                             ["ukedon_6_p_1.png", "ukedon_6_p_2.png"],
+                             ["ukedon_7_b_1.png", "ukedon_7_b_2.png"],
+                             ["ukedon_7_c_1.png", "ukedon_7_c_2.png"],
+                             ["ukedon_7_p_1.png", "ukedon_7_p_2.png"]
+                            ];
+
     module.exports = Code;
 });

@@ -77,7 +77,9 @@ public class WidgetContentManager {
         imageIndex = (imageIndex + 1) % images.length;
 
         if (frameIndex == 0) {
-            messages = CloudContents.getInstance().getCharaMessages();
+            CloudContents cloudContents = CloudContents.getInstance();
+            messages = cloudContents.getCharaMessages();
+            images = cloudContents.getCharaPatterns();
             synchronized(recommendArticles){
                 // メッセージ表示モードの遷移
                 displayMode = nextDisplayMode(displayMode);
