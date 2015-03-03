@@ -350,6 +350,7 @@ define(function(require, exports, module) {
                                         location.hash = encodeURIComponent($this.attr("href"));
                                     },
                                     onComplete : function() {
+                                        $colorbox.data("isClosingByBack", false);
                                         $("#colorbox").append(
                                                 "<button id='cboxCloseButton' class='small button'>閉じる</button>");
                                         $("#colorbox").append(
