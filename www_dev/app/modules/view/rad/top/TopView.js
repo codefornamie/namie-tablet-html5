@@ -30,9 +30,21 @@ define(function(require, exports, module) {
             "click [data-radiation-upload-button]" : "onClickRadiationUploadButton",
             "click [data-toggle-sidebar]" : "toggleSidebar",
             "sidebar.hide" : "hideSidebar",
-            "sidebar.show" : "showSidebar"
+            "sidebar.show" : "showSidebar",
+            "click #radiation-scrollDown" : "scrollDown",
+            "click #radiation-scrollUp" : "scrollUp"
         },
 
+        /**
+         * リストのスクロールオーバーレイ（上）が表示されているかどうか
+         */
+        isShowScrollUp : true,
+        
+        /**
+         * リストのスクロールオーバーレイ（下）が表示されているかどうか
+         */
+        isShowScrollDown : true,
+        
         /**
          * Viewの描画処理の開始前に呼び出されるコールバック関数。
          * <p>
@@ -50,8 +62,8 @@ define(function(require, exports, module) {
          */
         afterRendered : function() {
             $(".sidemenu-bottom__scroll")
-                .on("scroll", this.onScrollSidebar.bind(this))
-                .trigger("scroll");
+                .on("scroll", this.onScrollSidebar.bind(this));
+            $("#radiation-scrollDown").css("opacity",0);
         },
 
         /**
@@ -179,6 +191,7 @@ define(function(require, exports, module) {
             this.radClusterCollection
                 .fetch()
                 .done(function (col) {
+                    $(".sidemenu-bottom__scroll").trigger("scroll");
                     if (col.size() === 0) {
                         return;
                     }
@@ -249,7 +262,7 @@ define(function(require, exports, module) {
          * @memberOf RadTopView#
          * @param {Event} ev
          */
-        onScrollSidebar : _.throttle(function (ev) {
+        onScrollSidebar : _.throttle(function(ev) {
             var el = ev.currentTarget;
             var $container = $(el);
             var scrollTop = $container.scrollTop();
@@ -257,15 +270,39 @@ define(function(require, exports, module) {
             var contentHeight = $container[0].scrollHeight;
 
             if (scrollTop > 0) {
-                $container.addClass("has-before");
+                if (!this.isShowScrollUp) {
+                    this.isShowScrollUp = true;
+                    $(this).css("z-index", 10);
+                    $("#radiation-scrollUp").animate({
+                        opacity : 1
+                    });
+                }
             } else {
-                $container.removeClass("has-before");
+                if (this.isShowScrollUp) {
+                    this.isShowScrollUp = false;
+                    $(this).css("z-index", 0);
+                    $("#radiation-scrollUp").animate({
+                        opacity : 0
+                    });
+                }
             }
 
-            if (containerHeight + scrollTop < contentHeight) {
-                $container.addClass("has-after");
+            if (scrollTop < contentHeight - containerHeight) {
+                if (!this.isShowScrolldown) {
+                    this.isShowScrolldown = true;
+                    $(this).css("z-index", 10);
+                    $("#radiation-scrollDown").animate({
+                        opacity : 1
+                    });
+                }
             } else {
-                $container.removeClass("has-after");
+                if (this.isShowScrolldown) {
+                    this.isShowScrolldown = false;
+                    $(this).css("z-index", 0);
+                    $("#radiation-scrollDown").animate({
+                        opacity : 0
+                    });
+                }
             }
         }, 150),
 
@@ -276,7 +313,37 @@ define(function(require, exports, module) {
          */
         onClusterListUpdated : function () {
             $(".sidemenu-bottom__scroll").trigger("scroll");
-        }
+        },
+
+        /**
+         * スクロールバー（下）が押されたら呼ばれる
+         * @memberOf RadTopView#
+         * @param {Event} ev
+         */
+        scrollDown : _.throttle(function(ev) {
+            var $target = $(".sidemenu-bottom__scroll");
+            var outerHeight = $(".rad-cluster-item").outerHeight();
+            var marginTop = parseInt($(".rad-cluster-item").css("margin-top"));
+            var scrollTop = $target.scrollTop();
+            $target.animate({
+                scrollTop : scrollTop + outerHeight + marginTop
+            }, 300);
+        }, 500),
+
+        /**
+         * スクロールバー（上）が押されたら呼ばれる
+         * @memberOf RadTopView#
+         * @param {Event} ev
+         */
+        scrollUp : _.throttle(function(ev) {
+            var $target = $(".sidemenu-bottom__scroll");
+            var outerHeight = $(".rad-cluster-item").outerHeight();
+            var marginTop = parseInt($(".rad-cluster-item").css("margin-top"));
+            var scrollTop = $target.scrollTop();
+            $target.animate({
+                scrollTop : scrollTop - outerHeight - marginTop
+            }, 300);
+        }, 500)
     });
 
     module.exports = RadTopView;
