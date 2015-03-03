@@ -276,8 +276,10 @@ define(function(require, exports, module) {
          * @memberOf AbstractView#
          */
         showPIOImage : function(imgElement, item, isExpansion, saveFunc) {
+            var thisView = this;
             var $targetElem = imgElement;
-            var onGetBinary = $.proxy(function(binary, item) {
+
+            var onGetBinaryThumb = $.proxy(function(binary, item) {
                 var arrayBufferView = new Uint8Array(binary);
                 var blob = new Blob([
                     arrayBufferView
@@ -285,11 +287,57 @@ define(function(require, exports, module) {
                     type : "image/jpg"
                 });
                 var url = FileAPIUtil.createObjectURL(blob);
-                $targetElem.load($.proxy(function() {
-                    if (isExpansion) {
-                        $targetElem.wrap("<a class='expansionPicture' href='" + url + "'></a>");
-                        var $colorbox = $targetElem.parent().colorbox(
-                                {
+                $targetElem.attr("src", url);
+            }, this);
+
+            var onError = function(resp, item) {
+                $targetElem.triggerHandler("error", resp);
+            };
+
+            var path = this.model.get("imagePath");
+            if (item.hasPath) {
+                path = "";
+            } else {
+                path = path ? path + "/" : "";
+            }
+            try {
+                var davModelThumb = new WebDavModel();
+                if (item.imageThumbUrl) {
+                    davModelThumb.id = path + item.imageThumbUrl;
+                } else {
+                    davModelThumb.id = path + item.imageUrl;
+                }
+                davModelThumb.fetch({
+                    success : function(model, binary) {
+                        onGetBinaryThumb(binary, item);
+                    },
+
+                    error : function(resp) {
+                        onError(resp, item);
+                    }
+                });
+
+                if (isExpansion && item.imageUrl) {
+                    var $anc = $("<a class='expansionPicture'></a>");
+                    $anc.data("path", path + item.imageUrl);
+                    $anc.one("click", function(e) {
+                        var $this = $(this);
+                        thisView.showLoading();
+                        e.preventDefault();
+                        var davModel = new WebDavModel();
+                        davModel.id = $this.data("path");
+                        davModel.fetch({
+                            success : function(model, binary) {
+                                thisView.hideLoading();
+                                var arrayBufferView = new Uint8Array(binary);
+                                var blob = new Blob([
+                                    arrayBufferView
+                                ], {
+                                    type : "image/jpg"
+                                });
+                                var blobUrl = FileAPIUtil.createObjectURL(blob);
+                                $this.attr("href", blobUrl);
+                                $this.colorbox({
                                     closeButton : false,
                                     current : "",
                                     photo : true,
@@ -299,7 +347,7 @@ define(function(require, exports, module) {
                                         // ライトボックスが開いている時に
                                         // OSの戻るボタンで記事詳細画面に戻れるように
                                         // URLを変更しておく
-                                        location.hash = encodeURIComponent(url);
+                                        location.hash = encodeURIComponent($this.attr("href"));
                                     },
                                     onComplete : function() {
                                         $("#colorbox").append(
@@ -317,8 +365,8 @@ define(function(require, exports, module) {
                                         // OSの戻るボタンで戻った際に
                                         // closeLightBoxイベントが呼ばれる @app/router.js
                                         app.once("closeLightBox", function() {
-                                            $colorbox.colorbox.close();
-                                            $colorbox.data("isClosingByBack", true);
+                                            $this.colorbox.close();
+                                            $this.data("isClosingByBack", true);
                                         });
                                     },
                                     onClosed : function() {
@@ -327,41 +375,22 @@ define(function(require, exports, module) {
 
                                         // OSの戻るボタンで戻った際に
                                         // 二重でbackしないようにする
-                                        if (!$colorbox.data("isClosingByBack")) {
+                                        if (!$this.data("isClosingByBack")) {
                                             app.router.back();
                                         }
                                     }
                                 });
-                    }
-                    window.URL.revokeObjectURL($(this).attr("src"));
-                }, this, url, blob));
-                $targetElem.attr("src", url);
-            }, this);
+                                $this.trigger("click");
+                            },
 
-            var onError = function(resp, item) {
-                $targetElem.triggerHandler("error", resp);
-            };
-
-            try {
-                if (item.imageUrl) {
-                    var davModel = new WebDavModel();
-                    var path = this.model.get("imagePath");
-
-                    if (item.hasPath) {
-                        path = "";
-                    } else {
-                        path = path ? path + "/" : "";
-                    }
-                    davModel.id = path + item.imageUrl;
-                    davModel.fetch({
-                        success : function(model, binary) {
-                            onGetBinary(binary, item);
-                        },
-
-                        error : function(resp) {
-                            onError(resp, item);
-                        }
+                            error : function(resp) {
+                                thisView.hideLoading();
+                                onError(resp, item);
+                            }
+                        });
                     });
+                    $targetElem.wrap($anc);
+
                 }
             } catch (e) {
                 console.error(e);

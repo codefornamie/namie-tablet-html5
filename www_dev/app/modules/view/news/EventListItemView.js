@@ -63,6 +63,7 @@ define(function(require, exports, module) {
                             imgArray.push({
                                 hasPath : true,
                                 imageUrl : imagePath + model.get("imageUrl"),
+                                imageThumbUrl : imagePath + model.get("imageThumbUrl"),
                                 imageComment : model.get("imageComment"),
                                 imageIndex : index
                             });
