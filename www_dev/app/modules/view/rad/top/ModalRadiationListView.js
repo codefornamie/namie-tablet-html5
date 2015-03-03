@@ -380,7 +380,7 @@ define(function(require, exports, module) {
         saveClusterModel : function(radiationClusterModel, file, next) {
             radiationClusterModel.save(null, {
                 success : function(model) {
-                    this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + this.perProgress);
+                    this.increaseProgress();
                     app.logger.debug("saveClusterModel():success");
                     // clusterの保存に成功した場合はradiationLogの保存処理実施
                     this.setLogModels(model, file, next);
@@ -449,7 +449,7 @@ define(function(require, exports, module) {
                     app.logger.error("ModalRadiationListView#saveSequence():error:" + JSON.stringify(err));
                     next(file.name + "の保存処理に失敗しました。");
                 } else {
-                    self.$progressBar.attr("value", parseInt(self.$progressBar.attr("value")) + self.perProgress);
+                    self.increaseProgress();
                     next();
                 }
             });

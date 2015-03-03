@@ -143,6 +143,19 @@ define(function(require, exports, module) {
             this.$progressBar.attr("value", 0);
         },
         /**
+         * プログレスバーを一定の値進ませる関数。
+         * @memberOf AbstractView#
+         * @param {Number} value 増加値
+         */
+        increaseProgress : function(value) {
+            if (!this.$progressBar || this.$progressBar.length === 0 || (!this.perProgress && !value)) {
+                return;
+            }
+            var increaseValue = value || this.perProgress;
+            var currentValue = parseInt(this.$progressBar.attr("value"));
+            this.$progressBar.attr("value",currentValue + increaseValue);
+        },
+        /**
          * ローディングメッセージを閉じる
          * @memberOf AbstractView#
          */
@@ -408,8 +421,10 @@ define(function(require, exports, module) {
         generateFileName : function(fileName) {
             fileName = CommonUtil.blankTrim(fileName);
             var preName = fileName.substr(0, fileName.lastIndexOf("."));
+            // PIO用ファイル名正規化処理
+            preName = preName.substr(0,100);
+            preName = preName.replace(/[\[\]()\{\}]/g,"_");
             var suffName = fileName.substr(fileName.lastIndexOf("."));
-
             return preName + "_" + new Date().getTime() + _.uniqueId("") + suffName;
         },
         /**
