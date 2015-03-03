@@ -7,7 +7,7 @@
             <div class="rad-cluster-item__date">
                 <div>
                     <span class="date--year">
-                        <%= moment(prop.startDate).format("YYYY") %>
+                        <%= date["YYYY"] %>
                         年
                     </span>
                 </div>
@@ -19,9 +19,9 @@
                 </div>
 
                 <div class="date--time">
-                    <span class="date--starttime"><%= moment(prop.startDate).format("HH:MM") %></span>
+                    <span class="date--starttime"><%= moment(prop.startDate).format("HH:mm") %></span>
                     -
-                    <span class="date--endtime"><%= moment(prop.endDate).format("HH:MM") %></span>
+                    <span class="date--endtime"><%= moment(prop.endDate).format("HH:mm") %></span>
                 </div>
             </div>
         </div>
