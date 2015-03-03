@@ -38,7 +38,7 @@ define(function(require, exports, module) {
             // 地図上に表示できないようなデータは省く
             response = _.filter(response, function(ress) {
                 if (!ress.minLatitude || !ress.maxLatitude || !ress.minLongitude || !ress.maxLongitude ||
-                        !ress.averageValue || !ress.maxValue || !ress.minValue) {
+                        !ress.averageValue || !ress.maxValue) {
                     return false;
                 }
                 return true;

@@ -81,7 +81,7 @@
                 this.errorCode |= Code.ERR_INVALID_DATE;
             }
 
-            return hasDose && hasPosition;
+            return hasPosition;
         };
 
         return HoribaRecordValidator;
