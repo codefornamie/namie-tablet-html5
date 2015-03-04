@@ -114,7 +114,9 @@ define(function(require, exports, module) {
 //                var validator = new AutomotiveDosimeterRecordValidator();
                 // 1. CSV形式のデータをJSONオブジェクトに変換
                 try {
-                    if (file.type !== "text/csv" && file.type !== "text/comma-separated-values") {
+                    if (file.type !== "text/csv" && file.type !== "text/comma-separated-values" &&
+                            file.type !== "application/vnd.ms-excel" && file.type !== "application/excel" &&
+                            file.type !== "application/msexcel" && file.type !== "application/x-excel") {
                         throw new Error("couldn't accept file type: " + file.type);
                     }
 
