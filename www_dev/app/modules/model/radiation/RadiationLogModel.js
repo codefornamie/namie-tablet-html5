@@ -96,6 +96,16 @@ define(function(require, exports, module) {
             };
 
             return geoJSON;
+        },
+        /**
+         * このモデルの文字列情報を取得する
+         * @memberOf RadiationLogModel#
+         * @return {String} このモデルの文字列情報
+         */
+        toString : function() {
+            return "RadiationLogModel [date:" + this.get("date") + ", latitude:" + this.get("latitude") +
+                    ", longitude:" + this.get("longitude") + ", altitude:" + this.get("altitude") + ", value:" +
+                    this.get("value") + ", collectionId:" + this.get("collectionId") + "]";
         }
     });
 

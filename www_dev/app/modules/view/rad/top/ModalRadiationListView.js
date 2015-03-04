@@ -310,6 +310,8 @@ define(function(require, exports, module) {
             radiationClusterModel.set("maxLongitude", file.maxLongitude);
             radiationClusterModel.set("errorCode", errorCode);
             radiationClusterModel.set("isFixedStation", false);
+            radiationClusterModel.set("measurementType", Code.RAD_MEASUREMENT_PRIVATE);
+
 
             return radiationClusterModel;
         },
