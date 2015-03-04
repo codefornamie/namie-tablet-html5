@@ -35,7 +35,11 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         makeSaveData : function(saveData) {
-            saveData.logModels = this.get("logModels");
+            if (this.get("logModels")) {
+                // userscriptで一括登録する際に設定される
+                saveData.logModels = this.get("logModels");
+            }
+
             saveData.date = this.get("date");
             var latitude = null;
             if (this.get("latitude")) {

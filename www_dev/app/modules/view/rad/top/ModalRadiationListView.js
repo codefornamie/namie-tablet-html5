@@ -238,10 +238,17 @@ define(function(require, exports, module) {
                         this.saveClusterModel(radiationClusterModel, file, next);
                     }.bind(this);
                     if (message) {
+                        // BlockUIでブロックしていると、タブレット実機の場合にVexDialogのOKボタンが押せなくなるため、
+                        // 一時的にブロックを解除する
+                        var currentValue = parseFloat(this.$progressBar.attr("value"));
+                        this.hideLoading();
                         vexDialog.alert({
                             message : message,
                             callback : function(value) {
-                                saveFunction();
+                                // 再度、プログレスバー表示
+                                this.showProgressBarLoading();
+                                this.increaseProgress();
+                                saveFunction(currentValue);
                             }.bind(this)
                         });
                     } else {
