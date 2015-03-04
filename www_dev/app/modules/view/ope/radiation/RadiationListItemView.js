@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var vexDialog = require("vexDialog");
+    var Code = require("modules/util/Code");
     var async = require("async");
 
     var WebDavModel = require("modules/model/WebDavModel");
@@ -26,12 +27,22 @@ define(function(require, exports, module) {
             var prop = this.model.toGeoJSON().properties;
             var sDate = this.toMapDate(prop.startDate);
             var eDate = this.toMapDate(prop.endDate);
+
+            var errorCode = this.model.get("errorCode");
+            var hasErrDoseMissing = errorCode & Code.ERR_DOSE_MISSING;
+            var hasErrPositionMissing = errorCode & Code.ERR_POSITION_MISSING;
+            var hasErrInvalidDate = errorCode & Code.ERR_INALID_DATE;
+            var hasError = !!errorCode;
+
             return {
                 model : this.model,
                 prop : prop,
-                hasError : !!this.model.get("errorCode"),
                 sDate : sDate,
-                eDate : eDate
+                eDate : eDate,
+                hasErrDoseMissing : hasErrDoseMissing,
+                hasErrPositionMissing : hasErrPositionMissing,
+                hasErrInvalidDate : hasErrInvalidDate,
+                hasError : hasError
             };
         },
 
