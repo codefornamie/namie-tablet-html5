@@ -5,6 +5,11 @@ define(function(require, exports, module) {
     var AutomotiveDosimeterRecordValidator = require("modules/util/AutomotiveDosimeterRecordValidator");
     var vexDialog = require("vexDialog");
     var CommonUtil = require("modules/util/CommonUtil");
+    var Code = require("modules/util/Code");
+    var async = require("async");
+    var moment = require("moment");
+    var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
+    var RadiationLogModel = require("modules/model/radiation/RadiationLogModel");
 
     /**
      * スライドショー新規登録・編集画面のViewクラス
@@ -71,9 +76,21 @@ define(function(require, exports, module) {
                     vexDialog.defaultOptions.className = 'vex-theme-default';
                     vexDialog.alert(errmsg);
                 } else {
-                    this.onSubmit();
+                    this.saveProcess();
                 }
             }
+        },
+        /**
+         * バリデーションチェック
+         * @memberOf RadiationRegistView#
+         * @return {String} エラーメッセージ。正常の場合はnullを返す
+         */
+        validate : function() {
+            var $file = this.$el.find("#radiationFile");
+            if ($file.prop("files").length < 1) {
+                return "アップロードファイルを選択してください。";
+            }
+            return null;
         },
         /**
          * キャンセルボタン押下時のコールバック関数
@@ -87,31 +104,19 @@ define(function(require, exports, module) {
             }
         },
         /**
-         * バリデーションチェックがOKとなり、登録処理が開始された際に呼び出されるコールバック関数。
-         * @memberOf RadiationRegistView#
-         */
-        onSubmit : function() { 
-            this.convertFile();
-//            // 登録処理を開始する
-//            this.setInputValue();
-//            $("#slideshowRegistPage").hide();
-//            this.setView("#slideshowRegistConfirmWrapperPage", new OpeSlideshowRegistConfirmView({
-//                models : this.models,
-//            })).render();
-//            $("#snap-content").scrollTop(0);
-        },
-        /**
          * 選択されたファイルをデータとして扱える形に変換する
          * @memberOf RadiationRegistView#
          */
-        convertFile : function() {
+        saveProcess : function() {
+            this.showProgressBarLoading();
             var reader = new FileReader();
             var file = this.$el.find("#radiationFile").prop("files")[0];
 
             // fileのロード完了後のコールバック
             reader.onload = function() {
+                this.$progressBar.attr("value", 10);
                 var originalRecords;
-//                var validator = new AutomotiveDosimeterRecordValidator();
+                var validator = new AutomotiveDosimeterRecordValidator();
                 // 1. CSV形式のデータをJSONオブジェクトに変換
                 try {
                     if (file.type !== "text/csv" && file.type !== "text/comma-separated-values" &&
@@ -132,76 +137,229 @@ define(function(require, exports, module) {
                     return;
                 }
 
-                // TODO 2. 不正なレコードは省く
-//                file.jsonObject = validator.validate(originalRecords);
-                file.jsonObject = originalRecords;
+                // 2. 不正なレコードは省く
+                file.jsonObject = validator.validate(originalRecords);
+                this.$progressBar.attr("value", 10);
 
-                // TODO 3. 不正なレコードを省いた旨を通知する
+                this.perProgress = 90 / (file.jsonObject.length + 1) / 2;
+
+                // 3. 不正なレコードを省いた旨を通知する
                 vexDialog.defaultOptions.className = "vex-theme-default";
-//
-//                if (validator.hasError(Code.ERR_NO_RECORD)) {
-//                    vexDialog.alert({
-//                        message : [
-//                            file.name,
-//                            " は何らかの原因により壊れているため、情報を登録できませんでした。"
-//                        ].join("")
-//                    });
-//                } else if (validator.hasError(Code.ERR_POSITION_MISSING)) {
-//                    vexDialog.alert({
-//                        message : [
-//                            file.name,
-//                            " は何らかの原因により壊れているため、一部の情報を登録できませんでした。",
-//                            "正常な情報については、登録が完了しました。"
-//                        ].join("")
-//                    });
-//                } else if (validator.hasError(Code.ERR_DOSE_MISSING)) {
-//                    vexDialog.alert({
-//                        message : [
-//                            file.name,
-//                            " は何らかの原因により壊れているため、一部の情報を登録できませんでした。",
-//                            "正常な情報については、登録が完了しました。"
-//                        ].join("")
-//                    });
-//                }
 
-                // TODO 4. レコードをもとにRadiationClusterModelを作成
-//                var radiationClusterModel = this.createRadiationClusterModel(file, validator.errorCode);
-//
-//                // TODO 5. Model保存処理
-//                this.saveClusterModel(radiationClusterModel, file, next);
-                
-                
-                
-                // テスト確認用
-                vexDialog.defaultOptions.className = 'vex-theme-default';
-                vexDialog.alert(JSON.stringify(file.jsonObject));
-                $(".vex-content").width(900);
-                // ここまで
+                if (validator.hasError(Code.ERR_NO_RECORD)) {
+                    vexDialog.alert({
+                        message : [
+                                file.name, " は何らかの原因により壊れているため、情報を登録できませんでした。"
+                        ].join("")
+                    });
+                } else if (validator.hasError(Code.ERR_POSITION_MISSING)) {
+                    vexDialog.alert({
+                        message : [
+                                file.name, " は何らかの原因により壊れているため、一部の情報を登録できませんでした。", "正常な情報については、登録が完了しました。"
+                        ].join("")
+                    });
+                } else if (validator.hasError(Code.ERR_DOSE_MISSING)) {
+                    // 車載線量計のデータの最初のレコードが線量0のため、このバリデータは一時無効とする
+//                    vexDialog.alert({
+//                        message : [
+//                                file.name, " は何らかの原因により壊れているため、一部の情報を登録できませんでした。", "正常な情報については、登録が完了しました。"
+//                        ].join("")
+//                    });
+                }
 
+                // 4. レコードをもとにRadiationClusterModelを作成
+                var radiationClusterModel = this.createRadiationClusterModel(file, validator.errorCode);
+
+                // // 5. Model保存処理
+                this.saveClusterModel(radiationClusterModel, file);
             }.bind(this);
 
             // テキストとしてファイルを読み込む
             reader.readAsText(file, "Shift-JIS");
         },
         /**
-         * バリデーションチェック
+         * clusterModelにデータをセットする
          * @memberOf RadiationRegistView#
-         * @return {String} エラーメッセージ。正常の場合はnullを返す
+         * @param {Object} file ファイルオブジェクト
+         * @param {Number} errorCode アップロード時のエラーコード
          */
-        validate : function() {
-            var $file = this.$el.find("#radiationFile");
-            if ($file.prop("files").length < 1) {
-                return "アップロードファイルを選択してください。";
-            }
-            return null;
+        createRadiationClusterModel : function(file, errorCode) {
+            console.assert(typeof errorCode === "number", "errorCode should be a number");
+
+            var radiationClusterModel = new RadiationClusterModel();
+            // csvの時刻を日付型文字列に変換する
+            this.convertToDate(file);
+
+            // clustermodelに必要なデータの計算処理を実施
+            this.calcDataForCluster(file);
+
+            // modelにデータを詰める
+            radiationClusterModel.set("userId", app.user.get("__id"));
+            radiationClusterModel.set("startDate", file.startDate);
+            radiationClusterModel.set("createDate", moment(file.lastModifiedDate).format());
+            radiationClusterModel.set("endDate", file.endDate);
+            radiationClusterModel.set("numSample", file.numSample);
+            radiationClusterModel.set("maxValue", file.maxValue);
+            radiationClusterModel.set("minValue", file.minValue);
+            radiationClusterModel.set("averageValue", file.averageValue);
+            radiationClusterModel.set("maxLatitude", file.maxLatitude);
+            radiationClusterModel.set("minLatitude", file.minLatitude);
+            radiationClusterModel.set("minLongitude", file.minLongitude);
+            radiationClusterModel.set("maxLongitude", file.maxLongitude);
+            radiationClusterModel.set("errorCode", errorCode);
+            radiationClusterModel.set("isFixedStation", false);
+            radiationClusterModel.set("measurementType", Code.RAD_MEASUREMENT_MUNICIPALITY);
+
+            return radiationClusterModel;
         },
         /**
-         * モデルにデータをセットする関数
+         * csvの時刻を日付型文字列に変換する
          * @memberOf RadiationRegistView#
          */
-        setInputValue : function() {
-        }
+        convertToDate : function(file) {
+            var data = file.jsonObject;
+            var targetDate = this.$el.find("#measurementDate").val();
+            var startTime = data[0][Code.AUTOMOTIVE_TITLE_TIME];
+            _.each(data, function(json) {
+                var targetTime = json[Code.AUTOMOTIVE_TITLE_TIME];
+                if (startTime > targetTime) {
+                    // 時刻が途中で減った場合は、日付をまたいだことになるため、付加する日付文字列を1日進める
+                    targetDate = moment(targetDate).add(1, "d").format("YYYY-MM-DD");
+                }
+                json[Code.AUTOMOTIVE_TITLE_TIME] = targetDate + "T" + targetTime;
+            });
+        },
+        /**
+         * cluster用のデータを求める
+         * @memberOf RadiationRegistView#
+         * @param {Object} file ファイルオブジェクト
+         */
+        calcDataForCluster : function(file) {
+            var data = file.jsonObject;
 
+            // データから時間のみの配列を取得
+            var dateTimes = _.map(data, function(obj) {
+                return obj[Code.AUTOMOTIVE_TITLE_TIME];
+            });
+            file.startDate = _.min(dateTimes, function(date) {
+                return new Date(date).getTime();
+            });
+            file.endDate = _.max(dateTimes, function(date) {
+                return new Date(date).getTime();
+            });
+            file.numSample = data.length;
+
+            // データから線量1のみの配列を取得
+            var svs = _.map(data, function(obj) {
+                return parseFloat(obj[Code.AUTOMOTIVE_TITLE_DOSE1]);
+            });
+            file.maxValue = _.max(svs, function(sv) {
+                return sv;
+            });
+            file.minValue = _.min(svs, function(sv) {
+                return sv;
+            });
+            file.averageValue = _.reduce(svs, function(pre, next) {
+                return pre + next;
+            }) / data.length;
+
+            // データから緯度のみの配列を取得
+            var latitudes = _.map(data, function(obj) {
+                return parseFloat(obj[Code.AUTOMOTIVE_TITLE_LATITUDE]);
+            });
+            // データから軽度のみの配列を取得
+            var longitudes = _.map(data, function(obj) {
+                return parseFloat(obj[Code.AUTOMOTIVE_TITLE_LONGITUDE]);
+            });
+
+            file.maxLatitude = _.max(latitudes, function(lat) {
+                return lat;
+            });
+            file.minLatitude = _.min(latitudes, function(lat) {
+                return lat;
+            });
+            file.minLongitude = _.max(longitudes, function(lon) {
+                return lon;
+            });
+            file.maxLongitude = _.min(longitudes, function(lon) {
+                return lon;
+            });
+        },
+        /**
+         * cluster保存処理
+         * @memberOf RadiationRegistView#
+         * @param {Model} radiationClusterModel クラスターモデル
+         * @param {Object} file ファイルオブジェクト
+         */
+        saveClusterModel : function(radiationClusterModel, file) {
+            radiationClusterModel.save(null, {
+                success : function(model) {
+                    this.increaseProgress();
+                    this.showSuccessMessage("放射線クラスター情報の保存", radiationClusterModel);
+                    // clusterの保存に成功した場合はradiationLogの保存処理実施
+                    this.setLogModels(model, file);
+                }.bind(this),
+                error : function(e) {
+                    this.showErrorMessage(file.name + "(radiation_cluster)の保存", e);
+                }.bind(this)
+            });
+        },
+        /**
+         * radiationLog作成処理後保存呼び出し
+         * @memberOf RadiationRegistView#
+         * @param {Model} radiationClusterModel クラスターモデル
+         * @param {Object} file ファイルオブジェクト
+         */
+        setLogModels : function(radiationClusterModel, file) {
+            var logModels = [];
+            _.each(file.jsonObject, function(rec) {
+                var model = new RadiationLogModel();
+                model.set("date", rec[Code.AUTOMOTIVE_TITLE_TIME]);
+                model.set("value", rec[Code.AUTOMOTIVE_TITLE_DOSE1]);
+                model.set("latitude", rec[Code.AUTOMOTIVE_TITLE_LATITUDE]);
+                model.set("longitude", rec[Code.AUTOMOTIVE_TITLE_LONGITUDE]);
+                model.set("altitude", null);
+                model.set("collectionId", radiationClusterModel.get("__id"));
+                logModels.push(model);
+            });
+            this.saveEachLogModel(logModels, file);
+        },
+        /**
+         * 線量レコード単位の保存処理
+         * @memberOf RadiationRegistView#
+         * @param {Array} models radiationLogModelの配列
+         */
+        saveEachLogModel : function(models, file) {
+            var self = this;
+
+            // TODO 現状は5パラでリクエストしているが後々$batch処理に変更する
+            // 最大同時処理数
+            var LIMIT_PARALLEL_SAVE_SEQUENCE = 5;
+
+            async.eachLimit(models, LIMIT_PARALLEL_SAVE_SEQUENCE,
+            // 各要素に対する保存処理
+            function fn(model, done) {
+                model.save(null, {
+                    success : function() {
+                        this.increaseProgress();
+                        this.showSuccessMessage("放射線ログ情報の保存", model);
+                        done();
+                    }.bind(this, model),
+                    error : function(e) {
+                        done(e);
+                    }
+                });
+            }.bind(this),
+            // 保存処理が全て完了したら呼ばれる
+            function onFinish(err) {
+                if (err) {
+                    this.showErrorMessage(file.name + "(radiation_log)の保存処理", err);
+                } else {
+                    this.hideLoading();
+                    app.router.go("ope-radiation");
+                }
+            }.bind(this));
+        },
     });
     module.exports = RadiationRegistView;
 });
