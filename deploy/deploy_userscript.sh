@@ -1,7 +1,7 @@
 #!/bin/sh
 
 endpoints=(
-    "radiation.js" \
+    "radiation_log.js" \
     "radiation_cluster.js"
     )
 requirejs=(

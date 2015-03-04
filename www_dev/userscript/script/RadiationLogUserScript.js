@@ -6,7 +6,7 @@
 /* global JSGIResponse: false */
 /* global Message: false */
 
-function RadiationUserScript(request) {
+function RadiationLogUserScript(request) {
     this.superclass.constructor.apply(this, [
             request, [
                 "POST"
@@ -14,25 +14,31 @@ function RadiationUserScript(request) {
     ]);
     this.entity = "radiation_log";
 }
-var RadiationUserScript = CommonUtil.extend(PIOUserScript, RadiationUserScript);
+var RadiationLogUserScript = CommonUtil.extend(PIOUserScript, RadiationLogUserScript);
 
 /**
  * 放射線情報を登録する
  * @param {Object} input 入力データを保持するJSONオブジェクト
  * @returns {JSGIResponse} 処理結果
  */
-RadiationUserScript.prototype.create = function(input) {
+RadiationLogUserScript.prototype.create = function(input) {
     var logModels = input.logModels;
     this.log('I', 'Start radiaton logs. count=%1', [
         logModels.length
     ]);
     return this.bulk(logModels);
 };
-RadiationUserScript.prototype.bulk = function(logModels) {
+RadiationLogUserScript.prototype.bulk = function(logModels) {
     var responseDataSet = [];
     for (var i = 0; i < logModels.length; i++) {
         var dataJson = logModels[i];
+        this.log('I', 'start radiation creation. data=%1', [
+            JSON.stringify(dataJson)
+        ]);
         var res = this.cell.box(this.box).odata(this.odata).entitySet(this.entity).create(dataJson);
+        this.log('I', 'radiation created. response=%1', [
+            JSON.stringify(res)
+        ]);
         responseDataSet.push(res);
     }
     var response = new JSGIResponse();
@@ -47,7 +53,7 @@ RadiationUserScript.prototype.bulk = function(logModels) {
     });
     return response;
 };
-RadiationUserScript.prototype.batch = function(logModels) {
+RadiationLogUserScript.prototype.batch = function(logModels) {
     var odataBatch = this.cell.box(this.box).odata(this.odata).makeODataBatch(false);
     for (var i = 0; i < logModels.length; i++) {
         var dataJson = logModels[i];
@@ -70,4 +76,4 @@ RadiationUserScript.prototype.batch = function(logModels) {
     });
     return response;
 };
-exports.RadiationUserScript = RadiationUserScript;
+exports.RadiationLogUserScript = RadiationLogUserScript;
