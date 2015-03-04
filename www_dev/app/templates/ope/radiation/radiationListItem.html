@@ -3,5 +3,5 @@
 <td><%= model.get("numSample") %></td>
 <td><%= model.get("maxValue") %></td>
 <td><%= model.get("minValue") %></td>
+<td><% if (hasError) { %>※データに一部不備があります。<% } %></td>
 <td><button data-article-edit-button class="button radius">削除</button></td>
-
