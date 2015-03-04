@@ -1,7 +1,8 @@
 #!/bin/sh
 
 endpoints=(
-    "radiation.js"
+    "radiation.js" \
+    "radiation_cluster.js"
     )
 requirejs=(
     "common.js"
@@ -116,7 +117,7 @@ do
     dcPathXml=${dcPathXml}'<dc:path name="'${endpoint%.js}'" src="'${endpoint}'"/>'
 done
 
-pioXml='<?xml version="1.0" encoding="utf-8" ?><D:propertyupdate xmlns:D="DAV:" xmlns:dc="urn:x-dc1:xmlns"><D:set><D:prop><dc:service language="JavaScript">'${dcPathXml}'</dc:service></D:prop></D:set></D:propertyupdate>'
+pioXml='<?xml version="1.0" encoding="utf-8" ?><D:propertyupdate xmlns:D="DAV:" xmlns:dc="urn:x-dc1:xmlns"><D:set><D:prop><dc:service language="JavaScript" subject="ukedon">'${dcPathXml}'</dc:service></D:prop></D:set></D:propertyupdate>'
 
 _result=`curl ${service_url} -X PROPPATCH -i -s \
 -H "Authorization: Bearer ${TOKEN}" \

@@ -414,9 +414,21 @@ define(function(require, exports, module) {
                 model.set("longitude", longitude);
                 model.set("altitude", rec[Code.HORIBA_TITLE_ALTITUDE]);
                 model.set("collectionId", radiationClusterModel.get("__id"));
-                logModels.push(model);
+                logModels.push(model.getSaveData());
             });
-            this.saveEachLogModel(logModels, file, next);
+            var model = new RadiationLogModel();
+            model.set("logModels", logModels);
+            model.save(null, {
+                success : function() {
+                    next();
+                },
+                error : function(e) {
+                    app.logger.error("ModalRadiationListView#saveSequence():error:" + JSON.stringify(e));
+                    next(file.name + "の保存処理に失敗しました。");
+                }
+            });
+            
+//            this.saveEachLogModel(logModels, file, next);
         },
         /**
          * 線量レコード単位の保存処理

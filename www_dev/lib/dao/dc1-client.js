@@ -12970,10 +12970,11 @@ dcc.box.ServiceCollection.prototype._callWithOptions = function(method, name,
   }
   if (method === "POST") {
     if (callbackExist) {
+        // FSTが修正
       restAdapter.post(url, options.body, contentTypeHeader, {},
-          function(resp) {
+          {complete: function(resp) {
         self.processCallback(resp, options);
-      });
+      }});
     } else {
       //no callback is specified, simply return the response
       if (options.headers !== undefined) {
@@ -12988,10 +12989,11 @@ dcc.box.ServiceCollection.prototype._callWithOptions = function(method, name,
   }
   if (method === "PUT") {
     if (callbackExist) {
-      restAdapter.put(url, options.body, "*", contentTypeHeader, {},
-          function(resp) {
+        // FSTが修正
+        restAdapter.put(url, options.body, "*", contentTypeHeader, {},
+              {complete: function(resp) {
         self.processCallback(resp, options);
-      });
+      }});
     } else {
       //no callback is specified, simply return the response
       if (options.headers !== undefined) {
@@ -13006,9 +13008,10 @@ dcc.box.ServiceCollection.prototype._callWithOptions = function(method, name,
   }
   if (method === "DELETE") {
     if (callbackExist) {
-      restAdapter.del(url, "*", function(resp) {
+      // FSTが修正
+      restAdapter.del(url, "*", {complete: function(resp) {
         self.processCallback(resp, options);
-      });
+      }});
     } else {
       //no callback is specified, simply return the response
       response = restAdapter.del(url, "*");

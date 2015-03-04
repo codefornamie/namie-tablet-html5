@@ -28,6 +28,9 @@ function PIOUserScript(request, allowdMethods) {
         // このユーザスクリプトが実行されているセルのIDを取得する
         this.cellId = CommonUtil.getCellNameByUrl(this.cellUrl);
 
+        this.box = 'data';
+        this.odata = 'odata';
+
         // 実行メソッドを取得する
         this.method = CommonUtil.getHttpMethod(request);
         this.allowdMethods = allowdMethods;
@@ -53,8 +56,15 @@ function PIOUserScript(request, allowdMethods) {
         throw new PIOUnknownException(CommonUtil.getClassName(this), e);
     }
 }
+/**
+ * personium.io へのアクセスオブジェクトを取得する
+ * @returns {Accessor} personium.io へのアクセスオブジェクト
+ */
 PIOUserScript.prototype.getAccessor = function() {
-    return dc.as('client');
+    // serviceSubjectで設定されたアカウントの権限で動作する
+    // http://personium.io/docs/
+    // (Box Level API > Engineサービスコレクション > サービスコレクション設定 > サービスコレクション設定適用PROPPATCH)
+    return dc.as('serviceSubject');
 };
 /**
  * ユーザスクリプトの初期化処理を行う。
@@ -128,12 +138,12 @@ PIOUserScript.prototype.post = function() {
     this.createValidation();
 
     // リクエストボディをJSONオブジェクトに変換する
-    var entity = null;
+    var input = null;
     if (this.body.d !== undefined) {
-        entity = JSON.parse(this.body.d);
+        input = JSON.parse(this.body.d);
     }
 
-    var response = this.create(entity);
+    var response = this.create(input);
 
     if (response) {
         // 明示されたレスポンスがあれば、それを返す。
@@ -221,7 +231,7 @@ PIOUserScript.prototype.dispatch = function() {
 PIOUserScript.prototype.createUnkwownErrorResponse = function(e) {
     var response = new JSGIResponse();
 
-    response.status = String(StatusCode.HTTP_INTERNAL_SERVER_ERROR);
+    response.status = StatusCode.HTTP_INTERNAL_SERVER_ERROR;
     response.setResponseData({
         "message" : e.toString()
     });
@@ -250,7 +260,7 @@ PIOUserScript.prototype.createEngineErrorResponse = function(engineException) {
         this.log('I', message, [], this.method, this.request.queryString, engineException);
     } else {
         // 300、400以外のエラーが発生した場合
-        response.status = String(StatusCode.HTTP_INTERNAL_SERVER_ERROR);
+        response.status = StatusCode.HTTP_INTERNAL_SERVER_ERROR;
         message = Message.getMessage('Error occured in dc1-engine process. message=%1', [
             engineException.toString()
         ]);
@@ -266,7 +276,7 @@ PIOUserScript.prototype.createEngineErrorResponse = function(engineException) {
 };
 
 /**
- * ユーザスクリプトの処理を開始する。
+ * personium.io ユーザスクリプトの処理を開始する。
  * <p>
  * クライアントからのリクエストメソッドに対応するユーザスクリプトの処理を実行し、その結果が含まれるJSGIResponseを返却する。<br>
  * 処理中にエラーが発生した場合、そのエラー内容が含まれるJSGIResponseを返却する。

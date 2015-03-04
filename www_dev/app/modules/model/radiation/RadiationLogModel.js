@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var AbstractUserScriptModel = require("modules/model/AbstractUserScriptModel");
     var Code = require("modules/util/Code");
 
     /**
@@ -12,7 +12,8 @@ define(function(require, exports, module) {
      * @exports RadiationLogModel
      * @constructor
      */
-    var RadiationLogModel = AbstractODataModel.extend({
+    var RadiationLogModel = AbstractUserScriptModel.extend({
+        serviceName: 'radiation',
         entity : "radiation_log",
 
         /**
@@ -33,6 +34,7 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         makeSaveData : function(saveData) {
+            saveData.logModels = this.get("logModels");
             saveData.date = this.get("date");
             var latitude = null;
             if (this.get("latitude")) {
