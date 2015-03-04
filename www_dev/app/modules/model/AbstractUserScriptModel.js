@@ -38,7 +38,9 @@ define(function(require, exports, module) {
                 d : JSON.stringify(this.getSaveData()),
                 etag : this.get("etag")
             });
-
+            if (method === 'DELETE') {
+                this.serviceName += "?id=" + model.get("__id");
+            }
             app.box.service(this.service).call(method, this.serviceName, {
                 body : createFormUrlEncodedData,
                 complete : function(response) {
@@ -48,7 +50,7 @@ define(function(require, exports, module) {
             });
         },
         /**
-         * UserScriptの登録処理を行う。
+         * UserScriptの登録処理を呼び出す。
          * 
          * @param {String} method メソッド
          * @param {Object} model モデル
@@ -64,7 +66,7 @@ define(function(require, exports, module) {
             this.call('POST', model, options, complete);
         },
         /**
-         * UserScriptの更新処理を行う。
+         * UserScriptの更新処理を呼び出す。
          * 
          * @param {String} method メソッド
          * @param {Object} model モデル
@@ -79,22 +81,22 @@ define(function(require, exports, module) {
             app.logger.debug("AbstractUserScriptModel update");
             this.call('PUT', model, options, complete);
         },
-//        /**
-//         * PCS ODataの削除処理を行う。
-//         * 
-//         * @param {String} method メソッド
-//         * @param {Object} model モデル
-//         * @param {Object} options オプション情報
-//         * @param {Function} complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
-//         *                以下のシグネチャの関数を指定する。<br>
-//         *                <code>complete (response:Object)</code><br>
-//         *                responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
-//         * @memberOf AbstractUserScriptModel#
-//         */
-//        del : function(method, model, options, complete) {
-//            app.logger.debug("AbstractUserScriptModel delete");
-//            this.call('DELETE', model, options, complete);
-//        },
+        /**
+         * UserScriptの削除処理を呼び出す。
+         * 
+         * @param {String} method メソッド
+         * @param {Object} model モデル
+         * @param {Object} options オプション情報
+         * @param {Function} complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *                以下のシグネチャの関数を指定する。<br>
+         *                <code>complete (response:Object)</code><br>
+         *                responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * @memberOf AbstractUserScriptModel#
+         */
+        del : function(method, model, options, complete) {
+            app.logger.debug("AbstractUserScriptModel delete");
+            this.call('DELETE', model, options, complete);
+        },
         /**
          * 指定されたJSONデータを form-urlencoded の形式に変換する
          * @param {Object} data JSONオブジェクト

@@ -261,7 +261,7 @@ PIOUserScript.prototype.del = function(request) {
         input = JSON.parse(this.body.d);
     }
 
-    var response = this.destory(input, this.body.etag);
+    var response = this.destory(this.query.id, this.body.etag);
 
     if (response) {
         // 明示されたレスポンスがあれば、それを返す。

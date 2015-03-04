@@ -39,6 +39,7 @@ AbstractRegisterUserScript.prototype.create = function(input) {
 /**
  * 指定されたJSONデータで更新する。
  * @param {Object} input 入力データを保持するJSONオブジェクト
+ * @param {String} etag 更新対象のデータのetag値
  * @returns {JSGIResponse} 処理結果
  */
 AbstractRegisterUserScript.prototype.update = function(input, etag) {
@@ -62,12 +63,17 @@ AbstractRegisterUserScript.prototype.update = function(input, etag) {
     });
     return response;
 };
-AbstractRegisterUserScript.prototype.destory = function(input, etag) {
-    var dataJson = input;
-    this.log('I', 'Start delete process. data=%1, etag=%2', [
-            JSON.stringify(dataJson), etag
+
+/**
+ * 指定されたidの情報を削除する。
+ * @param {String} id 削除対象のデータの__idの値
+ * @param {String} etag 削除対象のデータのetag値
+ * @returns {JSGIResponse} 処理結果
+ */
+AbstractRegisterUserScript.prototype.destory = function(id, etag) {
+    this.log('I', 'Start delete process. id=%1, etag=%2', [
+            id, etag
     ]);
-    var id = dataJson.__id;
     this.cell.box(this.box).odata(this.odata).entitySet(this.entity).del(id, etag);
 
     var response = new JSGIResponse();
@@ -77,7 +83,7 @@ AbstractRegisterUserScript.prototype.destory = function(input, etag) {
             CommonUtil.getClassName(this)
         ]),
         "d" : {
-            "results" : dataJson
+            "results" : []
         }
     });
     return response;
