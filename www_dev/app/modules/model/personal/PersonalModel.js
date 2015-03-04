@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var AbstractUserScriptModel = require("modules/model/AbstractUserScriptModel");
     var Code = require("modules/util/Code");
     /**
      * パーソナル情報のモデルクラスを作成する。
@@ -11,7 +11,8 @@ define(function(require, exports, module) {
      * @exports PersonalModel
      * @constructor
      */
-    var PersonalModel = AbstractODataModel.extend({
+    var PersonalModel = AbstractUserScriptModel.extend({
+        serviceName: 'personal',
         entity : "personal",
         /**
          * モデル固有の永続化データを生成する。
