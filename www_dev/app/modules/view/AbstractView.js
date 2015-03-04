@@ -195,7 +195,7 @@ define(function(require, exports, module) {
                 showNetworkError = true;
             }
             vexDialog.defaultOptions.className = 'vex-theme-default';
-            if (showNetworkError && typeof object.isNetworkError === "function") {
+            if (showNetworkError && object && typeof object.isNetworkError === "function") {
                 if (object.isNetworkError()) {
                     message = "通信エラーが発生したため、以下のエラーが発生しました。通信状態をご確認ください。<br/><br/>" + message;
                 }

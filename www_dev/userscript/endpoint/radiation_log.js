@@ -4,7 +4,7 @@
 fn = function(request) {
     var userscript;
     try {
-        userscript = new common.RadiationUserScript(request);
+        userscript = new common.RadiationLogUserScript(request);
         return userscript.execute();
     } catch (e) {
         if (e instanceof common.PIOUserScriptException) {

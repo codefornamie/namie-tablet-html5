@@ -13,7 +13,7 @@ define(function(require, exports, module) {
      * @constructor
      */
     var RadiationLogModel = AbstractUserScriptModel.extend({
-        serviceName: 'radiation',
+        serviceName: 'radiation_log',
         entity : "radiation_log",
 
         /**
