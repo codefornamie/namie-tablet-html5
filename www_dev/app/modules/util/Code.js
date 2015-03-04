@@ -245,6 +245,25 @@ define(function(require, exports, module) {
     Code.HORIBA_TITLE_ALTITUDE = "Altitude(m)";
 
     /**
+     * 車載csvの時刻ヘッダ名
+     */
+    Code.AUTOMOTIVE_TITLE_TIME = "時刻";
+    /**
+     * 車載csvの線量ヘッダ名
+     */
+    Code.AUTOMOTIVE_TITLE_DOSE1 = "線量１";
+    Code.AUTOMOTIVE_TITLE_DOSE2 = "線量２";
+    Code.AUTOMOTIVE_TITLE_DOSE3 = "線量３";
+    /**
+     * 車載csvの緯度ヘッダ名
+     */
+    Code.AUTOMOTIVE_TITLE_LATITUDE = "緯度";
+    /**
+     * 車載csvの経度ヘッダ名
+     */
+    Code.AUTOMOTIVE_TITLE_LONGITUDE = "経度";
+
+    /**
      *  放射線データのエラーコード
      */
     // 緯度経度が抜けているレコードがある
