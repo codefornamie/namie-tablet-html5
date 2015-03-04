@@ -1,6 +1,6 @@
 <li
     data-article-id="<%= model.get('__id') %>"
-    class="rad-cluster-item feed-item"
+    class="rad-cluster-item feed-item <%= !model.get('hidden') ? 'rad-cluster-item--selected' : '' %>"
 >
     <div class="rad-cluster-item__row">
         <div class="rad-cluster-item__left">
@@ -11,51 +11,57 @@
                         年
                     </span>
                 </div>
-
+    
                 <div>
                     <span class="date--monthday"><b><%= date["M"] %></b><span style="margin: 0 3px;">/</span><b><%= date["D"] %></b></span>
+    
+                    <span class="date--weekday date--weekday<%= moment(prop.startDate).format("d") %>">(<%= date["ddd"] %>)</span>
+                </div>
 
-                    <span class="date--weekday">(<%= date["ddd"] %>)</span>
+                <div class="date--time">
+                    <span class="date--starttime"><%= moment(prop.startDate).format("HH:mm") %></span>
+                    -
+                    <span class="date--endtime"><%= moment(prop.endDate).format("HH:mm") %></span>
                 </div>
             </div>
         </div>
-
+    
         <div class="rad-cluster-item__right">
             <table class="rad-cluster-item__value-table">
-                <tr class="rad-cluster-item__avg-value">
-                    <td>
-                        <span>
-                            平均値
-                        </span>
-                    </td>
-
-                    <td>
-                        <b>
-                            <%= prop.averageValue %>
-                        </b>
-                    </td>
-
-                    <td>
-                        <span>
-                            μSv/h
-                        </span>
-                    </td>
-                </tr>
-
                 <tr class="rad-cluster-item__max-value">
                     <td>
                         <span>
                             最大値
                         </span>
                     </td>
-
-                    <td>
+    
+                    <td class="rad-cluster-item__value">
                         <b>
-                            <%= prop.maxValue %>
+                            <%= prop.maxValue ? prop.maxValue.toFixed(3) : '--' %>
                         </b>
                     </td>
-
+    
+                    <td class="rad-cluster-item__unit">
+                        <span>
+                            μSv/h
+                        </span>
+                    </td>
+                </tr>
+    
+                <tr class="rad-cluster-item__min-value">
                     <td>
+                        <span>
+                            最小値
+                        </span>
+                    </td>
+    
+                    <td class="rad-cluster-item__value">
+                        <b>
+                            <%= prop.minValue ? prop.minValue.toFixed(3) : '--' %>
+                        </b>
+                    </td>
+    
+                    <td class="rad-cluster-item__unit">
                         <span>
                             μSv/h
                         </span>
@@ -68,19 +74,19 @@
     <% if (hasError) { %>
         <% if (hasErrDoseMissing) { %>
             <div class="rad-cluster-item__row">
-                <p>
+                <p class="rad-cluster-item__error">
                     ※ 一部の測定値が登録されていません。
                 </p>
             </div>
         <% } else if (hasErrPositionMissing) { %>
             <div class="rad-cluster-item__row">
-                <p>
+                <p class="rad-cluster-item__error">
                     ※ 一部の座標情報が無いため地図に表示されません。
                 </p>
             </div>
         <% } else if (hasErrInvalidDate) { %>
             <div class="rad-cluster-item__row">
-                <p>
+                <p class="rad-cluster-item__error">
                     ※ 一部の日付情報が壊れています。
                 </p>
             </div>

@@ -2,14 +2,17 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
+    var async = require("async");
     var AbstractView = require("modules/view/AbstractView");
     var RadMapView = require("modules/view/rad/top/RadMapView");
     var RadClusterListView = require("modules/view/rad/top/RadClusterListView");
     var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
     var RadiationClusterCollection = require("modules/collection/radiation/RadiationClusterCollection");
     var ModalRadiationListView = require("modules/view/rad/top/ModalRadiationListView");
+    var RadTutorialView = require("modules/view/rad/top/RadTutorialView");
     var FileAPIUtil = require("modules/util/FileAPIUtil");
     var CommonUtil = require("modules/util/CommonUtil");
+    var Code = require("modules/util/Code");
     var vexDialog = require("vexDialog");
 
     /**
@@ -25,12 +28,14 @@ define(function(require, exports, module) {
          */
         template : require("ldsh!templates/{mode}/top/top"),
         events : {
+            "click [data-tab-button]" : "onClickTabButton",
             "click [data-radiation-upload-button]" : "onClickRadiationUploadButton",
             "click [data-toggle-sidebar]" : "toggleSidebar",
             "sidebar.hide" : "hideSidebar",
             "sidebar.show" : "showSidebar",
             "click #radiation-scrollDown" : "scrollDown",
-            "click #radiation-scrollUp" : "scrollUp"
+            "click #radiation-scrollUp" : "scrollUp",
+            "click [data-tutorial-button]" : "onClickTutorialButton"
         },
 
         /**
@@ -82,9 +87,75 @@ define(function(require, exports, module) {
                 collection: this.radClusterCollection
             }));
 
-            // ローディングを停止
-            //this.hideLoading();
+            this.loadYouTubeLibrary($.proxy(function() {
+                // youtubeAPI読み込み
+                gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
+                //gapi.client.load('youtube', 'v3', $.proxy(this.searchDojoMovieList, this));
+            }, this));
         },
+
+        /**
+         * youtubeライブラリを読み込む
+         * 
+         * @memberOf RadTopView#
+         * @param {Function} callback
+         */
+        loadYouTubeLibrary : function(callback) {
+            if (app.gapiLoaded) {
+                callback();
+                return;
+            }
+            var self = this;
+            var loadScript = function(url) {
+                return function(next) {
+                    $.getScript(url).done(function() {
+                        next(null);
+                    }).fail(function(jqXHR, settings, err) {
+                        next(err);
+                    });
+                };
+            };
+            var onLoadGAPI = function(next) {
+                window.onLoadGAPI = function() {
+                    delete window.onLoadGAPI;
+                    next(null);
+                };
+
+                loadScript("https://apis.google.com/js/client.js?onload=onLoadGAPI")(function(err) {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+                });
+            };
+            async.series([
+                    onLoadGAPI, loadScript("https://www.youtube.com/iframe_api")
+            ], function(err) {
+                if (!err) {
+                    app.gapiLoaded = true;
+                }
+                callback(err);
+            });
+        },
+
+        /**
+         * タブ切り替えボタンが押下された際のコールバック
+         * @memberOf RadTopView#
+         * @param {Event} ev
+         */
+        onClickTabButton : function(ev) {
+            var $tab = $(".contents__secondary .sidemenu .tab");
+            var selectedTabName = $(ev.target).data("tab");
+
+            $(".tab-button", $tab).removeClass("tab-button--selected");
+            $(".tab-button--" + selectedTabName, $tab).addClass("tab-button--selected");
+            $("#contents__secondary").attr("data-selected-tab", selectedTabName);
+
+            $(".sidemenu-bottom__scroll").scrollTop(0);
+
+            this.radClusterCollection.trigger("tabSwitched", selectedTabName);
+        },
+
         /**
          * 線量データアップロードボタンが押下された際のコールバック
          * @memberOf RadTopView#
@@ -153,7 +224,7 @@ define(function(require, exports, module) {
             });
             modalRadiationListView.render();
 
-            // カレンダー画面用URLに遷移
+            // 線量データ一覧画面用URLに遷移
             app.router.navigate("radiationList", {
                 trigger: true,
                 replace: false
@@ -167,8 +238,8 @@ define(function(require, exports, module) {
          */
         initCollection : function () {
             this.radClusterCollection = new RadiationClusterCollection();
-            // 自身のアップロードしたデータのみ検索
-            this.radClusterCollection.setSearchConditionByMyself();
+            // 車載または自身がアップロードしたデータのみ検索
+            this.radClusterCollection.setSearchConditionFixedOrByMyself();
             this.radClusterCollection
                 .fetch()
                 .done(function (col) {
@@ -179,7 +250,17 @@ define(function(require, exports, module) {
                     col.each(function (model) {
                         model.set("hidden", true);
                     });
-                    col.at(0).set("hidden", false);
+
+                    // 車載の情報のうち先頭の1件を表示
+                    var firstFixedClusterModel = col.find(function (model) {
+                        return model.get("isFixedStation");
+                    });
+                    if (firstFixedClusterModel) {
+                        firstFixedClusterModel.set("hidden", false);
+                    }
+
+                    // タブを「役場」に切り替える
+                    $(".tab-button--fixed").click();
                 });
             // TODO: テスト用データの作成を差し替える
             //_(10).times($.proxy(function(index) {
@@ -198,6 +279,7 @@ define(function(require, exports, module) {
          */
         initEvents : function() {
             this.listenTo(this.radClusterCollection, "sync", this.render);
+            this.listenTo(this.radClusterCollection, "clusterListUpdated", this.onClusterListUpdated.bind(this));
         },
 
         /**
@@ -277,6 +359,16 @@ define(function(require, exports, module) {
         }, 150),
 
         /**
+         * サイドバーのクラスター一覧の更新後に呼ばれる
+         * @memberOf RadTopView#
+         * @param {Event} ev
+         */
+        onClusterListUpdated : function () {
+            this.isShowScrollUp = true;
+            $(".sidemenu-bottom__scroll").trigger("scroll");
+        },
+
+        /**
          * スクロールバー（下）が押されたら呼ばれる
          * @memberOf RadTopView#
          * @param {Event} ev
@@ -304,7 +396,18 @@ define(function(require, exports, module) {
             $target.animate({
                 scrollTop : scrollTop - outerHeight - marginTop
             }, 300);
-        }, 500)
+        }, 500),
+
+        /**
+         * 使い方ボタンが押下された際のコールバック
+         * @memberOf RadTopView#
+         */
+        onClickTutorialButton : function() {
+            var radTutorialView = new RadTutorialView();
+
+            this.setView("#radiation-tutorial-container", radTutorialView);
+            radTutorialView.render();
+        }
     });
 
     module.exports = RadTopView;

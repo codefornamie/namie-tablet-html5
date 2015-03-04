@@ -31,7 +31,7 @@ define(function(require, exports, module) {
             var logFeature = this.radiationLogFeature;
 
             var hasCollection = !!logFeatureCollection;
-            var date, dateStr, avg, max;
+            var date, dateStr, avg, max , min;
             var stationType, numSample, sensorVendor, sensorModel;
             var hasErrDoseMissing;
 
@@ -44,9 +44,13 @@ define(function(require, exports, module) {
                 max = _.max(logFeatureCollection.features, function (feature) {
                     return feature.properties.value;
                 }).properties.value;
+                min = _.min(logFeatureCollection.features, function (feature) {
+                    return feature.properties.value;
+                }).properties.value;
                 hasErrDoseMissing = _.some(logFeatureCollection.features, function (feature) {
                     return feature.properties.errorCode & Code.ERR_DOSE_MISSING;
                 });
+                numSample = logFeatureCollection.features.length;
 
                 // 小数点以下3桁に丸める
                 avg = Math.round(avg * 1000) / 1000;
@@ -56,10 +60,10 @@ define(function(require, exports, module) {
                 avg = logFeature.properties.value;
                 max = logFeature.properties.value;
                 hasErrDoseMissing = logFeature.properties.errorCode & Code.ERR_DOSE_MISSING;
+                numSample = 1;
             }
 
             stationType = clusterFeature.properties.isFixedStation ? "固定局" : "移動局";
-            numSample = clusterFeature.properties.numSample;
             sensorVendor = clusterFeature.properties.sensorVendor;
             sensorModel = clusterFeature.properties.sensorModel;
 
@@ -68,6 +72,7 @@ define(function(require, exports, module) {
                     dateStr : dateStr,
                     avg : avg,
                     max : max,
+                    min : min,
                     stationType : stationType,
                     numSample : numSample,
                     sensorVendor : sensorVendor,
