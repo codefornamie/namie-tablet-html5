@@ -134,6 +134,7 @@ define(function(require, exports, module) {
                     app.logger.error("CommonUtil.convertJsonObject():error=" + e);
                     vexDialog.defaultOptions.className = "vex-theme-default";
                     vexDialog.alert(file.name + " をCSVファイルとして読み込むことができませんでした。", "ファイル形式を再度ご確認下さい。");
+                    this.hideLoading();
                     return;
                 }
 
@@ -152,10 +153,12 @@ define(function(require, exports, module) {
                                 file.name, " は何らかの原因により壊れているため、情報を登録できませんでした。"
                         ].join("")
                     });
+                    this.hideLoading();
+                    return;
                 } else if (validator.hasError(Code.ERR_POSITION_MISSING)) {
                     vexDialog.alert({
                         message : [
-                                file.name, " は何らかの原因により壊れているため、一部の情報を登録できませんでした。", "正常な情報については、登録が完了しました。"
+                                file.name, " は何らかの原因により壊れているため、一部の情報を登録できませんでした。", "正常な情報については、登録を実施します。"
                         ].join("")
                     });
                 } else if (validator.hasError(Code.ERR_DOSE_MISSING)) {
