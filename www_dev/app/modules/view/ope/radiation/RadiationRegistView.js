@@ -302,8 +302,8 @@ define(function(require, exports, module) {
                     // clusterの保存に成功した場合はradiationLogの保存処理実施
                     this.setLogModels(model, file);
                 }.bind(this),
-                error : function(e) {
-                    this.showErrorMessage(file.name + "(radiation_cluster)の保存", e);
+                error : function(model, resp) {
+                    this.showErrorMessage(file.name + "(radiation_cluster)の保存", resp);
                 }.bind(this)
             });
         },
@@ -348,7 +348,7 @@ define(function(require, exports, module) {
                         this.showSuccessMessage("放射線ログ情報の保存", model);
                         done();
                     }.bind(this, model),
-                    error : function(e) {
+                    error : function(model, e) {
                         done(e);
                     }
                 });
