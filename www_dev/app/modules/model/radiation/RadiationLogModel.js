@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var HoribaRecordValidator = require("modules/util/HoribaRecordValidator");
     var Code = require("modules/util/Code");
 
     /**
@@ -23,7 +24,17 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         parseOData : function(response, options) {
-            console.log(response);
+            var dose = response.value / Code.RAD_RADIATION_DOSE_MAGNIFICATION;
+            var position = 
+                response.latitude / Code.RAD_LAT_LONG_MAGNIFICATION +
+                " " +
+                response.longitude / Code.RAD_LAT_LONG_MAGNIFICATION;
+            var date = response.date;
+            var validator = new HoribaRecordValidator();
+
+            validator.isValid(dose, position, date);
+
+            response.errorCode = validator.errorCode;
 
             return response;
         },
@@ -79,7 +90,8 @@ define(function(require, exports, module) {
                         "__id": this.get("__id"),
                         "date": this.get("date"),
                         "value": this.get("value"),
-                        "collectionId": this.get("collectionId")
+                        "collectionId": this.get("collectionId"),
+                        "errorCode": this.get("errorCode")
                     }
             };
 

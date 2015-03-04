@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var moment = require("moment");
+    var Code = require("modules/util/Code");
     var AbstractView = require("modules/view/AbstractView");
     var Super = AbstractView;
 
@@ -34,11 +35,20 @@ define(function(require, exports, module) {
                 .object()
                 .value();
 
+            var errorCode = this.model.get("errorCode");
+            var hasErrDoseMissing = errorCode & Code.ERR_DOSE_MISSING;
+            var hasErrPositionMissing = errorCode & Code.ERR_POSITION_MISSING;
+            var hasErrInvalidDate = errorCode & Code.ERR_INALID_DATE;
+            var hasError = !!errorCode;
+
             return {
                 model : this.model,
                 prop : prop,
-                hasError : !!this.model.get("errorCode"),
-                date : date
+                date : date,
+                hasErrDoseMissing : hasErrDoseMissing,
+                hasErrPositionMissing : hasErrPositionMissing,
+                hasErrInvalidDate : hasErrInvalidDate,
+                hasError : hasError
             };
         },
 

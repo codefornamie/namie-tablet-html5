@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
     "use strict";
 
+    var Code = require("modules/util/Code");
     var moment = require("moment");
     var leaflet = require("leaflet");
     var AbstractView = require("modules/view/AbstractView");
@@ -32,6 +33,7 @@ define(function(require, exports, module) {
             var hasCollection = !!logFeatureCollection;
             var date, dateStr, avg, max , min;
             var stationType, numSample, sensorVendor, sensorModel;
+            var hasErrDoseMissing;
 
             if (hasCollection) {
                 date = moment(clusterFeature.properties.startDate);
@@ -45,6 +47,9 @@ define(function(require, exports, module) {
                 min = _.min(logFeatureCollection.features, function (feature) {
                     return feature.properties.value;
                 }).properties.value;
+                hasErrDoseMissing = _.some(logFeatureCollection.features, function (feature) {
+                    return feature.properties.errorCode & Code.ERR_DOSE_MISSING;
+                });
                 numSample = logFeatureCollection.features.length;
 
                 // 小数点以下3桁に丸める
@@ -54,6 +59,7 @@ define(function(require, exports, module) {
                 dateStr = date.format("YYYY年 M/D(ddd) H時mm分");
                 avg = logFeature.properties.value;
                 max = logFeature.properties.value;
+                hasErrDoseMissing = logFeature.properties.errorCode & Code.ERR_DOSE_MISSING;
                 numSample = 1;
             }
 
@@ -71,7 +77,8 @@ define(function(require, exports, module) {
                     numSample : numSample,
                     sensorVendor : sensorVendor,
                     sensorModel : sensorModel,
-                    hasCollection: hasCollection
+                    hasErrDoseMissing : hasErrDoseMissing,
+                    hasCollection : hasCollection
                 }
             };
         },
