@@ -80,11 +80,17 @@ define(function(require, exports, module) {
                 maxLongitude = Math.round(this.get("maxLongitude") * Code.RAD_LAT_LONG_MAGNIFICATION);
             }
             saveData.maxLongitude = maxLongitude;
+
             saveData.isFixedStation = this.get("isFixedStation");
+            saveData.measurementType = this.get("measurementType");
             
-            // TODO 他の端末対応をした際には切り分ける
-            saveData.sensorVendor = "HORIBA";
-            saveData.sensorModel = "PA-1100";
+            if (this.get("measurementType") === Code.RAD_MEASUREMENT_PRIVATE) {
+                saveData.sensorVendor = "HORIBA";
+                saveData.sensorModel = "PA-1100";
+            } else {
+                saveData.sensorVendor = "MEASUREWORKS";
+                saveData.sensorModel = "TC100";
+            }
         },
 
         /**
@@ -124,6 +130,22 @@ define(function(require, exports, module) {
             };
 
             return geoJSON;
+        },
+        /**
+         * このモデルの文字列情報を取得する
+         * @memberOf RadiationClusterModel#
+         * @return {String} このモデルの文字列情報
+         */
+        toString : function() {
+            return "RadiationClusterModel [userId:" + this.get("userId") + ", createDate:" + this.get("createDate") +
+                    ", startDate:" + this.get("startDate") + ", endDate:" + this.get("endDate") + ", numSample:" +
+                    this.get("numSample") + ", errorCode:" + this.get("errorCode") + ", maxValue:" +
+                    this.get("maxValue") + ", minValue:" + this.get("minValue") + ", averageValue:" +
+                    this.get("averageValue") + ", maxLatitude:" + this.get("maxLatitude") + ", minLatitude:" +
+                    this.get("minLatitude") + ", minLongitude:" + this.get("minLongitude") + ", maxLongitude:" +
+                    this.get("maxLongitude") + ", minLongitude:" + this.get("minLongitude") + ", isFixedStation:" +
+                    this.get("isFixedStation") + ", measurementType:" + this.get("measurementType") +
+                    ", sensorVendor:" + this.get("sensorVendor") + ", sensorModel:" + this.get("sensorModel") + "]";
         }
     });
 

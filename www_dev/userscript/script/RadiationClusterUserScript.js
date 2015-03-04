@@ -32,7 +32,9 @@ RadiationClusterUserScript.prototype.create = function(input) {
         JSON.stringify(dataJson)
     ]);
     var res = this.cell.box(this.box).odata(this.odata).entitySet(this.entity).create(dataJson);
-
+    this.log('I', 'Created radiaton cluster. data=%1', [
+        JSON.stringify(res)
+    ]);
     var response = new JSGIResponse();
     response.status = StatusCode.HTTP_OK;
     response.setResponseData({
@@ -40,7 +42,7 @@ RadiationClusterUserScript.prototype.create = function(input) {
             CommonUtil.getClassName(this)
         ]),
         "d" : {
-            "results" : JSON.stringify(res)
+            "results" : res
         }
     });
     return response;

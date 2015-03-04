@@ -22,6 +22,10 @@ define(function(require, exports, module) {
      */
     var ModalRadiationListView = AbstractView.extend({
         /**
+         * 放射線ログ情報を一度に登録する数
+         */
+        LOG_BULK_COUNT: 100,
+        /**
          * テンプレート
          * @memberOf ModalRadiationListView#
          */
@@ -172,7 +176,7 @@ define(function(require, exports, module) {
             this.$progressBar.attr("value", 100);
             this.hideLoading();
 
-            if (response.event && response.event.isError()) {
+            if (response && response.event && response.event.isError()) {
                 this.showErrorMessage("放射線情報(" + response.fileName + ")の登録", response);
                 return;
             } else {
@@ -238,10 +242,17 @@ define(function(require, exports, module) {
                         this.saveClusterModel(radiationClusterModel, file, next);
                     }.bind(this);
                     if (message) {
+                        // BlockUIでブロックしていると、タブレット実機の場合にVexDialogのOKボタンが押せなくなるため、
+                        // 一時的にブロックを解除する
+                        var currentValue = parseFloat(this.$progressBar.attr("value"));
+                        this.hideLoading();
                         vexDialog.alert({
                             message : message,
                             callback : function(value) {
-                                saveFunction();
+                                // 再度、プログレスバー表示
+                                this.showProgressBarLoading();
+                                this.increaseProgress();
+                                saveFunction(currentValue);
                             }.bind(this)
                         });
                     } else {
@@ -293,6 +304,8 @@ define(function(require, exports, module) {
             radiationClusterModel.set("maxLongitude", file.maxLongitude);
             radiationClusterModel.set("errorCode", errorCode);
             radiationClusterModel.set("isFixedStation", false);
+            radiationClusterModel.set("measurementType", Code.RAD_MEASUREMENT_PRIVATE);
+
 
             return radiationClusterModel;
         },
@@ -410,7 +423,8 @@ define(function(require, exports, module) {
         saveEachLogModel : function(models, file, next) {
             var self = this;
             // 100個づつ分割し、登録リクエストを発行する
-            var slicedModels = CommonUtil.sliceArray(models, 100);
+            // 登録はUserScript内で$batchを利用して一括処理される
+            var slicedModels = CommonUtil.sliceArray(models, this.LOG_BULK_COUNT);
             var counter = 0;
             async.eachLimit(slicedModels, 1,
             // 各要素に対する保存処理
@@ -421,7 +435,7 @@ define(function(require, exports, module) {
                 model.save(null, {
                     success : function(model, response, options) {
                         app.logger.info("Success ModalRadiationListView#saveEachLogModel() counter: " + counter++);
-                        done(response);
+                        done();
                     },
                     error : function(model, response, options) {
                         app.logger.info("Error ModalRadiationListView#saveEachLogModel() counter: " + counter++);

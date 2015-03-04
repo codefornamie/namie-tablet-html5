@@ -3,6 +3,7 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractUserScriptModel = require("modules/model/AbstractUserScriptModel");
+    var HoribaRecordValidator = require("modules/util/HoribaRecordValidator");
     var Code = require("modules/util/Code");
 
     /**
@@ -34,7 +35,11 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         makeSaveData : function(saveData) {
-            saveData.logModels = this.get("logModels");
+            if (this.get("logModels")) {
+                // userscriptで一括登録する際に設定される
+                saveData.logModels = this.get("logModels");
+            }
+
             saveData.date = this.get("date");
             var latitude = null;
             if (this.get("latitude")) {
@@ -81,11 +86,22 @@ define(function(require, exports, module) {
                         "__id": this.get("__id"),
                         "date": this.get("date"),
                         "value": this.get("value"),
-                        "collectionId": this.get("collectionId")
+                        "collectionId": this.get("collectionId"),
+                        "errorCode": this.get("errorCode")
                     }
             };
 
             return geoJSON;
+        },
+        /**
+         * このモデルの文字列情報を取得する
+         * @memberOf RadiationLogModel#
+         * @return {String} このモデルの文字列情報
+         */
+        toString : function() {
+            return "RadiationLogModel [date:" + this.get("date") + ", latitude:" + this.get("latitude") +
+                    ", longitude:" + this.get("longitude") + ", altitude:" + this.get("altitude") + ", value:" +
+                    this.get("value") + ", collectionId:" + this.get("collectionId") + "]";
         }
     });
 

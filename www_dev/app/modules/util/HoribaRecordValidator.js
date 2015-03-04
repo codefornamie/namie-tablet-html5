@@ -3,13 +3,14 @@
 
     define(function (require, exports, module) {
         var _ = require("underscore");
+        var Backbone = require("backbone");
         var moment = require("moment");
         var Code = require("modules/util/Code");
 
         /**
-         * 線量データのアップロード用リストダイアログクラス
+         * HORIBAの線量データをバリデーションするためのクラス
          *
-         * @class 線量データのアップロード用リストダイアログクラス
+         * @class HORIBAの線量データをバリデーションするためのクラス
          * @exports ModalRadiationListView
          * @constructor
          */
@@ -20,8 +21,9 @@
         }, Backbone.Events);
 
         /**
-         * hasError
+         * バリデーションによってエラーが出たかどうかを返す
          *
+         * @memberOf HoribaRecordValidator#
          * @param {Boolean} expected
          * @return {Boolean}
          */
@@ -34,8 +36,9 @@
         };
 
         /**
-         * validate
+         * 渡されたログデータのレコード配列が正しいかどうか判定する
          *
+         * @memberOf HoribaRecordValidator#
          * @param {Array} records
          * @return {Array}
          */
@@ -52,22 +55,37 @@
         };
 
         /**
-         * selectValidRecord
+         * 渡されたログデータのレコードが正しいかどうか判定する
          *
+         * @memberOf HoribaRecordValidator#
          * @param {Object} record
          * @return {Boolean}
          */
         HoribaRecordValidator.prototype.selectValidRecord = function (record) {
             var date = record[Code.HORIBA_TITLE_DATE];
             var position = record[Code.HORIBA_TITLE_POSITION];
-            var hasDose = record[Code.HORIBA_TITLE_DOSE];
+            var dose = record[Code.HORIBA_TITLE_DOSE];
+
+            return this.isValid(dose, position, date);
+        };
+
+        /**
+         * 渡されたログデータが正しいかどうか判定する
+         *
+         * @memberOf HoribaRecordValidator#
+         * @param {Number} dose
+         * @param {String} position
+         * @param {String} date
+         * @return {Boolean}
+         */
+        HoribaRecordValidator.prototype.isValid = function (dose, position, date) {
             var hasPosition = (
                 typeof position === "string" &&
                 position.split(" ").every(function (s) { return !!parseInt(s, 10); })
             );
 
             // 線量が無い場合
-            if (!hasDose) {
+            if (!dose) {
                 this.errorCode |= Code.ERR_DOSE_MISSING;
             }
 
@@ -81,7 +99,7 @@
                 this.errorCode |= Code.ERR_INVALID_DATE;
             }
 
-            return hasDose && hasPosition;
+            return hasPosition;
         };
 
         return HoribaRecordValidator;

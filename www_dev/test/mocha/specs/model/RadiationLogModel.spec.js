@@ -24,7 +24,8 @@ define(function(require) {
                         "__id" : "RADIATION_LOG_UUID",
                         "date" : "2000-01-23T12:34:56+0900",
                         "value" : "1234",
-                        "collectionId" : "COLLECTION_ID"
+                        "collectionId" : "COLLECTION_ID",
+                        "errorCode" : "0"
                     }
             };
 
@@ -36,7 +37,8 @@ define(function(require) {
                 latitude : targetJSON.geometry.coordinates[1],
                 altitude : targetJSON.geometry.coordinates[2],
                 value : targetJSON.properties.value,
-                collectionId : targetJSON.properties.collectionId
+                collectionId : targetJSON.properties.collectionId,
+                errorCode : targetJSON.properties.errorCode
             });
 
             testData = {

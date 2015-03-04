@@ -37,7 +37,7 @@ define(function(require, exports, module) {
         parseOData: function (response, options) {
             // 地図上に表示できないようなデータは省く
             response = _.filter(response, function(ress) {
-                if (!ress.latitude || !ress.longitude || !ress.value) {
+                if (!ress.latitude || !ress.longitude) {
                     return false;
                 }
                 return true;
