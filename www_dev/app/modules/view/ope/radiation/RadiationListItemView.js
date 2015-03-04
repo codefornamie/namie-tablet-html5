@@ -48,7 +48,7 @@ define(function(require, exports, module) {
                 return [
                         key, isInvalid ? "--" : mDate.format(key)
                 ];
-            }
+            };
 
             return _([
                     "YYYY", "MM", "DD", "ddd", "HH", "mm", "ss"
