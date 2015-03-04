@@ -142,7 +142,31 @@ PIOUserScript.prototype.get = function(request) {
  * @returns {JSGIResponse} 処理結果
  */
 PIOUserScript.prototype.put = function(request) {
-    return null;
+    // 入力チェック処理を呼び出す
+    this.updateValidation();
+
+    // リクエストボディをJSONオブジェクトに変換する
+    var input = null;
+    if (this.body.d !== undefined) {
+        input = JSON.parse(this.body.d);
+    }
+
+    var response = this.update(input, this.body.etag);
+
+    if (response) {
+        // 明示されたレスポンスがあれば、それを返す。
+        return response;
+    } else {
+        // なければ、デフォルトの正常終了レスポンスを返す
+        response = new JSGIResponse();
+        response.status = StatusCode.HTTP_OK;
+        response.setResponseData({
+            "message" : Message.getMessage("Script execution finished successfully. UserScript: %1", [
+                CommonUtil.getClassName(this)
+            ])
+        });
+        return response;
+    }
 };
 
 /**
@@ -186,6 +210,15 @@ PIOUserScript.prototype.post = function() {
  * </p>
  */
 PIOUserScript.prototype.createValidation = function() {
+
+};
+/**
+ * 更新処理リクエストの入力パラメタのチェックを行う。
+ * <p>
+ * サブクラスは、このメソッドをオーバライドして、更新処理での入力チェックを実装する。
+ * </p>
+ */
+PIOUserScript.prototype.updateValidation = function() {
 
 };
 /**

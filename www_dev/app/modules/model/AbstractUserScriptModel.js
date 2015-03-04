@@ -35,7 +35,8 @@ define(function(require, exports, module) {
          */
         call: function(method, model, options, complete) {
             var createFormUrlEncodedData = this.createFormUrlEncodedData({
-                d : JSON.stringify(this.getSaveData())
+                d : JSON.stringify(this.getSaveData()),
+                etag : this.get("etag")
             });
 
             app.box.service(this.service).call(method, this.serviceName, {

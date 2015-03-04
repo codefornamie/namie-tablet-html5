@@ -9,7 +9,7 @@
 function PersonalUserScript(request) {
     this.superclass.constructor.apply(this, [
             request, [
-                "POST"
+                    "POST", "PUT"
             ]
     ]);
     this.entity = "personal";
@@ -46,12 +46,16 @@ PersonalUserScript.prototype.create = function(input) {
  * @param {Object} input 入力データを保持するJSONオブジェクト
  * @returns {JSGIResponse} 処理結果
  */
-PersonalUserScript.prototype.update = function(input) {
-    var dataJson = input.data;
-    this.log('I', 'Start update personal. data=%1', [
-        JSON.stringify(dataJson)
+PersonalUserScript.prototype.update = function(input, etag) {
+    var dataJson = input;
+    this.log('I', 'Start update personal. data=%1, etag=%2', [
+        JSON.stringify(dataJson), etag
     ]);
-    var res = this.cell.box(this.box).odata(this.odata).entitySet(this.entity).update(dataJson);
+    var id = dataJson.__id;
+    delete dataJson.__id;
+    this.log('I', 'kuro: id=' + id);
+    this.cell.box(this.box).odata(this.odata).entitySet(this.entity).update(id, dataJson, etag);
+    this.log('I', 'kuro: update end');
 
     var response = new JSGIResponse();
     response.status = StatusCode.HTTP_OK;
@@ -60,9 +64,9 @@ PersonalUserScript.prototype.update = function(input) {
             CommonUtil.getClassName(this)
         ]),
         "d" : {
-            "results" : JSON.stringify(res)
         }
     });
+    this.log('I', 'kuro: end update personal!!!!!!!!!!!!!');
     return response;
 };
 
