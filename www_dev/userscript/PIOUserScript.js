@@ -141,8 +141,32 @@ PIOUserScript.prototype.get = function(request) {
  * @param {JSGIRequest} request クライアントからのリクエスト情報
  * @returns {JSGIResponse} 処理結果
  */
-PIOUserScript.prototype.put = function(request) {
-    return null;
+PIOUserScript.prototype.put = function() {
+    // 入力チェック処理を呼び出す
+    this.updateValidation();
+
+    // リクエストボディをJSONオブジェクトに変換する
+    var input = null;
+    if (this.body.d !== undefined) {
+        input = JSON.parse(this.body.d);
+    }
+
+    var response = this.update(input);
+
+    if (response) {
+        // 明示されたレスポンスがあれば、それを返す。
+        return response;
+    } else {
+        // なければ、デフォルトの正常終了レスポンスを返す
+        response = new JSGIResponse();
+        response.status = StatusCode.HTTP_OK;
+        response.setResponseData({
+            "message" : Message.getMessage("Script execution finished successfully. UserScript: %1", [
+                CommonUtil.getClassName(this)
+            ])
+        });
+        return response;
+    }
 };
 
 /**
