@@ -49,10 +49,10 @@ function PIOUserScript(request, allowdMethods) {
         }
         this.headers = request.headers;
         // リクエストを発行したアカウントのIDを取得する
-//        this.accountId = this.getRequestAccountId();
-//        this.log('I', "account id = %1", [
-//            this.accountId
-//        ]);
+        // this.accountId = this.getRequestAccountId();
+        // this.log('I', "account id = %1", [
+        // this.accountId
+        // ]);
 
         this.log('I', "Start userscript. name = %1", [
             CommonUtil.getClassName(this)
@@ -101,6 +101,13 @@ PIOUserScript.prototype.init = function() {
     // ロガーの初期化
     this.logger = new PIOLogger(this.cell);
 };
+/**
+ * ログを出力する。
+ * @param {String} level ログレベル('I' or 'W' or 'E')
+ * @param {String} message ログメッセージ。%1から%9までのパラメタを指定可能
+ * @param {Array} messageParams ログメッセージパラメタの値。パラメタがない場合、空配列を指定する。
+ * @param {Error} error エラー情報
+ */
 PIOUserScript.prototype.log = function(level, message, messageParams, error) {
     message = Message.getMessage(message, messageParams);
     if (error) {
@@ -126,7 +133,10 @@ PIOUserScript.prototype.log = function(level, message, messageParams, error) {
 };
 
 /**
- * リクエストメソッドがGETの場合に呼び出される。 サブクラスは、このメソッドをオーバライドして、GETメソッドの処理を実装する。
+ * リクエストメソッドがGETの場合に呼び出される。
+ * <p>
+ * サブクラスは、このメソッドをオーバライドして、GETメソッドの処理を実装する。
+ * </p>
  * 
  * @param {JSGIRequest} request クライアントからのリクエスト情報
  * @returns {JSGIResponse} 処理結果
@@ -233,15 +243,50 @@ PIOUserScript.prototype.create = function(input) {
 
 };
 /**
- * リクエストメソッドがDELETEの場合に呼び出される。 サブクラスは、このメソッドをオーバライドして、DELETEメソッドの処理を実装する。
+ * リクエストメソッドがDELETEの場合に呼び出される。
+ * <p>
+ * サブクラスは、このメソッドをオーバライドして、DELETEメソッドの処理を実装する。
+ * </p>
  * 
  * @param {JSGIRequest} request クライアントからのリクエスト情報
  * @returns {JSGIResponse} 処理結果
  */
 PIOUserScript.prototype.del = function(request) {
-    return null;
-};
+    // 入力チェック処理を呼び出す
+    this.deleteValidation();
 
+    // リクエストボディをJSONオブジェクトに変換する
+    var input = null;
+    if (this.body.d !== undefined) {
+        input = JSON.parse(this.body.d);
+    }
+
+    var response = this.destory(input, this.body.etag);
+
+    if (response) {
+        // 明示されたレスポンスがあれば、それを返す。
+        return response;
+    } else {
+        // なければ、デフォルトの正常終了レスポンスを返す
+        response = new JSGIResponse();
+        response.status = StatusCode.HTTP_OK;
+        response.setResponseData({
+            "message" : Message.getMessage("Script execution finished successfully. UserScript: %1", [
+                CommonUtil.getClassName(this)
+            ])
+        });
+        return response;
+    }
+};
+/**
+ * 削除処理リクエストの入力パラメタのチェックを行う。
+ * <p>
+ * サブクラスは、このメソッドをオーバライドして、削除処理での入力チェックを実装する。
+ * </p>
+ */
+PIOUserScript.prototype.deleteValidation = function() {
+
+};
 /**
  * クライアントから指定されたリクエストメソッドに対応するメソッドを呼び出す。
  * 

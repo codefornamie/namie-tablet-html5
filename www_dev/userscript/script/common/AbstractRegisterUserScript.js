@@ -62,5 +62,25 @@ AbstractRegisterUserScript.prototype.update = function(input, etag) {
     });
     return response;
 };
+AbstractRegisterUserScript.prototype.destory = function(input, etag) {
+    var dataJson = input;
+    this.log('I', 'Start delete process. data=%1, etag=%2', [
+            JSON.stringify(dataJson), etag
+    ]);
+    var id = dataJson.__id;
+    this.cell.box(this.box).odata(this.odata).entitySet(this.entity).del(id, etag);
+
+    var response = new JSGIResponse();
+    response.status = StatusCode.HTTP_OK;
+    response.setResponseData({
+        "message" : Message.getMessage("Script execution finished successfully. UserScript: %1", [
+            CommonUtil.getClassName(this)
+        ]),
+        "d" : {
+            "results" : dataJson
+        }
+    });
+    return response;
+};
 
 exports.AbstractRegisterUserScript = AbstractRegisterUserScript;
