@@ -6,6 +6,11 @@
 /* global JSGIResponse: false */
 /* global Message: false */
 
+/**
+ * 放射線のクラスター情報のユーザスクリプトを作成する。
+ * @class 放射線のクラスター情報のユーザスクリプト
+ * @param {Object} request リクエスト情報を保持するオブジェクト
+ */
 function RadiationClusterUserScript(request) {
     this.superclass.constructor.apply(this, [
             request, [
@@ -22,7 +27,7 @@ var RadiationClusterUserScript = CommonUtil.extend(PIOUserScript, RadiationClust
  * @returns {JSGIResponse} 処理結果
  */
 RadiationClusterUserScript.prototype.create = function(input) {
-    var dataJson = input.data;
+    var dataJson = input;
     this.log('I', 'Start radiaton cluster. data=%1', [
         JSON.stringify(dataJson)
     ]);

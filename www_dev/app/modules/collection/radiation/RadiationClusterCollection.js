@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
     var Equal = require("modules/util/filter/Equal");
+    var Or = require("modules/util/filter/Or");
 
     /**
      * 放射線量データのコレクションクラス
@@ -66,6 +67,19 @@ define(function(require, exports, module) {
         setSearchConditionByMyself : function() {
             this.condition.filters = [
                 new Equal("userId", app.user.get("__id"))
+            ];
+        },
+
+        /**
+         * 車載または自身がアップロードしたclusterの検索条件設定を行う
+         * @memberOf RadiationClusterCollection#
+         */
+        setSearchConditionFixedOrByMyself : function() {
+            this.condition.filters = [
+                new Or([
+                    new Equal("isFixedStation", true),
+                    new Equal("userId", app.user.get("__id"))
+                ])
             ];
         },
 

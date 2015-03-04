@@ -22,7 +22,7 @@ var PersonalUserScript = CommonUtil.extend(PIOUserScript, PersonalUserScript);
  * @returns {JSGIResponse} 処理結果
  */
 PersonalUserScript.prototype.create = function(input) {
-    var dataJson = input.data;
+    var dataJson = input;
     this.log('I', 'Start create personal. data=%1', [
         JSON.stringify(dataJson)
     ]);

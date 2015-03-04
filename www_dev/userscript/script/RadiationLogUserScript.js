@@ -6,6 +6,14 @@
 /* global JSGIResponse: false */
 /* global Message: false */
 
+/**
+ * 放射線のログ情報のユーザスクリプトを作成する。
+ * <p>
+ * 放射線のログ情報の登録処理を行う。
+ * </p>
+ * @class 放射線のログ情報のユーザスクリプト
+ * @param {Object} request リクエスト情報を保持するオブジェクト
+ */
 function RadiationLogUserScript(request) {
     this.superclass.constructor.apply(this, [
             request, [
@@ -28,6 +36,11 @@ RadiationLogUserScript.prototype.create = function(input) {
     ]);
     return this.bulk(logModels);
 };
+/**
+ * 指定された放射線のログ情報を一括で登録する。
+ * @param {Array} logModels 放射線ログ情報のJSONオブジェクトの配列
+ * @returns {JSGIResponse} 登録結果情報を保持するレスポンス
+ */
 RadiationLogUserScript.prototype.bulk = function(logModels) {
     var responseDataSet = [];
     for (var i = 0; i < logModels.length; i++) {
@@ -53,6 +66,7 @@ RadiationLogUserScript.prototype.bulk = function(logModels) {
     });
     return response;
 };
+
 RadiationLogUserScript.prototype.batch = function(logModels) {
     var odataBatch = this.cell.box(this.box).odata(this.odata).makeODataBatch(false);
     for (var i = 0; i < logModels.length; i++) {

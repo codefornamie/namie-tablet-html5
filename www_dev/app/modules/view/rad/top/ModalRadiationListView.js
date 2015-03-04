@@ -172,11 +172,11 @@ define(function(require, exports, module) {
             this.$progressBar.attr("value", 100);
             this.hideLoading();
 
-            if (response.event.isError()) {
+            if (response.event && response.event.isError()) {
                 this.showErrorMessage("放射線情報(" + response.fileName + ")の登録", response);
                 return;
             } else {
-                this.showSuccessMessage("放射線情報の登録", response);
+                this.showSuccessMessage("放射線情報の登録", response, false);
             }
 
             app.logger.debug("success all to save radiationCluster and radiationLog");
@@ -363,7 +363,7 @@ define(function(require, exports, module) {
         saveClusterModel : function(radiationClusterModel, file, next) {
             radiationClusterModel.save(null, {
                 success : function(model) {
-                    this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + this.perProgress);
+                    this.increaseProgress();
                     app.logger.debug("saveClusterModel():success");
                     // clusterの保存に成功した場合はradiationLogの保存処理実施
                     this.setLogModels(model, file, next);
@@ -431,11 +431,11 @@ define(function(require, exports, module) {
             },
             // 保存処理が全て完了したら呼ばれる
             function onFinish(response) {
-                if (response && response.event.isError()) {
+                if (response && response.event && response.event.isError()) {
                     response.fileName = file.name;
                     next(response);
                 } else {
-                    self.$progressBar.attr("value", parseInt(self.$progressBar.attr("value")) + self.perProgress);
+                    self.increaseProgress();
                     next(response);
                 }
             });

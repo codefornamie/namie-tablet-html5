@@ -4,24 +4,36 @@
             <%= data.dateStr %>
         </div>
 
-        <div class="rad-popup__radvalue">
-            <div class="rad-popup__radvalue__label">
-                平均値
+        <% if (data.hasCollection) { %>
+            <div class="rad-popup__radvalue">
+                <div class="rad-popup__radvalue__label">
+                    最大値
+                </div>
+                <div class="rad-popup__radvalue__value">
+                    <b><%= data.max ? data.max.toFixed(3) : '' %></b>
+                    μSv/h
+                </div>
             </div>
-            <div class="rad-popup__radvalue__value">
-                <b><%= data.avg %></b>
-                μSv/h
+            <div class="rad-popup__radvalue">
+                <div class="rad-popup__radvalue__label">
+                    最小値
+                </div>
+                <div class="rad-popup__radvalue__value">
+                    <b><%= data.min ? data.min.toFixed(3) : '' %></b>
+                    μSv/h
+                </div>
             </div>
-        </div>
-        <div class="rad-popup__radvalue">
-            <div class="rad-popup__radvalue__label">
-                最大値
+        <% } else { %>
+            <div class="rad-popup__radvalue">
+                <div class="rad-popup__radvalue__label">
+                    測定値
+                </div>
+                <div class="rad-popup__radvalue__value">
+                    <b><%= data.max ? data.max.toFixed(3) : '' %></b>
+                    μSv/h
+                </div>
             </div>
-            <div class="rad-popup__radvalue__value">
-                <b><%= data.max %></b>
-                μSv/h
-            </div>
-        </div>
+        <% } %>
     </div>
 
     <div class="rad-popup__info__more">
@@ -35,10 +47,12 @@
                 <span class="rad-popup__info__value"><%= data.stationType %></span>
             </li>
 
-            <li>
-                測定標本数 :
-                <span class="rad-popup__info__value"><%= data.numSample %></span>
-            </li>
+            <% if (data.hasCollection) { %>
+                <li>
+                    測定標本数 :
+                    <span class="rad-popup__info__value"><%= data.numSample %></span>
+                </li>
+            <% } %>
 
             <li>
                 測定機器メーカー :
