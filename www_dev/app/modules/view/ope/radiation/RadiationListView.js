@@ -63,7 +63,8 @@ define(function(require, exports, module) {
          */
         initCollection : function() {
             this.radClusterCollection = new RadiationClusterCollection();
-            // とりあえず自身が登録したものを検索
+            //車載線量計データのみ取得する
+            this.radClusterCollection.setSearchConditionByMunicipality();
             this.radClusterCollection.fetch().done(function(col) {
                 if (col.size() === 0) {
                     return;

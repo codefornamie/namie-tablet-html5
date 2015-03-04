@@ -19,21 +19,11 @@ define(function(require, exports, module) {
 
         /**
          * レンダリングに利用するオブジェクトを作成する
-         *
          * @return {Object}
+         * @memberOf RadiationListItemView#
          */
-        serialize : function () {
+        serialize : function() {
             var prop = this.model.toGeoJSON().properties;
-//            var m = moment(prop.startDate);
-//            var isInvalid = !m.isValid();
-//            var generateKeyFormatPair = function (key) {
-//                return [key, isInvalid ? "--" : m.format(key)];
-//            };
-//
-//            var date = _(["YYYY", "M", "D", "ddd","HH","mm","ss"])
-//                .map(generateKeyFormatPair)
-//                .object()
-//                .value();
             var sDate = this.toMapDate(prop.startDate);
             var eDate = this.toMapDate(prop.endDate);
             return {
@@ -44,26 +34,34 @@ define(function(require, exports, module) {
                 eDate : eDate
             };
         },
-        toMapDate : function (d) {
+
+        /**
+         * 日付をマップに変換する
+         * @param {String} 日付文字列
+         * @return {Object} 各日付フィールドを格納したマップ
+         * @memberOf RadiationListItemView#
+         */
+        toMapDate : function(d) {
             var mDate = moment(d);
             var isInvalid = !mDate.isValid();
-            var generateKeyFormatPair = function (key) {
-                return [key, isInvalid ? "--" : mDate.format(key)];
+            var generateKeyFormatPair = function(key) {
+                return [
+                        key, isInvalid ? "--" : mDate.format(key)
+                ];
             }
-            
-            return _(["YYYY", "MM", "DD", "ddd", "HH", "mm", "ss"])
-            .map(generateKeyFormatPair)
-            .object()
-            .value();
+
+            return _([
+                    "YYYY", "MM", "DD", "ddd", "HH", "mm", "ss"
+            ]).map(generateKeyFormatPair).object().value();
         },
         /**
          * このViewの親要素
-         * @memberOf OpeSlideshowListItemView#
+         * @memberOf RadiationListItemView#
          */
         tagName : "tr",
         /**
          * このViewのイベント
-         * @memberOf OpeSlideshowListItemView#
+         * @memberOf RadiationListItemView#
          */
         events : {
             "click [data-article-edit-button]" : "onClickRadiationDeleteButton"
@@ -71,42 +69,49 @@ define(function(require, exports, module) {
 
         /**
          * ViewのテンプレートHTMLの描画処理が完了前に呼び出される。
-         * @memberOf OpeSlideshowListItemView#
+         * @memberOf RadiationListItemView#
          */
         beforeRendered : function() {
         },
 
         /**
          * 初期化処理
-         * @memberOf OpeSlideshowListItemView#
+         * @memberOf RadiationListItemView#
          */
         initialize : function(options) {
         },
-        /**
-         * 削除ボタンをクリックした後に呼ばれる
-         * @memberOf RadClusterListItemView#
-         */
-        onClickRadiationDeleteButton : function () {
-            destroyModel();
-        },
 
         /**
-         * ODataの削除
-         * @memberOf OpeSlideshowRegistConfirmView#
+         * 削除ボタンをクリックした後に呼ばれる
+         * @memberOf RadiationListItemView#
          */
-        destroyModel : function() {
-            alert("データ消します");
-            // ODataの削除
-//            this.model.destroy({
-//                success : $.proxy(function() {
-//                    app.logger.debug("destroyModel():success");
-//                }, this),
-//                error : $.proxy(function(e) {
-//                    this.hideLoading();
-//                    vexDialog.alert("削除に失敗しました。");
-//                    app.logger.error("削除に失敗しました。");
-//                }, this)
-//            });
+        onClickRadiationDeleteButton : function() {
+            vexDialog.defaultOptions.className = 'vex-theme-default';
+            vexDialog.buttons.YES.text = 'はい';
+            vexDialog.buttons.NO.text = 'いいえ';
+            vexDialog.open({
+                message : '選択した線量計データを削除していいですか？',
+                callback : $.proxy(function(value) {
+                    if (value) {
+                        this.showLoading();
+
+                        this.model.set("isDelete", true);
+                        this.model.save(null, {
+                            success : $.proxy(function(model, resp, options) {
+                                this.hideLoading();
+                                this.showSuccessMessage("線量計データ情報の削除", model);
+                                app.router.opeRadiation();
+                            }, this),
+                            error : $.proxy(function(model, resp, options) {
+                                this.hideLoading();
+                                this.showErrorMessage("線量計データ情報の削除", resp);
+                                app.router.opeRadiation();
+                            }, this)
+                        });
+                    }
+                    return;
+                }, this)
+            });
         }
     });
     module.exports = RadiationListItemView;
