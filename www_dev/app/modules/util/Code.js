@@ -227,6 +227,10 @@ define(function(require, exports, module) {
     // 放射線データ保存時の「高度」保存時倍率
     Code.RAD_ALTITUDE_MAGNIFICATION = 1000;
 
+    // 放射線アプリの使い方動画のID
+    // TODO: 正式版に差し替える
+    Code.RAD_TUTORIAL_VIDEO_ID = "NgVzppfZ-4Q";
+
     /**
      * HORIBAcsvの収集時刻ヘッダ名
      */
@@ -243,6 +247,25 @@ define(function(require, exports, module) {
      * HORIBAcsvの高度ヘッダ名
      */
     Code.HORIBA_TITLE_ALTITUDE = "Altitude(m)";
+
+    /**
+     * 車載csvの時刻ヘッダ名
+     */
+    Code.AUTOMOTIVE_TITLE_TIME = "時刻";
+    /**
+     * 車載csvの線量ヘッダ名
+     */
+    Code.AUTOMOTIVE_TITLE_DOSE1 = "線量１";
+    Code.AUTOMOTIVE_TITLE_DOSE2 = "線量２";
+    Code.AUTOMOTIVE_TITLE_DOSE3 = "線量３";
+    /**
+     * 車載csvの緯度ヘッダ名
+     */
+    Code.AUTOMOTIVE_TITLE_LATITUDE = "緯度";
+    /**
+     * 車載csvの経度ヘッダ名
+     */
+    Code.AUTOMOTIVE_TITLE_LONGITUDE = "経度";
 
     /**
      *  放射線データのエラーコード
