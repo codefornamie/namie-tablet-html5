@@ -406,18 +406,7 @@ define(function(require, exports, module) {
             var radTutorialView = new RadTutorialView();
 
             this.setView("#radiation-tutorial-container", radTutorialView);
-            this.listenTo(radTutorialView, "closeRadTutorial", function () {
-                radTutorialView.remove();
-                // URLを元に戻す
-                app.router.back();
-            });
             radTutorialView.render();
-
-            // 使い方画面用URLに遷移
-            app.router.navigate("tutorial", {
-                trigger: true,
-                replace: false
-            });
         }
     });
 

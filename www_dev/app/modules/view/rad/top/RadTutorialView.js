@@ -154,7 +154,6 @@ define(function(require, exports, module) {
             // CSSトランジションの完了後に閉じる
             setTimeout(function () {
                 self.remove();
-                app.router.back();
             }, 300);
             if ($(ev.target).hasClass("dojo-lesson__back")) {
                 // TODO: Google Analytics
