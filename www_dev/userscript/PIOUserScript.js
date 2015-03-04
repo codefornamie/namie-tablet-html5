@@ -48,6 +48,14 @@ function PIOUserScript(request, allowdMethods) {
             this.body = dc.util.queryParse(buff, 'utf-8');
         }
         this.headers = request.headers;
+        this.log('I', "headers = %1", [
+            this.headers
+        ]);
+        // リクエストを発行したアカウントのIDを取得する
+        //this.accountId = this.getRequestAccountId();
+        this.log('I', "account id = %1", [
+            this.accountId
+        ]);
 
         this.log('I', "Start userscript. name = %1", [
             CommonUtil.getClassName(this)
@@ -56,6 +64,17 @@ function PIOUserScript(request, allowdMethods) {
         throw new PIOUnknownException(CommonUtil.getClassName(this), e);
     }
 }
+PIOUserScript.prototype.getAuthorizationToken = function() {
+    var authorization = this.request.headers["Authorization"];
+    var token = authorization.substring("Bearer ".length);
+    return token;
+};
+PIOUserScript.prototype.getRequestAccountId = function() {
+    var token = this.getAuthorizationToken();
+    var decoredToken = CommonUtil.base64decord(token);
+
+    return decoredToken;
+};
 /**
  * personium.io へのアクセスオブジェクトを取得する
  * @returns {Accessor} personium.io へのアクセスオブジェクト

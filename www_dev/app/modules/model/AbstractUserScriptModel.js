@@ -41,7 +41,7 @@ define(function(require, exports, module) {
             app.box.service(this.service).call(method, this.serviceName, {
                 body : createFormUrlEncodedData,
                 complete : function(response) {
-                    app.logger.debug("AbstractUserScriptModel " + method + " complete. event:" + response.event);
+                    app.logger.debug("AbstractUserScriptModel " + method + " complete.");
                     complete(response);
                 }
             });
@@ -60,7 +60,7 @@ define(function(require, exports, module) {
          */
         create : function(method, model, options, complete) {
             app.logger.debug("AbstractUserScriptModel create");
-            this.call(method, model, options, complete);
+            this.call('POST', model, options, complete);
         },
         /**
          * PCS ODataの更新処理を行う。
@@ -76,7 +76,7 @@ define(function(require, exports, module) {
          */
         update : function(method, model, options, complete) {
             app.logger.debug("AbstractUserScriptModel update");
-            this.call(method, model, options, complete);
+            this.call('PUT', model, options, complete);
         },
         /**
          * PCS ODataの削除処理を行う。
@@ -92,7 +92,7 @@ define(function(require, exports, module) {
          */
         del : function(method, model, options, complete) {
             app.logger.debug("AbstractUserScriptModel delete");
-            this.call(method, model, options, complete);
+            this.call('DELETE', model, options, complete);
         },
         /**
          * 指定されたJSONデータを form-urlencoded の形式に変換する

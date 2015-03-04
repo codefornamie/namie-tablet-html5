@@ -66,10 +66,12 @@ define(function(require, exports, module) {
             this.entityset = odataCollection.entitySet(this.entity);
 
             var complete = function(res) {
-                app.logger.debug("AbstractODataModel search complete handler");
+                app.logger.debug("AbstractODataModel complete handler");
                 // personium.ioのAPI呼び出し情報を保持するイベント
                 // 便宜上、resオブジェクトに紐付ける
                 var event = new PIOEvent(res);
+                app.logger.debug("AbstractODataModel event:" + event);
+
                 res.event = event;
                 // 取得したJSONオブジェクト
                 var json = null;
