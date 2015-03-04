@@ -13,9 +13,9 @@
                 </div>
     
                 <div>
-                    <span class="date--monthday"><b><%= moment(prop.startDate).format("M") %></b><span style="margin: 0 3px;">/</span><b><%= moment(prop.startDate).format("D") %></b></span>
+                    <span class="date--monthday"><b><%= date["M"] %></b><span style="margin: 0 3px;">/</span><b><%= date["D"] %></b></span>
     
-                    <span class="date--weekday date--weekday<%= moment(prop.startDate).format("d") %>">(<%= moment(prop.startDate).format("ddd") %>)</span>
+                    <span class="date--weekday date--weekday<%= moment(prop.startDate).format("d") %>">(<%= date["ddd"] %>)</span>
                 </div>
 
                 <div class="date--time">
@@ -37,7 +37,7 @@
     
                     <td class="rad-cluster-item__value">
                         <b>
-                            <%= prop.maxValue ? prop.maxValue.toFixed(3) : '' %>
+                            <%= prop.maxValue ? prop.maxValue.toFixed(3) : '--' %>
                         </b>
                     </td>
     
@@ -57,7 +57,7 @@
     
                     <td class="rad-cluster-item__value">
                         <b>
-                            <%= prop.minValue ? prop.minValue.toFixed(3) : '' %>
+                            <%= prop.minValue ? prop.minValue.toFixed(3) : '--' %>
                         </b>
                     </td>
     
@@ -72,10 +72,24 @@
     </div>
 
     <% if (hasError) { %>
-        <div class="rad-cluster-item__row">
-            <p class="rad-cluster-item__error">
-                ※データに一部不備があります。
-            </p>
-        </div>
+        <% if (hasErrDoseMissing) { %>
+            <div class="rad-cluster-item__row">
+                <p class="rad-cluster-item__error">
+                    ※ 一部の測定値が登録されていません。
+                </p>
+            </div>
+        <% } else if (hasErrPositionMissing) { %>
+            <div class="rad-cluster-item__row">
+                <p class="rad-cluster-item__error">
+                    ※ 一部の座標情報が無いため地図に表示されません。
+                </p>
+            </div>
+        <% } else if (hasErrInvalidDate) { %>
+            <div class="rad-cluster-item__row">
+                <p class="rad-cluster-item__error">
+                    ※ 一部の日付情報が壊れています。
+                </p>
+            </div>
+        <% } %>
     <% } %>
 </li>
