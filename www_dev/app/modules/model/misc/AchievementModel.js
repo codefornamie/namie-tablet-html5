@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var AbstractUserScriptModel = require("modules/model/AbstractUserScriptModel");
 
     /**
      * 達成情報のモデルクラスを作成する。
@@ -11,7 +11,8 @@ define(function(require, exports, module) {
      * @exports AchievementModel
      * @constructor
      */
-    var AchievementModel = AbstractODataModel.extend({
+    var AchievementModel = AbstractUserScriptModel.extend({
+        serviceName: 'achievement',
         entity : "achievement",
         /**
          * 取得したOData情報のparse処理を行う。
