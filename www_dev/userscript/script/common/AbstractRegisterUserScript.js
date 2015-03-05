@@ -47,6 +47,8 @@ AbstractRegisterUserScript.prototype.update = function(input, etag) {
     this.log('I', 'Start update process. data=%1, etag=%2', [
             JSON.stringify(dataJson), etag
     ]);
+    var user = this.getRequestAccountId();
+    this.log("I", "user=" + user);
     var id = dataJson.__id;
     delete dataJson.__id;
     this.cell.box(this.box).odata(this.odata).entitySet(this.entity).update(id, dataJson, etag);

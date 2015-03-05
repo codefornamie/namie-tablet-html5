@@ -75,25 +75,16 @@ function PIOUserScript(request, allowdMethods) {
  * @returns {String} アカウントID
  */
 PIOUserScript.prototype.getRequestAccountId = function() {
-    this.log('I', "refresh_token = %1", [
-        this.body.refreshToken
-    ]);
-
     var cell = dc.as({
         "cellUrl" : this.cellUrl,
         "refreshToken" : this.body.refreshToken
     }).cell(this.cellId);
     var token = cell.getToken().access_token;
-    this.log('I', "Token = %1", [
-        token
-    ]);
-    // TODO URL safeなBase64 デコード処理に変更する
-    var decoredToken = CommonUtil.base64decord(token);
-    this.log('I', "decoredToken = %1", [
-        decoredToken
-    ]);
-    // TODO Base64デコードした文字列からアカウントのIDを取得する
-    return decoredToken;
+    // URL safeなBase64 デコード
+    var decoredToken = CommonUtil.base64decode(token);
+    // Base64デコードした文字列からアカウントのIDを取得する
+    var userId = decoredToken.match(/<NameID>(.*)<\/NameID>/)[1].split("/#")[1];
+    return userId;
 };
 /**
  * personium.io へのアクセスオブジェクトを取得する
