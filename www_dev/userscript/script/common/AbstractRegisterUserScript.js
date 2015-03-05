@@ -1,4 +1,5 @@
 /* global PIOUserScript: false */
+/* global SecurityException: false */
 /* global dc: false */
 /* global StatusCode: false */
 /* global CommonUtil: false */
@@ -12,6 +13,17 @@ function AbstractRegisterUserScript(request) {
 var AbstractRegisterUserScript = CommonUtil.extend(PIOUserScript, AbstractRegisterUserScript);
 
 /**
+ * アカウントIDからパーソナル情報を取得する。
+ * @param {String} accountId アカウントID
+ * @returns {Object} パーソナル情報のレコード
+ */
+AbstractRegisterUserScript.prototype.getPersonal = function(accountId) {
+    var res = this.cell.box(this.box).odata(this.odata).entitySet("personal").query().filter("loginId eq '" + accountId + "'")
+    .top(1).run();
+    return res.d.results[0];
+};
+
+/**
  * 指定されたJSONデータを登録する。
  * @param {Object} input 入力データを保持するJSONオブジェクト
  * @returns {JSGIResponse} 処理結果
@@ -21,6 +33,13 @@ AbstractRegisterUserScript.prototype.create = function(input) {
     this.log('I', 'Start create process. data=%1', [
         JSON.stringify(dataJson)
     ]);
+    
+    // personal以外の場合は、ownerIdを設定する。
+    if(this.entity !== "personal") {
+        var personal = this.getPersonal(this.getRequestAccountId());
+        dataJson.ownerId = personal.__id;
+    }
+
     var res = this.cell.box(this.box).odata(this.odata).entitySet(this.entity).create(dataJson);
 
     var response = new JSGIResponse();
@@ -37,6 +56,22 @@ AbstractRegisterUserScript.prototype.create = function(input) {
 };
 
 /**
+ * 指定されたIDのodataドキュメントのオーナーがログインユーザと一致するか確認する。
+ * @param {String} id ドキュメントid
+ * @returns {boolean} ログインユーザと一致した場合true
+ */
+AbstractRegisterUserScript.prototype.isOwn = function(id) {
+    var personal = this.getPersonal(this.getRequestAccountId());
+    if(this.entity !== "personal") {
+        var res = this.cell.box(this.box).odata(this.odata).entitySet(this.entity).retrieveAsResponse(id);
+        var target = res.d.results[0];
+        return (personal.roles != null && personal.roles.split(",").indexOf("admin") >= 0) || target.ownerId === personal.__id;
+    } else {
+        return id === personal.__id;
+    }
+};
+
+/**
  * 指定されたJSONデータで更新する。
  * @param {Object} input 入力データを保持するJSONオブジェクト
  * @param {String} etag 更新対象のデータのetag値
@@ -47,10 +82,15 @@ AbstractRegisterUserScript.prototype.update = function(input, etag) {
     this.log('I', 'Start update process. data=%1, etag=%2', [
             JSON.stringify(dataJson), etag
     ]);
-    var user = this.getRequestAccountId();
-    this.log("I", "user=" + user);
+    
     var id = dataJson.__id;
     delete dataJson.__id;
+
+    // 更新しようとしているレコードに対する更新権限があるかチェックする。
+    if(!this.isOwn(id)){
+        throw new SecurityException(this.entity, id);
+    }
+
     this.cell.box(this.box).odata(this.odata).entitySet(this.entity).update(id, dataJson, etag);
 
     var response = new JSGIResponse();

@@ -4,6 +4,7 @@ function StatusCode() {
 StatusCode.HTTP_OK = 200;
 StatusCode.HTTP_CREATED = 201;
 StatusCode.HTTP_UNAUTHORIZED = 401;
+StatusCode.HTTP_FORBIDDEN = 403;
 StatusCode.HTTP_NOT_FOUND = 404;
 StatusCode.HTTP_METHOD_NOT_ALLOWD = 405;
 StatusCode.HTTP_CONFLICT = 409;

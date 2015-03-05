@@ -279,6 +279,7 @@ define(function(require, exports, module) {
             } else {
                 saveData.deletedAt = null;
             }
+            saveData.ownerId = this.get("ownerId");
 
             this.makeSaveData(saveData);
 
