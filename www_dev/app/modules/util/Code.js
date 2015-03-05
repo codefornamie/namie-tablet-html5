@@ -227,6 +227,15 @@ define(function(require, exports, module) {
     // 放射線データ保存時の「高度」保存時倍率
     Code.RAD_ALTITUDE_MAGNIFICATION = 1000;
 
+    // 測定種別：個人測定
+    Code.RAD_MEASUREMENT_PRIVATE = "private";
+    // 測定種別：車載線量計
+    Code.RAD_MEASUREMENT_MUNICIPALITY = "municipality";
+
+    // 放射線アプリの使い方動画のID
+    // TODO: 正式版に差し替える
+    Code.RAD_TUTORIAL_VIDEO_ID = "NgVzppfZ-4Q";
+
     /**
      * HORIBAcsvの収集時刻ヘッダ名
      */

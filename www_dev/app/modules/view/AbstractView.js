@@ -152,7 +152,7 @@ define(function(require, exports, module) {
                 return;
             }
             var increaseValue = value || this.perProgress;
-            var currentValue = parseInt(this.$progressBar.attr("value"));
+            var currentValue = parseFloat(this.$progressBar.attr("value"));
             this.$progressBar.attr("value",currentValue + increaseValue);
         },
         /**
@@ -350,7 +350,7 @@ define(function(require, exports, module) {
                                 });
                                 var blobUrl = FileAPIUtil.createObjectURL(blob);
                                 $this.attr("href", blobUrl);
-                                $this.colorbox({
+                                var $colorbox = $this.colorbox({
                                     closeButton : false,
                                     current : "",
                                     photo : true,

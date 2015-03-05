@@ -865,6 +865,130 @@
 }
 
 /**
+ *  使い方画面
+ */
+.rad-tutorial-container {
+}
+
+.rad-tutorial-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 1010;
+    opacity: 0;
+    transition: .3s ease opacity;
+}
+
+.rad-tutorial-bg.is-ready {
+    opacity: 1;
+}
+
+.rad-tutorial-dialog {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 600px;
+    height: 85%;
+    margin: auto;
+    background: white;
+    z-index: 1020;
+    box-shadow: 0 5px 38px 0 rgba(0,0,0,0.7);
+    opacity: 0;
+    transition: .3s ease opacity;
+}
+
+.rad-tutorial-dialog.is-ready {
+    opacity: 1;
+}
+
+.button.rad-tutorial-dialog__back {
+    background: white;
+    width: 38px;
+    height: 38px;
+    margin: 0;
+    padding: 0;
+    border-radius: 50%;
+    color: #389514;
+    line-height: 38px;
+    font-size: 25px;
+    box-shadow: 0px 2px 1px 0px #a4a4a4;
+    position: absolute;
+    top: -19px;
+    right: -19px;
+}
+
+.button.rad-tutorial-dialog__back::after {
+    content: "閉じる";
+    position: absolute;
+    top: 0;
+    left: 100%;
+    color: white;
+    white-space: nowrap;
+    margin-left: 10px;
+    font-size: 1rem;
+}
+
+
+.rad-tutorial-dialog__header {
+}
+
+.rad-tutorial-dialog__guide {
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin: 20px 40px;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.rad-tutorial-dialog .ico-youtube-play {
+    display: inline-block;
+    width: 41px;
+    height: 28px;
+    background-image: url(../../app/img/dojo/img-youtube-play.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    vertical-align: middle;
+    margin: -5px 5px 0 5px;
+}
+
+.rad-tutorial-dialog__player {
+    padding: 0 40px 10px;
+}
+
+.rad-tutorial-dialog__content {
+    width: 100%;
+    background: #777;
+}
+
+.rad-tutorial-dialog__body {
+    padding: 0 20px;
+    text-align: center;
+}
+
+.rad-tutorial-dialog__movie-control {
+    margin-bottom: 13px;
+    visibility: hidden;
+}
+
+.rad-tutorial-dialog__body .button {
+    font-size: 1.2rem;
+    width: 100%;
+    color: #2e3a3a;
+}
+.rad-tutorial-dialog__body .button[data-play-movie] {
+    display: none;
+}
+.rad-tutorial-dialog__body .button[data-pause-movie] {
+}
+.rad-tutorial-dialog__body .button[data-rad-tutorial-closer] {
+}
+
+/**
  *  モーダル線量リストダイアログ
  */
 .modal-radiation-overlay {

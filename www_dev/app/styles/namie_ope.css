@@ -1,5 +1,5 @@
 /**
- *  浪江町アプリ管理ツールCSS
+ *  浪江町アプリ管�?��ールCSS
  */
 /**
  *  ----------
@@ -38,4 +38,8 @@
 
 .radiatioin-filename-area label {
     font-size: 1.2rem;
+}
+
+#radiationListHead th {
+    text-align: center;
 }
