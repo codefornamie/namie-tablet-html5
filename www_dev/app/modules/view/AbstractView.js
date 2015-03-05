@@ -350,7 +350,7 @@ define(function(require, exports, module) {
                                 });
                                 var blobUrl = FileAPIUtil.createObjectURL(blob);
                                 $this.attr("href", blobUrl);
-                                $this.colorbox({
+                                var $colorbox = $this.colorbox({
                                     closeButton : false,
                                     current : "",
                                     photo : true,
