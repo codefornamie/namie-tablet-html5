@@ -49,10 +49,10 @@ function PIOUserScript(request, allowdMethods) {
         }
         this.headers = request.headers;
         // リクエストを発行したアカウントのIDを取得する
-        // this.accountId = this.getRequestAccountId();
-        // this.log('I', "account id = %1", [
-        // this.accountId
-        // ]);
+        this.accountId = this.getRequestAccountId();
+        this.log('I', "account id = %1", [
+            this.accountId
+        ]);
 
         this.log('I', "Start userscript. name = %1", [
             CommonUtil.getClassName(this)
@@ -61,18 +61,38 @@ function PIOUserScript(request, allowdMethods) {
         throw new PIOUnknownException(CommonUtil.getClassName(this), e);
     }
 }
-PIOUserScript.prototype.getAuthorizationToken = function() {
-    var authorization = this.headers["authorization"];
-    var token = authorization.substring("Bearer ".length);
-    this.log('I', "token = %1", [
+
+/**
+ * ユーザースクリプトを呼び出したアカウントのIDを取得する。
+ * <p>
+ * 処理は以下の流れで行う。
+ * <ol>
+ * <li>自セルに対してトランスセルトークン認証を行う</li>
+ * <li>トークンをURL safeなBase64でデコードする</li>
+ * <li>デコードした文字列内に含まれるアカウントIDを取得する</li>
+ * </ol>
+ * </p>
+ * @returns {String} アカウントID
+ */
+PIOUserScript.prototype.getRequestAccountId = function() {
+    this.log('I', "refresh_token = %1", [
+        this.body.refreshToken
+    ]);
+
+    var cell = dc.as({
+        "cellUrl" : this.cellUrl,
+        "refreshToken" : this.body.refreshToken
+    }).cell(this.cellId);
+    var token = cell.getToken().access_token;
+    this.log('I', "Token = %1", [
         token
     ]);
-    return token;
-};
-PIOUserScript.prototype.getRequestAccountId = function() {
-    var token = this.getAuthorizationToken();
+    // TODO URL safeなBase64 デコード処理に変更する
     var decoredToken = CommonUtil.base64decord(token);
-
+    this.log('I', "decoredToken = %1", [
+        decoredToken
+    ]);
+    // TODO Base64デコードした文字列からアカウントのIDを取得する
     return decoredToken;
 };
 /**

@@ -36,7 +36,8 @@ define(function(require, exports, module) {
         call: function(method, model, options, complete) {
             var createFormUrlEncodedData = this.createFormUrlEncodedData({
                 d : JSON.stringify(this.getSaveData()),
-                etag : this.get("etag")
+                etag : this.get("etag"),
+                refreshToken : app.pcsManager.refreshToken
             });
             if (method === 'DELETE') {
                 this.serviceName += "?id=" + model.get("__id");
