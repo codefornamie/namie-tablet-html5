@@ -2,13 +2,18 @@ module.exports = ->
   @loadNpmTasks "grunt-contrib-clean"
 
   # Wipe out previous builds and test reporting.
-  @config "clean", 
+  @config "clean",
     options:
       force: true
-    files: [
-      "../www/"
-      "reports/test"
-      "reports/doc"
-      "reports/coverage"
-      "reports/jshint"
-    ]
+    www:
+      [
+        "../www/"
+        "reports/test"
+        "reports/doc"
+        "reports/coverage"
+        "reports/jshint"
+      ]
+    us:
+      [
+        "../userscript/"
+      ]

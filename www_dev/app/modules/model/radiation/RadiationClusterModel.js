@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var AbstractUserScriptModel = require("modules/model/AbstractUserScriptModel");
     var Code = require("modules/util/Code");
 
     /**
@@ -12,7 +12,8 @@ define(function(require, exports, module) {
      * @exports RadiationClusterModel
      * @constructor
      */
-    var RadiationClusterModel = AbstractODataModel.extend({
+    var RadiationClusterModel = AbstractUserScriptModel.extend({
+        serviceName: 'radiation_cluster',
         entity : "radiation_cluster",
 
         /**

@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var AbstractUserScriptModel = require("modules/model/AbstractUserScriptModel");
     var HoribaRecordValidator = require("modules/util/HoribaRecordValidator");
     var Code = require("modules/util/Code");
 
@@ -13,7 +13,8 @@ define(function(require, exports, module) {
      * @exports RadiationLogModel
      * @constructor
      */
-    var RadiationLogModel = AbstractODataModel.extend({
+    var RadiationLogModel = AbstractUserScriptModel.extend({
+        serviceName: 'radiation_log',
         entity : "radiation_log",
 
         /**
@@ -24,17 +25,7 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         parseOData : function(response, options) {
-            var dose = response.value / Code.RAD_RADIATION_DOSE_MAGNIFICATION;
-            var position = 
-                response.latitude / Code.RAD_LAT_LONG_MAGNIFICATION +
-                " " +
-                response.longitude / Code.RAD_LAT_LONG_MAGNIFICATION;
-            var date = response.date;
-            var validator = new HoribaRecordValidator();
-
-            validator.isValid(dose, position, date);
-
-            response.errorCode = validator.errorCode;
+            console.log(response);
 
             return response;
         },
@@ -44,6 +35,11 @@ define(function(require, exports, module) {
          * @memberOf RadiationLogModel#
          */
         makeSaveData : function(saveData) {
+            if (this.get("logModels")) {
+                // userscriptで一括登録する際に設定される
+                saveData.logModels = this.get("logModels");
+            }
+
             saveData.date = this.get("date");
             var latitude = null;
             if (this.get("latitude")) {

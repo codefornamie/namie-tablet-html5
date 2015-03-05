@@ -10,7 +10,7 @@ module.exports = ->
 
   # When running the default Grunt command, just lint the code.
   @registerTask "default", [
-    "clean"
+    "clean:www"
     "jsdoc"
     "jshint"
     "plato"
@@ -24,7 +24,7 @@ module.exports = ->
   ]
 
   @registerTask "skipTests", [
-    "clean"
+    "clean:www"
     "processhtml"
     "requirejs"
     "styles"
@@ -55,4 +55,9 @@ module.exports = ->
   @registerTask "server_letter", [
     "replace:devmode_letter"
     "server"
+  ]
+  @registerTask "us", [
+    "clean:us"
+    "concat:us"
+    "copy:us"
   ]

@@ -12,6 +12,23 @@ define(function(require, exports, module) {
 
     };
     /**
+     * 配列を、指定された数ずつ分割する
+     * @param targetArray
+     * @param eachOf
+     * @returns {Array}
+     */
+    CommonUtil.sliceArray = function(targetArray, eachOf) {
+        var b = targetArray.length;
+        var slicedArray = [];
+
+        for (var i = 0; i < Math.ceil(b / eachOf); i++) {
+            var j = i * eachOf;
+            var p = targetArray.slice(j, j + eachOf);
+            slicedArray.push(p);
+        }
+        return slicedArray;
+    };
+    /**
      * 文字列をコンテンツに表示できる形に置換する
      * 
      * @memberOf CommonUtil#

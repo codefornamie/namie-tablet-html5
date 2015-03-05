@@ -13,7 +13,7 @@ define(function(require, exports, module) {
     var async = require("async");
     var moment = require("moment");
     require("moment/locale/ja");
-    
+
     /**
      * 線量データのアップロード用リストダイアログクラス
      * @class 線量データのアップロード用リストダイアログクラス
@@ -22,6 +22,10 @@ define(function(require, exports, module) {
      */
     var ModalRadiationListView = AbstractView.extend({
         /**
+         * 放射線ログ情報を一度に登録する数
+         */
+        LOG_BULK_COUNT: 100,
+        /**
          * テンプレート
          * @memberOf ModalRadiationListView#
          */
@@ -29,11 +33,11 @@ define(function(require, exports, module) {
 
         /**
          * レンダリングに利用するオブジェクトを作成する
-         *
+         * 
          * @memberOf RadPopupView#
          * @return {Object}
          */
-        serialize : function () {
+        serialize : function() {
             return {
                 mode : this.mode
             };
@@ -77,7 +81,7 @@ define(function(require, exports, module) {
          * 初期化処理
          * @memberOf ModalRadiationListView#
          */
-        initialize : function (opt) {
+        initialize : function(opt) {
             opt = opt || {};
 
             // ファイル選択形式のモード
@@ -89,10 +93,8 @@ define(function(require, exports, module) {
             this.fileEntryArray = opt.fileEntryArray;
 
             if (this.mode === "list") {
-                console.assert(
-                    this.fileEntryArray,
-                    'if modalRadiationListView is "list" mode, it should have fileEntryArray'
-                );
+                console.assert(this.fileEntryArray,
+                        'if modalRadiationListView is "list" mode, it should have fileEntryArray');
             }
         },
 
@@ -113,7 +115,7 @@ define(function(require, exports, module) {
          * onChangeRadiationCSV
          * @memberOf ModalRadiationListView#
          */
-        onChangeRadiationCSV : function (ev) {
+        onChangeRadiationCSV : function(ev) {
             var files = ev.target.files;
         },
 
@@ -170,17 +172,15 @@ define(function(require, exports, module) {
          * @memberOf ModalRadiationListView#
          * @param {Error} err
          */
-        onSaveAll : function (err) {
+        onSaveAll : function(response) {
             this.$progressBar.attr("value", 100);
             this.hideLoading();
 
-            if (err) {
-                vexDialog.defaultOptions.className = "vex-theme-default vex-theme-rad";
-                vexDialog.alert({
-                    message : err
-                });
-                app.logger.error("ModalRadiationListView#onClickRadiationUploadButton():error:" + err);
+            if (response && response.event && response.event.isError()) {
+                this.showErrorMessage("放射線情報(" + response.fileName + ")の登録", response);
                 return;
+            } else {
+                this.showSuccessMessage("放射線情報の登録", response, false);
             }
 
             app.logger.debug("success all to save radiationCluster and radiationLog");
@@ -194,7 +194,7 @@ define(function(require, exports, module) {
          * @param {Function} next
          */
         convertFileEntry : function(fileEntry, next) {
-            var readFile = function (file) {
+            var readFile = function(file) {
                 var reader = new FileReader();
 
                 // fileのロード完了後のコールバック
@@ -204,27 +204,19 @@ define(function(require, exports, module) {
 
                     // 1. CSV形式のデータをJSONオブジェクトに変換
                     try {
-                        if (
-                            file.type !== "text/csv" &&
-                            file.type !== "text/comma-separated-values"
-                        ) {
+                        if (file.type !== "text/csv" && file.type !== "text/comma-separated-values") {
                             throw new Error("couldn't accept file type: " + file.type);
                         }
 
                         originalRecords = CommonUtil.convertJsonObject(reader.result, {
                             cast : [
-                                "String",
-                                "Number",
-                                "String",
-                                "Number"
+                                    "String", "Number", "String", "Number"
                             ]
                         });
                     } catch (e) {
                         app.logger.error("CommonUtil.convertJsonObject():error=" + e);
                         next([
-                            file.name,
-                            " をCSVファイルとして読み込むことができませんでした。",
-                            "ファイル形式を再度ご確認下さい。"
+                                file.name, " をCSVファイルとして読み込むことができませんでした。", "ファイル形式を再度ご確認下さい。"
                         ].join(""));
                         return;
                     }
@@ -235,36 +227,38 @@ define(function(require, exports, module) {
                     // 3. 不正なレコードを省いた旨を通知する
                     vexDialog.defaultOptions.className = "vex-theme-default vex-theme-rad";
 
+                    var message;
                     if (validator.hasError(Code.ERR_NO_RECORD)) {
-                        vexDialog.alert({
-                            message : [
-                                file.name,
-                                " は何らかの原因により壊れているため、情報を登録できませんでした。"
-                            ].join("")
-                        });
+                        message = [file.name, " は何らかの原因により壊れているため、測定情報を登録できませんでした。"].join("");
                     } else if (validator.hasError(Code.ERR_POSITION_MISSING)) {
-                        vexDialog.alert({
-                            message : [
-                                file.name,
-                                " は何らかの原因により壊れているため、一部の情報を登録できませんでした。",
-                                "正常な情報については、登録が完了しました。"
-                            ].join("")
-                        });
+                        message = [file.name, " には緯度経度情報が未設定の測定情報があります。<br/>", "緯度経度が設定されている測定情報について、登録します。"].join("");
                     } else if (validator.hasError(Code.ERR_DOSE_MISSING)) {
+                        message = [file.name, " は何らかの原因により壊れているため、一部の情報を登録できません。", "正常な測定情報について、登録します。"].join("");
+                    }
+                    var saveFunction = function() {
+                        // 4. レコードをもとにRadiationClusterModelを作成
+                        var radiationClusterModel = this.createRadiationClusterModel(file, validator.errorCode);
+                        // 5. Model保存処理
+                        this.saveClusterModel(radiationClusterModel, file, next);
+                    }.bind(this);
+                    if (message) {
+                        // BlockUIでブロックしていると、タブレット実機の場合にVexDialogのOKボタンが押せなくなるため、
+                        // 一時的にブロックを解除する
+                        var currentValue = parseFloat(this.$progressBar.attr("value"));
+                        this.hideLoading();
                         vexDialog.alert({
-                            message : [
-                                file.name,
-                                " は何らかの原因により壊れているため、一部の情報を登録できませんでした。",
-                                "正常な情報については、登録が完了しました。"
-                            ].join("")
+                            message : message,
+                            callback : function(value) {
+                                // 再度、プログレスバー表示
+                                this.showProgressBarLoading();
+                                this.increaseProgress();
+                                saveFunction(currentValue);
+                            }.bind(this)
                         });
+                    } else {
+                        saveFunction();
                     }
 
-                    // 4. レコードをもとにRadiationClusterModelを作成
-                    var radiationClusterModel = this.createRadiationClusterModel(file, validator.errorCode);
-
-                    // 5. Model保存処理
-                    this.saveClusterModel(radiationClusterModel, file, next);
                 }.bind(this, file);
 
                 // テキストとしてファイルを読み込む
@@ -390,8 +384,7 @@ define(function(require, exports, module) {
                 error : function(e) {
                     app.logger.debug("saveClusterModel():error" + e.code);
                     next([
-                        file.name,
-                        " の保存処理に失敗しました。"
+                            file.name, " の保存処理に失敗しました。"
                     ].join(""));
                 }
             });
@@ -416,8 +409,9 @@ define(function(require, exports, module) {
                 model.set("longitude", longitude);
                 model.set("altitude", rec[Code.HORIBA_TITLE_ALTITUDE]);
                 model.set("collectionId", radiationClusterModel.get("__id"));
-                logModels.push(model);
+                logModels.push(model.getSaveData());
             });
+
             this.saveEachLogModel(logModels, file, next);
         },
         /**
@@ -428,31 +422,35 @@ define(function(require, exports, module) {
          */
         saveEachLogModel : function(models, file, next) {
             var self = this;
-
-            // TODO 現状は5パラでリクエストしているが後々$batch処理に変更する
-            // 最大同時処理数
-            var LIMIT_PARALLEL_SAVE_SEQUENCE = 5;
-
-            async.eachLimit(models, LIMIT_PARALLEL_SAVE_SEQUENCE,
+            // 100個づつ分割し、登録リクエストを発行する
+            // 登録はUserScript内で$batchを利用して一括処理される
+            var slicedModels = CommonUtil.sliceArray(models, this.LOG_BULK_COUNT);
+            var counter = 0;
+            async.eachLimit(slicedModels, 1,
             // 各要素に対する保存処理
-            function fn(model, done) {
+            function fn(models, done) {
+                app.logger.info("Start ModalRadiationListView#saveEachLogModel() counter: " + counter);
+                var model = new RadiationLogModel();
+                model.set("logModels", models);
                 model.save(null, {
-                    success : function() {
+                    success : function(model, response, options) {
+                        app.logger.info("Success ModalRadiationListView#saveEachLogModel() counter: " + counter++);
                         done();
                     },
-                    error : function(e) {
-                        done(e);
+                    error : function(model, response, options) {
+                        app.logger.info("Error ModalRadiationListView#saveEachLogModel() counter: " + counter++);
+                        done(response);
                     }
                 });
             },
             // 保存処理が全て完了したら呼ばれる
-            function onFinish(err) {
-                if (err) {
-                    app.logger.error("ModalRadiationListView#saveSequence():error:" + JSON.stringify(err));
-                    next(file.name + "の保存処理に失敗しました。");
+            function onFinish(response) {
+                if (response && response.event && response.event.isError()) {
+                    response.fileName = file.name;
+                    next(response);
                 } else {
                     self.increaseProgress();
-                    next();
+                    next(response);
                 }
             });
         },
