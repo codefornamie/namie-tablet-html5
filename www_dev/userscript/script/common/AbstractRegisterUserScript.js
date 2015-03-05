@@ -63,8 +63,8 @@ AbstractRegisterUserScript.prototype.create = function(input) {
 AbstractRegisterUserScript.prototype.isOwn = function(id) {
     var personal = this.getPersonal(this.getRequestAccountId());
     if(this.entity !== "personal") {
-        var res = this.cell.box(this.box).odata(this.odata).entitySet(this.entity).retrieveAsResponse(id);
-        var target = res.d.results[0];
+        var target = this.cell.box(this.box).odata(this.odata).entitySet(this.entity).retrieve(id);
+        
         return (personal.roles != null && personal.roles.split(",").indexOf("admin") >= 0) || target.ownerId === personal.__id;
     } else {
         return id === personal.__id;
