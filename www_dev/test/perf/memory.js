@@ -4,6 +4,9 @@
  * 起動方法(Mac):
  * $ cd www_dev/
  * $ PATH=$PATH:`npm bin` node test/perf/memory.js
+ *
+ * オプション:
+ * --snapshot   繰り返し処理の開始前にHeapSnapshotを取得するための一時停止を行う
  * 
  * ログファイル:
  * 「reports/perf/」以下に、「memory-(実行日時).log」というファイル名でログファイルが作成される。
@@ -33,6 +36,11 @@ colors.setTheme({
     info: "green",
     memory: "cyan"
 });
+
+var isEnabledTakeHeapSnapshot = false;
+if (process.argv.indexOf("--snapshot") >= 0) {
+    isEnabledTakeHeapSnapshot = true;
+}
 
 function runTest() {
     var TIMEOUT = 10000;
@@ -108,7 +116,9 @@ function runTest() {
         }, TIMEOUT);
         
         // ヒープスナップショットを取得するプロンプトを表示
-        waitTakingHeapSnapshot();
+        if (isEnabledTakeHeapSnapshot) {
+            waitTakingHeapSnapshot();
+        }
 
         //   3秒間、間隔をあける
         driver.sleep(3000);
