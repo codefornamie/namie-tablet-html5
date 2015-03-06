@@ -9,7 +9,7 @@
 function ArticleUserScript(request) {
     this.superclass.superclass.constructor.apply(this, [
             request, [
-                    "POST", "PUT", "DELETE"
+                    "POST", "PUT"
             ]
     ]);
     this.entity = "article";
