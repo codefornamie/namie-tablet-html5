@@ -164,6 +164,10 @@ function runTest() {
             //   3秒間、間隔をあける
             driver.sleep(3000).then(function () {showStep("6 過去記事を選択し、記事一覧を表示する");} );
 
+            driver.wait(function () {
+                return driver.isElementPresent(By.css('#modal-calendar'));
+            }, TIMEOUT);
+
             // 6 過去記事を選択し、記事一覧を表示する
             //   選択可能な日付を抽出しランダムで選びクリックさせる
             driver.findElements(By.css(".rd-day-body:not(.rd-day-selected):not(.rd-day-disabled):not(.rd-day-prev-month):not(:last-child)")).then(function(elements) {
@@ -210,7 +214,6 @@ function runTest() {
 
 // ヒープスナップショットを取得するプロンプトを表示
 function waitTakingHeapSnapshot() {
-    return;
     flow.execute(function () {
         var d = webdriver.promise.defer();
 
