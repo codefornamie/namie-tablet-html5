@@ -31,7 +31,10 @@ define(function(require, exports, module) {
             "click #radiationUploadButton" : "onClickRadiationUploadButton",
             "click #radiationCancelButton" : "onClickRadiationCancelButton"
         },
-
+        /**
+         * 放射線ログ情報を一度に登録する数
+         */
+        LOG_BULK_COUNT: 500,
         /**
          * ViewのテンプレートHTMLの描画処理が完了した後に呼び出される。
          * @memberOf RadiationRegistView#
@@ -142,7 +145,7 @@ define(function(require, exports, module) {
                 file.jsonObject = validator.validate(originalRecords);
                 this.$progressBar.attr("value", 10);
 
-                this.perProgress = 90 / (file.jsonObject.length + 1) / 2;
+                this.perProgress = 90 / (file.jsonObject.length / this.LOG_BULK_COUNT + 1);
 
                 // 3. 不正なレコードを省いた旨を通知する
                 vexDialog.defaultOptions.className = "vex-theme-default";
@@ -335,28 +338,33 @@ define(function(require, exports, module) {
         saveEachLogModel : function(models, file) {
             var self = this;
 
-            // TODO 現状は5パラでリクエストしているが後々$batch処理に変更する
-            // 最大同時処理数
-            var LIMIT_PARALLEL_SAVE_SEQUENCE = 5;
-
-            async.eachLimit(models, LIMIT_PARALLEL_SAVE_SEQUENCE,
+            // this.LOG_BULK_COUNT で指定された個数づつ分割し、登録リクエストを発行する
+            // 登録はUserScript内で$batchを利用して一括処理される
+            var slicedModels = CommonUtil.sliceArray(models, this.LOG_BULK_COUNT);
+            var counter = 0;
+            async.eachLimit(slicedModels, 1,
             // 各要素に対する保存処理
-            function fn(model, done) {
+            function fn(models, done) {
+                app.logger.info("Start RadiationRegistView#saveEachLogModel() counter: " + counter);
+                var model = new RadiationLogModel();
+                model.set("logModels", models);
                 model.save(null, {
-                    success : function() {
+                    success : function(model, response, options) {
                         this.increaseProgress();
-                        this.showSuccessMessage("放射線ログ情報の保存", model);
+                        //this.showSuccessMessage("放射線ログ情報の保存", null);
+                        app.logger.info("Success RadiationRegistView#saveEachLogModel() counter: " + counter++);
                         done();
-                    }.bind(this, model),
-                    error : function(model, e) {
-                        done(e);
+                    }.bind(this),
+                    error : function(model, response, options) {
+                        app.logger.info("Error RadiationRegistView#saveEachLogModel() counter: " + counter++);
+                        done(response);
                     }
                 });
             }.bind(this),
             // 保存処理が全て完了したら呼ばれる
-            function onFinish(err) {
-                if (err) {
-                    this.showErrorMessage(file.name + "(radiation_log)の保存処理", err);
+            function onFinish(response) {
+                if (response && response.event && response.event.isError()) {
+                    this.showErrorMessage(file.name + "(radiation_log)の保存処理", response);
                 } else {
                     this.hideLoading();
                     app.router.go("ope-radiation");

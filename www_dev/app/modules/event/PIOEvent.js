@@ -40,7 +40,16 @@ define(function(require, exports, module) {
                 this.code = this.json.code;
                 // APIの応答メッセージ
                 if (this.json.message) {
-                    this.message = this.json.message.value;
+                    if (this.json.message.value) {
+                        // OData APIアクセスの場合、valueにメッセージ本文がある
+                        this.message = this.json.message.value;
+                    } else {
+                        // UserScript の場合、causeにメッセージが入る
+                        if (this.json.cause) {
+                            this.message = JSON.stringify(this.json.cause);
+                        }
+                    }
+                    
                 }
                 this._super(this.code, this.message);
             }
@@ -57,6 +66,13 @@ define(function(require, exports, module) {
         } else {
             return false;
         }
+    };
+    /**
+     * API操作が失敗したかどうか。
+     * @returns {Boolean} 失敗した場合、<code>true</code>を返す
+     */
+    PIOEvent.prototype.isError = function() {
+        return !this.isSuccess();
     };
     /**
      * 対象のAPI呼び出し時に通信失敗によるエラーが発生したかどうか。
