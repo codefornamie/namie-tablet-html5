@@ -759,109 +759,124 @@
  *  マーカー、凡例
  */
 .page-rad .map-marker--1 {
-    background-color: #0b24e5;
-    fill: #0b24e5;
+    background-color: hsl(233, 90%, 47%);
+    fill: hsl(233, 90%, 47%);
+    box-shadow: 0 0 0 3px hsl(233, 90%, 23%);
 }
+
 .page-rad .map-marker--2 {
-    background-color: #357ce7;
-    fill: #357ce7;
+    background-color: hsl(216, 78%, 55%);
+    fill: hsl(216, 78%, 55%);
+    box-shadow: 0 0 0 3px hsl(216, 78%, 28%);
 }
+
 .page-rad .map-marker--3 {
-    background-color: #25bfe9;
-    fill:#25bfe9;
+    background-color: hsl(192, 81%, 52%);
+    fill: hsl(192, 81%, 52%);
+    box-shadow: 0 0 0 3px hsl(192, 81%, 26%);
 }
+
 .page-rad .map-marker--4 {
-    background-color: #18d381;
-    fill: #18d381;
+    background-color: hsl(153, 79%, 46%);
+    fill: hsl(153, 79%, 46%);
+    box-shadow: 0 0 0 3px hsl(153, 79%, 23%);
 }
+
 .page-rad .map-marker--5 {
-    background-color: #16b23a;
-    fill: #16b23a;
+    background-color: hsl(133, 77%, 39%);
+    fill: hsl(133, 77%, 39%);
+    box-shadow: 0 0 0 3px hsl(133, 77%, 14%);
 }
+
 .page-rad .map-marker--6 {
-    background-color: #a5cd05;
-    fill: #a5cd05;
+    background-color: hsl(72, 95%, 41%);
+    fill: hsl(72, 95%, 41%);
+    box-shadow: 0 0 0 3px hsl(72, 95%, 20%);
 }
+
 .page-rad .map-marker--7 {
     fill: #ebc323;
     -webkit-background-size: 10px 10px;
     -moz-background-size: 10px 10px;
     background-size: 10px 10px;
-    background-color: #cfa81e;
+    background-color: hsl(46, 74%, 46%);
     background-image: -webkit-gradient(linear, 0 0, 100% 100%,
-                color-stop(.25, #b88e10), color-stop(.25, transparent),
-                            color-stop(.5, transparent), color-stop(.5, #b88e10),
-                                        color-stop(.75, #b88e10), color-stop(.75, transparent),
+                color-stop(.25, hsl(45,84%,39%)), color-stop(.25, transparent),
+                            color-stop(.5, transparent), color-stop(.5, hsl(45,84%,39%)),
+                                        color-stop(.75, hsl(45,84%,39%)), color-stop(.75, transparent),
                                                     to(transparent));
-    background-image: -webkit-linear-gradient(-45deg, #b88e10 25%, transparent 25%,
-              transparent 50%, #b88e10 50%, #b88e10 75%,
+    background-image: -webkit-linear-gradient(-45deg, hsl(45,84%,39%) 25%, transparent 25%,
+              transparent 50%, hsl(45,84%,39%) 50%, hsl(45,84%,39%) 75%,
                         transparent 75%, transparent);
-    background-image: -moz-linear-gradient(-45deg, #b88e10 25%, transparent 25%,
-              transparent 50%, #b88e10 50%, #b88e10 75%,
+    background-image: -moz-linear-gradient(-45deg, hsl(45,84%,39%) 25%, transparent 25%,
+              transparent 50%, hsl(45,84%,39%) 50%, hsl(45,84%,39%) 75%,
                         transparent 75%, transparent);
-    background-image: -ms-linear-gradient(-45deg, #b88e10 25%, transparent 25%,
-              transparent 50%, #b88e10 50%, #b88e10 75%,
+    background-image: -ms-linear-gradient(-45deg, hsl(45,84%,39%) 25%, transparent 25%,
+              transparent 50%, hsl(45,84%,39%) 50%, hsl(45,84%,39%) 75%,
                         transparent 75%, transparent);
-    background-image: -o-linear-gradient(-45deg, #b88e10 25%, transparent 25%,
-              transparent 50%, #b88e10 50%, #b88e10 75%,
+    background-image: -o-linear-gradient(-45deg, hsl(45,84%,39%) 25%, transparent 25%,
+              transparent 50%, hsl(45,84%,39%) 50%, hsl(45,84%,39%) 75%,
                         transparent 75%, transparent);
-    background-image: linear-gradient(-45deg, #b88e10 25%, transparent 25%,
-              transparent 50%, #b88e10 50%, #b88e10 75%,
+    background-image: linear-gradient(-45deg, hsl(45,84%,39%) 25%, transparent 25%,
+              transparent 50%, hsl(45,84%,39%) 50%, hsl(45,84%,39%) 75%,
                         transparent 75%, transparent);
+    box-shadow: 0 0 0 3px hsl(45, 84%, 19%);
 }
 .page-rad .map-marker--8 {
     fill: #ec881c;
     -webkit-background-size: 10px 10px;
     -moz-background-size: 10px 10px;
     background-size: 10px 10px;
-    background-color: #ce6d13;
+    background-color: hsl(28,83%,44%);
     background-image: -webkit-gradient(linear, 0 0, 100% 100%,
-                color-stop(.25, #b2520b), color-stop(.25, transparent),
-                            color-stop(.5, transparent), color-stop(.5, #b2520b),
-                                        color-stop(.75, #b2520b), color-stop(.75, transparent),
+                color-stop(.25, hsl(25,88%,37%)), color-stop(.25, transparent),
+                            color-stop(.5, transparent), color-stop(.5, hsl(25,88%,37%)),
+                                        color-stop(.75, hsl(25,88%,37%)), color-stop(.75, transparent),
                                                     to(transparent));
-    background-image: -webkit-linear-gradient(-45deg, #b2520b 25%, transparent 25%,
-              transparent 50%, #b2520b 50%, #b2520b 75%,
+    background-image: -webkit-linear-gradient(-45deg, hsl(25,88%,37%) 25%, transparent 25%,
+              transparent 50%, hsl(25,88%,37%) 50%, hsl(25,88%,37%) 75%,
                         transparent 75%, transparent);
-    background-image: -moz-linear-gradient(-45deg, #b2520b 25%, transparent 25%,
-              transparent 50%, #b2520b 50%, #b2520b 75%,
+    background-image: -moz-linear-gradient(-45deg, hsl(25,88%,37%) 25%, transparent 25%,
+              transparent 50%, hsl(25,88%,37%) 50%, hsl(25,88%,37%) 75%,
                         transparent 75%, transparent);
-    background-image: -ms-linear-gradient(-45deg, #b2520b 25%, transparent 25%,
-              transparent 50%, #b2520b 50%, #b2520b 75%,
+    background-image: -ms-linear-gradient(-45deg, hsl(25,88%,37%) 25%, transparent 25%,
+              transparent 50%, hsl(25,88%,37%) 50%, hsl(25,88%,37%) 75%,
                         transparent 75%, transparent);
-    background-image: -o-linear-gradient(-45deg, #b2520b 25%, transparent 25%,
-              transparent 50%, #b2520b 50%, #b2520b 75%,
+    background-image: -o-linear-gradient(-45deg, hsl(25,88%,37%) 25%, transparent 25%,
+              transparent 50%, hsl(25,88%,37%) 50%, hsl(25,88%,37%) 75%,
                         transparent 75%, transparent);
-    background-image: linear-gradient(-45deg, #b2520b 25%, transparent 25%,
-              transparent 50%, #b2520b 50%, #b2520b 75%,
+    background-image: linear-gradient(-45deg, hsl(25,88%,37%) 25%, transparent 25%,
+              transparent 50%, hsl(25,88%,37%) 50%, hsl(25,88%,37%) 75%,
                         transparent 75%, transparent);
+    box-shadow: 0 0 0 3px hsl(25, 88%, 18%);
 }
 .page-rad .map-marker--9 {
     fill: #ff0a21;
     -webkit-background-size: 10px 10px;
     -moz-background-size: 10px 10px;
     background-size: 10px 10px;
-    background-color: #c71230;
+    background-color: hsl(350,83%,42%);
     background-image: -webkit-gradient(linear, 0 0, 100% 100%,
-                color-stop(.25, #90071e), color-stop(.25, transparent),
-                            color-stop(.5, transparent), color-stop(.5, #90071e),
-                                        color-stop(.75, #90071e), color-stop(.75, transparent),
+                color-stop(.25, hsl(349,90%,29%)), color-stop(.25, transparent),
+                            color-stop(.5, transparent), color-stop(.5, hsl(349,90%,29%)),
+                                        color-stop(.75, hsl(349,90%,29%)), color-stop(.75, transparent),
                                                     to(transparent));
-    background-image: -webkit-linear-gradient(-45deg, #90071e 25%, transparent 25%,
-              transparent 50%, #90071e 50%, #90071e 75%,
+    background-image: -webkit-linear-gradient(-45deg, hsl(349,90%,29%) 25%, transparent 25%,
+              transparent 50%, hsl(349,90%,29%) 50%, hsl(349,90%,29%) 75%,
                         transparent 75%, transparent);
-    background-image: -moz-linear-gradient(-45deg, #90071e 25%, transparent 25%,
-              transparent 50%, #90071e 50%, #90071e 75%,
+    background-image: -moz-linear-gradient(-45deg, hsl(349,90%,29%) 25%, transparent 25%,
+              transparent 50%, hsl(349,90%,29%) 50%, hsl(349,90%,29%) 75%,
                         transparent 75%, transparent);
-    background-image: -ms-linear-gradient(-45deg, #90071e 25%, transparent 25%,
-              transparent 50%, #90071e 50%, #90071e 75%,
+    background-image: -ms-linear-gradient(-45deg, hsl(349,90%,29%) 25%, transparent 25%,
+              transparent 50%, hsl(349,90%,29%) 50%, hsl(349,90%,29%) 75%,
                         transparent 75%, transparent);
-    background-image: -o-linear-gradient(-45deg, #90071e 25%, transparent 25%,
-              transparent 50%, #90071e 50%, #90071e 75%,
+    background-image: -o-linear-gradient(-45deg, hsl(349,90%,29%) 25%, transparent 25%,
+              transparent 50%, hsl(349,90%,29%) 50%, hsl(349,90%,29%) 75%,
                         transparent 75%, transparent);
-    background-image: linear-gradient(-45deg, #90071e 25%, transparent 25%,
-              transparent 50%, #90071e 50%, #90071e 75%,
+    background-image: linear-gradient(-45deg, hsl(349,90%,29%) 25%, transparent 25%,
+              transparent 50%, hsl(349,90%,29%) 50%, hsl(349,90%,29%) 75%,
                         transparent 75%, transparent);
+    box-shadow: 0 0 0 3px hsl(349, 90%, 14%);
 }
 
 /**
