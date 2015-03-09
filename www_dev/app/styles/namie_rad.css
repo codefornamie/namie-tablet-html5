@@ -162,7 +162,7 @@
     box-shadow: none;
 }
 
-.page-rad .contents__secondary .sidemenu .tab-button--fixed {
+.page-rad .contents__secondary .sidemenu .tab-button--municipality {
     background-color: rgb(114, 199,67);
     color: #fff;
 }
@@ -212,7 +212,7 @@
     padding: 0 10px;
     background-color: rgb(115, 199, 67);
 }
-.contents__secondary[data-selected-tab="fixed"] .sidemenu-bottom__scroll {
+.contents__secondary[data-selected-tab="municipality"] .sidemenu-bottom__scroll {
     background-color: rgb(115, 199, 67);
 }
 .contents__secondary[data-selected-tab="mobile"] .sidemenu-bottom__scroll {
@@ -269,7 +269,7 @@
     margin: 10px 0;
     line-height: 1;
 }
-.page-rad .contents__secondary[data-selected-tab="fixed"] .sidemenu-bottom h3.sidemenu-bottom__header--fixed {
+.page-rad .contents__secondary[data-selected-tab="municipality"] .sidemenu-bottom h3.sidemenu-bottom__header--municipality {
     display: block;
     background: rgb(94, 182, 38);
     color: white;
@@ -745,7 +745,7 @@
  *  3. Cosmetic
  *  ----------
  */
-.page-rad .contents__secondary[data-selected-tab="fixed"] .rad-cluster-item--selected {
+.page-rad .contents__secondary[data-selected-tab="municipality"] .rad-cluster-item--selected {
     background-color: rgb(255, 255, 132);
     border: 3px solid rgb(239, 227, 21);
 }

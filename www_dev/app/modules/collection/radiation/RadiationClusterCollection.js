@@ -5,6 +5,7 @@ define(function(require, exports, module) {
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var RadiationClusterModel = require("modules/model/radiation/RadiationClusterModel");
     var Equal = require("modules/util/filter/Equal");
+    var Code = require("modules/util/Code");
     var Or = require("modules/util/filter/Or");
     var IsNull = require("modules/util/filter/IsNull");
 
@@ -77,7 +78,7 @@ define(function(require, exports, module) {
          */
         setSearchConditionByMunicipality : function() {
             this.condition.filters = [
-                    new Equal("measurementType", "municipality"), new IsNull("deletedAt")
+                    new Equal("measurementType", Code.RAD_MEASUREMENT_MUNICIPALITY), new IsNull("deletedAt")
             ];
         },
 
@@ -85,10 +86,10 @@ define(function(require, exports, module) {
          * 車載または自身がアップロードしたclusterの検索条件設定を行う
          * @memberOf RadiationClusterCollection#
          */
-        setSearchConditionFixedOrByMyself : function() {
+        setSearchConditionByMunicipalityOrByMyself : function() {
             this.condition.filters = [
                 new Or([
-                    new Equal("isFixedStation", true),
+                    new Equal("measurementType", Code.RAD_MEASUREMENT_MUNICIPALITY),
                     new Equal("userId", app.user.get("__id"))
                 ])
             ];
