@@ -42,7 +42,23 @@ if (process.argv.indexOf("--snapshot") >= 0) {
     isEnabledTakeHeapSnapshot = true;
 }
 
-function runTest() {
+// ログイン情報の入力を受け付ける
+function getAccountInfo(callback) {
+    var rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rl.question("ユーザー名: ", function (username) {
+        rl.question("パスワード: ", function (password) {
+            rl.close();
+            callback(username, password);
+        });
+    });
+};
+
+// テストシナリオを実行する
+function runTest(username, password) {
     var TIMEOUT = 10000;
     var LOG_DIR = "reports/perf";
     var LOG_FILE = LOG_DIR + "/memory-" + moment().format("YYYY-MM-DDTHH-mm-ss") + ".log";
@@ -105,8 +121,8 @@ function runTest() {
             return driver.findElement(By.css('#loginId')).isDisplayed();
         }, TIMEOUT);
 
-        driver.findElement(By.css('#loginId')).sendKeys('ukedon');
-        driver.findElement(By.css('#password')).sendKeys('namie01');
+        driver.findElement(By.css('#loginId')).sendKeys(username);
+        driver.findElement(By.css('#password')).sendKeys(password);
         driver.findElement(By.css('#loginButton')).click();
 
         driver.wait(function () {
@@ -179,21 +195,27 @@ function runTest() {
             }, TIMEOUT);
 
             // 6 過去記事を選択し、記事一覧を表示する
-            //   選択可能な日付を抽出しランダムで選びクリックさせる
-            driver.findElements(By.css(".rd-day-body:not(.rd-day-selected):not(.rd-day-disabled):not(.rd-day-prev-month):not(:last-child)")).then(function(elements) {
+            //   選択可能な日付（「現在表示中の日付、最終発行日より後の日付、前月内の日付、土曜日、日曜日」以外の日付）を抽出しランダムに選びクリックさせる
+            driver.findElements(By.css(".rd-day-body:not(.rd-day-selected):not(.rd-day-disabled):not(.rd-day-prev-month):not(:nth-child(6)):not(:nth-child(7))")).then(function(elements) {
                 _.sample(elements).click();
             });
+
+            driver.wait(function () {
+                return driver.getCurrentUrl().then(function (url) {
+                  return URL.parse(url).pathname.match(/^\/top\/[\d-]/);
+                });
+            }, TIMEOUT);
 
             //   3秒間、間隔をあける
             driver.sleep(3000).then(function () {showStep("7 記事を選択し、記事詳細画面を表示する");} );
 
             // 7 記事を選択し、記事詳細画面を表示する
-            //   2番目の項目をクリックする
+            //   ランダムに項目を選びクリックする
             driver.wait(function () {
                 return driver.isElementPresent(By.css(".grid-list__item"));
             }, TIMEOUT);
             driver.findElements(By.css(".grid-list__item")).then(function(elements) {
-                elements[1].click();
+                _.sample(elements).click();
             });
 
             driver.wait(function () {
@@ -242,6 +264,8 @@ function waitTakingHeapSnapshot() {
     });
 }
 
-chromedriver.start();
-runTest(); 
-chromedriver.stop();
+getAccountInfo(function (username, password) {
+    chromedriver.start();
+    runTest(username, password); 
+    chromedriver.stop();
+});
