@@ -33,7 +33,7 @@ define(function(require, exports, module) {
          * municipalityであれば「役場」、privateであれば「自分」の情報を一覧に表示する
          * @memberOf RadClusterListView#
          */
-        targetMeasurementType: "municipality",
+        targetMeasurementType: Code.RAD_MEASUREMENT_MUNICIPALITY,
 
         /**
          * Viewの描画処理の終了後に呼び出されるコールバック関数。
@@ -83,11 +83,11 @@ define(function(require, exports, module) {
         onTabSwitched : function(selectedTabName) {
             // タブの選択状態に応じて一覧の表示対象を変更する
             switch(selectedTabName) {
-            case "municipality":
-                this.targetMeasurementType = "municipality";
+            case Code.RAD_MEASUREMENT_MUNICIPALITY:
+                this.targetMeasurementType = Code.RAD_MEASUREMENT_MUNICIPALITY;
                 break;
             case "mobile":
-                this.targetMeasurementType = "private";
+                this.targetMeasurementType = Code.RAD_MEASUREMENT_PRIVATE;
                 break;
             }
 

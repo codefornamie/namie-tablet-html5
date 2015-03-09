@@ -253,7 +253,7 @@ define(function(require, exports, module) {
 
                     // 車載の情報のうち先頭の1件を表示
                     var firstMunicipalityClusterModel = col.find(function (model) {
-                        return model.get("measurementType") === "municipality";
+                        return model.get("measurementType") === Code.RAD_MEASUREMENT_MUNICIPALITY;
                     });
                     if (firstMunicipalityClusterModel) {
                         firstMunicipalityClusterModel.set("hidden", false);
