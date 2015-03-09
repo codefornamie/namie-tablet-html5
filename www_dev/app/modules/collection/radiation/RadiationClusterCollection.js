@@ -85,10 +85,10 @@ define(function(require, exports, module) {
          * 車載または自身がアップロードしたclusterの検索条件設定を行う
          * @memberOf RadiationClusterCollection#
          */
-        setSearchConditionFixedOrByMyself : function() {
+        setSearchConditionByMunicipalityOrByMyself : function() {
             this.condition.filters = [
                 new Or([
-                    new Equal("isFixedStation", true),
+                    new Equal("measurementType", "municipality"),
                     new Equal("userId", app.user.get("__id"))
                 ])
             ];

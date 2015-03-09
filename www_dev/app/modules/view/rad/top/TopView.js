@@ -239,7 +239,7 @@ define(function(require, exports, module) {
         initCollection : function () {
             this.radClusterCollection = new RadiationClusterCollection();
             // 車載または自身がアップロードしたデータのみ検索
-            this.radClusterCollection.setSearchConditionFixedOrByMyself();
+            this.radClusterCollection.setSearchConditionByMunicipalityOrByMyself();
             this.radClusterCollection
                 .fetch()
                 .done(function (col) {
@@ -252,25 +252,16 @@ define(function(require, exports, module) {
                     });
 
                     // 車載の情報のうち先頭の1件を表示
-                    var firstFixedClusterModel = col.find(function (model) {
-                        return model.get("isFixedStation");
+                    var firstMunicipalityClusterModel = col.find(function (model) {
+                        return model.get("measurementType") === "municipality";
                     });
-                    if (firstFixedClusterModel) {
-                        firstFixedClusterModel.set("hidden", false);
+                    if (firstMunicipalityClusterModel) {
+                        firstMunicipalityClusterModel.set("hidden", false);
                     }
 
                     // タブを「役場」に切り替える
-                    $(".tab-button--fixed").click();
+                    $(".tab-button--municipality").click();
                 });
-            // TODO: テスト用データの作成を差し替える
-            //_(10).times($.proxy(function(index) {
-            //    this.radClusterCollection.push(
-            //        new RadiationClusterModel({
-            //            __id: "test-content-" + index,
-            //            dispTitle: "テスト用コンテンツ" + index
-            //        })
-            //    );
-            //}), this);
         },
 
         /**
