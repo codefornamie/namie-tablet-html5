@@ -1,10 +1,11 @@
-/* global dc: false */
 /* global StatusCode: false */
+/* global dc: false */
 /* global CommonUtil: false */
 /* global StringUtil: false */
 /* global PIOUserScriptException: false */
 /* global PIOUnknownException: false */
 /* global MethodNotAllowdException: false */
+/* global NoRefreshTokenException: false */
 /* global PIOLogger: false */
 /* global Message: false */
 /* global JSGIResponse: false */
@@ -58,7 +59,11 @@ function PIOUserScript(request, allowdMethods) {
             CommonUtil.getClassName(this)
         ]);
     } catch (e) {
-        throw new PIOUnknownException(CommonUtil.getClassName(this), e);
+        if (e instanceof PIOUserScriptException) {
+            return e.serialize();
+        } else {
+            throw new PIOUnknownException(CommonUtil.getClassName(this), e);
+        }
     }
 }
 
@@ -75,6 +80,11 @@ function PIOUserScript(request, allowdMethods) {
  * @returns {String} アカウントID
  */
 PIOUserScript.prototype.getRequestAccountId = function() {
+    this.log("I", "getRequestAccountId");
+    // refresh tokenが指定されていない場合はエラー
+    if (!this.body.refreshToken) {
+        throw new NoRefreshTokenException();
+    }
     var cell = dc.as({
         "cellUrl" : this.cellUrl,
         "refreshToken" : this.body.refreshToken
