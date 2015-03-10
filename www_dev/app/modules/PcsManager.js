@@ -112,11 +112,12 @@ define(function(require, exports, module) {
         // 期限外で、Androidの場合は、AccountManagerからトークン再取得
         if (androidDevice) {
             // AccountManagerからトークンを再取得
-            this.getAuthTokenFromDeviceAccountManager({
-                success: function() {
+            //this.getAuthTokenFromDeviceAccountManager({
+            this.getAuthToken({
+                success : function() {
                     callback();
                 },
-                error: function(msg) {
+                error : function(msg) {
                     callback(msg);
                 }
             });
@@ -130,8 +131,7 @@ define(function(require, exports, module) {
                 this.setTokenAndExpiresInValue(cell);
                 callback();
             }
-            if ((tokenStatus === this.EXPIRE_REFRESH_TOKEN) ||
-                    (tokenStatus === this.NOT_HAVE_TOKEN)) {
+            if ((tokenStatus === this.EXPIRE_REFRESH_TOKEN) || (tokenStatus === this.NOT_HAVE_TOKEN)) {
                 // ログイン画面へ
                 this.accessToken = "";
                 this.expirationDate = "";
@@ -158,9 +158,64 @@ define(function(require, exports, module) {
 
         this.refreshToken = cell.getRefreshToken();
     };
-
     /**
-     *　AndroidのAccountManagerからトークンを取得する。
+     * アカウントマネージャから、クレデンシャル情報を取得する。
+     * @param {Object} param 処理成功時、失敗時のコールバック関数を指定する
+     */
+    PcsManager.prototype.getCredential = function(param) {
+        this.androidAccountManager.getAccountsByType(this.packageName, $.proxy(function(error, accounts) {
+            Log.info("getAccountsByType of AccountManager method responsed ");
+            if (error) {
+                param.error("account manager error : " + error);
+                return;
+            }
+            if (!accounts || !accounts.length) {
+                Log.info("this device has no accounts name");
+                param.success();
+                return;
+            }
+            var account = accounts[0];
+            this.loginId = account.name;
+            Log.info("loginId: " + this.loginId);
+            // パスワードを取得
+            this.androidAccountManager.getPassword(account, $.proxy(function(error, password) {
+                if (error) {
+                    Log.info("error getPassword from AccountManager error-message:" + error);
+                    param.error(error);
+                    return;
+                }
+                this.password = password;
+                Log.info("password: " + this.password);
+                param.success();
+            }, this));
+        }, this));
+    };
+    /**
+     * 認証トークンを取得する。
+     * <p>
+     * アカウントマネージャからログインID, パスワードを取得して、認証処理を行い、トークンを取得する。
+     * </p>
+     * @param {Object} param 処理成功時、失敗時のコールバック関数を指定する
+     */
+    PcsManager.prototype.getAuthToken = function(param) {
+        this.getCredential({
+            success : function() {
+                try {
+                    if (this.loginId && this.password) {
+                        this.loginModel.certificationWithAccount(this.loginId, this.password);
+                    }
+                    param.success();
+                } catch (e) {
+                    param.error(e.message);
+                }
+            }.bind(this),
+            error : function() {
+                param.success();
+            }.bind(this)
+        });
+    };
+    /**
+     * AndroidのAccountManagerからトークンを取得する。
      * @param {Object} param 引数
      */
     PcsManager.prototype.getAuthTokenFromDeviceAccountManager = function(param) {

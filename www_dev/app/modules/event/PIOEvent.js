@@ -88,7 +88,24 @@ define(function(require, exports, module) {
     PIOEvent.prototype.isNetworkError = function() {
         return this.networkError;
     };
-    
+    /**
+     * 対象のAPI呼び出し結果が401となったかどうか。
+     * 
+     * @memberOf PIOEvent#
+     * @return {Boolean} 対象のAPI呼び出し結果が401の場合、<code>true</code>を返す。
+     */
+    PIOEvent.prototype.isLacksPrivilege = function() {
+        return this.status === 401;
+    };
+    /**
+     * 対象のAPI呼び出し結果が503となったかどうか。
+     * 
+     * @memberOf PIOEvent#
+     * @return {Boolean} 対象のAPI呼び出し結果が503の場合、<code>true</code>を返す。
+     */
+    PIOEvent.prototype.isServerBusy = function() {
+        return this.status === 503;
+    };
     /**
      * 対象のAPI呼び出し結果が404 NotFoundとなったかどうか。
      * 
