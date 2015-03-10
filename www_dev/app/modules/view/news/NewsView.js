@@ -182,6 +182,8 @@ define(function(require, exports, module) {
             ], function(err) {
                 if (!err) {
                     app.gapiLoaded = true;
+                } else {
+                    err = "NewsView#loadYouTubeLibrary: " + err;
                 }
                 callback(err);
             });
@@ -203,8 +205,8 @@ define(function(require, exports, module) {
                     self.loadFavorite(callback);
                 },
 
-                error : function onErrorLoadArticle() {
-                    callback('err');
+                error : function onErrorLoadArticle(model, resp, options) {
+                    callback(resp);
                 }
             });
         },
@@ -226,8 +228,8 @@ define(function(require, exports, module) {
                     callback();
                 },
 
-                error : function onErrorLoadFavorite() {
-                    callback('error');
+                error : function onErrorLoadFavorite(model, resp, options) {
+                    callback(resp);
                 }
             });
         },
@@ -246,8 +248,8 @@ define(function(require, exports, module) {
                     callback();
                 },
 
-                error : function onErrorLoadEvents() {
-                    callback('error');
+                error : function onErrorLoadEvents(model, resp, options) {
+                    callback(resp);
                 }
             });
         },
@@ -264,8 +266,8 @@ define(function(require, exports, module) {
                     callback();
                 },
 
-                error : function() {
-                    callback('error');
+                error : function(model, resp, options) {
+                    callback(resp);
                 }
             });
         },
@@ -279,7 +281,8 @@ define(function(require, exports, module) {
             var targetDate = new Date(this.targetDate);
 
             if (err) {
-                console.error(err);
+                this.hideLoading();
+                this.showErrorMessage("新聞情報の取得", err);
                 return;
             }
 

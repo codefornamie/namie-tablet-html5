@@ -24,7 +24,7 @@ define(function(require, exports, module) {
         /**
          * 放射線ログ情報を一度に登録する数
          */
-        LOG_BULK_COUNT: 100,
+        LOG_BULK_COUNT : 100,
         /**
          * テンプレート
          * @memberOf ModalRadiationListView#
@@ -229,11 +229,17 @@ define(function(require, exports, module) {
 
                     var message;
                     if (validator.hasError(Code.ERR_NO_RECORD)) {
-                        message = [file.name, " は何らかの原因により壊れているため、測定情報を登録できませんでした。"].join("");
+                        message = [
+                                file.name, " は何らかの原因により壊れているため、測定情報を登録できませんでした。"
+                        ].join("");
                     } else if (validator.hasError(Code.ERR_POSITION_MISSING)) {
-                        message = [file.name, " には緯度経度情報が未設定の測定情報があります。<br/>", "緯度経度が設定されている測定情報について、登録します。"].join("");
+                        message = [
+                                file.name, " には緯度経度情報が未設定の測定情報があります。<br/>", "緯度経度が設定されている測定情報について、登録します。"
+                        ].join("");
                     } else if (validator.hasError(Code.ERR_DOSE_MISSING)) {
-                        message = [file.name, " は何らかの原因により壊れているため、一部の情報を登録できません。", "正常な測定情報について、登録します。"].join("");
+                        message = [
+                                file.name, " は何らかの原因により壊れているため、一部の情報を登録できません。", "正常な測定情報について、登録します。"
+                        ].join("");
                     }
                     var saveFunction = function() {
                         // 4. レコードをもとにRadiationClusterModelを作成
@@ -306,7 +312,6 @@ define(function(require, exports, module) {
             radiationClusterModel.set("isFixedStation", false);
             radiationClusterModel.set("measurementType", Code.RAD_MEASUREMENT_PRIVATE);
 
-
             return radiationClusterModel;
         },
 
@@ -377,12 +382,12 @@ define(function(require, exports, module) {
             radiationClusterModel.save(null, {
                 success : function(model) {
                     this.increaseProgress();
-                    app.logger.debug("saveClusterModel():success");
+                    app.logger.info("saveClusterModel():success");
                     // clusterの保存に成功した場合はradiationLogの保存処理実施
                     this.setLogModels(model, file, next);
                 }.bind(this),
-                error : function(e) {
-                    app.logger.debug("saveClusterModel():error" + e.code);
+                error : function(model, response, options) {
+                    app.logger.error("saveClusterModel(): error" + response.event);
                     next([
                             file.name, " の保存処理に失敗しました。"
                     ].join(""));
@@ -438,7 +443,8 @@ define(function(require, exports, module) {
                         done();
                     },
                     error : function(model, response, options) {
-                        app.logger.info("Error ModalRadiationListView#saveEachLogModel() counter: " + counter++);
+                        app.logger.error("Error ModalRadiationListView#saveEachLogModel() counter: " + counter++ +
+                                ", event: " + response.event);
                         done(response);
                     }
                 });

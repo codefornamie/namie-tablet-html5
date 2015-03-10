@@ -26,6 +26,15 @@ define(function(require, exports, module) {
             saveData.published = this.get("published");
             saveData.publishedAt = this.get("publishedAt");
             saveData.depublishedAt = this.get("depublishedAt");
+        },
+        /**
+         * このモデルの文字列情報を取得する
+         * @memberOf SlideshowModel#
+         * @return {String} このモデルの文字列情報
+         */
+        toString : function() {
+            return "SlideshowModel [filename:" + this.get("filename") + ", published:" + this.get("published") +
+                    ", publishedAt:" + this.get("publishedAt") + ", depublishedAt:" + this.get("depublishedAt") + "]";
         }
     });
 

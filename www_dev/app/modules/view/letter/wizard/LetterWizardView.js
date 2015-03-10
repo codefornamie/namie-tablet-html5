@@ -471,11 +471,9 @@ define(function(require, exports, module) {
                     this.saveModel();
                 }
             }, this);
-            var error = $.proxy(function(e) {
+            var error = $.proxy(function(model, resp, options) {
                 this.hideLoading();
-                vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
-                vexDialog.alert("保存に失敗しました。");
-                app.logger.error("保存に失敗しました。");
+                this.showErrorMessage("写真情報の保存", resp);
             }, this);
 
             // 元画像の保存
@@ -553,11 +551,10 @@ define(function(require, exports, module) {
                     this.hideLoading();
                     app.router.go('letters/posted');
                 }, this),
-                error : function(e) {
+                error : $.proxy(function(model, resp, options) {
                     this.hideLoading();
-                    vexDialog.alert("保存に失敗しました。");
-                    app.logger.error("保存に失敗しました。");
-                }
+                    this.showErrorMessage("写真情報の保存", resp);
+                }, this)
             });
         },
 

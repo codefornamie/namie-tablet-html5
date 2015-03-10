@@ -31,8 +31,8 @@ define(function(require, exports, module) {
                     app.serverConfig.WIDGET_CHARACTER_PATTERN = model.get("value");
                     self.showWidgetImageList();
                 },
-                error : function () {
-                    this.showMessage("ウィジェット使用画像情報取得に失敗しました。");
+                error : function (model, resp, options) {
+                    self.showErrorMessage("キャラクターウィジェット画像情報取得", resp);
                 },
                 reset : true
             });

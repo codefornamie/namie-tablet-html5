@@ -51,7 +51,7 @@ define(function(require, exports, module) {
                         app.logger.error(err);
                         // 更新に失敗した場合は、次回の呼び出しで再度更新を試みるよう、modelの値を戻しておく。
                         this.get("showLastPublished", prev);
-                    }
+                    }.bind(this)
                 });
             }
         },

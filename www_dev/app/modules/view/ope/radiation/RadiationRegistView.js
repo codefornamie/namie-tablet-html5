@@ -306,7 +306,7 @@ define(function(require, exports, module) {
                     this.setLogModels(model, file);
                 }.bind(this),
                 error : function(model, resp) {
-                    this.showErrorMessage(file.name + "(radiation_cluster)の保存", resp);
+                    this.showErrorMessage(file.name + "(放射線クラスター情報)の保存", resp);
                 }.bind(this)
             });
         },

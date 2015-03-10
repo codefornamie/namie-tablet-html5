@@ -3,8 +3,8 @@ define(function(require, exports, module) {
 
     var app = require("app");
     var AbstractModel = require("modules/model/AbstractModel");
-    var Log = require("modules/util/Logger");
     var PIOImage = require("modules/util/PIOImage");
+    var PIOEvent = require("modules/event/PIOEvent");
     /**
      * WevDavにアクセスするモデル。
      * 
@@ -21,25 +21,22 @@ define(function(require, exports, module) {
 
         urlRoot : "/dav",
         path : "",
-        url : function(){
+        url : function() {
             return this.urlRoot + "/" + this.getPath();
         },
-        getPath : function(path){
+        getPath : function(path) {
             return "";
         },
         /**
          * PCS Davの取得・登録・更新・削除処理を行う。
-         *
-         * @param {String}
-         *            method メソッド
-         * @param {Object}
-         *            model モデル
-         * @param {Object}
-         *            options オプション情報
+         * 
+         * @param {String} method メソッド
+         * @param {Object} model モデル
+         * @param {Object} options オプション情報
          * @memberOf WebDavModel#
          */
         sync : function(method, model, options) {
-            Log.info("WebDavModel sync");
+            app.logger.debug("WebDavModel sync");
             var def = $.Deferred();
 
             if (!options) {
@@ -51,14 +48,34 @@ define(function(require, exports, module) {
             this.dav = app.box.col("dav");
 
             var complete = function(res) {
-                Log.info("WebDavModel search complete handler");
+                app.logger.debug("WebDavModel search complete handler");
+                // personium.ioのAPI呼び出し情報を保持するイベント
+                // 便宜上、resオブジェクトに紐付ける
+                var event = new PIOEvent(res);
+                app.logger.info("WebDavModel complete event:" + event);
+
+                res.event = event;
                 if (res.byteLength === 0) {
                     if (options.error) {
                         options.error(res);
                     }
                     def.reject(res);
                 } else if (options.success) {
-                    options.success(res);
+                    event.status = 200;
+                    if (!event.isSuccess()) {
+                        if (method === "delete" && event.isNotFound()) {
+                            // 対象のデータが存在しなかった場合、WARNを出して処理を継続する
+                            app.logger.warn("Delete method requested. but target file not found in webdav. event=" + event);
+                            options.success(res);
+                        } else {
+                            if (options.error) {
+                                options.error(res);
+                            }
+                        }
+
+                    } else {
+                        options.success(res);
+                    }
                 }
 
                 if (options.complete) {
@@ -68,7 +85,7 @@ define(function(require, exports, module) {
                     def.resolve(res);
                 }
             };
-            Log.info("Request personium. method : " + method);
+            app.logger.debug("Request personium. method : " + method);
             try {
                 switch (method) {
                 case 'create':
@@ -85,93 +102,81 @@ define(function(require, exports, module) {
                     break;
                 }
             } catch (e) {
-                Log.info("Personium Exception : " + e);
+                app.logger.debug("Personium Exception : " + e);
                 app.router.go("login");
             }
             return def.promise();
         },
         /**
          * PCS Davの登録処理を行う。
-         *
-         * @param {String}
-         *            method メソッド
-         * @param {Object}
-         *            model モデル
-         * @param {Object}
-         *            options オプション情報
-         * @param {Function}
-         *            complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
-         *            以下のシグネチャの関数を指定する。<br>
-         *            <code>complete (response:Object)</code><br>
-         *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * 
+         * @param {String} method メソッド
+         * @param {Object} model モデル
+         * @param {Object} options オプション情報
+         * @param {Function} complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *                以下のシグネチャの関数を指定する。<br>
+         *                <code>complete (response:Object)</code><br>
+         *                responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
          * @memberOf WebDavModel#
          */
         create : function(method, model, options, complete) {
-            Log.info("WebDavModel create");
+            app.logger.debug("WebDavModel create");
             var path = this.get("path");
             if (!path) {
                 new Error("path is null.");
-            } 
+            }
             var fileName = this.get("fileName");
             var contentType = this.get("contentType");
             var data = this.get("data");
             var onSuccess = options.success;
             var onFailure = options.failure;
-            
+
             this.mkCol(path);
-            this.dav.put(path + "/" + this.get("fileName"),{
+            this.dav.put(path + "/" + this.get("fileName"), {
                 body : data,
                 headers : {
                     body : data,
                     "Content-Type" : this.get("contentType"),
                     "If-Match" : "*"
                 },
-                success : $.proxy(function(e){
+                success : $.proxy(function(e) {
                     complete(e);
                 }, this),
-                error: $.proxy(function(e){
+                error : $.proxy(function(e) {
                     complete(e);
                 }, this)
             });
         },
         /**
          * PCS Davの更新処理を行う。
-         *
-         * @param {String}
-         *            method メソッド
-         * @param {Object}
-         *            model モデル
-         * @param {Object}
-         *            options オプション情報
-         * @param {Function}
-         *            complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
-         *            以下のシグネチャの関数を指定する。<br>
-         *            <code>complete (response:Object)</code><br>
-         *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * 
+         * @param {String} method メソッド
+         * @param {Object} model モデル
+         * @param {Object} options オプション情報
+         * @param {Function} complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *                以下のシグネチャの関数を指定する。<br>
+         *                <code>complete (response:Object)</code><br>
+         *                responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
          * @memberOf WebDavModel#
          */
         update : function(method, model, options, complete) {
-            Log.info("WebDavModel update");
+            app.logger.debug("WebDavModel update");
             this.create(method, model, options, complete);
         },
         /**
          * PCS Davの削除処理を行う。
-         *
-         * @param {String}
-         *            method メソッド
-         * @param {Object}
-         *            model モデル
-         * @param {Object}
-         *            options オプション情報
-         * @param {Function}
-         *            complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
-         *            以下のシグネチャの関数を指定する。<br>
-         *            <code>complete (response:Object)</code><br>
-         *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * 
+         * @param {String} method メソッド
+         * @param {Object} model モデル
+         * @param {Object} options オプション情報
+         * @param {Function} complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *                以下のシグネチャの関数を指定する。<br>
+         *                <code>complete (response:Object)</code><br>
+         *                responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
          * @memberOf WebDavModel#
          */
         del : function(method, model, options, complete) {
-            Log.info("WebDavModel delete");
+            app.logger.debug("WebDavModel delete");
             var path = this.get("path");
             if (!path) {
                 new Error("path is null.");
@@ -179,31 +184,27 @@ define(function(require, exports, module) {
             var fileName = this.get("fileName");
             var onSuccess = options.success;
             var onFailure = options.failure;
-            
-            this.dav.del(path + "/" + this.get("fileName"),{
-                success : $.proxy(function(e){
-                    Log.info("WebDavModel delete complete");
+
+            this.dav.del(path + "/" + this.get("fileName"), {
+                success : $.proxy(function(e) {
+                    app.logger.debug("WebDavModel delete complete");
                     complete(e);
                 }, this),
-                error: $.proxy(function(e){
+                error : $.proxy(function(e) {
                     complete(e);
                 }, this)
             });
         },
         /**
          * PCS Davの取得処理を行う。
-         *
-         * @param {String}
-         *            method メソッド
-         * @param {Object}
-         *            model モデル
-         * @param {Object}
-         *            options オプション情報
-         * @param {Function}
-         *            complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
-         *            以下のシグネチャの関数を指定する。<br>
-         *            <code>complete (response:Object)</code><br>
-         *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * 
+         * @param {String} method メソッド
+         * @param {Object} model モデル
+         * @param {Object} options オプション情報
+         * @param {Function} complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *                以下のシグネチャの関数を指定する。<br>
+         *                <code>complete (response:Object)</code><br>
+         *                responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
          * @memberOf WebDavModel#
          */
         retrieve : function(method, model, options, complete) {
@@ -218,18 +219,17 @@ define(function(require, exports, module) {
         },
         /**
          * PCS Davコレクションを作成する。
-         *
-         * @param {Function}
-         *            complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
-         *            以下のシグネチャの関数を指定する。<br>
-         *            <code>complete (response:Object)</code><br>
-         *            responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
+         * 
+         * @param {Function} complete 検索処理が完了した際に呼び出されるコールバック関数。<br>
+         *                以下のシグネチャの関数を指定する。<br>
+         *                <code>complete (response:Object)</code><br>
+         *                responseオブジェクトから、PCSが返却したレスポンス情報を取得することができる。
          * @memberOf WebDavModel#
          */
         mkCol : function(path) {
             var dav = app.box.col("dav");
             var idx = path.lastIndexOf("/");
-            if ( idx > 0){
+            if (idx > 0) {
                 var parentPath = path.substring(0, idx);
                 this.mkCol(parentPath);
             }

@@ -58,14 +58,13 @@ define(function(require, exports, module) {
          */
         loadSlideshow : function() {
             this.slideshowCollection.fetch({
+                success : function(model, resp, options) {
+                    this.showSuccessMessage("スライドショー画像情報の検索", model);
+                }.bind(this),
 
-                success : function() {
-                    app.logger.debug("Search successful");
-                },
-
-                error : function onErrorLoadSlideshow() {
-                    app.logger.debug("Faild to search PIO");
-                }
+                error : function onErrorLoadSlideshow(model, resp, options) {
+                    this.showErrorMessage("スライドショー画像情報の検索", resp);
+                }.bind(this)
             });
         },
         /**

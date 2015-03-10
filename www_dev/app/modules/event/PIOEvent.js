@@ -29,24 +29,29 @@ define(function(require, exports, module) {
             }
             var json = null;
             if (response.bodyAsJson) {
-                json = response.bodyAsJson();
+                try {
+                    json = response.bodyAsJson();
+                } catch (e) {
+                    json = {d: {results: []}};
+                }
             }
             if (json && json.d) {
-                json = json.d.results;
+                this.json = json.d.results;
             }
             this.json = json;
-            if (this.json) {
+            if (json) {
                 // APIの応答コード
-                this.code = this.json.code;
+                this.code = json.code;
                 // APIの応答メッセージ
-                if (this.json.message) {
-                    if (this.json.message.value) {
+                if (json.message) {
+                    if (json.message.value) {
                         // OData APIアクセスの場合、valueにメッセージ本文がある
-                        this.message = this.json.message.value;
+                        this.message = json.message.value;
                     } else {
-                        // UserScript の場合、causeにメッセージが入る
-                        if (this.json.cause) {
-                            this.message = JSON.stringify(this.json.cause);
+                        this.message = json.message;
+                        // UserScript の場合、causeにもメッセージが入る
+                        if (json.cause) {
+                            this.message += " cause=" + JSON.stringify(json.cause);
                         }
                     }
                     

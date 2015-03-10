@@ -45,7 +45,7 @@ define(function(require, exports, module) {
      * @param value トークン文字列
      */
     PcsManager.prototype.setAccessToken = function(value) {
-        Log.info("set access token : " + token);
+        Log.info("set access token : " + value);
         this.accessToken = value;
     };
 

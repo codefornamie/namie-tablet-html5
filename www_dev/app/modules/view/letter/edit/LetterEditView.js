@@ -17,6 +17,10 @@ define(function(require, exports, module) {
      */
     var LetterEditView = AbstractView.extend({
         /**
+         * アラートダイアログのカスタムスタイル
+         */
+        dialogCustomClass : "vex-theme-letter",
+        /**
          * @memberOf LetterEditView#
          */
         template : require("ldsh!templates/{mode}/edit/letterEdit"),
@@ -131,8 +135,8 @@ define(function(require, exports, module) {
                 success : function() {
                     next(null);
                 },
-                error : function(e) {
-                    next(e);
+                error : function(model, resp, options) {
+                    next(model, resp, options);
                 }
             });
         },
@@ -146,8 +150,8 @@ define(function(require, exports, module) {
                 success : function() {
                     next(null);
                 },
-                error : function(e) {
-                    next(e);
+                error : function(model, resp, options) {
+                    next(model, resp, options);
                 }
             });
         },
@@ -156,12 +160,10 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          * @param {Object} err
          */
-        onSaveComplete : function(err) {
+        onSaveComplete : function(model, resp, options) {
             this.hideLoading();
-            if (err) {
-                vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
-                vexDialog.alert("保存に失敗しました。");
-                app.logger.error("保存に失敗しました。");
+            if (resp) {
+                this.showErrorMessage("写真情報の編集", resp);
                 return;
             }
             app.router.go("letters/" + this.model.get("__id") + "/modified");

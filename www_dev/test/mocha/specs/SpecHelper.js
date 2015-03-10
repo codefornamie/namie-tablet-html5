@@ -4,6 +4,7 @@ define(function(require, exports, module) {
     var async = require("async");
     var Class = require("modules/util/Class");
     var LoginModel = require("modules/model/LoginModel");
+    var PersonalCollection = require("modules/collection/personal/PersonalCollection");
     var PersonalModel = require("modules/model/personal/PersonalModel");
     var AchievementModel = require("modules/model/misc/AchievementModel");
     var AbstractODataModel = require("modules/model/AbstractODataModel");
@@ -47,7 +48,7 @@ define(function(require, exports, module) {
         app.logger.debug("Setting personium.io enveironments.");
         app.config.basic.mode = "news";
         // テスト用セル
-        app.config.basic.cellId = "kizunatest05";
+        app.config.basic.cellId = "kizunatest06";
         app.logger.debug("app.config.basic:" + JSON.stringify(app.config.basic));
         // タイムアウト値を拡大
         spec.timeout(20000);
@@ -109,6 +110,40 @@ define(function(require, exports, module) {
                 app.logger.debug("Failed delete models" + err.toString());
             }
             done();
+        });
+    };
+    /**
+     * テストユーザーのパーソナルデータを削除する
+     * @param {Function} done 処理が完了した際に呼び出されるコールバック関数。
+     * @memberOf SpecHelper#
+     */
+    SpecHelper.deletePersonalData = function(done) {
+        var collection = new PersonalCollection();
+        collection.condition.top = 1000;
+        collection.fetch({
+            success : function(model, response, options) {
+                var fetchedModel = collection.find(function(model) {
+                    return model.get("loginId") === SpecHelper.TEST_USER;
+                });
+                if (fetchedModel) {
+                    fetchedModel.destroy({
+                        success : function(model, response, options) {
+                            app.logger.debug("Success delete personal data.");
+                            done();
+                        },
+                        error : function() {
+                            assert.ok(false, "Failed delete personal data.");
+                            done();
+                        }
+                    });
+                } else {
+                    done();
+                }
+            },
+            error: function(model, response, options) {
+                assert.ok(false, "personal collection fetched.");
+                done();
+            }
         });
     };
     /**

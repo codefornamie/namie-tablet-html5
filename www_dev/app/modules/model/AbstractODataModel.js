@@ -70,7 +70,7 @@ define(function(require, exports, module) {
                 // personium.ioのAPI呼び出し情報を保持するイベント
                 // 便宜上、resオブジェクトに紐付ける
                 var event = new PIOEvent(res);
-                app.logger.debug("AbstractODataModel event:" + event);
+                app.logger.info("AbstractODataModel complete event:" + event);
 
                 res.event = event;
                 // 取得したJSONオブジェクト
