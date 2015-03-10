@@ -175,8 +175,9 @@ define(function(require, exports, module) {
         onSaveAll : function(response) {
             this.$progressBar.attr("value", 100);
             this.hideLoading();
-
-            if (response && response.event && response.event.isError()) {
+            if (typeof response === "string") {
+                this.showMessage(response);
+            } else if (response && response.event && response.event.isError()) {
                 this.showErrorMessage("放射線情報(" + response.fileName + ")の登録", response);
                 return;
             } else {
@@ -214,7 +215,7 @@ define(function(require, exports, module) {
                             ]
                         });
                     } catch (e) {
-                        app.logger.error("CommonUtil.convertJsonObject():error=" + e);
+                        app.logger.info("CommonUtil.convertJsonObject():error=" + e);
                         next([
                                 file.name, " をCSVファイルとして読み込むことができませんでした。", "ファイル形式を再度ご確認下さい。"
                         ].join(""));
