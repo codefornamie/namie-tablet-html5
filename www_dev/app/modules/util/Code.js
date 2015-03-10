@@ -331,7 +331,13 @@ define(function(require, exports, module) {
                              ["ukedon_6_p_1.png", "ukedon_6_p_2.png"],
                              ["ukedon_7_b_1.png", "ukedon_7_b_2.png"],
                              ["ukedon_7_c_1.png", "ukedon_7_c_2.png"],
-                             ["ukedon_7_p_1.png", "ukedon_7_p_2.png"]
+                             ["ukedon_7_p_1.png", "ukedon_7_p_2.png"],
+                             ["ukedon_9_n_1.png", "ukedon_9_n_2.png"],
+                             ["ukedon_10_n_1.png", "ukedon_10_n_2.png"],
+                             ["ukedon_11_b_1.png", "ukedon_11_b_2.png"],
+                             ["ukedon_11_c_1.png", "ukedon_11_c_2.png"],
+                             ["ukedon_11_n_1.png", "ukedon_11_n_2.png"],
+                             ["ukedon_11_p_1.png", "ukedon_11_p_2.png"]
                             ];
 
     module.exports = Code;
