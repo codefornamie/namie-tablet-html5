@@ -136,7 +136,7 @@ define(function(require, exports, module) {
                     next(null);
                 },
                 error : function(model, resp, options) {
-                    next(model, resp, options);
+                    next(resp);
                 }
             });
         },
@@ -151,7 +151,7 @@ define(function(require, exports, module) {
                     next(null);
                 },
                 error : function(model, resp, options) {
-                    next(model, resp, options);
+                    next(resp);
                 }
             });
         },
@@ -160,7 +160,7 @@ define(function(require, exports, module) {
          * @memberOf LetterWizardView#
          * @param {Object} err
          */
-        onSaveComplete : function(model, resp, options) {
+        onSaveComplete : function(resp) {
             this.hideLoading();
             if (resp) {
                 this.showErrorMessage("写真情報の編集", resp);
