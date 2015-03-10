@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     "use strict";
 
     var app = require("app");
-    var AbstractODataModel = require("modules/model/AbstractODataModel");
+    var AbstractUserScriptModel = require("modules/model/AbstractUserScriptModel");
     var DateUtil = require("modules/util/DateUtil");
     var BusinessUtil = require("modules/util/BusinessUtil");
     var CommonUtil = require("modules/util/CommonUtil");
@@ -15,7 +15,8 @@ define(function(require, exports, module) {
      * @exports EventsModel
      * @constructor
      */
-    var ArticleModel = AbstractODataModel.extend({
+    var ArticleModel = AbstractUserScriptModel.extend({
+        serviceName: 'article',
         entity : "article",
 
         /**

@@ -9,6 +9,7 @@ module.exports = ->
         'userscript/exception/PIOUserScriptException.js'
         'userscript/exception/*.js'
         'userscript/PIOUserScript.js'
+        'userscript/script/common/AbstractRegisterUserScript.js'
         'userscript/script/*.js'
       ]
       dest: '../userscript/common.js'

@@ -358,9 +358,10 @@ define(function(require, exports, module) {
                 success : $.proxy(function() {
                     this.searchDojoInfo();
                 }, this),
-                error : function error() {
-                    console.log("error");
-                }
+                error : function error(model, resp, options) {
+                    this.hideLoading();
+                    this.showErrorMessage("道場動画情報の検索", resp);
+                }.bind(this)
             });
         },
 
@@ -375,11 +376,11 @@ define(function(require, exports, module) {
             this.dojoContentCollection.youtubeCollection = this.youtubeCollection;
             this.dojoContentCollection.fetch({
                 success : $.proxy(this.searchAchievement, this),
-                error : function() {
-                    app.logger.error("道場動画情報の検索に失敗しました。");
+                error : function(model, resp, options) {
                     this.hideLoading();
+                    this.showErrorMessage("道場動画情報の検索", resp);
                     return;
-                }
+                }.bind(this)
             });
         },
         /**
@@ -394,11 +395,11 @@ define(function(require, exports, module) {
                     "deletedAt")];
             this.achievementCollection.fetch({
                 success : $.proxy(this.onSearchAchievement, this),
-                error : function() {
-                    app.logger.error("達成情報の検索に失敗しました。");
+                error : function(model, resp, options) {
                     this.hideLoading();
+                    this.showErrorMessage("達成情報の検索", resp);
                     return;
-                }
+                }.bind(this)
             });
         },
         /**

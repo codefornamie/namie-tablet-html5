@@ -14,6 +14,7 @@ define(function(require, exports, module) {
          * @memberOf PIOEvent#
          */
         init : function(response) {
+            this.status = 200;
             if (!response) {
                 return;
             }
@@ -29,30 +30,46 @@ define(function(require, exports, module) {
             }
             var json = null;
             if (response.bodyAsJson) {
-                json = response.bodyAsJson();
-            }
-            if (json && json.d) {
-                json = json.d.results;
-            }
-            this.json = json;
-            if (this.json) {
-                // APIの応答コード
-                this.code = this.json.code;
-                // APIの応答メッセージ
-                if (this.json.message) {
-                    if (this.json.message.value) {
-                        // OData APIアクセスの場合、valueにメッセージ本文がある
-                        this.message = this.json.message.value;
-                    } else {
-                        // UserScript の場合、causeにメッセージが入る
-                        if (this.json.cause) {
-                            this.message = JSON.stringify(this.json.cause);
-                        }
-                    }
-                    
+                try {
+                    json = response.bodyAsJson();
+                } catch (e) {
+                    json = {d: {results: []}};
                 }
-                this._super(this.code, this.message);
+                if (json && json.d) {
+                    this.json = json.d.results;
+                }
+                this.json = json;
+                if (json) {
+                    // APIの応答コード
+                    this.code = json.code;
+                    // APIの応答メッセージ
+                    if (json.message) {
+                        if (json.message.value) {
+                            // OData APIアクセスの場合、valueにメッセージ本文がある
+                            this.message = json.message.value;
+                        } else {
+                            this.message = json.message;
+                            // UserScript の場合、causeにもメッセージが入る
+                            if (json.cause) {
+                                this.message += " cause=" + JSON.stringify(json.cause);
+                            }
+                        }
+                        
+                    }
+                }
+            } else {
+                // response.bodyAsJson を持たない場合
+                // WebDAV APIのレスポンスは、返却値がXMLのため、こちらの処理が通る
+                if (response.code) {
+                    var status = response.code.match(/[0-9]{3}?/);
+                    if (status) {
+                        this.status = parseInt(status[0]);
+                    }
+                    this.message = response.message;
+                    this.code = response.code;
+                }
             }
+            this._super(this.code, this.message);
         }
     });
     /**
@@ -83,7 +100,24 @@ define(function(require, exports, module) {
     PIOEvent.prototype.isNetworkError = function() {
         return this.networkError;
     };
-    
+    /**
+     * 対象のAPI呼び出し結果が401となったかどうか。
+     * 
+     * @memberOf PIOEvent#
+     * @return {Boolean} 対象のAPI呼び出し結果が401の場合、<code>true</code>を返す。
+     */
+    PIOEvent.prototype.isLacksPrivilege = function() {
+        return this.status === 401 || this.status === 403;
+    };
+    /**
+     * 対象のAPI呼び出し結果が503となったかどうか。
+     * 
+     * @memberOf PIOEvent#
+     * @return {Boolean} 対象のAPI呼び出し結果が503の場合、<code>true</code>を返す。
+     */
+    PIOEvent.prototype.isServerBusy = function() {
+        return this.status === 503;
+    };
     /**
      * 対象のAPI呼び出し結果が404 NotFoundとなったかどうか。
      * 

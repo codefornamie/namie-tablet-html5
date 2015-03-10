@@ -63,10 +63,10 @@ define(function(require, exports, module) {
                         app.router.go("ope-top" ,this.publishedAt);
                     }
                 }, this),
-                error : function(e) {
+                error : function(model, resp, options) {
                     this.hideLoading();
-                    vexDialog.alert("保存に失敗しました。");
-                }
+                    this.showErrorMessage("記事情報の編集", resp);
+                }.bind(this)
             });
         },
         /**

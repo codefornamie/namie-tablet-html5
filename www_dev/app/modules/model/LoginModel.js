@@ -279,20 +279,19 @@ define(function(require, exports, module) {
                                 app.user = personalModel;
                                 callback();
                             }, this),
-                            error : $.proxy(function() {
-                                app.logger.debug("personal info create faulure");
+                            error : $.proxy(function(model, resp, options) {
                                 // パーソナル情報新規登録に失敗
                                 callback("ユーザ情報の登録に失敗しました。再度ログインしてください。");
-                                app.logger.error("ユーザ情報の登録に失敗しました。再度ログインしてください。");
+                                app.logger.error("ユーザ情報の登録に失敗しました。再度ログインしてください。 event=" + resp.event);
                             }, this)
                         });
                     }
                 }, this),
-                error : $.proxy(function() {
+                error : $.proxy(function(model, resp, options) {
                     app.logger.debug("peronal collection fetch failure.");
                     // パーソナル情報検索に失敗
                     callback("ユーザ情報の取得に失敗しました。再度ログインしてください。");
-                    app.logger.error("ユーザ情報の取得に失敗しました。再度ログインしてください。");
+                    app.logger.error("ユーザ情報の取得に失敗しました。再度ログインしてください。 event=" + resp.event);
                 }, this)
             });
         },
@@ -309,10 +308,10 @@ define(function(require, exports, module) {
                     app.serverConfig = col.toMap();
                     callback();
                 },
-                error : $.proxy(function() {
+                error : $.proxy(function(model, resp, options) {
                     // 取得に失敗
                     callback("設定情報の取得に失敗しました。再度ログインしてください。");
-                    app.logger.error("設定情報の取得に失敗しました。再度ログインしてください。");
+                    app.logger.error("設定情報の取得に失敗しました。再度ログインしてください。 event=" + resp.event);
                 }, this)
             });
         },

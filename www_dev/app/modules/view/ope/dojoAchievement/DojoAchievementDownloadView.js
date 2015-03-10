@@ -111,11 +111,13 @@ define(function(require, exports, module) {
                 this.youtubeCollection.channelId = "UCSeFpozPKXTm_frDTqccxpQ";
                 this.youtubeCollection.fetch({
                     success : $.proxy(function() {
-                        this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 10);
+                        if (this.$progressBar.attr) {
+                            this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 10);
+                        }
                         next(null);
                     }, this),
-                    error : function error(err) {
-                        next(err);
+                    error : function error(model, resp, options) {
+                        next(resp);
                     }
                 });
             };
@@ -128,11 +130,13 @@ define(function(require, exports, module) {
                 this.dojoContentCollection.youtubeCollection = this.youtubeCollection;
                 this.dojoContentCollection.fetch({
                     success : function() {
-                        this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 10);
+                        if (this.$progressBar.attr) {
+                            this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 10);
+                        }
                         next(null);
                     }.bind(this),
-                    error : function (err) {
-                        next(err);
+                    error : function (model, resp, options) {
+                        next(resp);
                     }
                 });
             };
@@ -155,11 +159,13 @@ define(function(require, exports, module) {
             };
             this.personalCollection.fetch({
                 success : function() {
-                    this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 10);
+                    if (this.$progressBar.attr) {
+                        this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 10);
+                    }
                     callback();
                 }.bind(this),
-                error : function (ev) {
-                    callback(ev);
+                error : function (model, resp, options) {
+                    callback(resp);
                 }
             });
         },
@@ -175,11 +181,13 @@ define(function(require, exports, module) {
             this.achievementCollection.condition.top = 1000000;
             this.achievementCollection.fetch({
                 success : function() {
-                    this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 20);
+                    if (this.$progressBar.attr) {
+                        this.$progressBar.attr("value", parseInt(this.$progressBar.attr("value")) + 20);
+                    }
                     callback();
                 }.bind(this),
-                error : function (ev) {
-                    callback(ev);
+                error : function (model, resp, options) {
+                    callback(resp);
                 }
             });
         },
@@ -189,10 +197,8 @@ define(function(require, exports, module) {
          */
         onAllFetch : function(err) {
             if (err) {
-                app.logger.error("error OPE:DojoAchievementDownloadView:onAllFetch");
-                vexDialog.defaultOptions.className = 'vex-theme-default';
-                vexDialog.alert("道場達成状況情報の取得に失敗しました。");
                 this.hideLoading();
+                this.showErrorMessage("道場達成状況情報の取得", err);
                 return;
             }
             // 動画と達成情報の連結を行う

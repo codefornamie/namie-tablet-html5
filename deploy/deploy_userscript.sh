@@ -2,7 +2,10 @@
 
 endpoints=(
     "radiation_log.js" \
-    "radiation_cluster.js"
+    "radiation_cluster.js" \
+    "personal.js" \
+    "article.js" \
+    "achievement.js"
     )
 requirejs=(
     "common.js"

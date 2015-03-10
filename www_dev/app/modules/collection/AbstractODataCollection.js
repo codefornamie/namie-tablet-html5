@@ -94,7 +94,7 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataCollection#
          */
         sync : function(method, model, options) {
-            app.logger.info("AbstractODataCollection sync");
+            app.logger.debug("AbstractODataCollection sync");
 
             var def = $.Deferred();
 
@@ -116,11 +116,12 @@ define(function(require, exports, module) {
              * @memberOf AbstractODataCollection#
              */
             var complete = function(res) {
-                app.logger.info("AbstractODataCollection search complete handler");
+                app.logger.debug("AbstractODataCollection search complete handler");
 
                 // personium.ioのAPI呼び出し情報を保持するイベント
                 // 便宜上、resオブジェクトに紐付ける
                 var event = new PIOEvent(res);
+                app.logger.info("AbstractODataCollection complete event:" + event);
                 res.event = event;
                 // 取得したJSONオブジェクト
                 var json = null;
@@ -179,7 +180,7 @@ define(function(require, exports, module) {
          * @memberOf AbstractODataCollection#
          */
         search : function(method, model, options, complete) {
-            app.logger.info("AbstractODataCollection search");
+            app.logger.debug("AbstractODataCollection search");
             this.condition = Filter.searchCondition(this.condition);
             // 件数が多い場合は、分割してリクエストを投げるが、内部的に__idでソートが必要なため、外からorderbyを指定できない。
             console.assert(this.condition.top <= this.NUM_DOCS_PER_REQUEST || !this.condition.orderby,
@@ -188,7 +189,7 @@ define(function(require, exports, module) {
                 this.entityset.query().filter(this.condition.filter).top(this.condition.top).orderby(
                         this.condition.orderby).run({
                     complete : function(response) {
-                        app.logger.info("AbstractODataCollection search complete");
+                        app.logger.debug("AbstractODataCollection search complete");
                         complete(response);
                     }
                 });
@@ -208,17 +209,20 @@ define(function(require, exports, module) {
                     }
                     this.entityset.query().filter(filter).top(this.NUM_DOCS_PER_REQUEST).orderby("__id").run({
                         complete : function(res) {
-                            app.logger.info("AbstractODataCollection search part complete");
+                            app.logger.debug("AbstractODataCollection search part complete");
                             if (res.error) {
                                 complete(res);
                                 return;
                             }
                             var json = res.bodyAsJson();
+                            if (!json.d) {
+                                json.d = {results: []};
+                            }
                             Array.prototype.push.apply(savedResults, json.d.results);
                             if (json.d.results.length < this.NUM_DOCS_PER_REQUEST) {
                                 json.d.results = savedResults;
                                 res.concatedJson = json;
-                                app.logger.info("AbstractODataCollection search all complete");
+                                app.logger.debug("AbstractODataCollection search all complete");
                                 complete(res);
                                 return;
                             }

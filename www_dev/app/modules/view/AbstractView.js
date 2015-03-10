@@ -153,7 +153,7 @@ define(function(require, exports, module) {
             }
             var increaseValue = value || this.perProgress;
             var currentValue = parseFloat(this.$progressBar.attr("value"));
-            this.$progressBar.attr("value",currentValue + increaseValue);
+            this.$progressBar.attr("value", currentValue + increaseValue);
         },
         /**
          * ローディングメッセージを閉じる
@@ -188,12 +188,9 @@ define(function(require, exports, module) {
         /**
          * メッセージダイアログを表示する.
          * <p>
-         * personium.ioのAPI呼び出しでエラーが発生した場合に、
-         * 画面にエラーメッセージを表示するために利用する。
-         * <br>
+         * personium.ioのAPI呼び出しでエラーが発生した場合に、 画面にエラーメッセージを表示するために利用する。 <br>
          * personium.io のAPI呼び出しエラーが、端末の通信状態に起因するものであった場合、<br>
-         * 指定されたメッセージに加えて、通信状態に問題があることを示すメッセージを表示する。
-         * これを回避する場合、showNetworkErrorパラメタに<code>false</code>を指定する。
+         * 指定されたメッセージに加えて、通信状態に問題があることを示すメッセージを表示する。 これを回避する場合、showNetworkErrorパラメタに<code>false</code>を指定する。
          * </p>
          * @param {String} message メッセージ
          * @param {PIOEvent|Model} object エラーとなったイベント、または、操作対象のModel
@@ -208,9 +205,22 @@ define(function(require, exports, module) {
                 showNetworkError = true;
             }
             vexDialog.defaultOptions.className = 'vex-theme-default';
+            if (this.dialogCustomClass) {
+                vexDialog.defaultOptions.className += " " + this.dialogCustomClass;
+            }
             if (showNetworkError && object && typeof object.isNetworkError === "function") {
                 if (object.isNetworkError()) {
                     message = "通信エラーが発生したため、以下のエラーが発生しました。通信状態をご確認ください。<br/><br/>" + message;
+                }
+            }
+            if (showNetworkError && object && typeof object.isLacksPrivilege === "function") {
+                if (object.isLacksPrivilege()) {
+                    message = "この操作をするための権限がありません。<br/><br/>" + message;
+                }
+            }
+            if (showNetworkError && object && typeof object.isServerBusy === "function") {
+                if (object.isServerBusy()) {
+                    message = "現在アクセスが集中しており、画面が表示しにくい状態になっております。 時間をあけて再度操作してください。<br/><br/>" + message;
                 }
             }
             vexDialog.alert(message);
@@ -235,7 +245,7 @@ define(function(require, exports, module) {
          * @param {Object} target 操作対象オブジェクト
          * @param loggingOnly ログ記録のみかどうか。未指定の場合、<code>true</code>が設定される
          */
-        showSuccessMessage: function(operation, target, loggingOnly) {
+        showSuccessMessage : function(operation, target, loggingOnly) {
             if (loggingOnly === undefined) {
                 // デフォルトはダイアログには表示しない
                 loggingOnly = true;
@@ -255,12 +265,20 @@ define(function(require, exports, module) {
          * @param {String} operation 成功した操作を表す文字列 (ex. メッセージ情報の保存)
          * @param {Object} resp 処理の結果、personium.io が返却したエラー情報を含むレスポンス
          */
-        showErrorMessage: function(operation, resp) {
-            if (resp.event && resp.event.isConflict()) {
-                this.showMessage("他のユーザーと操作が競合したため、" + operation + "を完了できませんでした。" +
-                            "<br/>再度、操作を行ってください。", resp.event);
+        showErrorMessage : function(operation, resp) {
+            if (resp) {
+                if (resp.event) {
+                    if (resp.event && resp.event.isConflict()) {
+                        this.showMessage("他のユーザーと操作が競合したため、" + operation + "を完了できませんでした。" + "<br/>再度、操作を行ってください。",
+                                resp.event);
+                    } else {
+                        this.showMessage(operation + "に失敗しました。", resp.event, app.PIOLogLevel.ERROR);
+                    }
+                } else {
+                    this.showMessage(operation + "に失敗しました。", resp, app.PIOLogLevel.ERROR);
+                }
             } else {
-                this.showMessage(operation + "に失敗しました。", resp.event, app.PIOLogLevel.ERROR);
+                this.showMessage(operation + "に失敗しました。", undefined, app.PIOLogLevel.ERROR);
             }
         },
         /**
@@ -422,8 +440,8 @@ define(function(require, exports, module) {
             fileName = CommonUtil.blankTrim(fileName);
             var preName = fileName.substr(0, fileName.lastIndexOf("."));
             // PIO用ファイル名正規化処理
-            preName = preName.substr(0,100);
-            preName = preName.replace(/[\[\]()\{\}]/g,"_");
+            preName = preName.substr(0, 100);
+            preName = preName.replace(/[\[\]()\{\}]/g, "_");
             var suffName = fileName.substr(fileName.lastIndexOf("."));
             return preName + "_" + new Date().getTime() + _.uniqueId("") + suffName;
         },

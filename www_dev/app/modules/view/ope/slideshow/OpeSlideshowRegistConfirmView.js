@@ -90,9 +90,10 @@ define(function(require, exports, module) {
                 self.$progressBar.attr("value", 100);
                 self.hideLoading();
                 if (err) {
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert(err);
-                    app.logger.error("OpeSlideshowRegistConfirmView#onClickSlideshowRegistButton():error:" + err);
+                    self.showErrorMessage("スライドショー画像の保存", err);
+//                    vexDialog.defaultOptions.className = 'vex-theme-default';
+//                    vexDialog.alert(err);
+//                    app.logger.error("OpeSlideshowRegistConfirmView#onClickSlideshowRegistButton():error:" + err);
                     return;
                 }
                 app.logger.debug("success all to save slideshow pictures.");
@@ -129,8 +130,8 @@ define(function(require, exports, module) {
                     this.increaseProgress();
                     this.saveModel(model, done);
                 }.bind(this),
-                error : function(e) {
-                    done("スライドショー画像の登録に失敗しました。");
+                error : function(model, resp, options) {
+                    done(resp);
                 }
             });
         },
@@ -146,8 +147,8 @@ define(function(require, exports, module) {
                     this.increaseProgress();
                     done();
                 }.bind(this),
-                error : function(e) {
-                    done("スライドショー画像の登録に失敗しました。");
+                error : function(model, resp, options) {
+                    done(resp);
                 }
             });
         }

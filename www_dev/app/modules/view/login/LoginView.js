@@ -24,7 +24,7 @@ define(function(require, exports, module) {
         },
         beforeRendered : function() {
             app.logger.info("Start LoginView:beforeRendered");
-            setTimeout($.proxy(this.onTimeout, this), 1000);
+            setTimeout($.proxy(this.onTimeout, this), 0);
         },
 
         afterRendered : function() {
@@ -35,6 +35,7 @@ define(function(require, exports, module) {
          */
         onTimeout : function() {
             app.logger.info("Start LoginView:app.pcsManager.ready");
+            app.pcsManager.loginModel = this.model;
             app.pcsManager.ready($.proxy(function(error) {
                 if (error) {
                     Log.info("error pcsManager.ready failure msg : " + error);

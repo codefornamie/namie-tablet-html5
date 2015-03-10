@@ -9,13 +9,15 @@ define(function(require) {
 
     describe("PersonalModel", function() {
         before(function(done) {
-            SpecHelper.before(this, done);
+            SpecHelper.before(this, function() {
+                SpecHelper.deletePersonalData(done);
+            });
         });
 
         var testDataId;
         it("TEST-01 PersonalModel#save パーソナル情報の登録ができることを確認する", function(done) {
             var model = new PersonalModel();
-            model.set("loginId", SpecHelper.TEST_USER + "-test");
+            model.set("loginId", SpecHelper.TEST_USER);
             model.set("roles", "admin");
             model.set("fontSize", "middle");
 

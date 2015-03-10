@@ -32,23 +32,29 @@ CommonUtil.extend = function(s, c) {
     };
     return c;
 };
-CommonUtil.base64decord = function(s) {
-    var base64list = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-    var t = '', p = -8, a = 0, c, d;
-
-    for (var i = 0; i < s.length; i++) {
-        if ((c = base64list.indexOf(s.charAt(i))) < 0)
-            continue;
-        a = (a << 6) | (c & 63);
-        if ((p += 6) >= 0) {
-            d = (a >> p) & 255;
-            if (c != 64)
-                t += String.fromCharCode(d);
-            a &= 63;
-            p -= 8;
-        }
-    }
-    return t;
+/**
+ * base64decode function
+ * 
+ * @param {String} s base64 encoded string.
+ * @return {String} base64 decoded string.
+ */
+CommonUtil.base64decode = function(s) {
+     var base64list = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.';
+     var t = '', p = -8, a = 0, c, d;
+    
+     for (var i = 0; i < s.length; i++) {
+     if ((c = base64list.indexOf(s.charAt(i))) < 0)
+     continue;
+     a = (a << 6) | (c & 63);
+     if ((p += 6) >= 0) {
+     d = (a >> p) & 255;
+     if (c != 64)
+     t += String.fromCharCode(d);
+     a &= 63;
+     p -= 8;
+     }
+     }
+     return t;
 };
 /**
  * URL文字列からセルIDを取得する。

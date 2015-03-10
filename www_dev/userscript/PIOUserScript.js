@@ -1,10 +1,11 @@
-/* global dc: false */
 /* global StatusCode: false */
+/* global dc: false */
 /* global CommonUtil: false */
 /* global StringUtil: false */
 /* global PIOUserScriptException: false */
 /* global PIOUnknownException: false */
 /* global MethodNotAllowdException: false */
+/* global NoRefreshTokenException: false */
 /* global PIOLogger: false */
 /* global Message: false */
 /* global JSGIResponse: false */
@@ -49,31 +50,51 @@ function PIOUserScript(request, allowdMethods) {
         }
         this.headers = request.headers;
         // リクエストを発行したアカウントのIDを取得する
-//        this.accountId = this.getRequestAccountId();
-//        this.log('I', "account id = %1", [
-//            this.accountId
-//        ]);
+        this.accountId = this.getRequestAccountId();
+        this.log('I', "account id = %1", [
+            this.accountId
+        ]);
 
         this.log('I', "Start userscript. name = %1", [
             CommonUtil.getClassName(this)
         ]);
     } catch (e) {
-        throw new PIOUnknownException(CommonUtil.getClassName(this), e);
+        if (e instanceof PIOUserScriptException) {
+            return e.serialize();
+        } else {
+            throw new PIOUnknownException(CommonUtil.getClassName(this), e);
+        }
     }
 }
-PIOUserScript.prototype.getAuthorizationToken = function() {
-    var authorization = this.headers["authorization"];
-    var token = authorization.substring("Bearer ".length);
-    this.log('I', "token = %1", [
-        token
-    ]);
-    return token;
-};
-PIOUserScript.prototype.getRequestAccountId = function() {
-    var token = this.getAuthorizationToken();
-    var decoredToken = CommonUtil.base64decord(token);
 
-    return decoredToken;
+/**
+ * ユーザースクリプトを呼び出したアカウントのIDを取得する。
+ * <p>
+ * 処理は以下の流れで行う。
+ * <ol>
+ * <li>自セルに対してトランスセルトークン認証を行う</li>
+ * <li>トークンをURL safeなBase64でデコードする</li>
+ * <li>デコードした文字列内に含まれるアカウントIDを取得する</li>
+ * </ol>
+ * </p>
+ * @returns {String} アカウントID
+ */
+PIOUserScript.prototype.getRequestAccountId = function() {
+    this.log("I", "getRequestAccountId");
+    // refresh tokenが指定されていない場合はエラー
+    if (!this.body.refreshToken) {
+        throw new NoRefreshTokenException();
+    }
+    var cell = dc.as({
+        "cellUrl" : this.cellUrl,
+        "refreshToken" : this.body.refreshToken
+    }).cell(this.cellId);
+    var token = cell.getToken().access_token;
+    // URL safeなBase64 デコード
+    var decoredToken = CommonUtil.base64decode(token);
+    // Base64デコードした文字列からアカウントのIDを取得する
+    var userId = decoredToken.match(/<NameID>(.*)<\/NameID>/)[1].split("/#")[1];
+    return userId;
 };
 /**
  * personium.io へのアクセスオブジェクトを取得する
@@ -101,6 +122,13 @@ PIOUserScript.prototype.init = function() {
     // ロガーの初期化
     this.logger = new PIOLogger(this.cell);
 };
+/**
+ * ログを出力する。
+ * @param {String} level ログレベル('I' or 'W' or 'E')
+ * @param {String} message ログメッセージ。%1から%9までのパラメタを指定可能
+ * @param {Array} messageParams ログメッセージパラメタの値。パラメタがない場合、空配列を指定する。
+ * @param {Error} error エラー情報
+ */
 PIOUserScript.prototype.log = function(level, message, messageParams, error) {
     message = Message.getMessage(message, messageParams);
     if (error) {
@@ -126,7 +154,10 @@ PIOUserScript.prototype.log = function(level, message, messageParams, error) {
 };
 
 /**
- * リクエストメソッドがGETの場合に呼び出される。 サブクラスは、このメソッドをオーバライドして、GETメソッドの処理を実装する。
+ * リクエストメソッドがGETの場合に呼び出される。
+ * <p>
+ * サブクラスは、このメソッドをオーバライドして、GETメソッドの処理を実装する。
+ * </p>
  * 
  * @param {JSGIRequest} request クライアントからのリクエスト情報
  * @returns {JSGIResponse} 処理結果
@@ -141,7 +172,7 @@ PIOUserScript.prototype.get = function(request) {
  * @param {JSGIRequest} request クライアントからのリクエスト情報
  * @returns {JSGIResponse} 処理結果
  */
-PIOUserScript.prototype.put = function() {
+PIOUserScript.prototype.put = function(request) {
     // 入力チェック処理を呼び出す
     this.updateValidation();
 
@@ -151,7 +182,7 @@ PIOUserScript.prototype.put = function() {
         input = JSON.parse(this.body.d);
     }
 
-    var response = this.update(input);
+    var response = this.update(input, this.body.etag);
 
     if (response) {
         // 明示されたレスポンスがあれば、それを返す。
@@ -213,6 +244,15 @@ PIOUserScript.prototype.createValidation = function() {
 
 };
 /**
+ * 更新処理リクエストの入力パラメタのチェックを行う。
+ * <p>
+ * サブクラスは、このメソッドをオーバライドして、更新処理での入力チェックを実装する。
+ * </p>
+ */
+PIOUserScript.prototype.updateValidation = function() {
+
+};
+/**
  * 登録処理を行う。
  * <p>
  * サブクラスは、このメソッドをオーバライドして、登録処理を実装する。
@@ -224,15 +264,50 @@ PIOUserScript.prototype.create = function(input) {
 
 };
 /**
- * リクエストメソッドがDELETEの場合に呼び出される。 サブクラスは、このメソッドをオーバライドして、DELETEメソッドの処理を実装する。
+ * リクエストメソッドがDELETEの場合に呼び出される。
+ * <p>
+ * サブクラスは、このメソッドをオーバライドして、DELETEメソッドの処理を実装する。
+ * </p>
  * 
  * @param {JSGIRequest} request クライアントからのリクエスト情報
  * @returns {JSGIResponse} 処理結果
  */
 PIOUserScript.prototype.del = function(request) {
-    return null;
-};
+    // 入力チェック処理を呼び出す
+    this.deleteValidation();
 
+    // リクエストボディをJSONオブジェクトに変換する
+    var input = null;
+    if (this.body.d !== undefined) {
+        input = JSON.parse(this.body.d);
+    }
+
+    var response = this.destory(this.query.id, this.body.etag);
+
+    if (response) {
+        // 明示されたレスポンスがあれば、それを返す。
+        return response;
+    } else {
+        // なければ、デフォルトの正常終了レスポンスを返す
+        response = new JSGIResponse();
+        response.status = StatusCode.HTTP_OK;
+        response.setResponseData({
+            "message" : Message.getMessage("Script execution finished successfully. UserScript: %1", [
+                CommonUtil.getClassName(this)
+            ])
+        });
+        return response;
+    }
+};
+/**
+ * 削除処理リクエストの入力パラメタのチェックを行う。
+ * <p>
+ * サブクラスは、このメソッドをオーバライドして、削除処理での入力チェックを実装する。
+ * </p>
+ */
+PIOUserScript.prototype.deleteValidation = function() {
+
+};
 /**
  * クライアントから指定されたリクエストメソッドに対応するメソッドを呼び出す。
  * 
