@@ -61,7 +61,6 @@ define(function(require, exports, module) {
                     }
                     def.reject(res);
                 } else if (options.success) {
-                    event.status = 200;
                     if (!event.isSuccess()) {
                         if (method === "delete" && event.isNotFound()) {
                             // 対象のデータが存在しなかった場合、WARNを出して処理を継続する
@@ -131,7 +130,13 @@ define(function(require, exports, module) {
             var onSuccess = options.success;
             var onFailure = options.failure;
 
-            this.mkCol(path);
+            try {
+                this.mkCol(path);
+            } catch (e) {
+                complete(e);
+                return;
+            }
+
             this.dav.put(path + "/" + this.get("fileName"), {
                 body : data,
                 headers : {

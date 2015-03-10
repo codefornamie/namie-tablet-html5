@@ -212,11 +212,13 @@ define(function(require, exports, module) {
                 if (object.isNetworkError()) {
                     message = "通信エラーが発生したため、以下のエラーが発生しました。通信状態をご確認ください。<br/><br/>" + message;
                 }
-            } else if (showNetworkError && object && typeof object.isLacksPrivilege === "function") {
+            }
+            if (showNetworkError && object && typeof object.isLacksPrivilege === "function") {
                 if (object.isLacksPrivilege()) {
                     message = "この操作をするための権限がありません。<br/><br/>" + message;
                 }
-            } else if (showNetworkError && object && typeof object.isServerBusy === "function") {
+            }
+            if (showNetworkError && object && typeof object.isServerBusy === "function") {
                 if (object.isServerBusy()) {
                     message = "現在アクセスが集中しており、画面が表示しにくい状態になっております。 時間をあけて再度操作してください。<br/><br/>" + message;
                 }
