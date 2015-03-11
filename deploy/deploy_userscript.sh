@@ -19,7 +19,7 @@ deploy_api() {
     requestUrl=${_url}
     printf "${requestUrl}"
 
-    _result=`curl "${requestUrl}" -X PUT -H "Authorization:Bearer \"${TOKEN}\"" --data-binary @${SRC_DIR}/${scriptFile} -i -s -H "Content-Type: text/javascript" -k --retry ${RETRY_COUNT}`
+    _result=`curl "${requestUrl}" -X PUT -H "Authorization:Bearer ${TOKEN}" --data-binary @${SRC_DIR}/${scriptFile} -i -s -H "Content-Type: text/javascript" -k --retry ${RETRY_COUNT}`
 
     if [[ "$_result" =~ $_expect ]]; then
         echo " ..OK"
