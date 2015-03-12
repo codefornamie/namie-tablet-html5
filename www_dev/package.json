@@ -36,7 +36,8 @@
   },
   "scripts": {
     "test": "grunt test coveralls",
-    "perf": "PATH=$PATH:`npm bin` node test/perf/memory.js"
+    "perf": "PATH=$PATH:`npm bin` node test/perf/memory.js",
+    "perf-snapshot": "PATH=$PATH:`npm bin` node test/perf/memory.js --snapshot"
   },
   "repository": {
     "type": "git",

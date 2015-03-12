@@ -113,7 +113,7 @@ function runTest(username, password) {
         driver.sleep(0).then(function () {console.log(colors.info("全体試行回数: " + (index + 1) + "回目"));} );
 
         // 1 ログインする
-        driver.get('http://0.0.0.0:8000/').then(function () {showStep("1 ログインする");} );
+        driver.get('http://127.0.0.1:8000/').then(function () {showStep("1 ログインする");} );
         driver.wait(function () {
             return driver.isElementPresent(By.css('#loginId'));
         }, TIMEOUT);
