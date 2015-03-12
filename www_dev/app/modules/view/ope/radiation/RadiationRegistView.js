@@ -326,7 +326,7 @@ define(function(require, exports, module) {
                 model.set("longitude", rec[Code.AUTOMOTIVE_TITLE_LONGITUDE]);
                 model.set("altitude", null);
                 model.set("collectionId", radiationClusterModel.get("__id"));
-                logModels.push(model);
+                logModels.push(model.getSaveData());
             });
             this.saveEachLogModel(logModels, file);
         },
