@@ -256,8 +256,13 @@ define(function(require, exports, module) {
             file.numSample = data.length;
 
             // データから線量1のみの配列を取得
-            var svs = _.map(data, function(obj) {
-                return parseFloat(obj[Code.AUTOMOTIVE_TITLE_DOSE1]);
+            var svs = [];
+            _.each(data, function(obj) {
+                var value = parseFloat(obj[Code.AUTOMOTIVE_TITLE_DOSE1]);
+                // 線量がある場合のみ追加
+                if (value !== 0) {
+                    svs.push(value);
+                }
             });
             file.maxValue = _.max(svs, function(sv) {
                 return sv;
@@ -267,13 +272,13 @@ define(function(require, exports, module) {
             });
             file.averageValue = _.reduce(svs, function(pre, next) {
                 return pre + next;
-            }) / data.length;
+            }) / svs.length;
 
             // データから緯度のみの配列を取得
             var latitudes = _.map(data, function(obj) {
                 return parseFloat(obj[Code.AUTOMOTIVE_TITLE_LATITUDE]);
             });
-            // データから軽度のみの配列を取得
+            // データから経度のみの配列を取得
             var longitudes = _.map(data, function(obj) {
                 return parseFloat(obj[Code.AUTOMOTIVE_TITLE_LONGITUDE]);
             });
