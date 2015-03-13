@@ -25,6 +25,7 @@ define(function(require, exports, module) {
         serialize : function () {
             var prop = this.model.toGeoJSON().properties;
             var m = moment(prop.startDate);
+            var m2 = moment(prop.endDate);
             var isInvalid = !m.isValid();
             var generateKeyFormatPair = function (key) {
                 return [key, isInvalid ? "--" : m.format(key)];
@@ -34,6 +35,9 @@ define(function(require, exports, module) {
                 .map(generateKeyFormatPair)
                 .object()
                 .value();
+
+            var startTime = m.isValid() ? m.format("HH:mm") : "--";
+            var endTime = m2.isValid() ? m2.format("HH:mm") : "--";
 
             var errorCode = this.model.get("errorCode");
             var hasErrDoseMissing = errorCode & Code.ERR_DOSE_MISSING;
@@ -45,6 +49,8 @@ define(function(require, exports, module) {
                 model : this.model,
                 prop : prop,
                 date : date,
+                startTime : startTime,
+                endTime : endTime,
                 hasErrDoseMissing : hasErrDoseMissing,
                 hasErrPositionMissing : hasErrPositionMissing,
                 hasErrInvalidDate : hasErrInvalidDate,
