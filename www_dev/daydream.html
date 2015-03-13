@@ -214,6 +214,10 @@ body {
             // 親要素へバブルさせない
             return false;
         });
+        $(".pageArea").on("touchstart", function(e) {
+            appJsInterface.closeDreamService();
+            e.preventDefault();
+        });
         // Java呼び出し(トークン取得)
         callJava();
 
