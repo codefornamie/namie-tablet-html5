@@ -42,7 +42,7 @@ define(function(require, exports, module) {
             var errorCode = this.model.get("errorCode");
             var hasErrDoseMissing = errorCode & Code.ERR_DOSE_MISSING;
             var hasErrPositionMissing = errorCode & Code.ERR_POSITION_MISSING;
-            var hasErrInvalidDate = errorCode & Code.ERR_INALID_DATE;
+            var hasErrInvalidDate = errorCode & Code.ERR_INVALID_DATE;
             var hasError = !!errorCode;
 
             return {
