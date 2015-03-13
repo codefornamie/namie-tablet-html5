@@ -162,8 +162,15 @@ define(function(require, exports, module) {
             this.perProgress = 100 / fileEntries.length / 2;
 
             // radiationClusterの保存からradiationLogの保存の1セットをシリアルに処理する
-            async.eachSeries(fileEntries, function(fileEntry, next) {
-                self.convertFileEntry(fileEntry, next);
+            async.mapSeries(fileEntries, function(fileEntry, next) {
+                self.convertFileEntry(fileEntry, function (err, result) {
+                    if (err) {
+                        next(err);
+                        return;
+                    }
+
+                    next(null, result);
+                });
             }, this.onSaveAll.bind(this));
         },
 
@@ -171,17 +178,26 @@ define(function(require, exports, module) {
          * 全ファイルのアップロードが完了したか、または一部ファイルのアップロードに失敗したら呼ばれる
          * @memberOf ModalRadiationListView#
          * @param {Error} err
+         * @param {Array} results
          */
-        onSaveAll : function(response) {
+        onSaveAll : function(err, results) {
+            // アップロードに成功したリクエストの数を集計する
+            var saved = results.reduce(function (sum, obj) {
+                return sum + obj.saved;
+            }, 0);
+
             this.$progressBar.attr("value", 100);
             this.hideLoading();
-            if (typeof response === "string") {
-                this.showMessage(response);
-            } else if (response && response.event && response.event.isError()) {
-                this.showErrorMessage("放射線情報(" + response.fileName + ")の登録", response);
+
+            if (typeof err === "string") {
+                this.showMessage(err);
+            } else if (err && err.event && err.event.isError()) {
+                this.showErrorMessage("放射線情報(" + err.fileName + ")の登録", err);
                 return;
+            } else if (saved === 0) {
+                this.showErrorMessage("放射線情報の登録");
             } else {
-                this.showSuccessMessage("放射線情報の登録", response, false);
+                this.showSuccessMessage("放射線情報の登録", err, false);
             }
 
             app.logger.debug("success all to save radiationCluster and radiationLog");
@@ -242,17 +258,22 @@ define(function(require, exports, module) {
                                 file.name, " は何らかの原因により壊れているため、一部の情報を登録できません。", "正常な測定情報について、登録します。"
                         ].join("");
                     }
+
                     var saveFunction = function() {
                         // 4. レコードをもとにRadiationClusterModelを作成
                         var radiationClusterModel = this.createRadiationClusterModel(file, validator.errorCode);
+
                         // 5. Model保存処理
                         this.saveClusterModel(radiationClusterModel, file, next);
                     }.bind(this);
+
                     if (message) {
                         // BlockUIでブロックしていると、タブレット実機の場合にVexDialogのOKボタンが押せなくなるため、
                         // 一時的にブロックを解除する
                         var currentValue = parseFloat(this.$progressBar.attr("value"));
+
                         this.hideLoading();
+
                         vexDialog.alert({
                             message : message,
                             callback : function(value) {
@@ -432,6 +453,8 @@ define(function(require, exports, module) {
             // 登録はUserScript内で$batchを利用して一括処理される
             var slicedModels = CommonUtil.sliceArray(models, this.LOG_BULK_COUNT);
             var counter = 0;
+            var saved = 0;
+
             async.eachLimit(slicedModels, 1,
             // 各要素に対する保存処理
             function fn(models, done) {
@@ -441,6 +464,7 @@ define(function(require, exports, module) {
                 model.save(null, {
                     success : function(model, response, options) {
                         app.logger.info("Success ModalRadiationListView#saveEachLogModel() counter: " + counter++);
+                        saved++;
                         done();
                     },
                     error : function(model, response, options) {
@@ -454,10 +478,10 @@ define(function(require, exports, module) {
             function onFinish(response) {
                 if (response && response.event && response.event.isError()) {
                     response.fileName = file.name;
-                    next(response);
+                    next(response, { saved: saved });
                 } else {
                     self.increaseProgress();
-                    next(response);
+                    next(response, { saved: saved });
                 }
             });
         },
