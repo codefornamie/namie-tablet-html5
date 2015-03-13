@@ -341,7 +341,7 @@ define(function(require, exports, module) {
             _.each(data, function(obj) {
                 var value = parseFloat(obj[Code.HORIBA_TITLE_DOSE]);
                 // 線量がある場合のみ追加
-                if (value !== 0) {
+                if (value !== 0 && !isNaN(value)) {
                     svs.push(value);
                 }
             });
