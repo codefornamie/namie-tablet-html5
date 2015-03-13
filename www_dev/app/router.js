@@ -342,6 +342,11 @@ define(function(require, exports, module) {
 
             var targetDate = app.previewTargetDate ? app.previewTargetDate : date;
 
+            // モーダルダイアログを出したままホーム画面から戻ってきた場合
+            // モーダルダイアログが出たままトップページに遷移してしまうので
+            // 先にモーダルダイアログを消しておく
+            app.trigger("closeLightBox");
+
             // 日付が変わったら保存されているスクロール位置を削除する
             if (date !== app.currentDate) {
                 app.scrollTop = 0;
