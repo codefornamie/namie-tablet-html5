@@ -84,15 +84,17 @@ define(function(require, exports, module) {
          * @memberOf LetterEditView#
          */
         onClickUpdateLetter : function(ev) {
-            if (this.validate()) {
-                this.showLoading();
-                this.setInputValue();
-                // データ更新後、etagを更新するためthis.modelを再度fetchする
-                async.series([
-                        this.saveModel.bind(this), this.fetchModel.bind(this)
-                ], this.onSaveComplete.bind(this));
-            } else {
-                return;
+            if ($("#letter-edit-form").validate().form()) {
+                if (this.validate()) {
+                    this.showLoading();
+                    this.setInputValue();
+                    // データ更新後、etagを更新するためthis.modelを再度fetchする
+                    async.series([
+                            this.saveModel.bind(this), this.fetchModel.bind(this)
+                    ], this.onSaveComplete.bind(this));
+                } else {
+                    return;
+                }
             }
         },
 
