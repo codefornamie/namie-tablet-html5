@@ -1191,6 +1191,7 @@ div.nehan-block.nehan-body:last-child {
     margin-bottom: 10px;
     padding-left: 80px;
     min-height: 36px;
+    word-break: break-all;
 }
 
 .event__status {
