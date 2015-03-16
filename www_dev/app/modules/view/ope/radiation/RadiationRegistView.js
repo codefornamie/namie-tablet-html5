@@ -136,7 +136,7 @@ define(function(require, exports, module) {
                 } catch (e) {
                     app.logger.error("CommonUtil.convertJsonObject():error=" + e);
                     vexDialog.defaultOptions.className = "vex-theme-default";
-                    vexDialog.alert(file.name + " をCSVファイルとして読み込むことができませんでした。", "ファイル形式を再度ご確認下さい。");
+                    vexDialog.alert(file.name + " をCSVファイルとして読み込むことができませんでした。ファイル形式を再度ご確認下さい。");
                     this.hideLoading();
                     return;
                 }
@@ -153,7 +153,7 @@ define(function(require, exports, module) {
                 if (validator.hasError(Code.ERR_NO_RECORD)) {
                     vexDialog.alert({
                         message : [
-                                file.name, " は何らかの原因により壊れているため、情報を登録できませんでした。"
+                                file.name, " は何らかの原因により壊れているため、測定情報を登録できませんでした。"
                         ].join("")
                     });
                     this.hideLoading();
@@ -161,16 +161,16 @@ define(function(require, exports, module) {
                 } else if (validator.hasError(Code.ERR_POSITION_MISSING)) {
                     vexDialog.alert({
                         message : [
-                                file.name, " は何らかの原因により壊れているため、一部の情報を登録できませんでした。", "正常な情報については、登録を実施します。"
+                                file.name, " には緯度経度情報が未設定の測定情報があります。<br/>", "緯度経度が設定されている測定情報について、登録します。"
                         ].join("")
                     });
                 } else if (validator.hasError(Code.ERR_DOSE_MISSING)) {
                     // 車載線量計のデータの最初のレコードが線量0のため、このバリデータは一時無効とする
-//                    vexDialog.alert({
-//                        message : [
-//                                file.name, " は何らかの原因により壊れているため、一部の情報を登録できませんでした。", "正常な情報については、登録が完了しました。"
-//                        ].join("")
-//                    });
+                    // vexDialog.alert({
+                    // message : [
+                    // file.name, " は何らかの原因により壊れているため、一部の情報を登録できませんでした。", "正常な情報については、登録が完了しました。"
+                    //                        ].join("")
+                    //                    });
                 }
 
                 // 4. レコードをもとにRadiationClusterModelを作成
@@ -364,7 +364,7 @@ define(function(require, exports, module) {
             // 保存処理が全て完了したら呼ばれる
             function onFinish(response) {
                 if (response && response.event && response.event.isError()) {
-                    this.showErrorMessage(file.name + "(radiation_log)の保存処理", response);
+                    this.showErrorMessage(file.name + "(放射線ログ情報)の保存処理", response);
                 } else {
                     this.hideLoading();
                     app.router.go("ope-radiation");

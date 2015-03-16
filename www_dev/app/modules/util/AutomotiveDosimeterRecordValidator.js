@@ -77,7 +77,7 @@
             }
 
             // 時刻が不正な場合
-            if (!moment(moment().format("YYYY-MM-DDT") + time).isValid()) {
+            if (!moment(moment().format("YYYY-MM-DDT") + time).isValid() || !time) {
                 this.errorCode |= Code.ERR_INVALID_DATE;
             }
 
