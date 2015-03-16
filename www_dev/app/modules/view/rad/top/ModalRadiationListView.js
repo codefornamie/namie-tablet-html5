@@ -34,7 +34,7 @@ define(function(require, exports, module) {
         /**
          * レンダリングに利用するオブジェクトを作成する
          * 
-         * @memberOf RadPopupView#
+         * @memberOf ModalRadiationListView#
          * @return {Object}
          */
         serialize : function() {
@@ -358,8 +358,13 @@ define(function(require, exports, module) {
             file.numSample = data.length;
 
             // データから線量のみの配列を取得
-            var svs = _.map(data, function(obj) {
-                return parseFloat(obj[Code.HORIBA_TITLE_DOSE]);
+            var svs = [];
+            _.each(data, function(obj) {
+                var value = parseFloat(obj[Code.HORIBA_TITLE_DOSE]);
+                // 線量がある場合のみ追加
+                if (value !== 0 && !isNaN(value)) {
+                    svs.push(value);
+                }
             });
             file.maxValue = _.max(svs, function(sv) {
                 return sv;
@@ -369,13 +374,13 @@ define(function(require, exports, module) {
             });
             file.averageValue = _.reduce(svs, function(pre, next) {
                 return pre + next;
-            }) / data.length;
+            }) / svs.length;
 
             // データから緯度のみの配列を取得
             var latitudes = _.map(data, function(obj) {
                 return parseFloat(obj[Code.HORIBA_TITLE_POSITION].split(" ")[0]);
             });
-            // データから軽度のみの配列を取得
+            // データから経度のみの配列を取得
             var longitudes = _.map(data, function(obj) {
                 return parseFloat(obj[Code.HORIBA_TITLE_POSITION].split(" ")[1]);
             });

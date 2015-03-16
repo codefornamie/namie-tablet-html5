@@ -266,7 +266,7 @@ define(function(require, exports, module) {
          */
         defineMaxClusterRadius : function (zoom) {
             var radius = 80;
-            console.log("zoom: " + zoom + ", radius: " + radius);
+
             return radius;
         },
 

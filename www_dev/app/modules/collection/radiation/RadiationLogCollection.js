@@ -4,7 +4,9 @@ define(function(require, exports, module) {
     var app = require("app");
     var AbstractODataCollection = require("modules/collection/AbstractODataCollection");
     var RadiationLogModel = require("modules/model/radiation/RadiationLogModel");
+    var And = require("modules/util/filter/And");
     var Equal = require("modules/util/filter/Equal");
+    var Ge = require("modules/util/filter/Ge");
 
     /**
      * 放射線量データのコレクションクラス
@@ -60,7 +62,10 @@ define(function(require, exports, module) {
          */
         setSearchConditionIncludeInCluster : function() {
             this.condition.filters = [
-                new Equal("collectionId", this.collectionId)
+                new And([
+                    new Equal("collectionId", this.collectionId),
+                    new Ge("value", 0, true)
+                ])
             ];
         },
 
