@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var Code = require("modules/util/Code");
     var Or = require("modules/util/filter/Or");
     var IsNull = require("modules/util/filter/IsNull");
+    var And = require("modules/util/filter/And");
 
     /**
      * 放射線量データのコレクションクラス
@@ -88,9 +89,12 @@ define(function(require, exports, module) {
          */
         setSearchConditionByMunicipalityOrByMyself : function() {
             this.condition.filters = [
-                new Or([
-                    new Equal("measurementType", Code.RAD_MEASUREMENT_MUNICIPALITY),
-                    new Equal("userId", app.user.get("__id"))
+                new And([
+                    new Or([
+                        new Equal("measurementType", Code.RAD_MEASUREMENT_MUNICIPALITY),
+                        new Equal("userId", app.user.get("__id"))
+                    ]),
+                    new IsNull("deletedAt")
                 ])
             ];
         },
