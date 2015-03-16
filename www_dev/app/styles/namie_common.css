@@ -966,6 +966,7 @@ div.nehan-block.nehan-body:last-child {
     margin-bottom: 20px;
     margin-top: 20px;
     text-align: right;
+    word-break: break-all;
 }
 
 .letter-detail__nickname-unit {
@@ -976,6 +977,7 @@ div.nehan-block.nehan-body:last-child {
 .letter-detail__description {
     color: rgb(90, 86, 61);
     font-size: 1.7rem;
+    word-break: break-all;
 }
 
 /**
