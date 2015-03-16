@@ -135,11 +135,11 @@ PIOUserScript.prototype.log = function(level, message, messageParams, error) {
         // エラー内容をメッセージ付加する
         message += " (" + error.toString() + ")";
     }
-    var json = {
-        "action" : this.request.method,
-        "object" : this.request.pathInfo,
-        "result" : message
-    };
+    var json = {};
+    json.action = this.request ? this.request.method : undefined;
+    json.object = this.request ? this.request.pathInfo : undefined;
+    json.result = message;
+
     switch (level) {
     case 'I':
         this.logger.info(json);
@@ -148,7 +148,7 @@ PIOUserScript.prototype.log = function(level, message, messageParams, error) {
         this.logger.warn(json);
         break;
     case 'E':
-        this.logger.warn(json);
+        this.logger.error(json);
         break;
     }
 };
@@ -371,7 +371,7 @@ PIOUserScript.prototype.createEngineErrorResponse = function(engineException) {
     if (statusCode.charAt(0) == '3' || statusCode.charAt(0) == '4') {
         // DC-Engineが、300～400番台のステータスコードで終了した場合
         // クライアントの操作エラーとして処理する
-        response.status = statusCode;
+        response.status = parseInt(statusCode);
         message = Message.getMessage('ClientError occured in dc1-engine process. message=%1', [
             engineException.toString()
         ]);
