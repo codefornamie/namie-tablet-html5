@@ -38,7 +38,6 @@ body {
 	adisplay: relative;
 	display: none;
 	z-index: 100;
-	vertical-align: middle;
 }
 
 #icon {
@@ -58,6 +57,7 @@ body {
 	margin-bottom: 20px;
 	border: 1px solid #eed3d7;
 	border-radius: 4px;
+	vertical-align: middle;
 	position: absolute;
 	font-size: 40px;
 	top: 50%;
@@ -92,11 +92,36 @@ body {
 .popup #date {
 	left: 282px;
 }
+.nextArea {
+    width:100px;
+    height:100px;
+    position:fixed;
+    right:10px;
+    bottom:10px;
+    background-color: rgba(40,40,40,0.5);
+    border-radius:10px;
+}
+.preArea {
+    width:100px;
+    height:100px;
+    position:fixed;
+    right:350px;
+    bottom:10px;
+    background-color: rgba(40,40,40,0.5);
+    border-radius:10px;
+}
+.preArea p,.nextArea p {
+    margin:-13px 0 0 0;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    font-size: 7rem;
+}
 .pageArea {
     width:220px;
     height:100px;
     position:fixed;
-    right:10px;
+    right:120px;
     bottom:10px;
     background-color: rgba(40,40,40,0.5);
     border-radius:10px;
@@ -108,6 +133,10 @@ body {
     font-weight: bold;
     text-align: center;
     font-size: 4rem;
+}
+#loadingLabel {
+    padding:30px 0 0 0;
+    font-size: 2rem;
 }
 #currentPage {
     position: relative;
@@ -158,6 +187,8 @@ body {
     var _hasRecentAtricle = false;
     /** appConfig。 */
     var _conf = null;
+    /** 画像の読み込み表示中かどうか */
+    var isLoading = false;
 
     /** デバッグモード。 */
     // TODO: 関連処理はすべて削除する予定
@@ -214,9 +245,32 @@ body {
             // 親要素へバブルさせない
             return false;
         });
+        // スライドショーのページ要素をタップした場合、落ちる問題の対処
         $(".pageArea").on("touchstart", function(e) {
-            appJsInterface.closeDreamService();
             e.preventDefault();
+            return false;
+        });
+        // 矢印をタップした場合の処理
+        $(".preArea").on("touchstart", function(e) {
+            e.preventDefault();
+            if (_slideInterval && !isLoading) {
+                // インターバルをクリアした後、再セット
+                changeLoad(true);
+                showImage(getPrevImage());
+                resetInterval();
+            }
+            return false;
+        });
+        $(".nextArea").on("touchstart", function(e) {
+            e.preventDefault();
+            if (_slideInterval && !isLoading) {
+                // インターバルをクリアした後、再セット
+                changeLoad(true);
+                $("#currentPage").text("表示中…");
+                showImage(getNextImage());
+                resetInterval();
+            }
+            return false;
         });
         // Java呼び出し(トークン取得)
         callJava();
@@ -390,6 +444,51 @@ body {
         _index++;
         return fileName;
     }
+     /**
+      * 前の画像を取得。
+      * @return {String} 画像のファイル名
+      */
+     function getPrevImage() {
+         log("start getPrevImage / fileList.length :  " + _fileList.length + " / _index : " + _index);
+         if (_index === 1) {
+             _index = _fileList.length - 1;
+         } else {
+             _index -= 2;
+         }
+         if (_index < 0) {
+             _index = 0;
+         }
+         var fileName = _fileList[_index];
+         _index++;
+         return fileName;
+     }
+      /**
+       * 画像表示インターバルをリセットする
+       */
+      function resetInterval() {
+          log("start resetInterval method");
+          // インターバルをクリアした後、再セット
+          clearInterval(_slideInterval);
+          _slideInterval = null;
+          _slideInterval = setInterval(function() {
+              showImage(getNextImage());
+          }, _slideTime);
+      }
+      /**
+       * 画像読み込み表示開始・完了時の変更処理
+       * @param {boolean} isLoad ロード中かどうか
+       */
+      function changeLoad(isLoad) {
+          log("start changeLoad method");
+          isLoading = isLoad;
+          if (isLoad) {
+              $("#pageLabel").hide();
+              $("#loadingLabel").show();
+          } else {
+              $("#pageLabel").show();
+              $("#loadingLabel").hide();
+          }
+      }
 
     /**
      * 画像のバイナリを取得。キャッシュにあれば再利用する。
@@ -509,6 +608,7 @@ body {
     function showImage(fname) {
         log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         log("start showImage : " + fname);
+        isLoading = true;
         checkRecentArticle({
             hidden : function() {
                 log("checkRecentArticle responsed hidden");
@@ -539,12 +639,14 @@ body {
         });
         if (_fileList.length === 0) {
             ohSnap('スライドショー画像が未登録です。', 'red');
+            changeLoad(false);
             return;
         }
         getImageBinary(fname, function(binary) {
             if (!binary) {
                 log("failure binary null");
                 ohSnap('スライドショー画像を取得できませんでした。', 'red');
+                changeLoad(false);
                 return;
             }
             log("start onGetBinary");
@@ -562,6 +664,7 @@ body {
                 img.prependTo($("#container")).addClass("animated fadeIn");
                 log("end onGetBinary");
                 $("#currentPage").text(_index);
+                changeLoad(false);
             }, 2000);
         });
     }
@@ -574,10 +677,15 @@ body {
 		</div>
 	</div>
 	<div id="ohsnap"></div>
+    <div class="preArea"><p>◀</p></div>
     <div class="pageArea">
-        <p>
+        <p id="pageLabel">
             <label id="currentPage"></label>／<label id="allPages"></label>
         </p>
+        <p id="loadingLabel" style="display: none;">
+            <label>表示中…</label>
+        </p>
     </div>
+    <div class="nextArea"><p>▶</p></div>
 </body>
 </html>
