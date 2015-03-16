@@ -121,7 +121,8 @@ define(function(require, exports, module) {
                 model : this.model,
                 recommendArticle : this.recommendArticle,
                 publishedAt : this.model.get("publishedAt"),
-                thumbImageByteArray : this.thumbImageByteArray
+                thumbImageByteArray : this.thumbImageByteArray,
+                targetDate : this.targetDate
             })).render();
             $("#contents__primary").scrollTop(0);
         },

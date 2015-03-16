@@ -25,21 +25,19 @@ define(function(require, exports, module) {
                         this.recommendArticle.set("isRecommend",null);
                         this.recommendArticle.save(null, {
                             success:$.proxy(function() {
-                                app.router.go("ope-top" ,this.publishedAt);
+                                app.router.go("ope-top", this.targetDate);
                             },this),
                             error:$.proxy(function() {
-                                app.router.go("ope-top" ,this.publishedAt);
+                                app.router.go("ope-top", this.targetDate);
                             },this)
                         });
                     }else {
-                        app.router.go("ope-top", this.publishedAt);
+                        app.router.go("ope-top", this.targetDate);
                     }
                 }, this),
                 error: function(model, resp, options){
                     this.hideLoading();
                     this.showErrorMessage("記事情報の保存", resp);
-//                    vexDialog.alert("保存に失敗しました。");
-//                    app.logger.error("保存に失敗しました。");
                 }.bind(this)
             });
         }
