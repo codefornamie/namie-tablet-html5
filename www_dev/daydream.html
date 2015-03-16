@@ -377,6 +377,7 @@ body {
             _collectonObj = cellObj.box("data").col("dav").col("slideshow");
         } catch (e) {
             log("Personium certificate failure : " + e);
+            list.error = true;
             ohSnap('認証処理でエラーが発生しました。', 'red');
         }
         try {
@@ -390,6 +391,7 @@ body {
             }
         } catch (e) {
             log("Personium odata failure : " + e);
+            list.error = true;
             ohSnap('スライドショー画像を取得できませんでした。', 'red');
         }
         $("#allPages").text(list.length);
@@ -638,14 +640,18 @@ body {
             }
         });
         if (_fileList.length === 0) {
-            ohSnap('スライドショー画像が未登録です。', 'red');
+            if (_fileList.error) {
+                ohSnap('スライドショー画像情報を取得できませんでした。通信状態を確認してください', 'red');
+            } else {
+                ohSnap('スライドショー画像が未登録です。', 'red');
+            }
             changeLoad(false);
             return;
         }
         getImageBinary(fname, function(binary) {
             if (!binary) {
                 log("failure binary null");
-                ohSnap('スライドショー画像を取得できませんでした。', 'red');
+                ohSnap('スライドショー画像を取得できませんでした。通信状態を確認してください', 'red');
                 changeLoad(false);
                 return;
             }
