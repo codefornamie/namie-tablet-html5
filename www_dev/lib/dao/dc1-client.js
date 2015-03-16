@@ -1389,6 +1389,10 @@ dcc.http.DcHttpClient.prototype._execute = function(method, requestUrl, requestB
   };
   xhr.onerror = function (e) {
     promise.reject(e.target.status);
+    // FSTが修正
+    if(callback){
+        callback(self);
+    }
   };
   xhr.send(requestBody);
   return promise;
@@ -1465,6 +1469,13 @@ dcc.http.DcHttpClient.prototype._execute2 = function(method, requestUrl, options
   };
   xhr.onerror = function (e) {
     promise.reject(e.target.status);
+    // FSTが修正
+    if(options && options.error){
+        options.error(self);
+    }
+    if(options && options.complete){
+        options.complete(self);
+      }
   };
   xhr.send(requestBody);
   return promise;

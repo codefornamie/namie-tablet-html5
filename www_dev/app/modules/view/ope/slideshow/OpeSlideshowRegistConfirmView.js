@@ -91,9 +91,6 @@ define(function(require, exports, module) {
                 self.hideLoading();
                 if (err) {
                     self.showErrorMessage("スライドショー画像の保存", err);
-//                    vexDialog.defaultOptions.className = 'vex-theme-default';
-//                    vexDialog.alert(err);
-//                    app.logger.error("OpeSlideshowRegistConfirmView#onClickSlideshowRegistButton():error:" + err);
                     return;
                 }
                 app.logger.debug("success all to save slideshow pictures.");
