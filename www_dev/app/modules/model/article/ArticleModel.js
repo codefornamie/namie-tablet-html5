@@ -43,6 +43,13 @@ define(function(require, exports, module) {
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.dispPlace = CommonUtil.sanitizing(response.place);
             response.dispDescription = CommonUtil.sanitizing(response.description);
+            
+                // URL文字列をアンカーに置き換える
+            response.dispDescription = CommonUtil.replaceURLtoAnchor(response.dispDescription);
+            response.dispRawHTML = CommonUtil.replaceURLtoAnchor(response.rawHTML);
+            response.dispRawHTML2 = CommonUtil.replaceURLtoAnchor(response.rawHTML2);
+            response.dispRawHTML3 = CommonUtil.replaceURLtoAnchor(response.rawHTML3);
+            
             response.dispContactInfo = CommonUtil.sanitizing(response.contactInfo);
             if (response.startDate) {
                 if (response.startDate.length > 10) {
