@@ -1387,6 +1387,16 @@ dcc.http.DcHttpClient.prototype._execute = function(method, requestUrl, requestB
     }
     //}
   };
+  if(this.async){
+      xhr.timeout = 60000;
+  }
+  xhr.ontimeout = function (e) {
+      promise.reject(e.target.status);
+      // FSTが修正
+      if(callback){
+          callback(self);
+      }
+    };
   xhr.onerror = function (e) {
     promise.reject(e.target.status);
     // FSTが修正
@@ -1477,6 +1487,19 @@ dcc.http.DcHttpClient.prototype._execute2 = function(method, requestUrl, options
         options.complete(self);
       }
   };
+  // FSTが修正
+  if(this.async){
+      xhr.timeout = 60000;
+  }
+  xhr.ontimeout = function (e) {
+      promise.reject(e.target.status);
+      if(options && options.error){
+          options.error(self);
+      }
+      if(options && options.complete){
+          options.complete(self);
+        }
+    };
   xhr.send(requestBody);
   return promise;
 };

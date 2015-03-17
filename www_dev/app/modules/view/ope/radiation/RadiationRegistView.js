@@ -311,6 +311,7 @@ define(function(require, exports, module) {
                     this.setLogModels(model, file);
                 }.bind(this),
                 error : function(model, resp) {
+                    this.hideLoading();
                     this.showErrorMessage(file.name + "(放射線クラスター情報)の保存", resp);
                 }.bind(this)
             });
@@ -369,11 +370,12 @@ define(function(require, exports, module) {
             // 保存処理が全て完了したら呼ばれる
             function onFinish(response) {
                 if (response && response.event && response.event.isError()) {
+                    this.hideLoading();
                     this.showErrorMessage(file.name + "(放射線ログ情報)の保存処理", response);
                 } else {
-                    this.hideLoading();
                     app.router.go("ope-radiation");
                 }
+                this.hideLoading();
             }.bind(this));
         },
     });

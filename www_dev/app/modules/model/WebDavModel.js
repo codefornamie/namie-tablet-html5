@@ -52,7 +52,7 @@ define(function(require, exports, module) {
                 // personium.ioのAPI呼び出し情報を保持するイベント
                 // 便宜上、resオブジェクトに紐付ける
                 var event = new PIOEvent(res);
-                app.logger.info("WebDavModel complete event:" + event);
+                app.logger.debug("WebDavModel complete event:" + event);
 
                 res.event = event;
                 if (res.byteLength === 0) {
