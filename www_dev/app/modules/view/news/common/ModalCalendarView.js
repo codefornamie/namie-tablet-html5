@@ -160,10 +160,9 @@ define(function(require, exports, module) {
                         this.trigger("closeModalCalendar");
                     }
                     if (e) {
-                        app.logger.error("error ModalCalendarView:holCol.prevPublished()");
-                        vexDialog.defaultOptions.className = 'vex-theme-default';
-                        vexDialog.alert("休刊日の取得に失敗しました。");
+                        this.showErrorMessage("休刊日の取得", e);
                         this.hideLoading();
+                        return;
                     }
                     if (!isPublish) {
                         // 休刊日

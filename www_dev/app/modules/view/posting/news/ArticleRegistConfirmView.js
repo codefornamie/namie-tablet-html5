@@ -168,11 +168,9 @@ define(function(require, exports, module) {
                                 this.saveModel();
                             }
                         }, this),
-                        error: $.proxy(function(e){
+                        error: $.proxy(function(model, response, options){
                             this.hideLoading();
-                            vexDialog.defaultOptions.className = 'vex-theme-default';
-                            vexDialog.alert("保存に失敗しました。");
-                            app.logger.error("保存に失敗しました。");
+                            this.showErrorMessage("記事の写真情報の保存", response);
                         }, this)
                     });
                 }, this));
@@ -192,11 +190,10 @@ define(function(require, exports, module) {
                     }
                     app.router.go("posting-top");
                 }, this),
-                error: function(e){
+                error: $.proxy(function(model, response, options){
                     this.hideLoading();
-                    vexDialog.alert("保存に失敗しました。");
-                    app.logger.error("保存に失敗しました。");
-                }
+                    this.showErrorMessage("記事情報の保存", response);
+                }, this)
             });
         }
     });

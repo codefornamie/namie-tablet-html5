@@ -56,9 +56,8 @@ define(function(require, exports, module) {
                     this.onFetch();
                 },this),
                 
-                error: $.proxy(function () {
-                    alert("記事一覧の取得に失敗しました");
-                    app.logger.error("記事一覧の取得に失敗しました");
+                error: $.proxy(function (model, response, options) {
+                    this.showErrorMessage("記事一覧の取得", response);
                     this.hideLoading();
                 },this)
             });

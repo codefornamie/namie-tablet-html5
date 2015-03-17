@@ -149,10 +149,9 @@ define(function(require, exports, module) {
                     this.model.set("isDeleted", true);
                     app.router.back();
                 }, this),
-                error : $.proxy(function(e) {
+                error : $.proxy(function(model, response, options) {
                     this.hideLoading();
-                    vexDialog.alert("削除に失敗しました。");
-                    app.logger.error("error LetterListItemView:deleteLetter()");
+                    this.showErrorMessage("記事の削除", response);
                 }, this)
             });
         },

@@ -83,10 +83,19 @@ define(function(require, exports, module) {
          */
         onClickDojoAchievementButton : function() {
             this.showProgressBarLoading();
-            this.loadYouTubeLibrary($.proxy(function() {
-                // youtubeAPI読み込み
-                gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
-                gapi.client.load('youtube', 'v3', $.proxy(this.searchDojoCsvInfo, this));
+            this.loadYouTubeLibrary($.proxy(function(err) {
+                if (!CommonUtil.isOnline()) {
+                    err = "Network is Offline";
+                }
+                if (err) {
+                    app.logger.info("Failed loading youtube library. error:" + err);
+                    this.showMessage("Youtubeライブラリの読み込みに失敗しました。通信状態をご確認ください。");
+                    this.hideLoading();
+                } else {
+                    // youtubeAPI読み込み
+                    gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
+                    gapi.client.load('youtube', 'v3', $.proxy(this.searchDojoCsvInfo, this));
+                }
             }, this));
         },
         /**

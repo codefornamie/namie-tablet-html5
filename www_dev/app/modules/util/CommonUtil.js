@@ -193,5 +193,16 @@ define(function(require, exports, module) {
         return new CSV(csv, opt).parse();
     };
 
+    /**
+     * ネットワークに接続しているかどうかを判定する。
+     * @returns {Boolean} 接続している場合、<code>true</code>を返す。
+     */
+    CommonUtil.isOnline = function() {
+        if (typeof navigator.onLine !== undefined) {
+            return navigator.onLine; 
+        } else {
+            return true;
+        }
+    };
     module.exports = CommonUtil;
 });

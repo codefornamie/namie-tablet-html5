@@ -18,7 +18,8 @@ define(function(require, exports, module) {
     var Code = require("modules/util/Code");
     var Equal = require("modules/util/filter/Equal");
     var IsNull = require("modules/util/filter/IsNull");
-    
+    var CommonUtil = require("modules/util/CommonUtil");
+
     /**
      * 道場アプリのLayout
      * 
@@ -243,10 +244,20 @@ define(function(require, exports, module) {
             this.initLayout();
             this.initEvents();
 
-            this.loadYouTubeLibrary($.proxy(function() {
-                // youtubeAPI読み込み
-                gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
-                gapi.client.load('youtube', 'v3', $.proxy(this.searchDojoMovieList, this));
+            this.loadYouTubeLibrary($.proxy(function(err) {
+                if (!CommonUtil.isOnline()) {
+                    err = "Network is Offline";
+                }
+                if (err) {
+                    app.logger.info("Failed loading youtube library. error:" + err);
+                    this.showMessage("Youtubeライブラリの読み込みに失敗しました。通信状態をご確認ください。");
+                    this.hideLoading();
+                } else {
+                    // youtubeAPI読み込み
+                    gapi.client.setApiKey("AIzaSyCfqTHIGvjra1cyftOuCP9-UGZcT9YkfqU");
+                    gapi.client.load('youtube', 'v3', $.proxy(this.searchDojoMovieList, this));
+                }
+
             }, this));
         },
 
@@ -475,7 +486,6 @@ define(function(require, exports, module) {
 
             this.updateChildViews();
         },
-
         /**
          * ◯◯編が変更されたら呼ばれる
          * @memberOf TopView#
