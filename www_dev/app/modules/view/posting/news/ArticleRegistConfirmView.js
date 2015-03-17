@@ -34,7 +34,11 @@ define(function(require, exports, module) {
             $("#articlePublishRange").text("掲載期間：" + pubDateString);
 
             // 内容
-            $("#articleDescription").html(CommonUtil.sanitizing(this.model.get("description")));
+            var dispDescription = CommonUtil.sanitizing(this.model.get("description"));
+            if (dispDescription && typeof dispDescription.replace === "function") {
+                dispDescription = dispDescription.replace(/\r?\n/g, '<br />');
+            }
+            $("#articleDescription").html(CommonUtil.replaceURLtoAnchor(dispDescription));
 
             // 連絡先
             $("#articleContactInfo").html(CommonUtil.sanitizing(this.model.get("contactInfo")));
