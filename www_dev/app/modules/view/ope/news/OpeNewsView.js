@@ -68,9 +68,7 @@ define(function(require, exports, module) {
             var holCol = new NewspaperHolidayCollection();
             holCol.prevPublished(targetDate, function(prev, isPublish, e) {
                 if (e) {
-                    app.logger.error("error OpeNewsView:holCol.prevPublished()");
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert("休刊日の取得に失敗しました。");
+                    this.showErrorMessage("休刊日情報の取得", e);
                     this.hideLoading();
                     return;
                 }

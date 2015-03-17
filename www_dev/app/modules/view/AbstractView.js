@@ -210,17 +210,20 @@ define(function(require, exports, module) {
             }
             if (showNetworkError && object && typeof object.isNetworkError === "function") {
                 if (object.isNetworkError()) {
-                    message = "通信エラーが発生したため、以下のエラーが発生しました。通信状態をご確認ください。<br/><br/>" + message;
+                    message = "<div class='panel callout radius'>通信エラーが発生したため、以下のエラーが発生しました。通信状態をご確認ください。</div>" + message;
+                    level = PIOLogLevel.INFO;
                 }
             }
             if (showNetworkError && object && typeof object.isLacksPrivilege === "function") {
                 if (object.isLacksPrivilege()) {
-                    message = "この操作をするための権限がありません。<br/><br/>" + message;
+                    message = "<div class='panel callout radius'>この操作をするための権限がありません。</div>" + message;
+                    level = PIOLogLevel.INFO;
                 }
             }
             if (showNetworkError && object && typeof object.isServerBusy === "function") {
                 if (object.isServerBusy()) {
-                    message = "現在アクセスが集中しており、画面が表示しにくい状態になっております。 時間をあけて再度操作してください。<br/><br/>" + message;
+                    message = "<div class='panel callout radius'>現在アクセスが集中しており、画面が表示しにくい状態になっております。 時間をあけて再度操作してください。</div>" + message;
+                    level = PIOLogLevel.WARN;
                 }
             }
             vexDialog.alert(message);

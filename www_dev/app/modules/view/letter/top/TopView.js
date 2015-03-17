@@ -210,11 +210,8 @@ define(function(require, exports, module) {
                     // 画面遷移を行う
                     this.followAnchor(evt);
                 }, this),
-                error : $.proxy(function onErrorLoadArticle() {
-                    app.logger.error("Articleの読み込みに失敗。");
-                    vexDialog.defaultOptions.className = 'vex-theme-default vex-theme-letter';
-                    vexDialog.buttons.YES.text = 'OK';
-                    vexDialog.alert("情報の読み込みに失敗しました。");
+                error : $.proxy(function onErrorLoadArticle(model, response, options) {
+                    this.showErrorMessage("写真投稿情報の取得", response);
                     this.hideLoading();
                 }, this)
             });
@@ -405,9 +402,8 @@ define(function(require, exports, module) {
          * 記事一覧の読み込みに失敗したら呼ばれる
          * @memberOf LetterTopView#
          */
-        onErrorLetter : function() {
-            alert("記事一覧の取得に失敗しました");
-            app.logger.error("記事一覧の取得に失敗しました");
+        onErrorLetter : function(model, response, options) {
+            this.showErrorMessage("写真投稿情報の取得", response);
             this.hideLoading();
         }
     });

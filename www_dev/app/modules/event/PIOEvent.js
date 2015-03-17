@@ -61,12 +61,21 @@ define(function(require, exports, module) {
                 // response.bodyAsJson を持たない場合
                 // WebDAV APIのレスポンスは、返却値がXMLのため、こちらの処理が通る
                 if (response.code) {
-                    var status = response.code.match(/[0-9]{3}?/);
-                    if (status) {
-                        this.status = parseInt(status[0]);
+                    if (typeof response.code === 'string') {
+                        var status = response.code.match(/[0-9]{3}?/);
+                        if (status) {
+                            this.status = parseInt(status[0]);
+                        }
+                        this.message = response.message;
+                        this.code = response.code;
+                    } else {
+                        // ネットワークエラーが発生した場合
+                        // response.codeは数値となり、HTTPステータスが入らないため、明示的に0をいれる
+                        this.status = 0;
+                        this.message = response.name + ": " + response.message;
+                        this.code = response.code;
                     }
-                    this.message = response.message;
-                    this.code = response.code;
+
                 }
             }
             this._super(this.code, this.message);
@@ -98,7 +107,7 @@ define(function(require, exports, module) {
      * @return {Boolean} 対象のAPI呼び出し時に通信失敗によるエラーが発生した場合、<code>true</code>を返す。
      */
     PIOEvent.prototype.isNetworkError = function() {
-        return this.networkError;
+        return this.status === 0;
     };
     /**
      * 対象のAPI呼び出し結果が401となったかどうか。

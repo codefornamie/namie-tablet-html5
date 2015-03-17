@@ -104,11 +104,9 @@ define(function(require, exports, module) {
                     // ODataの削除
                     this.destroyModel();
                 }, this),
-                error : $.proxy(function(e) {
+                error : $.proxy(function(model, response, options) {
                     this.hideLoading();
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert("画像削除に失敗しました。");
-                    app.logger.error("destroyDavFile():error=" + e.code);
+                    this.showErrorMessage("スライドショー写真の削除", response);
                 }, this)
             });
         },
@@ -122,10 +120,9 @@ define(function(require, exports, module) {
                 success : $.proxy(function() {
                     app.logger.debug("destroyModel():success");
                 }, this),
-                error : $.proxy(function(e) {
+                error : $.proxy(function(model, response, options) {
                     this.hideLoading();
-                    vexDialog.alert("削除に失敗しました。");
-                    app.logger.error("削除に失敗しました。");
+                    this.showErrorMessage("スライドショー情報の削除", response);
                 }, this)
             });
         }

@@ -71,8 +71,8 @@ define(function(require, exports, module) {
                     // 休刊日の連続が限界を超えている。
                     callback(null, false, new Error());
                 },
-                error : function(e) {
-                    callback(null, false, e);
+                error : function(model, response, options) {
+                    callback(null, false, response);
                 },
             });
         },
