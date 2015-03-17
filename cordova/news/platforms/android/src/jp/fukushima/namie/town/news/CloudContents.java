@@ -117,13 +117,15 @@ public class CloudContents implements Runnable {
             lists[i] = new ArrayList<String>();
         }
         List<Object> res = model.getCharaMessage(context);
-        for (Object rec : res) {
-            Map<String, Object> r = (Map<String, Object>) rec;
-            try {
-                int type = ((Long) r.get("type")).intValue();
-                lists[type - 1].add((String) r.get("message"));
-            } catch (RuntimeException e) {
-                Log.w(TAG, "character_message parse error.");
+        if (res != null) {
+            for (Object rec : res) {
+                Map<String, Object> r = (Map<String, Object>) rec;
+                try {
+                    int type = ((Long) r.get("type")).intValue();
+                    lists[type - 1].add((String) r.get("message"));
+                } catch (RuntimeException e) {
+                    Log.w(TAG, "character_message parse error.");
+                }
             }
         }
         if (lists[0].size() > 0) {
