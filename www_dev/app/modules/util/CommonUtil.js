@@ -212,7 +212,7 @@ define(function(require, exports, module) {
                 } else {
                     return '<a href="' + str + '">' + str + '</a>';
                 }
-            }
+            };
             return targetStr.replace(/((?:https?):\/\/[-_.!~*\'()a-zA-Z0-9;\/?:@&=+$,%#]+)/g, replacer);
         }
         return targetStr;
