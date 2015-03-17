@@ -183,7 +183,11 @@ define(function(require, exports, module) {
         onSaveAll : function(err, results) {
             // アップロードに成功したリクエストの数を集計する
             var saved = results.reduce(function (sum, obj) {
-                return sum + obj.saved;
+                if (obj) {
+                    return sum + obj.saved;
+                } else {
+                    return sum;
+                }
             }, 0);
 
             this.$progressBar.attr("value", 100);
@@ -193,7 +197,6 @@ define(function(require, exports, module) {
                 this.showMessage(err);
             } else if (err && err.event && err.event.isError()) {
                 this.showErrorMessage("放射線情報(" + err.fileName + ")の登録", err);
-                return;
             } else if (saved === 0) {
                 this.showErrorMessage("放射線情報の登録");
             } else {
