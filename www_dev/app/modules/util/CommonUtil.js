@@ -192,6 +192,31 @@ define(function(require, exports, module) {
 
         return new CSV(csv, opt).parse();
     };
+    /**
+     * URL形式の文字列をアンカータグ表記に置換する（タグ内パターン文字列は置き換えない）
+     * 
+     * @return {String} targetStr 置換対象文字列
+     * @memberOf CommonUtil#
+     */
+    CommonUtil.replaceURLtoAnchor = function(targetStr) {
+        if (targetStr && typeof targetStr === "string") {
+            var replacer = function(str, str2, offset, allStr) {
+                // 全文とパターン一致した文字およびその文字列のインデックスを掛けあわせて
+                // タグ内にある文字列かどうかを判断する
+                var greater = allStr.indexOf('>', offset);
+                var lesser = allStr.indexOf('<', offset);
+
+                if (greater < lesser || (greater != -1 && lesser == -1)) {
+                    // タグ内の文字列は置換を行わない
+                    return str;
+                } else {
+                    return '<a href="' + str + '">' + str + '</a>';
+                }
+            }
+            return targetStr.replace(/((?:https?):\/\/[-_.!~*\'()a-zA-Z0-9;\/?:@&=+$,%#]+)/g, replacer);
+        }
+        return targetStr;
+    };
 
     /**
      * ネットワークに接続しているかどうかを判定する。
