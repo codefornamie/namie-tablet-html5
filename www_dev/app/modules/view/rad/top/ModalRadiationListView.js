@@ -163,7 +163,7 @@ define(function(require, exports, module) {
 
             // radiationClusterの保存からradiationLogの保存の1セットをシリアルに処理する
             async.mapSeries(fileEntries, function(fileEntry, next) {
-                self.convertFileEntry(fileEntry, function (err, result) {
+                self.convertFileEntry(fileEntry, function(err, result) {
                     if (err) {
                         next(err);
                         return;
@@ -182,7 +182,7 @@ define(function(require, exports, module) {
          */
         onSaveAll : function(err, results) {
             // アップロードに成功したリクエストの数を集計する
-            var saved = results.reduce(function (sum, obj) {
+            var saved = results.reduce(function(sum, obj) {
                 if (obj) {
                     return sum + obj.saved;
                 } else {
@@ -417,10 +417,17 @@ define(function(require, exports, module) {
                     this.setLogModels(model, file, next);
                 }.bind(this),
                 error : function(model, response, options) {
-                    app.logger.error("saveClusterModel(): error" + response.event);
-                    next([
+                    var message = [
                             file.name, " の保存処理に失敗しました。"
-                    ].join(""));
+                    ];
+                    if (response && response.event && response.event.isNetworkError()) {
+                        message.push(" <br/>通信状態をご確認ください。");
+                    } else if (response && response.event && response.event.isServerBusy()) {
+                        message.push(" <br/>現在アクセスが集中しており、画面が表示しにくい状態になっております。 時間をあけて再度操作してください。");
+                    }
+
+                    app.logger.error("saveClusterModel(): error" + response.event);
+                    next(message.join(""));
                 }
             });
         },
@@ -486,10 +493,14 @@ define(function(require, exports, module) {
             function onFinish(response) {
                 if (response && response.event && response.event.isError()) {
                     response.fileName = file.name;
-                    next(response, { saved: saved });
+                    next(response, {
+                        saved : saved
+                    });
                 } else {
                     self.increaseProgress();
-                    next(response, { saved: saved });
+                    next(response, {
+                        saved : saved
+                    });
                 }
             });
         },

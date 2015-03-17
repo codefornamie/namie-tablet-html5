@@ -370,6 +370,7 @@ define(function(require, exports, module) {
             // 保存処理が全て完了したら呼ばれる
             function onFinish(response) {
                 if (response && response.event && response.event.isError()) {
+                    this.hideLoading();
                     this.showErrorMessage(file.name + "(放射線ログ情報)の保存処理", response);
                 } else {
                     app.router.go("ope-radiation");
