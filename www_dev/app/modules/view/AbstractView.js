@@ -385,10 +385,10 @@ define(function(require, exports, module) {
 
                                         $("#colorbox").css("overflow", "visible");
                                         $("#colorbox").append(
-                                                "<div id='cboxControl'>"
-                                                + "<button id='cboxCloseButton' class='small button'>閉じる</button>"
-                                                + "<button id='cboxSaveButton' class='small button'>画像を保存</button>"
-                                                + "</div>"
+                                                "<div id='cboxControl'>" +
+                                                "<button id='cboxCloseButton' class='small button'>閉じる</button>" +
+                                                "<button id='cboxSaveButton' class='small button'>画像を保存</button>" +
+                                                "</div>"
                                         );
                                         $("#cboxControl").css({
                                             "position": "fixed",
