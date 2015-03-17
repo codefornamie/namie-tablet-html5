@@ -88,9 +88,6 @@ define(function(require, exports, module) {
             }));
 
             this.loadYouTubeLibrary($.proxy(function(err) {
-                if (!CommonUtil.isOnline()) {
-                    err = "Network is Offline";
-                }
                 if (err) {
                     app.logger.info("Failed loading youtube library. error:" + err);
                     this.showMessage("Youtubeライブラリの読み込みに失敗しました。通信状態をご確認ください。");
