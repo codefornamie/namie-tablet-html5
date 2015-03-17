@@ -134,6 +134,10 @@ public class WidgetContentManager {
             }
         } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND_BEFORE) {
             nextMode = DisplayMode.DISPLAY_RECOMMEND;
+            if (recommendArticles.isEmpty()) {
+                // 「新しいニュースがあるよ」と言った後にニュースがなくなると落ちるので
+                nextMode = DisplayMode.DISPLAY_RECOMMEND_AFTER;
+            }
         } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND) {
             nextMode = DisplayMode.DISPLAY_RECOMMEND_AFTER;
         } else if (currentMode == DisplayMode.DISPLAY_RECOMMEND_AFTER) {
