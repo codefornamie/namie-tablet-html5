@@ -10,4 +10,5 @@
     <content src="index.html" />
     <access origin="*" />
     <preference name="Orientation" value="landscape" />
+    <preference name="loadUrlTimeoutValue" value="10000" />
 </widget>
