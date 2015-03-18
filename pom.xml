@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>jp.fukushima.namie.town</groupId>
+    <artifactId>namie-tablet</artifactId>
+    <version>1.0.0</version>
+    <name>namie-tablet</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.google.code.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <header>www_dev/build/header.txt</header>
+                    <includes>
+                        <include>www_dev/app/modules/**/*.js</include>
+                        <include>www_dev/userscript/**/*.js</include>
+                        <include>cordova/letter/platforms/android/src/jp/fukushima/**/*.java</include>
+                        <include>cordova/dojo/platforms/android/src/jp/fukushima/**/*.java</include>
+                        <include>cordova/rad/platforms/android/src/jp/fukushima/**/*.java</include>
+                        <include>cordova/posting/platforms/android/src/jp/fukushima/**/*.java</include>
+                    </includes>
+                    <encoding>UTF-8</encoding>
+                    <headerDefinitions>
+                        <headerDefinition>www_dev/build/header-definition.xml</headerDefinition>
+                    </headerDefinitions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
