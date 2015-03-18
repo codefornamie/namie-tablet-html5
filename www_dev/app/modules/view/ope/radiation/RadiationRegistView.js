@@ -20,10 +20,6 @@ define(function(require, exports, module) {
      */
     var RadiationRegistView = AbstractView.extend({
         template : require("ldsh!templates/{mode}/radiation/radiationRegist"),
-        /**
-         * フォーム要素のID
-         */
-        formId : '#radiationRegistForm',
         events : {
             "change #radiationFile" : "onChangeFileData",
             "click #fileInputButton" : "onClickFileInputButton",
@@ -73,14 +69,12 @@ define(function(require, exports, module) {
          * @memberOf RadiationRegistView#
          */
         onClickRadiationUploadButton : function() {
-            if ($(this.formId).validate().form()) {
-                var errmsg = this.validate();
-                if (errmsg) {
-                    vexDialog.defaultOptions.className = 'vex-theme-default';
-                    vexDialog.alert(errmsg);
-                } else {
-                    this.saveProcess();
-                }
+            var errmsg = this.validate();
+            if (errmsg) {
+                vexDialog.defaultOptions.className = 'vex-theme-default';
+                vexDialog.alert(errmsg);
+            } else {
+                this.saveProcess();
             }
         },
         /**
@@ -224,15 +218,12 @@ define(function(require, exports, module) {
          */
         convertToDate : function(file) {
             var data = file.jsonObject;
-            var targetDate = this.$el.find("#measurementDate").val();
-            var startTime = data[0][Code.AUTOMOTIVE_TITLE_TIME];
             _.each(data, function(json) {
-                var targetTime = json[Code.AUTOMOTIVE_TITLE_TIME];
-                if (startTime > targetTime) {
-                    // 時刻が途中で減った場合は、日付をまたいだことになるため、付加する日付文字列を1日進める
-                    targetDate = moment(targetDate).add(1, "d").format("YYYY-MM-DD");
-                }
-                json[Code.AUTOMOTIVE_TITLE_TIME] = targetDate + "T" + targetTime;
+                var dateTimeArr = json[Code.AUTOMOTIVE_TITLE_TIME].split(" ");
+                var date = moment(dateTimeArr[0]).format("YYYY-MM-DD");
+                var time = dateTimeArr[1];
+                
+                json[Code.AUTOMOTIVE_TITLE_TIME] = date + "T" + time;
             });
         },
         /**
