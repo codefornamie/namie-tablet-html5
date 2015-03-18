@@ -29,6 +29,15 @@ require([
             }, false);
         }
 
+        // 放射線アプリがバックグラウンドとなった場合は、トップ画面へリロードする
+        if (app.config.basic.mode === Code.APP_MODE_RAD) {
+            document.addEventListener("resume", function() {
+                // 放射線アプリのTopにいる場合のみリロードする。
+                if ( Backbone.history.fragment === "rad" ) {
+                    app.router.radTop();
+                }
+            }, false);
+        }
     };
     var main = function() {
         VersionChecker.check(function(result) {
