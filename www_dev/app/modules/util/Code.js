@@ -248,8 +248,7 @@ define(function(require, exports, module) {
     Code.RAD_MEASUREMENT_MUNICIPALITY = "municipality";
 
     // 放射線アプリの使い方動画のID
-    // TODO: 正式版に差し替える
-    Code.RAD_TUTORIAL_VIDEO_ID = "NgVzppfZ-4Q";
+    Code.RAD_TUTORIAL_VIDEO_ID = "uif984O6yUI";
 
     /**
      * HORIBAcsvの収集時刻ヘッダ名
