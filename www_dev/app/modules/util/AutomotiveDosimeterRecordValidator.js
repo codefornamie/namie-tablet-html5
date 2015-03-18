@@ -59,7 +59,8 @@
          * @return {Boolean}
          */
         AutomotiveDosimeterRecordValidator.prototype.selectValidRecord = function (record) {
-            var time = record[Code.AUTOMOTIVE_TITLE_TIME];
+            var date = record[Code.AUTOMOTIVE_TITLE_TIME].split(" ")[0];
+            var time = record[Code.AUTOMOTIVE_TITLE_TIME].split(" ")[1];
             var lat = record[Code.AUTOMOTIVE_TITLE_LATITUDE];
             var long = record[Code.AUTOMOTIVE_TITLE_LONGITUDE];
             var hasDose = record[Code.AUTOMOTIVE_TITLE_DOSE1];
@@ -77,7 +78,7 @@
             }
 
             // 時刻が不正な場合
-            if (!moment(moment().format("YYYY-MM-DDT") + time).isValid() || !time) {
+            if (!time || !moment(moment(date).format("YYYY-MM-DDT") + time).isValid()) {
                 this.errorCode |= Code.ERR_INVALID_DATE;
             }
 
