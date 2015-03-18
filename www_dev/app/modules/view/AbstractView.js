@@ -385,10 +385,21 @@ define(function(require, exports, module) {
                                     },
                                     onComplete : function() {
                                         $colorbox.data("isClosingByBack", false);
+
+                                        $("#colorbox").css("overflow", "visible");
                                         $("#colorbox").append(
-                                                "<button id='cboxCloseButton' class='small button'>閉じる</button>");
-                                        $("#colorbox").append(
-                                                "<button id='cboxSaveButton' class='small button'>画像を保存</button>");
+                                                "<div id='cboxControl'>" +
+                                                "<button id='cboxCloseButton' class='small button'>閉じる</button>" +
+                                                "<button id='cboxSaveButton' class='small button'>画像を保存</button>" +
+                                                "</div>"
+                                        );
+                                        $("#cboxControl").css({
+                                            "position": "fixed",
+                                            "z-index": "10000",
+                                            "width": "300px",
+                                            "top": 0,
+                                            "right": 0
+                                        });
                                         $("#cboxCloseButton").click(function() {
                                             $.colorbox.close();
                                         });
@@ -405,8 +416,7 @@ define(function(require, exports, module) {
                                         });
                                     },
                                     onClosed : function() {
-                                        $("#cboxSaveButton").remove();
-                                        $("#cboxCloseButton").remove();
+                                        $("#cboxControl").remove();
 
                                         // OSの戻るボタンで戻った際に
                                         // 二重でbackしないようにする

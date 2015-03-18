@@ -218,34 +218,43 @@ public class PersoniumModel {
         Log.d(TAG, "end readRecommendArticle : " + articles.size());
         return articles;
     }
-
-    @SuppressWarnings("unchecked")
+    /**
+     * 新聞が既読かチェックする。
+     * @param odataコレクション
+     * @return 既読の新聞がある場合はtrue
+     */
     private boolean isAlreadyRead(ODataCollection odata) {
         Log.d(TAG, "start isAllreadyread");
         Calendar now = Calendar.getInstance();
         String nowStr = formatDate(now);
 
+        String showLastPublished = getShowLastPublished(odata);
+        boolean isAlreadyRead = showLastPublished == null || showLastPublished.equals(nowStr);
+        return isAlreadyRead;
+    }
+
+    /**
+     * showLastPublishedを取得する。
+     * @param odata odataコレクション
+     * @return 日付文字列。取得失敗の場合、null
+     */
+    @SuppressWarnings("unchecked")
+    private String getShowLastPublished(ODataCollection odata){
         HashMap<String, Object> json = null;
         try {
             json = odata.entitySet("personal").query().top(1).filter("loginId eq '" + userName + "'").run();
         } catch (DaoException e) {
             Log.d(TAG, "personium personal entity query failure : " + e.getMessage());
-            return true;
+            return null;
         }
         Log.d(TAG, json.toString());
         HashMap<String, Object> d = (HashMap<String, Object>) json.get("d");
         List<Object> results = (List<Object>) d.get("results");
-        String ret = null;
         if ((results != null) && (results.size() > 0)) {
             HashMap<String, Object> item = (HashMap<String, Object>) results.get(0);
-            String showLastPublished = (String) item.get("showLastPublished");
-            if (showLastPublished.equals(nowStr)) {
-                Log.d(TAG, "now equals showLastPublished");
-                return true;
-            }
+            return (String) item.get("showLastPublished");
         }
-        Log.d(TAG, "un readed : " + ret);
-        return false;
+        return null;
     }
 
     @SuppressLint("DefaultLocale")
@@ -386,12 +395,6 @@ public class PersoniumModel {
        // チェック時刻の更新
        ret.lastRequestDate = now;
        
-       // 土曜日または日曜日ならば新聞発行なし
-       if (isSaturdayOrSunday(Calendar.getInstance())) {
-           Log.d(TAG, "Today is SATURDAY or SUNDAY");
-           return ret;
-       }
-
        // Perosonium接続
        ODataCollection odata = initializePersonium(context);
        if (odata == null) {

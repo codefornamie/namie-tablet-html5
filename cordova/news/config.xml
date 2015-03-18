@@ -10,4 +10,5 @@
     <content src="index.html" />
     <access origin="*" />
     <access origin="mailto:*" launch-external="yes"/>
+    <preference name="loadUrlTimeoutValue" value="10000" />
 </widget>
