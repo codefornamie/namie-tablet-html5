@@ -71,4 +71,17 @@ require([
     } else {
         goRoute();
     }
+
+    /**
+     *  ライセンスページヘのリンクを有効化する
+     */
+    $(document).on("click", "[data-external-link]", function (ev) {
+        var href = $(ev.target).attr("href");
+
+        if (href) {
+            window.open(href, "_system");
+            ev.preventDefault();
+            ev.stopImmediatePropagation();
+        }
+    });
 });

@@ -451,7 +451,7 @@
 
 .page-rad #map-container {
     height: 100%;
-    padding-bottom: 50px;
+    padding-bottom: 80px;
 }
 
 .page-rad #map-container > div {
@@ -481,8 +481,9 @@
     background-color: #ebecea;
     position: absolute;
     bottom: 0;
-    height: 50px;
+    height: 80px;
     width: 100%;
+    padding: 10px 0 20px;
 }
 
 .page-rad .map-legend-list {
