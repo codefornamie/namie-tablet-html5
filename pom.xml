@@ -15,6 +15,11 @@
                     <header>www_dev/build/header.txt</header>
                     <includes>
                         <include>www_dev/app/modules/**/*.js</include>
+                        <include>www_dev/userscript/**/*.js</include>
+                        <include>cordova/letter/platforms/android/src/jp/fukushima/**/*.java</include>
+                        <include>cordova/dojo/platforms/android/src/jp/fukushima/**/*.java</include>
+                        <include>cordova/rad/platforms/android/src/jp/fukushima/**/*.java</include>
+                        <include>cordova/posting/platforms/android/src/jp/fukushima/**/*.java</include>
                     </includes>
                     <encoding>UTF-8</encoding>
                     <headerDefinitions>
