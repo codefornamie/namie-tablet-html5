@@ -5,6 +5,5 @@
 /*-- Application stylesheets. -----------------------------------------------*/
 
 .namie-license {
-    right: 14px;
-    bottom: 14px;
+    display: none;
 }

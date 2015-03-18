@@ -1652,6 +1652,12 @@ select#articleCategory {
     transition: .2s ease all;
 }
 
+.namie-license.namie-license--news {
+    display: block;
+    right: 14px;
+    bottom: 14px;
+}
+
 .namie-license a {
     display: inline-block;
     padding: 8px;
