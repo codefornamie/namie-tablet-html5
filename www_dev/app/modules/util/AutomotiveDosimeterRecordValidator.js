@@ -74,8 +74,12 @@
          * @return {Boolean}
          */
         AutomotiveDosimeterRecordValidator.prototype.selectValidRecord = function (record) {
-            var date = record[Code.AUTOMOTIVE_TITLE_TIME].split(" ")[0];
-            var time = record[Code.AUTOMOTIVE_TITLE_TIME].split(" ")[1];
+            var date = "";
+            var time = "";
+            if (record[Code.AUTOMOTIVE_TITLE_TIME] && typeof record[Code.AUTOMOTIVE_TITLE_TIME] === "string") {
+                date = record[Code.AUTOMOTIVE_TITLE_TIME].split(" ")[0];
+                time = record[Code.AUTOMOTIVE_TITLE_TIME].split(" ")[1];
+            }
             var lat = record[Code.AUTOMOTIVE_TITLE_LATITUDE];
             var long = record[Code.AUTOMOTIVE_TITLE_LONGITUDE];
             var hasDose = record[Code.AUTOMOTIVE_TITLE_DOSE1];
