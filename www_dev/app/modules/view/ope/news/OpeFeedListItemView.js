@@ -87,12 +87,15 @@ define(function(require, exports, module) {
          * @memberOf OpeFeedListItemView#
          * @param {Boolean} 保存に成功したかどうか
          */
-        saveEnd : function(success) {
-            if (success) {
-                this.lastModel = this.model;
-            } else {
+        saveEnd : function(resp) {
+            if (resp) {
                 this.model = this.lastModel;
+                this.showMessage("配信情報の保存に失敗しました", resp.event, app.PIOLogLevel.ERROR);
+                // 一覧を再読み込み
+                this.parentView.parent.reloadNewsView();
+                return;
             }
+            this.lastModel = this.model;
             this.setData();
             this.$el.find(".isPublishCheckBox").prop("disabled", false);
             this.$el.find("[data-article-edit-button]").prop("disabled", false);
@@ -198,15 +201,15 @@ define(function(require, exports, module) {
                 success : $.proxy(function() {
                     this.model.fetch({
                         success : $.proxy(function() {
-                            this.saveEnd(true);
-                        }, this),
-                        error : $.proxy(function() {
                             this.saveEnd();
+                        }, this),
+                        error : $.proxy(function(resp) {
+                            this.saveEnd(resp);
                         }, this)
                     });
                 }, this),
-                error : $.proxy(function() {
-                    this.saveEnd();
+                error : $.proxy(function(model, resp) {
+                    this.saveEnd(resp);
                 }, this)
             });
         },
