@@ -7,6 +7,8 @@ require([
     window.alert = function() {
     };
     var goRoute = function() {
+        // アプリが起動できたことをマークする
+        window.startApp = true;
         // キャッシュの有無
         app.useCache = CommonUtil.useCache(app.config.basic.mode);
 

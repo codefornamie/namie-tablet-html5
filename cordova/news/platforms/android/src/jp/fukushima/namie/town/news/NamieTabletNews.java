@@ -46,6 +46,7 @@ public class NamieTabletNews extends CordovaActivity {
         alertDialog.setMessage("アプリケーションを表示できませんでした。電波状態を見直して、起動し直してください。");
         alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                endActivity();
             }
         });
 

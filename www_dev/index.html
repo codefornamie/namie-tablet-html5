@@ -27,6 +27,16 @@
   <!-- build:[src] source.min.js -->
   <script src="bower_components/requirejs/require.js"
     data-main="app/config"></script>
+  <script>
+    setTimeout(function() {
+        if (!window.startApp) {
+            alert("アプリケーションを表示できませんでした。電波状態を見直して、起動し直してください。");
+            if (navigator && navigator.app && navigator.app.exitApp) {
+                navigator.app.exitApp();
+            };
+        }
+    }, 10000);
+  </script>
   <!-- /build -->
 </body>
 </html>
