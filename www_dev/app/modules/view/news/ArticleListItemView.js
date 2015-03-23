@@ -87,7 +87,7 @@ define(function(require, exports, module) {
 
             if (this.model.get("imageUrl")) {
                 articleImage.on("error", function() {
-                    articleImage.hide();
+//                    articleImage.hide();
                 });
                 var imageUrl = this.model.get("imageUrl");
                 this.showPIOImage(articleImage, {
