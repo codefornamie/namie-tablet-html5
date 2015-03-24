@@ -17,12 +17,8 @@ package jp.fukushima.namie.town.letter;
 
 import org.apache.cordova.CordovaActivity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 
 public class NamieTabletLetter extends CordovaActivity {
     @Override
@@ -38,25 +34,13 @@ public class NamieTabletLetter extends CordovaActivity {
     @Override
     public void onReceivedError(int errorCode, String description,
             String failingUrl) {
-        FragmentManager fm = getActivity().getFragmentManager();
-        AlertFragment af = new AlertFragment();
-        af.show(fm, "alert_dialog");
-    }
-}
-
-class AlertFragment extends DialogFragment {
-    private DialogInterface.OnClickListener okListener = new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int id) {
-            getActivity().finish();
-        }
-    };
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("なみえ写真投稿")
-                .setMessage("アプリケーションを表示できませんでした。電波状態を見直して、起動し直してください。")
-                .setPositiveButton("OK", okListener);
-        return builder.create();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                displayError("なみえ写真投稿",
+                        "アプリケーションを表示できませんでした。電波状態を見直して、起動し直してください。", "OK", true);
+            }
+        }, 3000);
     }
 }
