@@ -1250,6 +1250,7 @@ div.nehan-block.nehan-body:last-child {
 
 .post .eventFileImage img {
     border: 10px solid rgb(242, 240, 226);
+    width: 800px;
 }
 
 /**

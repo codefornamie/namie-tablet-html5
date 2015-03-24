@@ -492,7 +492,7 @@ define(function(require, exports, module) {
          */
         makeThmbnail : function(byteArray, callback) {
             // サムネイルの長辺のサイズ
-            var LONG_SIDE_SIZE = 256;
+            var LONG_SIDE_SIZE = 400;
             var canvas = document.createElement('canvas');
             var img = new Image();
             img.onload = function() {
