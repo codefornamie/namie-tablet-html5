@@ -15,11 +15,14 @@
  */
 package jp.fukushima.namie.town.news.radiation;
 
+import org.apache.cordova.CordovaActivity;
+
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import org.apache.cordova.*;
 
 public class NamieTabletRad extends CordovaActivity {
     @Override
@@ -33,19 +36,27 @@ public class NamieTabletRad extends CordovaActivity {
      * 受信エラーが発生した場合に呼び出される。
      */
     @Override
-    public void onReceivedError(int errorCode, String description, String failingUrl) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+    public void onReceivedError(int errorCode, String description,
+            String failingUrl) {
+        FragmentManager fm = getActivity().getFragmentManager();
+        AlertFragment af = new AlertFragment();
+        af.show(fm, "alert_dialog");
+    }
+}
 
-        // ダイアログの設定
-        alertDialog.setTitle("なみえ放射線情報");
-        alertDialog.setMessage("アプリケーションを表示できませんでした。電波状態を見直して、起動し直してください。");
-        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
+class AlertFragment extends DialogFragment {
+    private DialogInterface.OnClickListener okListener = new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+            getActivity().finish();
+        }
+    };
 
-        // ダイアログの作成と表示
-        alertDialog.create();
-        alertDialog.show();
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("なみえ放射線情報")
+                .setMessage("アプリケーションを表示できませんでした。電波状態を見直して、起動し直してください。")
+                .setPositiveButton("OK", okListener);
+        return builder.create();
     }
 }
