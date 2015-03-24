@@ -90,7 +90,7 @@ define(function(require, exports, module) {
         saveEnd : function(resp) {
             if (resp) {
                 this.model = this.lastModel;
-                this.showMessage("配信情報の保存に失敗しました", resp.event, app.PIOLogLevel.ERROR);
+                this.showErrorMessage("配信情報の保存", resp);
                 // 一覧を再読み込み
                 this.parentView.parent.reloadNewsView();
                 return;
@@ -203,7 +203,7 @@ define(function(require, exports, module) {
                         success : $.proxy(function() {
                             this.saveEnd();
                         }, this),
-                        error : $.proxy(function(resp) {
+                        error : $.proxy(function(model, resp) {
                             this.saveEnd(resp);
                         }, this)
                     });
@@ -257,7 +257,7 @@ define(function(require, exports, module) {
                         this.model
                     ]);
                 }, this),
-                error : $.proxy(function(resp) {
+                error : $.proxy(function(model, resp) {
                     this.showMessage("おすすめ記事情報の保存に失敗しました", resp.event, app.PIOLogLevel.ERROR);
                     this.hideLoading();
                 }, this)
