@@ -45,7 +45,7 @@ public class NamieWidgetProvider extends AppWidgetProvider {
     // ウィジェット更新処理開始までのインターバル(ms)
     private static final int TIMER_START_DELAY = 3 * 1000;
     // ウィジェット更新インターバル(ms)
-    private static final int UPDATE_INTERVAL = 500;
+    private static final int UPDATE_INTERVAL = 1000;
     // サーバアクセス開始までのインターバル(ms)
     private static final int UPDATE_TIMER_START_DELAY = 300 * 1000;
     // 既読チェックインターバル(ms)
