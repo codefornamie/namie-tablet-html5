@@ -38,9 +38,9 @@ public class WidgetContentManager {
     // フレームインデックス
     private int frameIndex = 0;
     // 表示メッセージを切り替えるまでのフレーム数
-    private static final int MESSAGE_ACTION_FRAME = 32;
+    private static final int MESSAGE_ACTION_FRAME = 16;
     // メッセージを非表示とするフレームインデックス
-    private static final int SHOW_MESSAGE_FRAME = 30;
+    private static final int SHOW_MESSAGE_FRAME = 14;
 
     // メッセージをスキップするかどうか
     private boolean messageSkip = false;
