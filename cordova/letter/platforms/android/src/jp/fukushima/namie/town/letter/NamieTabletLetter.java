@@ -15,11 +15,10 @@
  */
 package jp.fukushima.namie.town.letter;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.Bundle;
+import org.apache.cordova.CordovaActivity;
 
-import org.apache.cordova.*;
+import android.os.Bundle;
+import android.os.Handler;
 
 public class NamieTabletLetter extends CordovaActivity {
     @Override
@@ -33,19 +32,15 @@ public class NamieTabletLetter extends CordovaActivity {
      * 受信エラーが発生した場合に呼び出される。
      */
     @Override
-    public void onReceivedError(int errorCode, String description, String failingUrl) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-        // ダイアログの設定
-        alertDialog.setTitle("なみえ写真投稿");
-        alertDialog.setMessage("アプリケーションを表示できませんでした。電波状態を見直して、起動し直してください。");
-        alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+    public void onReceivedError(int errorCode, String description,
+            String failingUrl) {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                displayError("なみえ写真投稿",
+                        "アプリケーションを表示できませんでした。電波状態を見直して、起動し直してください。", "OK", true);
             }
-        });
-
-        // ダイアログの作成と表示
-        alertDialog.create();
-        alertDialog.show();
+        }, 3000);
     }
 }
