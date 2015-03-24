@@ -45,9 +45,7 @@ AbstractRegisterUserScript.prototype.getPersonal = function(accountId) {
  */
 AbstractRegisterUserScript.prototype.create = function(input) {
     var dataJson = input;
-    this.log('I', 'Start create process. data=%1', [
-        JSON.stringify(dataJson)
-    ]);
+    this.log('I', 'Start create process', []);
     
     // personal以外の場合は、ownerIdを設定する。
     if(this.entity !== "personal") {
@@ -95,8 +93,8 @@ AbstractRegisterUserScript.prototype.isOwn = function(id) {
  */
 AbstractRegisterUserScript.prototype.update = function(input, etag) {
     var dataJson = input;
-    this.log('I', 'Start update process. data=%1, etag=%2', [
-            JSON.stringify(dataJson), etag
+    this.log('I', 'Start update process. etag=%1', [
+            etag
     ]);
     
     var id = dataJson.__id;

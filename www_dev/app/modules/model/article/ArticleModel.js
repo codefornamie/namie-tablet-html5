@@ -134,6 +134,8 @@ define(function(require, exports, module) {
             saveData.title = this.get("title");
             saveData.description = this.get("description");
             saveData.rawHTML = this.get("rawHTML");
+            saveData.rawHTML2 = this.get("rawHTML2");
+            saveData.rawHTML3 = this.get("rawHTML3");
             saveData.auther = this.get("auther");
             saveData.scraping = this.get("scraping");
 
