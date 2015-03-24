@@ -72,6 +72,8 @@ define(function(require, exports, module) {
             var imageElems = $(this.el).find("img");
 
             if (this.isMinpoArticle) {
+                // 民報の記事の場合は、記事内(記事HTML内)img要素のみを対象とする
+                imageElems = $(this.el).find("img:not(.articleDetailImage)");
                 // この記事のimg要素にはWebDAVのパスが設定されているため、取得しにいく
                 _.each(imageElems, function(imageElement) {
                     var imageUrl = $(imageElement).attr("src");
@@ -87,7 +89,7 @@ define(function(require, exports, module) {
 
             if (this.model.get("imageUrl")) {
                 articleImage.on("error", function() {
-//                    articleImage.hide();
+                    articleImage.hide();
                 });
                 var imageUrl = this.model.get("imageUrl");
                 this.showPIOImage(articleImage, {
