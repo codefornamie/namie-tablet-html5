@@ -12,7 +12,7 @@ Node.js の動作確認バージョンは、0.10.32 です。
 
 ### 1. リポジトリをクローンします。
 ```
-https://bitbucket.org/codefornamie/namie-tablet-html5.git
+git clone https://bitbucket.org/codefornamie/namie-tablet-html5.git
 ```
 ※上記コマンドを実行するために、PCに、[git クライアント](http://msysgit.github.io/)のインストールが必要です。
 ### 2. カレントディレクトリを変更します。
