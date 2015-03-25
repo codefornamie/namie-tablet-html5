@@ -152,5 +152,10 @@ cordova run android
 ## HTML5アプリのビルドと、Cordova ビルド実行
 namie-tablet-html5/run_android.sh を実行することで、HTML5アプリのビルドとCordova build、Androidへのapk転送までが実施されます。
 ```
-namie-tablet-html5/run_android.sh
+cd namie-tablet-html5
+run_android.sh
+```
+テストをスキップして実行したい場合、以下のパラメタをつけます
+```
+run_android.sh skipTests
 ```
