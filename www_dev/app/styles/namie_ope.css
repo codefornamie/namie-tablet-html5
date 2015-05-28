@@ -1,5 +1,5 @@
 /**
- *  浪江町アプリ管�?��ールCSS
+ *  浪江町アプリ管�?��ールCSS
  */
 /**
  *  ----------
@@ -42,4 +42,18 @@
 
 #radiationListHead th {
     text-align: center;
+}
+
+td a.letter-title {
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    width: 10em;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+td a.letter-title br {
+    display: none;
 }

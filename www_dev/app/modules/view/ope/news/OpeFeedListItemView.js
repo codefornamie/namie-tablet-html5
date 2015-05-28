@@ -49,6 +49,11 @@ define(function(require, exports, module) {
          * </p>
          */
         afterRendered : function() {
+            // 写真投稿の場合は文字列省略用のClassを付加
+            if (this.model.get("type") === "6") {
+                this.$el.find("td a").addClass("letter-title");
+            }
+            
             if (this.model.get("isRecommend") && (this.model.get("publishedAt") === this.parentView.targetDate)) {
                 // 今日のおすすめ記事フラグがある場合はラジオボタンを選択状態にする
                 this.$el.find("input[type='radio']").attr("checked", "checked");
