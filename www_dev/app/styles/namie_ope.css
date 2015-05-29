@@ -49,7 +49,7 @@ td a.letter-title {
     -o-text-overflow: ellipsis;
     -webkit-text-overflow: ellipsis;
     text-overflow: ellipsis;
-    width: 10em;
+    width: 10.1em;
     white-space: nowrap;
     display: inline-block;
 }
