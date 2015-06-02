@@ -44,7 +44,9 @@
     text-align: center;
 }
 
-td a.letter-title {
+td a.letter-title,
+.OpeArticleDetailPage div.eventTitle.letter-title,
+#articleRegistConfirmWrapperPage div.eventTitle.letter-title {
     overflow: hidden;
     -o-text-overflow: ellipsis;
     -webkit-text-overflow: ellipsis;
@@ -54,6 +56,8 @@ td a.letter-title {
     display: inline-block;
 }
 
-td a.letter-title br {
+td a.letter-title br,
+.OpeArticleDetailPage div.eventTitle.letter-title br,
+#articleRegistConfirmWrapperPage div.eventTitle.letter-title br{
     display: none;
 }

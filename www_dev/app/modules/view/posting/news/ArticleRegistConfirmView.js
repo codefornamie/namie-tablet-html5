@@ -40,6 +40,10 @@ define(function(require, exports, module) {
         },
 
         afterRendered : function() {
+            if (this.model && this.model.get("type") === "6") {
+                this.$el.find(".eventTitle").addClass("letter-title");
+            }
+            
             // 日時
             var dateString = this.model.getDateString();
             $("#articleDateTime").html(dateString);
