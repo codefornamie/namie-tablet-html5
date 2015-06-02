@@ -37,6 +37,9 @@ define(function(require, exports, module) {
          * @memberOf OpeEventDetailView#
          */
         afterRendered : function() {
+            if (this.model && this.model.get("type") === "6") {
+                this.$el.find(".eventTitle").addClass("letter-title");
+            }
             this.showImage();
             this.hideLoading();
         },

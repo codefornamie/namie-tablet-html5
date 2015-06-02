@@ -49,11 +49,8 @@ define(function(require, exports, module) {
             response.dispUpdatedAt = DateUtil.formatDate(new Date(response.updatedAt), "yyyy年MM月dd日 HH時mm分");
             response.dispSite = CommonUtil.sanitizing(response.site);
             if (!response.title && response.description) {
-                // 写真投稿などのタイトルがないものは本文の先頭10文字をタイトルとする
-                response.title = response.description.substr(0, 10);
-                if (response.description.length > 10) {
-                    response.title += "...";
-                }
+                // 写真投稿などのタイトルがないものは代わりに本文を代入
+                response.title = response.description;
             }
             response.dispTitle = CommonUtil.sanitizing(response.title);
             response.dispPlace = CommonUtil.sanitizing(response.place);
