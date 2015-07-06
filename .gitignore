@@ -14,3 +14,7 @@ www_dev/karma.log
 www_dev/mode.json
 .DS_Store
 npm-debug.log
+
+# IntelliJ Idea
+.idea/
+*.iml
