@@ -1,13 +1,17 @@
-# なみえタブレットアプリ 
+# なみえタブレットアプリ
 ====================
 
 「浪江町きずな再生支援タブレット事業」で開発したタブレットアプリケーションです。
+
+## 必要バージョン
+-----------------------
+* Node v4.2.x
+* NPM v3.3.x
 
 ## セットアップ手順
 -----------------------
 インストールには [Node.js](http://nodejs.org)  が必要です。
 あらかじめインストールしておいてください。
-Node.js の動作確認バージョンは、0.10.32 です。
 以下、セットアップ手順を記載します。
 
 ### 1. リポジトリをクローンします。
@@ -62,21 +66,22 @@ mode プロパティに文字列を指定します。
             "mode" : "news"
 ```
 
-* なみえ新聞  
+* なみえ新聞
 "news" と指定します。
-* なみえ写真投稿  
+* なみえ写真投稿
 "letter" と指定します。
-* なみえタブレット道場  
+* なみえタブレット道場
 "dojo" と指定します。
-* なみえ放射線情報  
+* なみえ放射線情報
 "rad" と指定します。
-* なみえ新聞ライター  
+* なみえ新聞ライター
 "posting"と指定します
-* 浪江町アプリ管理ツール  
+* 浪江町アプリ管理ツール
 "ope"と指定します
 
-### 3. namie-tablet-html5/www_dev フォルダをカレントにして、grunt serverタスクを実行します
+### 3. grunt serverタスクを実行します
 ```
+cd namie-tablet-html5/www_dev
 grunt server
 ```
 ### 4. ブラウザで、http://127.0.0.1:8000/ を表示します。
@@ -91,19 +96,19 @@ grunt
 ```
 以下のタスクが実施されます。
 
-* jshint  
+* jshint
 JSHintによるソース解析
-* jsdoc  
+* jsdoc
 JSDocの生成
 * plato
 ソフトウェアメトリクスレポートを作成
-* processhtml  
+* processhtml
 index.htmlをリリース用に変換
-* copy  
+* copy
 成果物をwwwフォルダにコピー
-* requirejs  
+* requirejs
 RequireJSのr.jsを利用してソースを最適化
-* cssmin  
+* cssmin
 スタイルシートの最適化
 
 ## テスト実行
@@ -127,13 +132,13 @@ wwwフォルダ配下にHTML5モジュール(index.html, js, css)が出力され
 -----------------------
 namie-tablet-html5/cordova フォルダ配下に、各タブレットアプリ用のCordovaプロジェクトが格納されています。
 
-* なみえ新聞  
+* なみえ新聞
 namie-tablet-html5/cordova/news/
-* なみえ写真投稿  
+* なみえ写真投稿
 namie-tablet-html5/cordova/letter/
-* なみえタブレット道場  
+* なみえタブレット道場
 namie-tablet-html5/cordova/dojo/
-* なみえ放射線情報  
+* なみえ放射線情報
 namie-tablet-html5/cordova/rad/
 
 ### 1. 設定ファイル(namie-tablet-html5/www_dev/app/resources/appConfig.js)のmodeプロパティの文字列を、動作させるアプリの値に設定します
