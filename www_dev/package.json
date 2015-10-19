@@ -52,7 +52,7 @@
   "dependencies": {
   },
   "engines": {
-    "node": "~0.12.7",
+    "node": "~4.2.1",
     "npm": "~3.3.9"
   }
 }
