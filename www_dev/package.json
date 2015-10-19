@@ -47,8 +47,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/backbone-boilerplate/backbone-boilerplate.git"
+    "url": "http://gitlab.namie-tablet.org/namie2015_dev/namie-tablet-html5"
   },
   "dependencies": {
+  },
+  "engines": {
+    "node": "~0.12.7",
+    "npm": "~3.3.9"
   }
 }
