@@ -18,8 +18,8 @@
             <ImageView
                 android:id="@+id/chara"
                 android:src="@drawable/img_ukedon_1"
-                android:layout_width="141px"
-                android:layout_height="180px"
+                android:layout_width="94dp"
+                android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/character_name" />
@@ -27,21 +27,21 @@
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20px" >
+                android:layout_marginTop="13dp" >
                 <TextView
                     android:id="@+id/fukidashi"
                     android:visibility="invisible"
                     android:background="@drawable/bg_bubble"
-                    android:layout_width="493px"
-                    android:layout_height="191px"
-                    android:paddingStart="40px"
-                    android:paddingEnd="40px"
+                    android:layout_width="320dp"
+                    android:layout_height="127dp"
+                    android:paddingStart="27dp"
+                    android:paddingEnd="27dp"
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:scrollHorizontally="true"
                     android:gravity="center_vertical"
                     android:textColor="@android:color/black"
-                    android:textSize="33px" />
+                    android:textSize="22dp" />
                 <LinearLayout
                     android:id="@+id/recommend"
                     android:visibility="invisible"
@@ -50,18 +50,18 @@
                     <TextView
                         android:id="@+id/article_title"
                         android:background="@drawable/bg_news"
-                        android:layout_width="489px"
-                        android:layout_height="232px"
-                        android:paddingTop="44px"
-                        android:paddingBottom="100px"
-                        android:paddingStart="15px"
-                        android:paddingEnd="15px"
+                        android:layout_width="326dp"
+                        android:layout_height="155dp"
+                        android:paddingTop="29dp"
+                        android:paddingBottom="67dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:scrollHorizontally="true"
                         android:gravity="center_vertical"
                         android:textColor="@android:color/black"
-                        android:textSize="33px" />
+                        android:textSize="22dp" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -72,13 +72,13 @@
             android:orientation="horizontal" >
             <LinearLayout
                 android:gravity="center_horizontal"
-                android:layout_width="200px"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content">
                 <ImageButton
-                android:id="@+id/link_news"
-                android:background="@drawable/button_news"
-                android:layout_width="200px"
-                android:layout_height="222px"/>
+                    android:id="@+id/link_news"
+                    android:background="@drawable/button_news"
+                    android:layout_width="130dp"
+                    android:layout_height="148dp"/>
             </LinearLayout>
             <LinearLayout
                 android:gravity="center_horizontal"
@@ -87,18 +87,18 @@
                 <ImageButton
                     android:id="@+id/link_post"
                     android:background="@drawable/button_photo"
-                    android:layout_width="147px"
-                    android:layout_height="223px"/>
+                    android:layout_width="98dp"
+                    android:layout_height="149dp"/>
             </LinearLayout>
             <LinearLayout
                 android:gravity="center_horizontal"
-                android:layout_width="200px"
+                android:layout_width="133dp"
                 android:layout_height="wrap_content">
                 <ImageButton
                     android:id="@+id/link_dojo"
                     android:background="@drawable/button_dojo"
-                    android:layout_width="190px"
-                    android:layout_height="222px"/>
+                    android:layout_width="127dp"
+                    android:layout_height="148dp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
